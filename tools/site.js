@@ -8,6 +8,7 @@ const ROOT = path.join(__dirname, "..");
 const SUBJECTS = [
   ["physics", "Physics", "Forces, waves, electricity and modern physics."],
   ["business", "Business", "Stakeholders, enterprise, leadership and informed decisions."],
+  ["maths", "Maths", "Statistics and probability, geometry, number, algebra and functions."],
   ["applied-maths", "Applied Maths", "Modelling, networks, mechanics and a changing world."],
   ["english", "English", "Single text, comparative study, poetry and Paper 1."],
   ["spanish", "Spanish", "Communication, language awareness and culture."],
@@ -59,15 +60,15 @@ for(const [id,name,blurb] of SUBJECTS){
   const generated = !fs.existsSync(hub) || fs.readFileSync(hub,"utf8").includes("<!-- generated-hub -->");
   if(generated){
     const body = `<!-- generated-hub -->
-<section class="hero" style="grid-template-columns:1fr"><div><span class="pill t">Leaving Cert ${name}</span><h1 style="margin-top:12px">${name}</h1><p class="lede">${blurb} ${pages.length} interactive page${pages.length===1?"":"s"} so far; more are added every week.</p></div></section>
-<div class="topics">${pages.map(p=>card(p.f, p.title, p.sub)).join("\n")}</div>`;
+<section class="hero" style="grid-template-columns:1fr"><div><span class="pill t">Leaving Cert ${name}</span><h1 style="margin-top:12px">${name}</h1><p class="lede">${blurb} ${pages.length? `${pages.length} interactive page${pages.length===1?"":"s"} so far; more are added every week.` : "The first chapter is on its way."}</p></div></section>
+${pages.length? `<div class="topics">${pages.map(p=>card(p.f, p.title, p.sub)).join("\n")}</div>` : `<div class="panel pad"><p>No pages yet. Check back soon.</p></div>`}`;
     fs.writeFileSync(hub, shell(`${name} · Leaving Cert`, `Leaving Cert ${name}`, "Interactive study pages", id, "../", body));
   }
   for(const f of fs.readdirSync(dir).filter(f=>f.endsWith(".html"))) inject(path.join(dir,f), id, "../");
 }
 // 3. home page
 const homeBody = `<section class="hero" style="grid-template-columns:1fr"><div><span class="pill t">Free · Interactive · Leaving Certificate</span><h1 style="margin-top:12px">Study the Leaving Cert<br><em>by doing, not just reading.</em></h1><p class="lede">Visual notes, labs and simulations, flashcards, quizzes and exam practice for each topic, built from the official specifications and syllabuses. Pick a subject.</p></div></section>
-<div class="topics">${SUBJECTS.filter(([id])=>fs.existsSync(path.join(ROOT,id))).map(([id,name,blurb])=>{ const ps=pagesOf(id); return card(`${id}/index.html`, name, blurb, `<p style="font-size:.88rem"><b>${ps.length}</b> page${ps.length===1?"":"s"}: ${ps.slice(0,4).map(p=>p.title).join(" · ")}${ps.length>4?" …":""}</p>`); }).join("\n")}</div>
+<div class="topics">${SUBJECTS.filter(([id])=>fs.existsSync(path.join(ROOT,id))).map(([id,name,blurb])=>{ const ps=pagesOf(id); return card(`${id}/index.html`, name, blurb, ps.length? `<p style="font-size:.88rem"><b>${ps.length}</b> page${ps.length===1?"":"s"}: ${ps.slice(0,4).map(p=>p.title).join(" · ")}${ps.length>4?" …":""}</p>` : `<p style="font-size:.88rem">Coming soon</p>`); }).join("\n")}</div>
 <p class="result">Practice questions on these pages are not official SEC papers. Scenarios and figures in labs are illustrative.</p>`;
 fs.writeFileSync(path.join(ROOT,"index.html"), shell("Leaving Cert Study Lab", "Leaving Cert Study Lab", "All subjects", "home", "", homeBody));
 console.log("site updated:", SUBJECTS.map(([id])=>`${id} ${fs.existsSync(path.join(ROOT,id))?pagesOf(id).length:0}`).join(", "));
