@@ -2,7 +2,8 @@
 
 Free, interactive study pages for the Irish Leaving Certificate, one self-contained HTML page per topic, all sharing
 one design (palette, fonts, dark mode, top tabs + sidebar, visual-first). This folder is the single project and the
-GitHub repository (`gowridhandapani12-coder/leaving-cert-study`, private).
+GitHub repository (`gowridhandapani12-coder/leaving-cert-study`, public). Live site (GitHub Pages, from `main`):
+https://gowridhandapani12-coder.github.io/leaving-cert-study/ . Every push to `main` republishes it within a minute or two.
 
 | Folder | Subject | Notes |
 |--------|---------|-------|
