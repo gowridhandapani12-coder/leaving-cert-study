@@ -1,0 +1,1824 @@
+<title>Charge Interactions</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<style>
+:root{--band-ink:#3b2b21}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--surface)}
+.xlink:hover{border-color:var(--terra)}
+.working.wrap{white-space:normal;font-family:var(--f-body);font-size:.9rem}
+.spec-bullets{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+</style>
+<style>
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.rc-card{display:grid;gap:8px;padding:16px}
+.rc-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.rc-card .ico svg{width:24px;height:24px}
+.rc-card p{font-size:.9rem;margin:0}
+.rc-card p b{color:var(--terra)}
+</style>
+<style>
+.cases .rc-card canvas{width:100%;display:block;border-radius:12px}
+.sec td,.sec th{padding:4px 8px;text-align:right;font-family:var(--f-mono);font-size:.85rem;white-space:nowrap}
+.sec{border-collapse:collapse;width:100%}
+.sec tr+tr td{border-top:1px solid var(--line)}
+.secwrap{overflow-x:auto}
+.srt .row .btns button{padding:6px 10px;font-size:.85rem}
+.predopts .btns button{min-width:84px}
+</style>
+
+
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="13" r="4"/><circle cx="17" cy="13" r="4"/><path d="M5.5 13h3M7 11.5v3M15.5 13h3"/></svg></div>
+        <div style="min-width:0"><b>Charge Interactions</b><span>Leaving Cert Physics · Strand 3 · Section 3.1</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details open><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="here"><span class="mono">3.1</span>Charge interactions</li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 3 · Section 3.1 · Charge interactions</span>
+          <h1 style="margin-top:12px">Rub it.<br>Stick it.<br><em>Spark it.</em></h1>
+          <p class="lede">Everything is made of atoms full of charge, but most things are neutral. Rub two materials and electrons move from one to the other. Build atoms and ions, measure the charge a rubbed rod picks up, watch charged balls attract and repel, test conductors and insulators, charge a sphere without touching it, and find where charge sits on a conductor.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="A negatively charged balloon near a wall: the wall's surface becomes positive and the balloon is attracted"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/4</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">3.1.1</span><span>demonstrate forces • between charged objects • between charged and neutral objects</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">3.1.2</span><span>classify materials as conductors or insulators</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">3.1.3</span><span>describe the behaviour of insulators and conductors</span></label></li>
+          <li><label><input type="checkbox" id="lo4"><span class="mono">3.1.4</span><span>solve problems involving static electrical phenomena</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">Students learn about:</p>
+        <ul class="spec-bullets"><li>electrically neutral objects and how they become charged</li><li>the atomic structure of matter</li><li>free electrons and bound electrons</li><li>charging objects by friction / induction (single sphere); grounding</li><li>the conservation of charge in interactions</li><li>the distribution of charge on conductors and insulators</li></ul>
+        <p class="result" style="margin-top:10px">The specification lists no equations for 3.1. This page uses Q = ne (charge is carried in whole numbers of electrons, e = 1.6 × 10⁻¹⁹ C) and charge sharing between identical conductors to solve static problems. Coulomb's law (F = q₁q₂/4πεd²) comes next, in 3.2. Builds on 1.2 (forces, Newton's third law) and links ahead to 4.1 (the electron) and 4.3 (models of the atom).</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Build atoms and ions, rub materials and measure the charge, hang charged balls side by side, test materials with an electroscope, charge a sphere by induction and probe the charge on different shapes. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="atoms">
+        <div class="labhead"><span class="pill t">Atoms, ions and charge</span><p class="goal">An atom has a tiny nucleus of protons (+) and neutrons (no charge), with electrons (−) around it. With equal numbers of protons and electrons it is neutral. Only electrons can be added or removed in everyday charging, so a charged object has gained or lost electrons.</p></div>
+        <div class="panel sim">
+          <canvas id="atC" aria-label="A model atom with protons and neutrons in the nucleus and electrons in shells around it, with its net charge"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="atZ">Protons (element) <output id="atZo"></output></label><input type="range" id="atZ" min="1" max="20" step="1" value="6"></div>
+            <div class="ctl"><label for="atE">Electrons <output id="atEo"></output></label><input type="range" id="atE" min="0" max="22" step="1" value="6"></div>
+            <div class="ctl"><div class="btns"><button id="atAdd">Add an electron</button><button id="atRem">Remove an electron</button><button class="primary" id="atNeutral">Make it neutral</button></div></div>
+          </div>
+          <div class="readout" id="atOut"></div>
+          <div class="working wrap" id="atWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Free or bound electrons?</h3></div>
+          <div class="srt" id="fbList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="fbReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="fbOut"></div>
+        </div>
+        <p class="result">Simplified shell model (2, 8, 8, …) with the most common isotope of each element. Real atoms are about 10⁻¹⁰ m across and the nucleus is about 100 000 times smaller, so nothing here is to scale. e = 1.6 × 10⁻¹⁹ C.</p>
+        <div class="tries"><div class="try"><b>1</b>Make a sodium ion with a charge of +1e. How many electrons does it have?</div><div class="try"><b>2</b>Give oxygen two extra electrons. What is its charge in coulombs?</div><div class="try"><b>3</b>Why can't you charge an object by adding protons to it?</div></div>
+      </div>
+
+      <div class="lab" data-lab="friction" hidden>
+        <div class="labhead"><span class="pill t">Experiment: charging by friction</span><p class="goal">Rub two different neutral materials together and electrons move from one to the other. The one lower in the triboelectric series gains electrons and becomes negative; the other is left positive by exactly the same amount. Measure the rod's charge with a Faraday pail and coulombmeter for different numbers of strokes, then plot Q against strokes.</p></div>
+        <div class="panel sim">
+          <canvas id="rbC" aria-label="A rod being rubbed with a cloth, with plus and minus symbols showing the charge on each"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="rbA">Rod <output id="rbAo"></output></label><select id="rbA" aria-label="Rod material"></select></div>
+            <div class="ctl"><label for="rbB">Cloth <output id="rbBo"></output></label><select id="rbB" aria-label="Cloth material"></select></div>
+            <div class="ctl"><label for="rbN">Strokes <output id="rbNo"></output></label><input type="range" id="rbN" min="1" max="20" step="1" value="5"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="rbGo">Rub and measure</button><button id="rbClear">Clear table</button></div></div>
+          </div>
+          <div class="readout" id="rbOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>Strokes</th><th>Rod Q (nC)</th><th>Cloth Q (nC)</th><th>Total (nC)</th><th></th></tr></thead><tbody id="rbTable"></tbody></table><div class="empty" id="rbEmpty">No readings yet. Rub and measure for five or more different numbers of strokes.</div></div>
+            <div class="graphbox"><canvas id="rbGraph" aria-label="Graph of the size of the charge on the rod against the number of strokes with a line of best fit"></canvas><p class="result" id="rbResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Simulated coulombmeter readings with about ±5% scatter (humidity, pressure of each stroke). Charges are in nanocoulombs: 1 nC = 10⁻⁹ C. Real rods leak charge to damp air, so readings stop rising after many strokes; the model keeps the first 20 strokes linear. Changing a material clears the table.</p>
+        <div class="tries"><div class="try"><b>1</b>Rub polythene with wool, then glass with silk. Which rod ends up negative?</div><div class="try"><b>2</b>Add up the rod and cloth charges in each row. What do you notice? Which law is this?</div><div class="try"><b>3</b>Use the slope of your graph to find how many electrons move in each stroke.</div></div>
+      </div>
+
+      <div class="lab" data-lab="forces" hidden>
+        <div class="labhead"><span class="pill t">Forces between charged objects</span><p class="goal">Two small metal-coated balls hang on insulating threads. Give each one a charge. Like charges repel, unlike charges attract, and a charged ball attracts a neutral one by pulling its electrons to one side (polarisation). The forces on the two balls are always equal and opposite.</p></div>
+        <div class="panel sim">
+          <canvas id="pbC" aria-label="Two balls hanging on threads that swing apart or together depending on their charges"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="pbA">Charge on ball A <output id="pbAo"></output></label><input type="range" id="pbA" min="-3" max="3" step="0.5" value="2"></div>
+            <div class="ctl"><label for="pbB">Charge on ball B <output id="pbBo"></output></label><input type="range" id="pbB" min="-3" max="3" step="0.5" value="0"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="pbTouch">Let them touch</button><button id="pbEarth">Earth ball B</button><button id="pbReset">Reset</button></div></div>
+          </div>
+          <div class="readout" id="pbOut"></div>
+          <div class="working wrap" id="pbWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Attract, repel or no force?</h3></div>
+          <div class="srt" id="arList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="arReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="arOut"></div>
+        </div>
+        <p class="result">Charges are in units of 10 nC. The size of the swing is a qualitative model: the force grows with both charges and with how close the balls are (Coulomb's law, 3.2, gives the exact rule). The balls are conductors, so when they touch the charge is shared equally.</p>
+        <div class="tries"><div class="try"><b>1</b>Charge A and leave B neutral. Which way does B swing? Why?</div><div class="try"><b>2</b>Now let them touch. What happens to the charges, and then to the balls?</div><div class="try"><b>3</b>Give them +2 and −2 and let them touch. Where did the charge go?</div></div>
+      </div>
+
+      <div class="lab" data-lab="conductors" hidden>
+        <div class="labhead"><span class="pill t">Testing conductors and insulators</span><p class="goal">A charged gold-leaf electroscope has its leaves spread apart because they carry the same charge. Connect its cap to earth through a material. A conductor has free electrons that carry the charge away and the leaves fall at once; an insulator's electrons are bound to their atoms, so the leaves stay up.</p></div>
+        <div class="panel sim">
+          <canvas id="esC" aria-label="A gold-leaf electroscope whose cap is connected to earth through a strip of the chosen material"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Material between the cap and earth</span><div class="btns" id="esMat"></div></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="esGo">Connect to earth</button><button id="esCharge">Charge the electroscope</button></div></div>
+          </div>
+          <div class="readout" id="esOut"></div>
+          <div class="working wrap" id="esWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Classify the materials</h3></div>
+          <div class="srt" id="ciList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="ciReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="ciOut"></div>
+        </div>
+        <p class="result">Leaf angle is shown as a fraction of its starting value. Leak times are illustrative: metals discharge the electroscope almost instantly, your body and damp string in a second or two, good insulators not noticeably at all. Air is a very poor conductor when dry; damp air slowly discharges everything.</p>
+        <div class="tries"><div class="try"><b>1</b>Test every material. Sort them into two groups by what the leaves do.</div><div class="try"><b>2</b>Touch the cap with your finger. Are you a conductor? Why do you not get a shock?</div><div class="try"><b>3</b>Why can you charge a plastic rod by rubbing it while holding it, but not a metal rod?</div></div>
+      </div>
+
+      <div class="lab" data-lab="induction" hidden>
+        <div class="labhead"><span class="pill t">Charging a single sphere by induction</span><p class="goal">You can charge a metal sphere on an insulating stand without touching it with the charged rod. Bring the rod near, earth the sphere, remove the earth, then remove the rod. The sphere ends up with the opposite charge to the rod, and the rod keeps all its own charge.</p></div>
+        <div class="panel sim">
+          <canvas id="inC" aria-label="A metal sphere on an insulating stand, a charged rod beside it and an earth connection, with the charges shown at each step"></canvas>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Charge on the rod</span><div class="btns" id="inSign"><button data-s="-1" aria-pressed="true">Negative (polythene)</button><button data-s="1" aria-pressed="false">Positive (glass)</button></div></div>
+            <div class="ctl"><div class="btns"><button id="inBack">← Back</button><button class="primary" id="inNext">Next step →</button><button id="inRestart">Start again</button></div></div>
+          </div>
+          <div class="readout" id="inOut"></div>
+          <div class="working wrap" id="inWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Put the steps in order</h3></div>
+          <div class="srt" id="soList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="soReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="soOut"></div>
+        </div>
+        <p class="result">Only electrons move. The positive charges (protons in the nuclei) stay where they are. "Earthing" or "grounding" means connecting to the Earth, a huge conductor that can give or take any number of electrons.</p>
+        <div class="tries"><div class="try"><b>1</b>Go through all four steps with a negative rod. Where do the electrons go when you earth the sphere?</div><div class="try"><b>2</b>Repeat with a positive rod. Which way do electrons flow through the earth wire now?</div><div class="try"><b>3</b>What goes wrong if you remove the rod before removing the earth?</div></div>
+      </div>
+
+      <div class="lab" data-lab="distribution" hidden>
+        <div class="labhead"><span class="pill t">Where does the charge go?</span><p class="goal">On a conductor the charges repel each other and spread out over the outside surface, crowding most where the surface curves most sharply. On an insulator the charge stays where it was put. Pick a shape, then touch a proof plane to points on it and read the charge it picks up.</p></div>
+        <div class="panel sim">
+          <canvas id="shC" aria-label="A charged conductor of the chosen shape with dots showing how the charge is spread over its surface"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Object</span><div class="btns" id="shShape"><button data-s="sphere">Sphere</button><button data-s="egg">Egg shape</button><button data-s="point">Pointed</button><button data-s="can">Hollow can</button></div></div>
+            <div class="ctl"><span class="lbl">Material</span><div class="btns" id="shMat"><button data-m="0" aria-pressed="true">Conductor</button><button data-m="1" aria-pressed="false">Insulator (rubbed at one end)</button></div></div>
+            <div class="ctl"><span class="lbl">Proof plane</span><div class="btns" id="shProbe"></div></div>
+          </div>
+          <div class="readout" id="shOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>Object</th><th>Point</th><th>Electroscope reading</th><th></th></tr></thead><tbody id="shTable"></tbody></table><div class="empty" id="shEmpty">No readings yet. Touch the proof plane to each lettered point.</div></div>
+            <div class="graphbox"><canvas id="shGraph" aria-label="Bar chart of the electroscope readings at each point"></canvas><p class="result" id="shResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Dots show the surface charge density (charge per unit area), not individual electrons. Readings are in arbitrary units (leaf divergence), with ±5% scatter. For a conductor in equilibrium the charge is all on the outer surface; inside a closed or nearly closed conductor there is none.</p>
+        <div class="tries"><div class="try"><b>1</b>On the pointed object, compare the reading at the point with the reading on the flat side.</div><div class="try"><b>2</b>Probe inside the hollow can. What do you find? (This is Faraday's ice-pail result.)</div><div class="try"><b>3</b>Switch to an insulator. Why doesn't the charge spread out?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of charge interactions"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>Charge at a glance</h2></div><p>How objects become charged, step by step, and where the charge ends up.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Inside the material · LO 3.1.2, 3.1.3</p><h2>Free and bound electrons</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="free"></canvas><h3>Conductor</h3><p>Metals have free electrons that drift between the fixed positive ions, so charge flows through them easily.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="bound"></canvas><h3>Insulator</h3><p>Every electron is bound to its own atom. Charge put on an insulator stays where it is.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="polar"></canvas><h3>Polarisation</h3><p>Near a charged rod the electrons in each atom shift slightly. The near side becomes oppositely charged, so the object is attracted.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Solve problems · LO 3.1.4</p><h2>How big is a coulomb?</h2></div><p>Typical, rounded values. Number of electrons n = Q / e, with e = 1.6 × 10⁻¹⁹ C.</p></div>
+        <div class="secwrap"><table class="sec" id="secT"></table></div>
+        <p class="result" id="secRes" style="margin-top:10px"></p>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Where you meet it</p><h2>Static electricity around you</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Objects become charged by <b>gaining or losing electrons</b>. Protons never move in charging.</li>
+            <li>Like charges <b>repel</b>, unlike charges <b>attract</b>, and a charged object <b>attracts a neutral one</b> by polarising it.</li>
+            <li>Only <b>repulsion</b> proves an object is charged: attraction could be to a neutral object.</li>
+            <li>Conductors have <b>free electrons</b>; in insulators the electrons are <b>bound</b> to their atoms.</li>
+            <li>Charge is <b>conserved</b>: after rubbing, the two charges are equal and opposite and add to zero.</li>
+            <li>Induction in four steps: <b>rod near → earth → remove earth → remove rod</b>. The sphere gets the opposite charge.</li>
+            <li>On a conductor charge sits on the <b>outside surface</b> and is <b>densest at sharp points</b>.</li>
+            <li>Identical conductors that touch <b>share the total charge equally</b>: (Q₁ + Q₂) / 2 each.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The learning outcomes for this section use demonstrate, classify, describe and solve.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="text" placeholder="e.g. -12 or 2.5e11" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Attract, repel or no force?</h2></div></div>
+          <canvas id="predC" aria-label="Two objects with their charges shown"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" data-g="0"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: electron, induction, earth, conductor…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula and fact sheet</h2></div><p>Static electricity. The specification gives no equations for 3.1; these are the facts and relationships you need to solve problems.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Charge is quantised</span><span class="big">Q = ne</span><dl><dt>n</dt><dd>number of electrons gained or lost</dd><dt>e</dt><dd>1.6 × 10⁻¹⁹ C</dd></dl><div class="ex">3.0 × 10¹¹ electrons: 4.8 × 10⁻⁸ C = 48 nC</div></div>
+        <div class="panel fcell"><span class="pill">Number of electrons</span><span class="big">n = Q / e</span><dl><dt>Q</dt><dd>charge, C</dd></dl><div class="ex">−16 nC: 1.0 × 10¹¹ extra electrons</div></div>
+        <div class="panel fcell"><span class="pill">Particles in the atom</span><span class="big">p⁺ · n⁰ · e⁻</span><dl><dt>proton</dt><dd>+1.6 × 10⁻¹⁹ C</dd><dt>electron</dt><dd>−1.6 × 10⁻¹⁹ C, 9.11 × 10⁻³¹ kg</dd><dt>neutron</dt><dd>no charge</dd></dl><div class="ex">Neutral atom: protons = electrons</div></div>
+        <div class="panel fcell"><span class="pill">Ions</span><span class="big">charge = (p − e) × 1.6 × 10⁻¹⁹ C</span><dl><dt>lost electrons</dt><dd>positive ion</dd><dt>gained electrons</dt><dd>negative ion</dd></dl><div class="ex">O²⁻: −3.2 × 10⁻¹⁹ C</div></div>
+        <div class="panel fcell"><span class="pill">Conservation of charge</span><span class="big">Q_total before = Q_total after</span><dl><dt>rubbing</dt><dd>+Q on one, −Q on the other</dd></dl><div class="ex">Rod −20 nC → cloth +20 nC</div></div>
+        <div class="panel fcell"><span class="pill">Sharing (identical conductors)</span><span class="big">Q = (Q₁ + Q₂) / 2</span><dl><dt>use</dt><dd>touch, then separate</dd></dl><div class="ex">+8 nC and −2 nC → +3 nC each</div></div>
+        <div class="panel fcell"><span class="pill a">Forces</span><span class="big">like repel · unlike attract</span><dl><dt>charged + neutral</dt><dd>attract (polarisation)</dd><dt>pairs</dt><dd>equal and opposite (Newton's 3rd law)</dd></dl><div class="ex">Test for charge: repulsion</div></div>
+        <div class="panel fcell"><span class="pill a">Induction (single sphere)</span><span class="big">near → earth → off → away</span><dl><dt>result</dt><dd>opposite charge to the rod</dd></dl><div class="ex">− rod gives a + sphere</div></div>
+        <div class="panel fcell"><span class="pill a">Distribution</span><span class="big">σ highest at sharp points</span><dl><dt>conductor</dt><dd>charge on the outer surface only</dd><dt>insulator</dt><dd>charge stays where it is put</dd></dl><div class="ex">Lightning conductors, point discharge</div></div>
+        <div class="panel fcell"><span class="pill">Units and prefixes</span><span class="big">C · mC · µC · nC · pC</span><dl><dt>µC</dt><dd>10⁻⁶ C</dd><dt>nC</dt><dd>10⁻⁹ C</dd><dt>pC</dt><dd>10⁻¹² C</dd></dl><div class="ex">48 nC = 4.8 × 10⁻⁸ C</div></div>
+        <div class="panel fcell"><span class="pill">Coming next (3.2)</span><span class="big">F = q₁q₂ / 4πεd²</span><dl><dt>link</dt><dd>bigger charges, closer → bigger force</dd></dl><div class="ex">Like gravity, an inverse square law</div></div>
+      </div>
+      <footer>
+        <p>Built on section 3.1 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes are quoted from the specification. Experiment readings are simulated; charges in the coulomb table are typical, rounded values.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent","--band-ink"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+/* ---------- icons + topics ---------- */
+const ICON = {
+  atoms:'<circle cx="12" cy="12" r="2.2"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-60 12 12)"/>',
+  friction:'<path d="M12 3a6 7 0 016 7c0 4-3 7-6 7s-6-3-6-7a6 7 0 016-7z"/><path d="M11 17h2l-1 2zM12 19c0 2-2 1.5-2 3"/><path d="M9.5 9h2M10.5 8v2"/>',
+  forces:'<path d="M7 2v8.5M17 2v8.5M3 2h18"/><circle cx="7" cy="14" r="3.5"/><circle cx="17" cy="14" r="3.5"/><path d="M5.5 14h3M15.5 14h3M17 12.5v3"/>',
+  conductors:'<path d="M12 3v6"/><path d="M8 9h8"/><rect x="5" y="9" width="14" height="12" rx="2"/><path d="M12 9v4M12 13l-3 5M12 13l3 5"/>',
+  induction:'<circle cx="10" cy="9" r="6"/><path d="M10 15v6M6 21h8"/><path d="M16 9h5v5M19 14h4M20 16h2"/>',
+  distribution:'<path d="M12 2l4 7c2 4 1 11-4 13-5-2-6-9-4-13z"/><path d="M12 5v2M12 10v.01M10 14h.01M14 14h.01M12 18h.01"/>',
+  printer:'<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/>',
+  bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+  fuel:'<path d="M4 21V5a2 2 0 012-2h7a2 2 0 012 2v16M3 21h13M15 9h2a2 2 0 012 2v6a1.5 1.5 0 003 0V8l-3-3"/><path d="M7 7h5v4H7z"/>',
+  spray:'<rect x="5" y="9" width="8" height="12" rx="2"/><path d="M7 9V6h4v3M16 5h.01M19 4h.01M19 7h.01M22 5h.01"/>',
+  cage:'<path d="M4 4h16v16H4z"/><path d="M4 9h16M4 14h16M9 4v16M14 4v16"/>',
+  screen:'<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M7 8h.01M10 11h.01M15 9h.01"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"atoms", name:"Atoms and charge", short:"Protons +, electrons −, neutrons none. Neutral means equal numbers. Charging means gaining or losing electrons: Q = ne.", tint:"var(--blush)"},
+  {id:"friction", name:"Charging by friction", short:"Rub two materials and electrons move from one to the other. Equal and opposite charges: charge is conserved.", tint:"var(--apricot)"},
+  {id:"forces", name:"Forces between charges", short:"Like charges repel, unlike attract, and charged objects attract neutral ones by polarising them.", tint:"var(--sage)"},
+  {id:"conductors", name:"Conductors and insulators", short:"Conductors have free electrons, so charge flows through them. In insulators electrons are bound to their atoms.", tint:"var(--cream)"},
+  {id:"induction", name:"Induction and earthing", short:"Rod near, earth, remove earth, remove rod: the sphere gets the opposite charge without being touched.", tint:"var(--blush)"},
+  {id:"distribution", name:"Where charge sits", short:"On a conductor charge spreads over the outside surface and crowds at sharp points. On an insulator it stays put.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Atom","","The smallest part of an element: a tiny positive nucleus with negative electrons around it. A whole atom is neutral.","atoms"],
+  ["Nucleus","","The tiny, dense centre of an atom, containing the protons and neutrons.","atoms"],
+  ["Proton","p⁺","A particle in the nucleus with a charge of +1.6 × 10⁻¹⁹ C. Protons don't move when objects are charged.","atoms"],
+  ["Neutron","n⁰","A particle in the nucleus with no charge.","atoms"],
+  ["Electron","e⁻","A tiny particle outside the nucleus with a charge of −1.6 × 10⁻¹⁹ C and mass 9.11 × 10⁻³¹ kg. Electrons move when objects are charged.","atoms"],
+  ["Electric charge","Q","A property of protons and electrons that makes them exert electric forces. Measured in coulombs (C).","atoms","Q = ne"],
+  ["Coulomb","C","The SI unit of charge. One coulomb is the charge of about 6.25 × 10¹⁸ electrons.","atoms"],
+  ["Elementary charge","e","The size of the charge on one electron or proton: 1.6 × 10⁻¹⁹ C. All charges are whole-number multiples of e.","atoms","e = 1.6 × 10⁻¹⁹ C"],
+  ["Neutral","uncharged","Having equal amounts of positive and negative charge, so no overall (net) charge.","atoms"],
+  ["Net charge","","The total charge of an object: (number of protons − number of electrons) × e.","atoms"],
+  ["Ion","","An atom (or group of atoms) that has gained or lost electrons, so it is charged.","atoms"],
+  ["Positive ion","cation","An atom that has lost one or more electrons.","atoms"],
+  ["Negative ion","anion","An atom that has gained one or more electrons.","atoms"],
+  ["Atomic number","Z","The number of protons in the nucleus of an atom. It decides which element the atom is.","atoms"],
+  ["nC","nanocoulomb","10⁻⁹ C. Rubbed rods and balloons carry charges of tens of nC.","atoms"],
+  ["µC","microcoulomb","10⁻⁶ C.","atoms"],
+  ["Static electricity","electrostatics","Charge that builds up on an object and stays there, rather than flowing as a current.","friction"],
+  ["Charging by friction","","Rubbing two different neutral materials together so electrons move from one to the other. One becomes negative, the other equally positive.","friction"],
+  ["Triboelectric series","","A list of materials in order of how easily they give up electrons when rubbed. The one lower down gains electrons and becomes negative.","friction"],
+  ["Conservation of charge","","Charge can't be created or destroyed, only moved. The total charge of an isolated system stays the same.","friction"],
+  ["Polythene","","A plastic that gains electrons when rubbed with wool or a duster, becoming negative.","friction"],
+  ["Acetate","","A plastic that loses electrons when rubbed with a cloth, becoming positive (like glass rubbed with silk).","friction"],
+  ["Faraday pail","ice pail","A metal can on an insulating stand. Put a charged object inside and the full charge appears on the outside of the can, where a coulombmeter or electroscope can measure it.","friction"],
+  ["Coulombmeter","","A meter that measures charge, often in nC.","friction"],
+  ["Like charges","","Two charges of the same sign (both + or both −). They repel.","forces"],
+  ["Unlike charges","","A positive and a negative charge. They attract.","forces"],
+  ["Repulsion","","A force pushing objects apart. Repulsion is the only sure test that an object is charged.","forces"],
+  ["Attraction","","A force pulling objects together. It happens between unlike charges, and between a charged and a neutral object.","forces"],
+  ["Polarisation","","The small shift of electrons within a neutral object when a charged object is brought near. The near side gains the opposite charge, so the neutral object is attracted.","forces"],
+  ["Non-contact force","","A force that acts without the objects touching, like the electric force or gravity.","forces"],
+  ["Newton's third law","","If A exerts a force on B, B exerts an equal and opposite force on A. Two charged balls push or pull each other equally.","forces"],
+  ["Pith ball","","A very light ball (often coated in metal paint) hung on an insulating thread, used to show electric forces.","forces"],
+  ["Conductor","","A material that lets charge flow through it easily because it has free electrons, e.g. metals and graphite.","conductors"],
+  ["Insulator","","A material that does not let charge flow, because its electrons are bound to their atoms, e.g. plastic, glass, rubber.","conductors"],
+  ["Free electrons","delocalised electrons","Electrons in a conductor that are not attached to any one atom and can move through the material.","conductors"],
+  ["Bound electrons","","Electrons held tightly to their own atom, as in an insulator. They can shift slightly but can't flow.","conductors"],
+  ["Semiconductor","","A material, such as silicon, whose ability to conduct lies between a conductor's and an insulator's (more in 3.3).","conductors"],
+  ["Gold-leaf electroscope","","A metal cap and rod with thin gold leaves in a glass-fronted case. When charged, the leaves repel and spread apart. Used to detect charge and test materials.","conductors"],
+  ["Electroscope","","Any instrument that detects charge, usually by the repulsion of two light leaves.","conductors"],
+  ["Discharge","","Losing charge, e.g. through a conductor to earth or as a spark.","conductors"],
+  ["Induction","charging by induction","Charging an object without touching it with the charged object: the nearby charge moves electrons within the object, which is then earthed.","induction"],
+  ["Earthing","grounding","Connecting an object to the Earth with a conductor, so electrons can flow to or from the Earth until the object is neutral (or held there by a nearby charge).","induction"],
+  ["Earth","ground","The planet acts as a huge conductor that can give or take any number of electrons without changing its own charge noticeably.","induction"],
+  ["Induced charge","","The charge that appears on part of a conductor because of a nearby charged object.","induction"],
+  ["Insulating stand","","A support made of an insulator, so charge can't leak away from the object on it.","induction"],
+  ["Charging by contact","conduction","Touching a charged object to a neutral conductor so some charge flows across. Both end up with the same sign of charge.","induction"],
+  ["Surface charge density","σ","The charge per unit area on a surface. On a conductor it is highest where the surface is most sharply curved.","distribution","σ = Q / A"],
+  ["Proof plane","","A small metal disc on an insulating handle, used to pick up a sample of charge from a point on a surface and carry it to an electroscope.","distribution"],
+  ["Point discharge","","At a sharp point on a charged conductor the charge is so concentrated that it charges the nearby air, which carries charge away (a corona or 'electric wind').","distribution"],
+  ["Lightning conductor","","A pointed metal rod on top of a building connected by a thick conductor to earth. It discharges the cloud gradually and carries any strike safely to earth.","distribution"],
+  ["Faraday cage","","A closed conductor (or mesh). Charge sits on its outside, so the inside is shielded from electric effects.","distribution"],
+  ["Hollow conductor","","A conductor with a space inside, like a can. All its charge is on the outside surface.","distribution"],
+  ["Van de Graaff generator","","A machine that uses a moving belt to build up a large charge on a smooth metal dome.","distribution"],
+  ["Spark","","A sudden discharge through the air when the charge, and so the electric field, is big enough to make the air conduct.","distribution"],
+];
+GLOSS.forEach((g,i)=>{ GLOSS[i]={t:g[0],aka:g[1],d:g[2],topic:g[3],f:g[4],id:"g-"+g[0].toLowerCase().replace(/[^a-z0-9]+/g,"-")}; });
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["protons","Proton"],["neutrons","Neutron"],["electrons","Electron"],["nucleus","Nucleus"],["neutral","Neutral"],["ion","Ion"],["coulomb","Coulomb"],["triboelectric","Triboelectric series"],["conserved","Conservation of charge"],["conservation of charge","Conservation of charge"],["polarising","Polarisation"],["polarisation","Polarisation"],["repel","Repulsion"],["third law","Newton's third law"],["conductor","Conductor"],["insulator","Insulator"],["free electrons","Free electrons"],["bound","Bound electrons"],["electroscope","Gold-leaf electroscope"],["earth","Earthing"],["induction","Induction"],["proof plane","Proof plane"],["sharp","Surface charge density"],["lightning conductor","Lightning conductor"],["Faraday cage","Faraday cage"],["point discharge","Point discharge"]];
+
+
+/* ---------- glossary links + canvas helpers ---------- */
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function dbl(ctx,x1,y1,x2,y2,color,w=2){ line(ctx,x1,y1,x2,y2,color,w); const a=Math.atan2(y2-y1,x2-x1); arrowHead(ctx,x2,y2,a,color,8); arrowHead(ctx,x1,y1,a+Math.PI,color,8); }
+function dimArrow(ctx,xa,xb,y,label,col){ line(ctx,xa,y,xb,y,col,1.4); arrowHead(ctx,xa,y,Math.PI,col,7); arrowHead(ctx,xb,y,0,col,7); line(ctx,xa,y-5,xa,y+5,col,1.2); line(ctx,xb,y-5,xb,y+5,col,1.2); if(label) text(ctx,label,(xa+xb)/2,y-5,col,F(12),"center"); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const s3 = x => (+x.toPrecision(3)).toString();
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
+const sup = n => String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(x,d=3){ if(x===0) return "0"; let e=Math.floor(Math.log10(Math.abs(x))), ms=(x/Math.pow(10,e)).toFixed(d-1);
+  if(Math.abs(+ms)>=10){ e++; ms=(x/Math.pow(10,e)).toFixed(d-1); } return e===0? ms : `${ms} × 10${sup(e)}`; }
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+function coilV(ctx,x,y1,y2,n,wd,col,lw=2){ const lead=Math.min(8,(y2-y1)*0.12), a=y1+lead, b=y2-lead, seg=(b-a)/(2*n);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x,a);
+  for(let i=0;i<2*n;i++) ctx.lineTo(x+(i%2?-1:1)*wd/2, a+seg*(i+0.5)); ctx.lineTo(x,b); ctx.lineTo(x,y2); ctx.stroke(); ctx.restore(); }
+function coilH(ctx,x1,x2,y,n,ht,col,lw=2){ const lead=Math.min(8,(x2-x1)*0.12), a=x1+lead, b=x2-lead, seg=(b-a)/(2*n);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(a,y);
+  for(let i=0;i<2*n;i++) ctx.lineTo(a+seg*(i+0.5), y+(i%2?-1:1)*ht/2); ctx.lineTo(b,y); ctx.lineTo(x2,y); ctx.stroke(); ctx.restore(); }
+function massBlock(ctx,x,y,wd,ht,label){ rrect(ctx,x-wd/2,y,wd,ht,5,C.apricot,C.ink,1.4); text(ctx,label,x,y+ht/2+4,"#3b2b21",F(11),"center"); }
+function vdim(ctx,x,ya,yb,label,col){ line(ctx,x,ya,x,yb,col,1.4); line(ctx,x-5,ya,x+5,ya,col,1.2); line(ctx,x-5,yb,x+5,yb,col,1.2);
+  if(Math.abs(yb-ya)>16){ const d=yb>ya?1:-1; arrowHead(ctx,x,ya,-d*Math.PI/2,col,7); arrowHead(ctx,x,yb,d*Math.PI/2,col,7); }
+  if(label) text(ctx,label,x+8,(ya+yb)/2+4,col,F(12)); }
+/* ================= MODELS + DRAWINGS ================= */
+const EC = 1.6e-19, MEL = 9.11e-31, TAU = 2*Math.PI;
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function linfit0(pts){ let sxx=0,sxy=0; pts.forEach(([x,y])=>{sxx+=x*x;sxy+=x*y;}); return [sxy/sxx,0]; }
+function plus(ctx,x,y,s,col,lw=2){ line(ctx,x-s,y,x+s,y,col,lw); line(ctx,x,y-s,x,y+s,col,lw); }
+function minus(ctx,x,y,s,col,lw=2.2){ line(ctx,x-s,y,x+s,y,col,lw); }
+function qsym(ctx,x,y,sg,s=4.5){ if(sg>0) plus(ctx,x,y,s,C.terra,2.2); else if(sg<0) minus(ctx,x,y,s,C.ray2,2.6); }
+function earthSym(ctx,x,y,col){ line(ctx,x-12,y,x+12,y,col,2); line(ctx,x-8,y+5,x+8,y+5,col,2); line(ctx,x-4,y+10,x+4,y+10,col,2); }
+const fq = q => (q>0?"+":q<0?"−":"")+s3(Math.abs(q));
+
+// Elements 1-20: [symbol, name, mass number]
+const ELEMS = [["H","Hydrogen",1],["He","Helium",4],["Li","Lithium",7],["Be","Beryllium",9],["B","Boron",11],["C","Carbon",12],["N","Nitrogen",14],["O","Oxygen",16],["F","Fluorine",19],["Ne","Neon",20],["Na","Sodium",23],["Mg","Magnesium",24],["Al","Aluminium",27],["Si","Silicon",28],["P","Phosphorus",31],["S","Sulfur",32],["Cl","Chlorine",35],["Ar","Argon",40],["K","Potassium",39],["Ca","Calcium",40]];
+const SHELL = [2,8,8,4];
+function atomKind(z,e){ const q=z-e; return q===0? "neutral atom" : q>0? `positive ion (${q===1?"":q}+)` : `negative ion (${-q===1?"":-q}−)`; }
+function drawAtom(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, z=o.z, e=o.e, [sym,name,A]=ELEMS[z-1], nn=A-z, N=z+nn;
+  const cx=w/2, cy=h/2+(cp?0:12), Rmax=Math.max(40,Math.min(h/2-(cp?10:30), w/2-14)), rn=Rmax*0.22;
+  const nsh = e===0?1:(e<=2?1:e<=10?2:e<=18?3:4);
+  for(let k=0;k<Math.max(nsh,1);k++){ const r=rn+(k+1)*(Rmax-rn)/4; ctx.save(); ctx.strokeStyle=C.line; ctx.setLineDash([4,5]); ctx.lineWidth=1.3; ctx.beginPath(); ctx.arc(cx,cy,r,0,TAU); ctx.stroke(); ctx.restore(); }
+  const rr=Math.max(2.6,Math.min(7, rn*0.95/Math.sqrt(N)));
+  for(let i=0;i<N;i++){ const r=(rn-rr)*Math.sqrt((i+0.5)/N), a=i*2.39996, x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r, isP=Math.floor((i+1)*z/N)>Math.floor(i*z/N);
+    circle(ctx,x,y,rr,isP?C.terra:C.sage,C.ink,0.8); if(isP&&rr>=5) plus(ctx,x,y,rr*0.5,"#fffaf4",1.4); }
+  let left=e;
+  for(let k=0;k<4&&left>0;k++){ const n=Math.min(SHELL[k],left); left-=n; const r=rn+(k+1)*(Rmax-rn)/4, sp=(o.t||0)*(0.9/(k+1));
+    for(let j=0;j<n;j++){ const a=sp+j*TAU/n+k*0.4, x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r; circle(ctx,x,y,cp?4.5:6,C.ray2,C.ink,0.8); minus(ctx,x,y,cp?2.2:3,"#fffaf4",1.6); } }
+  if(!cp){ const q=z-e; text(ctx,`${sym}: ${name}, ${atomKind(z,e)}`,12,22,C.ink,F(14)); text(ctx,`net charge ${q===0?"0":(q>0?"+":"−")+Math.abs(q)+"e"}`,12,40,q>0?C.terra:q<0?C.ray2:C.muted,F(12)); }
+}
+
+// Triboelectric series, most positive first
+const TRIBO = [["Glass","#d6e3e0"],["Human hair","#8a5a3c"],["Nylon","#e8e2d0"],["Wool","#e9dcc4"],["Silk","#f0d7d0"],["Paper","#f6f1e6"],["Cotton","#ece8e0"],["Wood","#b88a5a"],["Amber","#d39a3a"],["Rubber (balloon)","#c4553c"],["Polythene","#e4e9ea"],["PVC","#9aa3a8"]];
+const RB_K = 0.45; // nC per stroke per place apart in the series
+const rbRate = (a,b) => -RB_K*(a-b); // charge per stroke on the rod (nC)
+function drawRub(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, y=h*(cp?0.38:0.42), x0=w*0.08, x1=w*0.66, th=cp?18:24, q=o.q||0;
+  rrect(ctx,x0,y-th/2,x1-x0,th,th/2,TRIBO[o.a][1],C.ink,1.4);
+  const nsym=q===0?0:Math.min(Math.max(3,Math.floor((x1-x0-30)/22)),Math.ceil(Math.abs(q)/4)+1);
+  for(let i=0;i<nsym;i++){ const x=x0+18+(i+0.5)*(x1-x0-30)/nsym; qsym(ctx,x,y,Math.sign(q),cp?3.5:4.5); }
+  const rubbing=o.rubbing, cw=cp?60:Math.min(110,w*0.2), ch=cp?38:52;
+  let clx, cly;
+  if(rubbing){ clx=x0+(x1-x0)*0.55+Math.sin((o.t||0)*9)*(x1-x0)*0.28; cly=y-ch/2; }
+  else { clx=Math.min(w-cw/2-10, x1+cw*0.75); cly=y+(cp?26:40); }
+  rrect(ctx,clx-cw/2,cly,cw,ch,10,TRIBO[o.b][1],C.ink,1.4);
+  if(rubbing){ const giver=rbRate(o.a,o.b)<0?"cloth":"rod"; for(let k=0;k<4;k++){ const f=(((o.t||0)*1.7+k/4)%1), sx=clx-cw*0.3+k*cw*0.2; const yy= giver==="cloth"? cly+ch*0.4-f*ch*0.5 : y+f*ch*0.5; if(rbRate(o.a,o.b)!==0) circle(ctx,sx,yy,3.2,C.ray2); } }
+  else if(nsym){ const k=Math.min(8,nsym); for(let i=0;i<k;i++){ const x=clx-cw/2+(i+0.5)*cw/k, yy=cly+ch/2+((i%2)?6:-6); qsym(ctx,x,yy,-Math.sign(q),cp?3.2:4); } }
+  if(!cp){ text(ctx,TRIBO[o.a][0]+" rod",x0,y-th/2-8,C.ink,F(12)); text(ctx,TRIBO[o.b][0]+(o.b===o.a?" (same material)":""),clx,cly+ch+16,C.ink,F(12),"center");
+    text(ctx,rubbing?"rubbing… electrons move":`rod ${fq(q)} nC · cloth ${fq(-q)} nC · total 0`,12,22,rubbing?C.muted:C.ink,F(13)); }
+}
+
+// Two hanging balls
+function pbForce(a,b){ if(a&&b) return a*b; if(a||b) return -0.25*(a||b)*(a||b); return 0; } // + = repel
+function pbAngles(a,b,w,h,cp){ const py=cp?12:46, rb=cp?11:14, d=Math.min(w*0.12,60), L=Math.max(40,Math.min(h-py-rb-(cp?8:34),200)), F=pbForce(a,b); let th=Math.atan(F*0.09);
+  const maxIn=Math.asin(Math.min(1,(2*d-2*rb-1)/(2*L))); let touch=false; if(th<-maxIn){ th=-maxIn; touch=true; } return {d,L,rb,th,F,touch,py}; }
+function ballCharges(ctx,x,y,r,q,other,toward){ if(q){ const n=Math.min(6,Math.max(1,Math.round(Math.abs(q)*2))); for(let i=0;i<n;i++){ const a=i*TAU/n-Math.PI/2; qsym(ctx,x+Math.cos(a)*r*0.55,y+Math.sin(a)*r*0.55,Math.sign(q),3.2); } }
+  else if(other){ qsym(ctx,x+toward*r*0.5,y-3,-Math.sign(other),3.2); qsym(ctx,x+toward*r*0.5,y+5,-Math.sign(other),3.2); qsym(ctx,x-toward*r*0.5,y-3,Math.sign(other),3.2); qsym(ctx,x-toward*r*0.5,y+5,Math.sign(other),3.2); }
+  else text(ctx,"0",x,y+4,C.muted,F(11),"center"); }
+function drawBalls(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, {d,L,rb,th,F:Fv,touch,py}=pbAngles(o.qa,o.qb,w,h,cp), cx=w/2;
+  line(ctx,cx-d-50,py,cx+d+50,py,C.ink,3); line(ctx,cx,py,cx,py-10,C.ink,2);
+  const xa=cx-d-L*Math.sin(th), xb=cx+d+L*Math.sin(th), yb=py+L*Math.cos(th);
+  line(ctx,cx-d,py,xa,yb,C.muted,1.3); line(ctx,cx+d,py,xb,yb,C.muted,1.3);
+  ctx.save(); ctx.strokeStyle=C.grid; ctx.setLineDash([3,4]); ctx.beginPath(); ctx.moveTo(cx-d,py); ctx.lineTo(cx-d,py+L+rb); ctx.moveTo(cx+d,py); ctx.lineTo(cx+d,py+L+rb); ctx.stroke(); ctx.restore();
+  circle(ctx,xa,yb,rb,C.cream,C.ink,1.3); circle(ctx,xb,yb,rb,C.cream,C.ink,1.3);
+  ballCharges(ctx,xa,yb,rb,o.qa,o.qb,1); ballCharges(ctx,xb,yb,rb,o.qb,o.qa,-1);
+  if(Fv){ const al=Math.min(60,14+Math.abs(Fv)*7), s=Fv>0?1:-1; arrow(ctx,xa-s*rb*0.2,yb,xa-s*(rb+al),yb,C.terra,2.4); arrow(ctx,xb+s*rb*0.2,yb,xb+s*(rb+al),yb,C.terra,2.4); }
+  if(!cp){ text(ctx,`A: ${o.qa?fq(o.qa*10)+" nC":"neutral"}`,cx-8,yb+rb+20,C.ink,F(12),"right"); text(ctx,`B: ${o.qb?fq(o.qb*10)+" nC":"neutral"}`,cx+8,yb+rb+20,C.ink,F(12),"left");
+    text(ctx,Fv>0?"Repel":Fv<0?(touch?"Attract: they touch!":"Attract"):"No force",12,22,Fv>0?C.terra:Fv<0?C.ray2:C.muted,F(14)); text(ctx,"insulating threads · equal and opposite forces",12,h-10,C.muted,F(11,600)); }
+}
+
+// Gold-leaf electroscope with an earth connection through a material
+const MATS = [["Copper wire","C",0.03,"#c9773d"],["Aluminium foil","C",0.03,"#b9bec2"],["Steel paper clip","C",0.04,"#8d9499"],["Pencil lead (graphite)","C",0.25,"#4a4a4a"],["Your finger","C",0.8,"#e0b394"],["Damp string","C",2.5,"#a99878"],["Plastic ruler","I",4000,"#e4c46a"],["Glass rod","I",9000,"#cfe0dd"],["Dry wood","I",600,"#c49a66"],["Rubber band","I",8000,"#8a4a3a"],["Silk thread","I",5000,"#f0d7d0"],["Dry air (nothing)","I",20000,"#dfe7ea"]];
+function drawScope(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, cx=cp?w*0.42:Math.min(w*0.36,w/2-20), cw=Math.min(w*(cp?0.5:0.34),170), ch=Math.min(h*0.5,170), top=h*0.36, capY=h*0.16, q=Math.max(0,o.q), sg=o.sign||1;
+  rrect(ctx,cx-cw/2,top,cw,ch,10,C.glass,C["glass-edge"],1.6); line(ctx,cx-cw/2,top+ch,cx+cw/2,top+ch,C.ink,2.4);
+  rrect(ctx,cx-9,top-6,18,14,4,C.sage,C.ink,1); // insulating plug
+  line(ctx,cx,capY,cx,top+ch*0.45,C.olive,3); ctx.save(); ctx.fillStyle=C.olive; ctx.beginPath(); ctx.ellipse(cx,capY,cw*0.32,7,0,0,TAU); ctx.fill(); ctx.restore();
+  rrect(ctx,cx-6,top+ch*0.3,12,ch*0.17,2,C.olive);
+  const hy=top+ch*0.45, ll=ch*0.42, ang=q*0.7;
+  [-1,1].forEach(sd=>{ ctx.save(); ctx.translate(cx,hy); ctx.rotate(sd*ang); ctx.fillStyle="#d8a93a"; ctx.strokeStyle=C.ink; ctx.lineWidth=0.8; ctx.beginPath(); ctx.moveTo(-3,0); ctx.lineTo(3,0); ctx.lineTo(2,ll); ctx.lineTo(-2,ll); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
+    if(q>0.08) qsym(ctx,cx+Math.sin(sd*ang)*ll*0.6+sd*8,hy+Math.cos(ang)*ll*0.6,sg,3.4); });
+  if(q>0.08){ const n=Math.max(1,Math.round(q*4)); for(let i=0;i<n;i++) qsym(ctx,cx-cw*0.24+i*cw*0.48/Math.max(1,n-1)*(n>1?1:0)+(n===1?cw*0.24:0),capY-14,sg,3.6); }
+  if(o.mat>=0){ const M=MATS[o.mat], ex=Math.min(w-30,cx+cw*0.5+60), eyy=top+ch+8;
+    if(o.conn){ const th=M[0]==="Dry air (nothing)"?0:5; if(th){ line(ctx,cx+cw*0.3,capY,ex,capY,M[3],th); line(ctx,ex,capY,ex,eyy,M[3],th); } else { line(ctx,cx+cw*0.3,capY,ex,capY,C.grid,2,[4,4]); line(ctx,ex,capY,ex,eyy,C.grid,2,[4,4]); }
+      if(q>0.03&&M[1]==="C"&&!cp){ const f=((o.t||0)*1.5)%1; circle(ctx,ex,capY+f*(eyy-capY),3.2,C.ray2); } }
+    else { line(ctx,ex,capY+30,ex,eyy,M[3],5); line(ctx,cx+cw*0.3+20,capY,ex-20,capY,C.grid,2,[4,4]); }
+    earthSym(ctx,ex,eyy,C.ink); if(!cp) text(ctx,M[0],ex-8,capY-12,C.ink,F(12),"right"); }
+  if(!cp){ text(ctx,`leaves: ${Math.round(q*100)}% of full divergence`,12,h-10,C.muted,F(12,600)); }
+}
+
+// Induction on a single sphere
+const IN_STEPS = ["Start: a neutral metal sphere on an insulating stand","Step 1: bring the charged rod near (don't touch)","Step 2: earth the sphere (touch it with a finger)","Step 3: remove the earth, keeping the rod in place","Step 4: take the rod away"];
+function drawInduce(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, st=o.step, s=o.s, R=Math.min(h*0.26,w*0.2), cx=w*0.56, cy=h*(cp?0.42:0.44);
+  line(ctx,cx,cy+R,cx,h-(cp?10:22),C.sage,6); line(ctx,cx-R*0.7,h-(cp?10:22),cx+R*0.7,h-(cp?10:22),C.ink,3);
+  circle(ctx,cx,cy,R,C["surface-2"],C.ink,1.6);
+  if(st>=1&&st<=3){ const rl=Math.min(w*0.3,cp?70:140), rx1=cx-R-(cp?10:18), rx0=Math.max(4,rx1-rl), rt=cp?10:16; rrect(ctx,rx0,cy-rt/2,rx1-rx0,rt,rt/2,s<0?TRIBO[10][1]:TRIBO[0][1],C.ink,1.2); for(let i=0;i<5;i++) qsym(ctx,rx0+10+i*(rx1-rx0-20)/4,cy,s,cp?3:4); }
+  const ex=Math.min(w-16,cx+R+(cp?22:50)), ey=h-(cp?18:34);
+  if(st===2){ line(ctx,cx+R,cy,ex,cy,C.olive,2.4); line(ctx,ex,cy,ex,ey,C.olive,2.4); earthSym(ctx,ex,ey,C.ink);
+    if(!cp){ for(let k=0;k<3;k++){ const f=(((o.t||0)*0.8+k/3)%1), yy= s<0? cy+f*(ey-cy) : ey-f*(ey-cy); circle(ctx,ex,yy,3.4,C.ray2); } text(ctx,s<0?"electrons flow to earth ↓":"electrons flow up from earth ↑",ex-8,ey-14,C.ray2,F(11),"right"); } }
+  if(st===3){ line(ctx,ex,cy+14,ex,ey,C.olive,2.4,[4,4]); earthSym(ctx,ex,ey,C.muted); }
+  const sp=cp?3.2:4.4, at=(a,f=0.78)=>[cx+Math.cos(a)*R*f,cy+Math.sin(a)*R*f];
+  if(st===0){ for(let k=0;k<8;k++){ const [x,y]=at(k*TAU/8+0.2); qsym(ctx,x-sp-1,y,1,sp); qsym(ctx,x+sp+1,y,-1,sp); } }
+  else if(st<=3){ [Math.PI-0.7,Math.PI-0.35,Math.PI,Math.PI+0.35,Math.PI+0.7].forEach(a=>{ const [x,y]=at(a); qsym(ctx,x,y,-s,sp); });
+    if(st===1) [-0.7,-0.35,0,0.35,0.7].forEach(a=>{ const [x,y]=at(a); qsym(ctx,x,y,s,sp); });
+    [-Math.PI/2,Math.PI/2].forEach(a=>{ const [x,y]=at(a,0.55); qsym(ctx,x-sp-1,y,1,sp); qsym(ctx,x+sp+1,y,-1,sp); }); }
+  else { for(let k=0;k<5;k++){ const [x,y]=at(k*TAU/5-Math.PI/2); qsym(ctx,x,y,-s,sp); } }
+  const net= st>=2? -s : 0;
+  if(cp){ text(ctx,st===0?"start":"step "+st,8,16,C.muted,F(11,700)); }
+  else { text(ctx,IN_STEPS[st],12,22,C.ink,F(14)); text(ctx,`sphere: ${net===0?"neutral overall":net>0?"positive":"negative"}`,12,h-10,net>0?C.terra:net<0?C.ray2:C.muted,F(12)); }
+}
+
+// Charge on conductors of different shapes
+const SHAPES = { sphere:"Sphere", egg:"Egg shape", point:"Pointed", can:"Hollow can" };
+const PROBES = { sphere:[["A",1,0],["B",0,-1],["C",-1,0],["D",0,1],["E",0.707,0.707]], egg:[["A",1.15,0],["B",0,-0.78],["C",-1.15,0],["D",0,0.78],["E",0.8,0.3]], point:[["A",1,0],["B",0.55,-0.36],["C",-0.2,-0.6],["D",-1,0],["E",-0.2,0.6]], can:[["A",-0.8,0.1],["B",-0.72,-0.9],["C",0,0.82],["D",0.72,0.1],["E",0.8,0.4]] };
+const shapeCache = {};
+function shapePath(kind){ if(shapeCache[kind]) return shapeCache[kind]; let pts=[];
+  if(kind==="can"){ const segs=[]; const add=(x0,y0,x1,y1,inner)=>segs.push([x0,y0,x1,y1,inner]);
+    add(-0.72,-0.9,-0.8,-0.9,0); add(-0.8,-0.9,-0.8,0.75,0);
+    const arc=(cx,cy,a0,a1)=>{ for(let i=0;i<10;i++){ const t0=a0+(a1-a0)*i/10, t1=a0+(a1-a0)*(i+1)/10; add(cx+0.15*Math.cos(t0),cy+0.15*Math.sin(t0),cx+0.15*Math.cos(t1),cy+0.15*Math.sin(t1),0); } };
+    arc(-0.65,0.75,Math.PI,Math.PI/2); add(-0.65,0.9,0.65,0.9,0); arc(0.65,0.75,Math.PI/2,0); add(0.8,0.75,0.8,-0.9,0); add(0.8,-0.9,0.72,-0.9,0);
+    add(0.72,-0.9,0.72,0.82,1); add(0.72,0.82,-0.72,0.82,1); add(-0.72,0.82,-0.72,-0.9,1);
+    segs.forEach(([x0,y0,x1,y1,inn])=>{ const L=Math.hypot(x1-x0,y1-y0), n=Math.max(1,Math.round(L/0.012)); for(let i=0;i<n;i++) pts.push({x:x0+(x1-x0)*i/n,y:y0+(y1-y0)*i/n,inner:inn}); }); }
+  else { const N=360; for(let i=0;i<N;i++){ const t=i/N*TAU; let x,y;
+      if(kind==="sphere"){ x=Math.cos(t); y=Math.sin(t); } else if(kind==="egg"){ x=1.15*Math.cos(t); y=Math.sin(t)*(0.78-0.2*Math.cos(t)); } else { x=Math.cos(t); y=0.75*Math.sin(t)*Math.sin(t/2); }
+      pts.push({x,y,inner:0,t}); } }
+  const n=pts.length; pts.forEach((p,i)=>{ const a=pts[(i-1+n)%n], b=pts[(i+1)%n], l1=Math.hypot(p.x-a.x,p.y-a.y), l2=Math.hypot(b.x-p.x,b.y-p.y);
+    let d=Math.atan2(b.y-p.y,b.x-p.x)-Math.atan2(p.y-a.y,p.x-a.x); while(d>Math.PI) d-=TAU; while(d<-Math.PI) d+=TAU; p.k=Math.abs(d)/((l1+l2)/2||1); p.ds=(l1+l2)/2; });
+  // smooth curvature over neighbours so a sharp corner spreads over a little length
+  const ks=pts.map((p,i)=>{ let s=0,c=0; for(let j=-3;j<=3;j++){ s+=pts[(i+j+n)%n].k; c++; } return s/c; });
+  pts.forEach((p,i)=>{ p.rho = p.inner? 0 : Math.pow(0.6+Math.min(ks[i],30),0.8); });
+  let tot=0, L=0; pts.forEach(p=>{ tot+=p.rho*p.ds; L+=p.ds; }); const outL=pts.filter(p=>!p.inner).reduce((a,p)=>a+p.ds,0); pts.forEach(p=>p.rho*=outL/tot);
+  // outward normals (path is clockwise on screen for these shapes when y points down? use centroid test)
+  pts.forEach((p,i)=>{ const a=pts[(i-1+n)%n], b=pts[(i+1)%n]; let nx=b.y-a.y, ny=-(b.x-a.x); const l=Math.hypot(nx,ny)||1; nx/=l; ny/=l; p.nx=nx; p.ny=ny; });
+  const area=pts.reduce((s,p,i)=>{ const b=pts[(i+1)%n]; return s+(p.x*b.y-b.x*p.y); },0); if(area<0) pts.forEach(p=>{ p.nx*=-1; p.ny*=-1; });
+  shapeCache[kind]=pts; return pts; }
+function shapeRho(kind,ins,p){ if(!ins) return p.rho; if(kind==="can") return p.x<-0.6? 3.2*Math.exp(-Math.pow((p.y+0.9)/0.5,2)) : 0; return 3.2*Math.exp(-Math.pow((p.x+ (kind==="egg"?1.15:1))/0.35,2)); }
+function probeRho(kind,ins,k){ const P=PROBES[kind][k], pts=shapePath(kind); let best=null, bd=1e9; pts.forEach(p=>{ const d=Math.hypot(p.x-P[1],p.y-P[2]); if(d<bd){ bd=d; best=p; } }); return shapeRho(kind,ins,best); }
+function drawShape(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, kind=o.shape, ins=o.ins, pts=shapePath(kind), sc=Math.min(w*(cp?0.38:0.34), h*(cp?0.4:0.36))/(kind==="egg"?1.15:1), cx=cp?w/2:Math.min(w*0.46,w/2), cy=h/2+(cp?0:8), X=p=>cx+p.x*sc, Y=p=>cy+p.y*sc;
+  ctx.save(); ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(X(p),Y(p)):ctx.moveTo(X(p),Y(p))); ctx.closePath(); ctx.fillStyle=ins?C.cream:C["surface-2"]; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.6; ctx.stroke(); ctx.restore();
+  // place charge symbols by cumulative density
+  const n=pts.length, rho=pts.map(p=>shapeRho(kind,ins,p)), tot=pts.reduce((s,p,i)=>s+rho[i]*p.ds,0), ND=cp?30:44; let acc=0, next=tot/ND/2, placed=0;
+  for(let i=0;i<n&&placed<ND;i++){ acc+=rho[i]*pts[i].ds; while(acc>=next&&placed<ND){ const p=pts[i], off=cp?6:8; qsym(ctx,X(p)+p.nx*off,Y(p)+p.ny*off,1,cp?2.8:3.6); placed++; next+=tot/ND; } }
+  if(!cp){ PROBES[kind].forEach(([L,x,y],k)=>{ const p={x,y}; let best=pts[0],bd=1e9; pts.forEach(q=>{ const d=Math.hypot(q.x-x,q.y-y); if(d<bd){bd=d;best=q;} });
+      const lx=X(best)+best.nx*26, ly=Y(best)+best.ny*26; circle(ctx,lx,ly,10,k===o.probe?C.terra:C.surface,C.ink,1.2); text(ctx,L,lx,ly+4,k===o.probe?"#fffaf4":C.ink,F(12),"center"); });
+    if(o.probe>=0){ const [L,x,y]=PROBES[kind][o.probe]; let best=pts[0],bd=1e9; pts.forEach(q=>{ const d=Math.hypot(q.x-x,q.y-y); if(d<bd){bd=d;best=q;} });
+      const px=X(best)+best.nx*4, py=Y(best)+best.ny*4, hx=px+best.nx*44+20, hy=py+best.ny*44-20; line(ctx,px,py,hx,hy,C.sage,4); ctx.save(); ctx.translate(px,py); ctx.rotate(Math.atan2(best.ny,best.nx)+Math.PI/2); rrect(ctx,-9,-3,18,6,3,C.olive,C.ink,1); ctx.restore(); }
+    text(ctx,`${SHAPES[kind]} · ${ins?"insulator rubbed at one end":"conductor"}`,12,22,C.ink,F(14)); text(ctx,"each + shows an equal share of the charge",12,h-10,C.muted,F(11,600)); }
+}
+
+// Hero: a charged balloon attracts a neutral wall
+function drawHero(ctx,w,h,t){ bg(ctx,w,h); const wx=w*0.72, bx=w*0.4+Math.sin(t*1.2)*5, by=h*0.6, rx=Math.min(w*0.13,h*0.17,80), ry=rx*1.18;
+  rrect(ctx,wx,0,w-wx,h,0,C.cream,null); line(ctx,wx,0,wx,h,C.ink,1.5);
+  for(let i=0;i<7;i++){ const y=by-ry*0.9+i*ry*0.3; qsym(ctx,wx+8,y,1,4); qsym(ctx,wx+24,y+6,-1,4); }
+  text(ctx,"neutral wall",wx+(w-wx)/2,h-14,C.muted,F(11,700),"center");
+  line(ctx,bx,by+ry,bx-6,by+ry+12,C.ink,1.4); ctx.save(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(bx-6,by+ry+12); ctx.quadraticCurveTo(bx-30,by+ry+50,bx-4,h); ctx.stroke(); ctx.restore();
+  ctx.save(); ctx.fillStyle=TRIBO[9][1]; ctx.strokeStyle=C.ink; ctx.lineWidth=1.5; ctx.beginPath(); ctx.ellipse(bx,by,rx,ry,0,0,TAU); ctx.fill(); ctx.stroke(); ctx.restore();
+  for(let i=0;i<9;i++){ const a=i*TAU/9, r=0.55; minus(ctx,bx+Math.cos(a)*rx*r,by+Math.sin(a)*ry*r,5,"#fffaf4",2.6); }
+  arrow(ctx,bx+rx+6,by,wx-8,by,C.terra,3); if(wx-bx-rx>80) text(ctx,"attraction",(bx+rx+wx)/2,by-10,C.terra,F(12),"center");
+  text(ctx,"Rubbed balloon: extra electrons",14,24,C.ink,F(14)); text(ctx,"Neutral wall: polarised, attracted",14,44,C.muted,F(12));
+}
+
+// Drill objects
+const PD_T = { "+":["positive",1], "−":["negative",-1], "0m":["neutral metal",0], "0p":["neutral plastic",0] };
+function drawDrill(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const r=Math.min(h*0.26,w*0.13);
+  [[o.a,w*0.28],[o.b,w*0.72]].forEach(([k,x])=>{ const [lab,sg]=PD_T[k], y=h*0.48;
+    circle(ctx,x,y,r,k==="0p"?C.cream:sg?C.blush:C.sage,C.ink,1.4);
+    if(sg){ for(let i=0;i<6;i++){ const a=i*TAU/6; qsym(ctx,x+Math.cos(a)*r*0.55,y+Math.sin(a)*r*0.55,sg,4); } }
+    else { for(let i=0;i<3;i++){ const a=i*TAU/3+0.5; qsym(ctx,x+Math.cos(a)*r*0.5-5,y+Math.sin(a)*r*0.5,1,3.5); qsym(ctx,x+Math.cos(a)*r*0.5+5,y+Math.sin(a)*r*0.5,-1,3.5); } }
+    text(ctx,lab,x,h-10,C.ink,F(12),"center"); });
+  text(ctx,"?",w/2,h*0.48+8,C.muted,F(26),"center");
+}
+
+// Infographic: triboelectric ladder
+function drawTribo(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const n=TRIBO.length, top=26, rowH=(h-top-24)/n, x0=40, x1=w-14;
+  text(ctx,"+ gives electrons easily",x0,16,C.terra,F(11)); text(ctx,"− gains electrons easily",x0,h-8,C.ray2,F(11));
+  arrow(ctx,22,top+4,22,h-28,C.muted,2);
+  TRIBO.forEach(([nm,col],i)=>{ const y=top+i*rowH; rrect(ctx,x0,y+2,x1-x0,rowH-4,6,col,C.line,1); text(ctx,nm,x0+10,y+rowH/2+4,"#3b2b21",F(12)); });
+  const mark=(i,j,lab)=>{ const y1=top+(i+0.5)*rowH, y2=top+(j+0.5)*rowH, x=x1-(i?34:14); line(ctx,x,y1,x,y2,C.ink,1.6); circle(ctx,x,y1,4,C.terra); circle(ctx,x,y2,4,C.ray2); text(ctx,lab,x-8,y2+4,C.ink,F(10),"right"); };
+  mark(0,4,"glass +, silk −"); mark(3,10,"wool +, polythene −");
+}
+// Infographic: free, bound and polarised electrons
+function drawLattice(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cols=6, rows=4, gx=w/(cols+1), gy=h/(rows+1); let seed=7; const rnd2=()=>{ seed=(seed*9301+49297)%233280; return seed/233280; };
+  if(o.kind==="free"){ for(let i=1;i<=cols;i++) for(let j=1;j<=rows;j++){ circle(ctx,i*gx,j*gy,9,C.terra,C.ink,0.8); plus(ctx,i*gx,j*gy,4,"#fffaf4",1.6); }
+    for(let k=0;k<24;k++){ const x=gx*0.5+rnd2()*(w-gx), y=gy*0.5+rnd2()*(h-gy); circle(ctx,x,y,3.4,C.ray2); } text(ctx,"free electrons drift between ions",8,h-6,C.muted,F(10,700)); }
+  else if(o.kind==="bound"){ for(let i=1;i<=cols;i++) for(let j=1;j<=rows;j++){ const x=i*gx, y=j*gy; ctx.save(); ctx.strokeStyle=C.line; ctx.beginPath(); ctx.arc(x,y,12,0,TAU); ctx.stroke(); ctx.restore(); circle(ctx,x,y,5,C.terra); const a=rnd2()*TAU; circle(ctx,x+Math.cos(a)*12,y+Math.sin(a)*12,3.2,C.ray2); } text(ctx,"each electron stays with its atom",8,h-6,C.muted,F(10,700)); }
+  else { rrect(ctx,4,8,22,h-16,8,TRIBO[10][1],C.ink,1); for(let k=0;k<5;k++) qsym(ctx,15,20+k*(h-40)/4,-1,4);
+    for(let i=1;i<=cols-1;i++) for(let j=1;j<=rows;j++){ const x=30+i*(w-40)/cols, y=j*gy; ctx.save(); ctx.fillStyle=C.blush; ctx.globalAlpha=0.7; ctx.beginPath(); ctx.ellipse(x+3,y,12,8,0,0,TAU); ctx.fill(); ctx.restore(); circle(ctx,x-3,y,3.5,C.terra); circle(ctx,x+7,y,2.6,C.ray2); }
+    text(ctx,"electrons pushed away from the − rod",30,h-6,C.muted,F(10,700)); }
+}
+function drawBars(s,vals,labels,o){ const {ctx,w,h}=s; bg(ctx,w,h,o.bgc); const pl=36,pb=26,pt=12, max=Math.max(4,...vals.filter(v=>v!=null))*1.15, bw=(w-pl-10)/labels.length;
+  line(ctx,pl,h-pb,w-6,h-pb,C.ink,1.3); line(ctx,pl,pt,pl,h-pb,C.ink,1.3);
+  const st=niceStep(max/4); for(let v=0;v<=max;v+=st){ const y=h-pb-v/max*(h-pb-pt); line(ctx,pl,y,w-6,y,C.grid,1); text(ctx,trim(v),pl-5,y+3,C.muted,M(10),"right"); }
+  labels.forEach((L,i)=>{ const x=pl+i*bw+bw*0.2, v=vals[i]; text(ctx,L,x+bw*0.3,h-pb+15,C.ink,F(11),"center"); if(v!=null){ const y=h-pb-v/max*(h-pb-pt); rrect(ctx,x,y,bw*0.6,h-pb-y,4,C.terra); text(ctx,v.toFixed(1),x+bw*0.3,y-4,C.ink,M(10),"center"); } });
+  text(ctx,o.yl||"",pl+4,pt+8,C.ink,F(11));
+}
+
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h,o.bgc);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ if(p[2]) circle(ctx,X(p[0]),Y(p[1]),4.5,null,C.olive,2); else { ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); } });
+}
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "atoms", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+const loIds=["lo1","lo2","lo3","lo4"]; const loState=store.get("s31-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s31-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s31-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+/* ================= LEARN ================= */
+const LEARN = {
+  atoms:{ vis:[["atom",{z:8,e:10,t:0.4}]], cap:"An oxygen atom has 8 protons. With 10 electrons it is a negative ion, O²⁻: net charge −2e = −2 × 1.6 × 10⁻¹⁹ = −3.2 × 10⁻¹⁹ C.",
+    keys:[["⚛","Matter is made of atoms: a tiny nucleus of protons (+) and neutrons (no charge), surrounded by electrons (−). Proton and electron charges are equal in size, e = 1.6 × 10⁻¹⁹ C."],["0","A neutral object has equal numbers of protons and electrons. It is full of charge, but the charges cancel."],["e⁻","Objects become charged by gaining electrons (negative) or losing electrons (positive). Protons stay locked in the nucleus. Q = ne."]],
+    f:"Q = ne · e = 1.6 × 10⁻¹⁹ C", mistake:"Saying a positive object has \"gained protons\". It has lost electrons; protons don't move when things are charged." },
+  friction:{ vis:[["rub",{a:10,b:3,q:-31.5}]], cap:"Polythene rubbed 10 times with wool: about 2.0 × 10¹¹ electrons move to the polythene. Rod −31.5 nC, wool +31.5 nC: the total is still zero.",
+    keys:[["↔","Rubbing two different materials moves electrons from one to the other. The triboelectric series tells you which way: the lower material gains electrons."],["±","The two objects get equal and opposite charges. Charge is conserved: it is moved, never made or destroyed."],["⇥","Insulators keep the charge where it was rubbed. A metal rod held in your hand loses its charge through you to earth, unless it has an insulating handle."]],
+    f:"Q_rod + Q_cloth = 0", mistake:"Thinking rubbing creates charge. It only separates charge that was already there." },
+  forces:{ vis:[["balls",{qa:2,qb:0}]], cap:"Charged ball A pulls on neutral ball B. B's electrons shift so the side facing A is oppositely charged, and B swings towards A. The forces on A and B are equal and opposite.",
+    keys:[["⇄","Like charges repel; unlike charges attract. The electric force is a non-contact force that gets weaker with distance."],["⊕","A charged object attracts a neutral object: it polarises it, pulling opposite charge to the near side. That's why a rubbed balloon sticks to a wall."],["?","Attraction doesn't prove an object is charged (it could be neutral). Repulsion does."]],
+    f:"like repel · unlike attract", mistake:"Saying a neutral object feels no force near a charged one. It is attracted, because it is polarised." },
+  conductors:{ vis:[["scope",{q:0.85,sign:-1,mat:7,conn:true}]], cap:"A charged electroscope connected to earth through a glass rod: the leaves stay apart because glass is an insulator. Through a copper wire they would fall at once.",
+    keys:[["e⁻","Conductors (metals, graphite, salty water, your body) have free electrons that can move through the material, so charge flows through them."],["⊗","Insulators (plastics, glass, rubber, dry wood, dry air) have bound electrons held by their atoms, so charge stays where it is put."],["✓","Classify a material by connecting a charged electroscope to earth through it: the leaves collapse quickly for a conductor and stay up for an insulator."]],
+    f:"free electrons → conductor", mistake:"Saying insulators can't be charged. They charge well by friction; they just don't let the charge move." },
+  induction:{ vis:[["induce",{step:2,s:-1,t:0.3}]], cap:"Step 2 with a negative rod: the rod repels the sphere's free electrons, and earthing gives them a path to the Earth. Positive charge is left on the near side.",
+    keys:[["1","Bring the charged rod near the sphere (on an insulating stand). Free electrons move, so the near side gets the opposite charge and the far side the same charge."],["2","Earth the sphere (touch it). Electrons flow to earth (negative rod) or from earth (positive rod)."],["3","Remove the earth, then remove the rod. The sphere keeps a charge opposite to the rod, and it spreads out over the surface."]],
+    f:"near → earth → remove earth → remove rod", mistake:"Removing the rod before the earth. The charge then flows back through the earth wire and the sphere ends up neutral." },
+  distribution:{ vis:[["shape",{shape:"point",ins:0,probe:-1}]], cap:"On a pointed conductor the charge crowds at the tip, where the surface curves most sharply. The surface charge density there can be large enough to charge the air: point discharge.",
+    keys:[["◯","On a conductor, like charges repel and spread out as far apart as they can: all the charge ends up on the outside surface."],["▲","Charge is most concentrated (highest surface charge density) where the surface is most sharply curved, at points and edges. Lightning conductors use this."],["▭","There is no charge on the inside of a hollow conductor, so a Faraday cage shields what's inside. On an insulator the charge stays where it was put."]],
+    f:"σ = Q/A, largest at sharp points", mistake:"Thinking charge spreads evenly over any conductor. It only spreads evenly on a sphere." },
+};
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  ["tribo","Charging by friction","The material lower in the series gains electrons. Glass rubbed with silk becomes positive; polythene rubbed with wool becomes negative. The further apart the two materials are, the more charge moves.","friction","var(--blush)"],
+  ["induce4","Induction in four steps","Rod near, earth, remove the earth, remove the rod. With a negative rod, electrons are pushed to earth and the sphere is left positive. The rod never touches the sphere and keeps all its charge.","induction","var(--apricot)"],
+  ["point","Charge crowds at points","On a conductor the charge is all on the outside, and densest where the surface is most sharply curved. This is why sparks jump from points, and why lightning conductors are pointed.","distribution","var(--sage)"],
+];
+$("cases").innerHTML = CASES.map(([k,t,p,topic,tint])=>`<div class="panel rc-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tint}">${svg(topic)}</div><h3>${t}</h3></div><canvas data-case="${k}" aria-label="${t}"></canvas><p>${p}</p><div class="btns"><button data-go="labs" data-lab="${topic}">Open the lab</button></div></div>`).join("");
+const SEC = [["One electron (size of its charge)",1.6e-19],["Rubbed balloon (typical)",5e-8],["Polythene rod, 10 strokes with wool (this page's lab)",3.15e-8],["School Van de Graaff dome",2e-6],["Static shock from a car door",1e-6],["Lightning flash",5]];
+$("secT").innerHTML = `<tr><th style="text-align:left">Object</th><th>Charge Q (C)</th><th>Electrons n = Q/e</th></tr>`
+  + SEC.map(([n,q])=>`<tr><td style="text-align:left;white-space:normal">${n}</td><td>${sci(q,2)}</td><td>${q===EC?"1":sci(q/EC,2)}</td></tr>`).join("");
+$("secRes").innerHTML = `A rubbed balloon carries about 5 × 10⁻⁸ C: only about <b>3 × 10¹¹</b> extra electrons. A 2 g balloon already contains roughly 6 × 10²³ electrons, so charging it changes about <b>one electron in every two million million</b>. Static charges are tiny in coulombs, which is why we measure them in nC and µC.`;
+const AROUND = [
+  ["printer","Photocopiers and laser printers","A drum is charged in the pattern of the page. Toner powder sticks only to the charged areas, is attracted onto the paper, then melted on.",[["Attraction","real"],["Insulator drum","neutral"]],"var(--blush)"],
+  ["bolt","Lightning conductors","A pointed metal rod on the roof, joined to earth by a thick copper strip. Point discharge reduces the charge build-up, and any strike is carried safely to earth.",[["Point discharge","real"],["Earthing","neutral"]],"var(--sage)"],
+  ["fuel","Refuelling aircraft and tankers","Fuel rubbing through pipes charges by friction. The aircraft and fuel tanker are earthed and bonded together so no spark can ignite the fuel vapour.",[["Friction","neutral"],["Earthing","real"]],"var(--apricot)"],
+  ["spray","Electrostatic paint spraying","The spray gun gives every paint droplet the same charge, so they repel into a fine, even mist. The earthed car body attracts them, even round the back.",[["Like charges repel","real"],["Earthed target","neutral"]],"var(--cream)"],
+  ["cage","Cars and planes in lightning","The metal body is a conductor: charge from a strike stays on the outside surface and flows to earth, so the people inside are protected.",[["Faraday cage","real"],["Outside surface","neutral"]],"var(--blush)"],
+  ["screen","Dust, clingy clothes and shocks","Screens charged by friction attract neutral dust (polarisation). Clothes cling after a tumble dryer. Walking on nylon carpet charges you; touching a metal handle discharges you in a spark.",[["Polarisation","neutral"],["Spark","real"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"atoms",label:"Atoms and charge",col:"var(--blush)",leaves:[["Proton +","In the nucleus; never moves."],["Electron −","Gained or lost in charging."],["Ion","Atom with extra or missing electrons."],["Q = ne","e = 1.6 × 10⁻¹⁹ C."]]},
+  {id:"friction",label:"Friction",col:"var(--apricot)",leaves:[["Triboelectric series","Lower one gains electrons."],["Equal and opposite","+Q and −Q."],["Conservation","Total charge unchanged."]]},
+  {id:"forces",label:"Forces",col:"var(--sage)",leaves:[["Like repel","+ + or − −."],["Unlike attract","+ −."],["Neutral attracted","Polarisation."],["Third law","Equal and opposite pull."]]},
+  {id:"conductors",label:"Conductors",col:"var(--cream)",leaves:[["Free electrons","Metals, graphite."],["Bound electrons","Plastic, glass, rubber."],["Electroscope","Leaves show charge."]]},
+  {id:"induction",label:"Induction",col:"var(--blush)",leaves:[["Rod near","Charges separate."],["Earth","Electrons to/from earth."],["Remove earth","Then remove rod."],["Opposite charge","To the rod."]]},
+  {id:"distribution",label:"Distribution",col:"var(--sage)",leaves:[["Outside surface","None inside."],["Sharp points","Highest density."],["Lightning conductor","Point discharge."],["Insulator","Charge stays put."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["atoms","Name the three particles in an atom and give their charges.","Proton: positive (+1.6 × 10⁻¹⁹ C). Electron: negative (−1.6 × 10⁻¹⁹ C). Neutron: no charge."],
+  ["atoms","What does it mean to say an object is electrically neutral?","It has equal amounts of positive and negative charge (equal numbers of protons and electrons), so no net charge."],
+  ["atoms","How does an object become negatively charged?","It gains electrons."],
+  ["atoms","How does an object become positively charged?","It loses electrons. (Protons don't move.)"],
+  ["atoms","What is the unit of charge?","The coulomb, C."],
+  ["atoms","What is the charge on one electron?","−1.6 × 10⁻¹⁹ C (the elementary charge e, with a minus sign)."],
+  ["atoms","What is an ion?","An atom that has gained or lost electrons, so it has a net charge."],
+  ["atoms","How many electrons make up a charge of −8.0 nC?","n = Q/e = 8.0 × 10⁻⁹ ÷ 1.6 × 10⁻¹⁹ = 5.0 × 10¹⁰ electrons."],
+  ["friction","Explain how a polythene rod becomes charged when rubbed with wool.","Friction moves electrons from the wool to the polythene. The polythene gains electrons and becomes negative; the wool loses them and becomes positive."],
+  ["friction","State the principle of conservation of charge.","Charge cannot be created or destroyed; the total charge of an isolated system stays the same."],
+  ["friction","A rod gets −20 nC by rubbing with a cloth. What charge does the cloth get?","+20 nC. The charges are equal and opposite, so the total is still zero."],
+  ["friction","What does the triboelectric series tell you?","Which of two rubbed materials becomes negative: the one lower in the series gains electrons."],
+  ["friction","Why can't you charge a metal rod by rubbing it while holding it?","Metal and your body are conductors, so the charge flows through you to earth. Use an insulating handle."],
+  ["forces","State the rule for forces between charges.","Like charges repel; unlike charges attract."],
+  ["forces","Why does a charged rod attract small pieces of paper?","It polarises the paper: opposite charge is pulled to the near side. The attraction to the near side is bigger than the repulsion from the far side."],
+  ["forces","What is the only sure test that an object is charged?","Repulsion by a known charged object. Attraction could be to a neutral object."],
+  ["forces","Two balls attract and swing together. Compare the forces on them.","The forces are equal in size and opposite in direction (Newton's third law)."],
+  ["forces","Two identical neutral metal balls: one is charged, then they touch. What happens?","The charge is shared equally, so both have the same sign of charge and they then repel."],
+  ["conductors","What is a conductor? Give two examples.","A material that lets charge flow through it, because it has free electrons, e.g. copper, aluminium, graphite."],
+  ["conductors","What is an insulator? Give two examples.","A material that doesn't let charge flow, because its electrons are bound to their atoms, e.g. plastic, glass, rubber."],
+  ["conductors","Distinguish between free and bound electrons.","Free electrons can move through the material (conductors). Bound electrons are held by their own atoms and can't flow (insulators)."],
+  ["conductors","How do you use an electroscope to test if a material is a conductor?","Charge the electroscope, then connect its cap to earth through the material. Leaves fall quickly: conductor. Leaves stay: insulator."],
+  ["induction","List the four steps to charge a single sphere by induction.","1 Bring a charged rod near. 2 Earth the sphere. 3 Remove the earth. 4 Remove the rod."],
+  ["induction","What charge does a sphere get by induction with a negative rod?","Positive: the opposite charge to the rod."],
+  ["induction","What does earthing (grounding) an object mean?","Connecting it to the Earth with a conductor so electrons can flow to or from the Earth."],
+  ["induction","Does the rod lose charge when it charges a sphere by induction?","No. It never touches the sphere, so it keeps all its charge."],
+  ["distribution","Where is the charge on a charged hollow conductor?","All on the outside surface. There is none on the inside."],
+  ["distribution","Where is the charge most concentrated on a conductor?","Where the surface is most sharply curved: at points and edges."],
+  ["distribution","How does a lightning conductor protect a building?","Point discharge from its sharp tip reduces charge build-up, and a strike is carried safely to earth by the thick conductor."],
+  ["distribution","How is charge distributed on an insulator?","It stays where it was put (where it was rubbed); it can't spread out."],
+];
+
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Charge</text><text x="${cx}" y="${cy+22}" text-anchor="middle">interactions</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("s31-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s31-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s31-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s31-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["atoms","Which particle moves when an object becomes charged by rubbing?",["Proton","Neutron","Electron","Nucleus"],2,"Electrons are on the outside of atoms and can be transferred. Protons are held in the nucleus."],
+  ["atoms","An object has lost electrons. Its charge is:",["Positive","Negative","Zero","It depends on the material"],0,"Losing negative electrons leaves more protons than electrons, so the object is positive."],
+  ["atoms","A sodium atom (11 protons) loses one electron. It becomes:",["A neutral atom","A negative ion with 12 electrons","A positive ion with 10 electrons","A positive ion with 12 protons"],2,"11 protons and 10 electrons: net charge +1e, a positive ion."],
+  ["atoms","How many electrons give a charge of −3.2 × 10⁻¹⁸ C?",["2","20","200","2 × 10¹⁸"],1,"n = Q/e = 3.2 × 10⁻¹⁸ ÷ 1.6 × 10⁻¹⁹ = 20."],
+  ["friction","A glass rod rubbed with silk becomes positive. This is because:",["Protons move from the silk to the glass","Electrons move from the glass to the silk","Electrons move from the silk to the glass","Positive charge is created by friction"],1,"The glass loses electrons to the silk. The silk becomes equally negative."],
+  ["friction","A polythene rod gains a charge of −30 nC when rubbed with a cloth. The cloth's charge is:",["−30 nC","0","+30 nC","+60 nC"],2,"Charge is conserved: the cloth loses exactly the electrons the rod gains, so it is +30 nC."],
+  ["friction","Why does a metal rod held in the hand not stay charged after rubbing?",["Metals can't gain electrons","The charge flows through the hand to earth","Metals have no electrons","Friction doesn't work on metals"],1,"Metal and your body are conductors, so the charge flows away to earth."],
+  ["forces","Two negatively charged balloons are hung side by side. They:",["Attract","Repel","Feel no force","Attract then repel"],1,"Like charges repel."],
+  ["forces","A charged comb picks up small, neutral bits of paper because:",["The paper is secretly charged","The comb polarises the paper","Gravity is switched off","The paper is a conductor"],1,"Opposite charge shifts to the near side of the paper. The nearer, opposite charge is attracted more strongly than the farther charge is repelled."],
+  ["forces","Object X is attracted to a positively charged rod. What can you conclude?",["X is negative","X is positive","X is neutral","X is either negative or neutral"],3,"Unlike charges attract, but so does a neutral object. Only repulsion proves the sign."],
+  ["conductors","Which of these is a conductor?",["Polythene","Glass","Graphite","Rubber"],2,"Graphite has free electrons and conducts. The others are insulators."],
+  ["conductors","Metals are good conductors because they have:",["More protons","Free electrons","Bound electrons","No electrons"],1,"Free (delocalised) electrons can move through the metal, carrying charge."],
+  ["conductors","A charged electroscope is connected to earth through a dry plastic ruler. The leaves:",["Collapse at once","Stay apart","Swing back and forth","Become oppositely charged"],1,"Plastic is an insulator, so the charge can't flow away to earth."],
+  ["induction","A metal sphere is charged by induction using a positive rod. Its final charge is:",["Positive","Negative","Zero","Depends on the size of the sphere"],1,"Induction always gives the opposite charge to the inducing rod."],
+  ["induction","In charging by induction, what happens when the sphere is earthed near a negative rod?",["Protons flow to earth","Electrons flow to earth","Electrons flow from earth","Nothing happens"],1,"The negative rod repels the free electrons, and the earth connection lets them escape."],
+  ["induction","What goes wrong if the rod is removed before the earth connection?",["The sphere gets the same charge as the rod","The sphere ends up neutral","The rod becomes neutral","Nothing changes"],1,"Without the rod, the electrons flow back along the earth wire and the sphere is left neutral."],
+  ["distribution","Where is the charge on a charged metal can?",["Spread evenly through the metal","On the inside surface","On the outside surface","At the bottom"],2,"Like charges repel to the outside surface. There is no charge inside a hollow conductor."],
+  ["distribution","On a charged pear-shaped conductor, the surface charge density is greatest:",["At the blunt end","At the narrow, sharply curved end","In the middle","It is the same everywhere"],1,"Charge is densest where the surface is most sharply curved."],
+];
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Demonstrate","Show clearly, by an experiment or a worked example, how something happens.","Demonstrate the force between a charged and a neutral object."],
+  ["Classify","Sort things into groups using a clear rule.","Classify these materials as conductors or insulators."],
+  ["Describe","Give the steps or features in a clear order, often with a labelled diagram.","Describe how to charge a sphere by induction."],
+  ["Solve","Work out an answer to a problem, showing each step.","Solve for the charge on each sphere after they touch."],
+  ["Explain","Give reasons, using physics ideas, for why something happens.","Explain why a rubbed balloon sticks to a wall."],
+  ["Define","Give the exact meaning in one full, precise sentence.","Define a conductor."],
+  ["State","Give a short fact, law or value. No explanation needed.","State the law of conservation of charge."],
+  ["Calculate","Write the formula, substitute the numbers, give the answer with a unit.","Calculate the number of electrons transferred."],
+  ["Distinguish","Give the key difference between two things.","Distinguish between a conductor and an insulator."],
+];
+
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s31-best",null); if(best==null||pct>best) store.set("s31-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+function parseNum(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,ch=>({"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-"})[ch]);
+  s=s.replace(/[x×*]10\^?/i,"e");
+  return parseFloat(s);
+}
+const r1 = x => Math.round(x*10)/10;
+const sn = x => (Math.abs(x)>=1e4||Math.abs(x)<1e-3)? sci(x) : String(x);
+const nC = x => (x>0?"+":x<0?"−":"")+s3(Math.abs(x))+" nC";
+const PTYPES = {
+  ne:{ name:"Q = ne", gen(){ const n=pick([2.5e10,5e10,1.25e11,2e11,3e11,6.25e11]), gain=Math.random()<0.6, Q=(gain?-1:1)*n*EC*1e9;
+    return { q:`A ${gain?"balloon gains":"glass rod loses"} <b>${sci(n)}</b> electrons. Calculate its charge in nC (include the sign).`, ans:Q, unit:"nC", steps:["Q = ne",`Q = ${sci(n)} × 1.6 × 10⁻¹⁹ = ${sci(n*EC)} C`,`= ${s3(Math.abs(Q))} nC, ${gain?"negative because electrons were gained":"positive because electrons were lost"}: Q = ${nC(Q)}`] }; } },
+  n:{ name:"n = Q/e", gen(){ const Q=pick([-8,-16,-40,-4.8,24,3.2,-64]), n=Math.abs(Q)*1e-9/EC;
+    return { q:`An object has a charge of <b>${nC(Q)}</b>. How many electrons has it ${Q<0?"gained":"lost"}?`, ans:n, unit:"electrons", steps:["n = Q / e",`n = ${s3(Math.abs(Q))} × 10⁻⁹ ÷ 1.6 × 10⁻¹⁹`,`n = ${sci(n)} electrons ${Q<0?"gained":"lost"}`] }; } },
+  share:{ name:"Two spheres touch", gen(){ let q1,q2; do{ q1=pick([12,8,-6,20,-10,5,15]); q2=pick([0,-4,6,-2,10,-9]); } while(q1+q2===0); const f=(q1+q2)/2;
+    return { q:`Two identical metal spheres on insulating stands carry <b>${nC(q1)}</b> and <b>${q2?nC(q2):"no charge"}</b>. They touch and are then separated. Calculate the charge on each sphere (include the sign).`, ans:f, unit:"nC", steps:["Charge is conserved and shared equally between identical conductors",`Total = (${nC(q1)}) + (${q2?nC(q2):"0"}) = ${nC(q1+q2)}`,`Each = ${nC(q1+q2)} ÷ 2 = ${nC(f)}`] }; } },
+  three:{ name:"Sharing in turn", gen(){ const Q=pick([16,24,-32,40,-48]), w=pick(["A","B","C"]), ans=w==="B"?Q/2:Q/4;
+    return { q:`Sphere A has <b>${nC(Q)}</b>. It touches identical neutral sphere B, is separated, then touches identical neutral sphere C. Calculate the final charge on sphere <b>${w}</b>.`, ans, unit:"nC", steps:[`A touches B: each gets ${nC(Q)} ÷ 2 = ${nC(Q/2)}`,`A touches C: each gets ${nC(Q/2)} ÷ 2 = ${nC(Q/4)}`,`Final: A = ${nC(Q/4)}, B = ${nC(Q/2)}, C = ${nC(Q/4)}. Total ${nC(Q)}: conserved.`] }; } },
+  mass:{ name:"Mass of electrons", gen(){ const Q=pick([-20,-50,-80,-12]), n=Math.abs(Q)*1e-9/EC, m=n*MEL;
+    return { q:`A rod is rubbed and gains a charge of <b>${nC(Q)}</b>. Calculate the mass of the electrons it gained. (e = 1.6 × 10⁻¹⁹ C, mₑ = 9.11 × 10⁻³¹ kg)`, ans:m, unit:"kg", steps:[`n = Q / e = ${s3(Math.abs(Q))} × 10⁻⁹ ÷ 1.6 × 10⁻¹⁹ = ${sci(n)}`,"mass = n × mₑ",`mass = ${sci(n)} × 9.11 × 10⁻³¹ = ${sci(m)} kg`] }; } },
+  ion:{ name:"Ion charge", gen(){ const [z,ch]=pick([[11,1],[12,2],[13,3],[17,-1],[8,-2],[16,-2],[19,1],[20,2],[9,-1],[3,1]]), [sym,name]=ELEMS[z-1], Q=ch*EC;
+    return { q:`${/^[aeiou]/i.test(name)?"An":"A"} ${name.toLowerCase()} atom (${z} protons) ${ch>0?"loses":"gains"} <b>${Math.abs(ch)}</b> electron${Math.abs(ch)>1?"s":""}. Calculate the charge of the ion in coulombs (include the sign).`, ans:Q, unit:"C", steps:[`Protons ${z}, electrons ${z-ch}: net charge = (${z} − ${z-ch})e = ${ch>0?"+":"−"}${Math.abs(ch)}e`,`Q = ${ch>0?"+":"−"}${Math.abs(ch)} × 1.6 × 10⁻¹⁹`,`Q = ${ch>0?"+":"−"}${sci(Math.abs(Q))} C`] }; } },
+};
+
+let pType="ne", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseNum($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 12.5 or 0.68.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.abs(pCur.ans)*0.02;
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: include the sign (+ or −); convert nC to C (× 10⁻⁹); type powers of ten as e.g. 2.5e11. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+// Drill: attract, repel or no force?
+let pd = { a:"+", b:"0m", ans:"", sel:null, shown:false, streak:0 };
+let predC=null;
+const PD_OPTS = ["Attract","Repel","No force"];
+function pdAnswer(a,b){ const sa=PD_T[a][1], sb=PD_T[b][1]; if(sa&&sb) return sa===sb?"Repel":"Attract"; if(sa||sb) return "Attract"; return "No force"; }
+function pdNew(){ const K=Object.keys(PD_T); let a,b; do{ a=pick(K); b=pick(K); } while(a===pd.a&&b===pd.b);
+  pd={...pd,a,b,ans:pdAnswer(a,b),sel:null,shown:false};
+  $("predQ").innerHTML=`A <b>${PD_T[a][0]}</b> object is brought near a <b>${PD_T[b][0]}</b> object. What happens?`;
+  $("predOpts").querySelector(".btns").innerHTML=PD_OPTS.map(x=>`<button data-a="${x}">${x}</button>`).join("");
+  $("predFb").innerHTML=""; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const ok=pd.sel===pd.ans; pd.streak=ok?pd.streak+1:0; pd.shown=true; const sa=PD_T[pd.a][1], sb=PD_T[pd.b][1];
+  const why = sa&&sb? (sa===sb? "Both have the same sign of charge: like charges repel." : "They have opposite charges: unlike charges attract.")
+    : (sa||sb)? `The charged object polarises the neutral ${PD_T[sa?pd.b:pd.a][0].split(" ")[1]}: its nearest side becomes oppositely charged (${PD_T[sa?pd.b:pd.a][0].includes("metal")?"free electrons move through the metal":"each atom's bound electrons shift slightly"}), so it is attracted.`
+    : "Neither object is charged, so there is no electric force between them.";
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${pd.ans}. ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Charging a rod by friction", intro:"A neutral polythene rod is rubbed with a neutral woollen cloth. Afterwards the rod has a charge of −40 nC. (e = 1.6 × 10⁻¹⁹ C, mass of an electron = 9.11 × 10⁻³¹ kg)",
+    parts:[["a","Describe the structure of an atom and explain why an atom is electrically neutral.",6,"Nucleus containing protons (positive) and neutrons (no charge) (2); electrons (negative) outside the nucleus (2); equal numbers of protons and electrons, with equal and opposite charges, so they cancel (2)."],
+      ["b","Explain how rubbing gave the rod a negative charge.",6,"Friction transfers electrons (2) from the wool to the polythene (2); the rod now has more electrons than protons (2)."],
+      ["c","Calculate the number of electrons transferred.",9,"n = Q/e (3); = 40 × 10⁻⁹ ÷ 1.6 × 10⁻¹⁹ (3); = 2.5 × 10¹¹ electrons (3)."],
+      ["d","State the charge on the cloth after rubbing. Name the law you used.",6,"+40 nC (3); conservation of charge: charge can't be created or destroyed (3)."],
+      ["e","Calculate the mass of the electrons transferred.",6,"m = n × mₑ (2) = 2.5 × 10¹¹ × 9.11 × 10⁻³¹ (2) = 2.3 × 10⁻¹⁹ kg (2)."],
+      ["f","Explain why a metal rod held in the hand can't be charged this way, and say how it could be.",6,"Metal and the body are conductors (2), so the charge flows through the hand to earth (2); hold it with an insulating handle (2)."]] },
+  { title:"Charging by induction", intro:"A student has a metal sphere on an insulating stand, a positively charged glass rod and a gold-leaf electroscope.",
+    parts:[["a","Describe, with labelled diagrams, how the student could give the sphere a negative charge by induction.",12,"Bring the positive rod near (not touching) the sphere (3); earth the sphere by touching it (3); remove the earth while the rod is still near (3); remove the rod (3). Diagrams showing the charge distribution at each stage."],
+      ["b","Explain, in terms of electrons, what happens when the sphere is earthed.",6,"The positive rod attracts electrons (2); electrons flow from the earth onto the sphere (2) and are held on the near side by the rod (2)."],
+      ["c","Explain why the glass rod is still charged at the end.",3,"It never touched the sphere, so no charge flowed to or from it (3)."],
+      ["d","Describe how to use the electroscope to show that the sphere is charged, and to find the sign of its charge.",9,"Bring the sphere near / touch it to the cap: leaves diverge, so it is charged (3); charge the electroscope negatively with a known charge (e.g. a polythene rod) (3); bring the sphere near: the leaves diverge further for a negative sphere (they collapse for a positive one) (3)."],
+      ["e","Explain why the stand must be an insulator.",3,"Otherwise the charge would flow away through the stand to earth (3)."],
+      ["f","The charged rod also attracts small pieces of neutral paper. Explain why.",6,"The rod polarises the paper (2): electrons shift so the near side becomes negative (2); the attraction to the near side is stronger than the repulsion from the far side because it is closer (2)."]] },
+  { title:"Conductors, insulators and sharing charge", intro:"Two identical small metal spheres, A and B, are on insulating stands. A has a charge of +12 nC and B has −4 nC.",
+    parts:[["a","Distinguish between a conductor and an insulator in terms of electrons.",6,"Conductor: has free electrons that can move through it, so charge flows (3). Insulator: electrons are bound to their atoms, so charge can't flow (3)."],
+      ["b","Classify each as a conductor or an insulator: copper, polythene, graphite, glass, salty water, dry wood.",6,"Conductors: copper, graphite, salty water (3). Insulators: polythene, glass, dry wood (3). (1 each)"],
+      ["c","A and B touch and are then separated. Calculate the charge on each and show that charge is conserved.",9,"Total = +12 + (−4) = +8 nC (3); each = +8 ÷ 2 = +4 nC (3); after: +4 + 4 = +8 nC, the same as before (3)."],
+      ["d","A then touches an identical neutral sphere C. Calculate the final charge on A and on C.",6,"Shared equally (2): +4 ÷ 2 (2) = +2 nC each (2)."],
+      ["e","Explain why charge collects at sharp points on a conductor, and describe how a lightning conductor protects a building.",9,"Like charges repel and spread out over the surface (2); charge density is greatest where the curvature is greatest (2); a pointed metal rod on the roof is joined by a thick conductor to earth (2); point discharge reduces the charge build-up / a strike is carried safely to earth (3)."],
+      ["f","Explain why people inside a car are safe if it is struck by lightning.",6,"The metal body is a conductor (2); the charge stays on the outside surface (2); it flows over the body to earth, with no charge inside (Faraday cage) (2)."]] },
+];
+const RAG = ["Describe the structure of an atom and the charges of its particles","Explain what makes an object neutral, positive or negative","Use Q = ne and convert nC and µC to C","Explain charging by friction in terms of electron transfer","Use the triboelectric series to predict which object becomes negative","State and apply the conservation of charge","Demonstrate attraction and repulsion between charged objects","Explain why a charged object attracts a neutral one (polarisation)","Distinguish free and bound electrons","Classify materials as conductors or insulators","Use an electroscope to detect charge and test materials","Describe charging a single sphere by induction, step by step","Explain earthing (grounding)","Find the charges after identical conductors touch","Describe the distribution of charge on conductors and insulators","Explain point discharge, lightning conductors and Faraday cages"];
+const SKILLS = [["Control variables","Keep the same two materials, the same rod and the same stroke pressure; change only the number of strokes.","Charging by friction lab"],["Choose the right graph","Plot charge against number of strokes: a straight line through the origin shows Q ∝ strokes; the slope is charge per stroke.","Charging by friction lab"],["Repeat and average","Take each reading two or three times, discharging the rod (pass it through a flame or touch it to earth) between runs.","Charging by friction lab"],["Spot sources of error","Damp air, touching the rod, and uneven strokes all change the charge. Work in dry conditions and handle insulators only.","All charge labs"],["Make fair comparisons","Use the same proof plane and touch it flat to each point for the same time before carrying it to the electroscope.","Where charge sits lab"],["Classify with evidence","Record what the electroscope leaves do for each material before deciding conductor or insulator.","Conductors lab"],["Convert units","nC to C (× 10⁻⁹), µC to C (× 10⁻⁶); write powers of ten clearly.","Calculation trainer"],["Work safely","Van de Graaff generators can give painful shocks: keep away if you have a heart condition, discharge the dome with an earthed sphere, keep clear of electronics.","Induction and distribution labs"]];
+
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+const ragState=store.get("s31-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s31-rag",ragState); ragRender(); });
+ragRender();
+const skState=store.get("s31-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s31-skills",skState); });
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+/* ================= LAB STATE + WIRING ================= */
+const noise = f => 1+(Math.random()*2-1)*f;
+// 1. Atoms
+const at = { z:6, e:6, t:0 };
+function atUpd(){ const [sym,name,A]=ELEMS[at.z-1], q=at.z-at.e;
+  $("atZo").textContent=`${at.z} (${sym})`; $("atEo").textContent=String(at.e); $("atZ").value=at.z; $("atE").value=at.e;
+  setReadout($("atOut"),[["Element",`${name} (${sym})`],["Protons",String(at.z)],["Neutrons",String(A-at.z)],["Electrons",String(at.e)],["Net charge",q===0?"0":`${q>0?"+":"−"}${Math.abs(q)}e`],["Charge in C",q===0?"0":`${q>0?"+":"−"}${sci(Math.abs(q)*EC)} C`],["Type",atomKind(at.z,at.e)]]);
+  $("atWork").innerHTML = q===0? `${at.z} protons and ${at.e} electrons: the charges cancel, so the atom is <b>neutral</b>. It still contains ${at.z} × 1.6 × 10⁻¹⁹ = ${sci(at.z*EC)} C of positive charge, balanced by the same amount of negative charge.`
+    : `Net charge = (protons − electrons) × e = (${at.z} − ${at.e}) × 1.6 × 10⁻¹⁹ = <b>${q>0?"+":"−"}${sci(Math.abs(q)*EC)} C</b>. It has ${q>0?"lost":"gained"} ${Math.abs(q)} electron${Math.abs(q)>1?"s":""}, so it is a <b>${q>0?"positive":"negative"} ion</b>. The protons haven't changed: it is still ${name.toLowerCase()}.`;
+  atC.redraw(); }
+$("atZ").addEventListener("input",e=>{ at.z=+e.target.value; at.e=at.z; atUpd(); });
+$("atE").addEventListener("input",e=>{ at.e=+e.target.value; atUpd(); });
+$("atAdd").addEventListener("click",()=>{ at.e=Math.min(22,at.e+1); atUpd(); });
+$("atRem").addEventListener("click",()=>{ at.e=Math.max(0,at.e-1); atUpd(); });
+$("atNeutral").addEventListener("click",()=>{ at.e=at.z; atUpd(); });
+const FB = [["Electrons in a copper wire","F","Metals have free electrons."],["Electrons in a polythene rod","B","Plastics are insulators: electrons are bound."],["Electrons in graphite (pencil lead)","F","Graphite has free electrons, so it conducts."],["Electrons in a glass rod","B","Glass is an insulator."],["Electrons in an aluminium can","F","A metal: free electrons."],["Electrons in a rubber balloon","B","Rubber is an insulator."],["Electrons in a silk thread","B","Silk is an insulator."],["Electrons in a steel paper clip","F","Steel is a metal."]];
+const FBN = {F:"Free",B:"Bound"}, fbS={order:[],ans:{}};
+function fbRender(){ sorter("fbList","fbOut",FB,FBN,fbS); }
+function fbNew(){ fbS.order=shuffle(FB.map((s,k)=>k)); fbS.ans={}; fbRender(); }
+$("fbList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; fbS.ans[b.dataset.k]=b.dataset.v; fbRender(); });
+$("fbReset").addEventListener("click",fbNew);
+
+// 2. Charging by friction
+let rbGraph=null;
+const rb = { a:10, b:3, n:5, q:0, rubbing:false, t:0, el:0, data:[], last:null };
+$("rbA").innerHTML=TRIBO.map(([n],i)=>`<option value="${i}">${n}</option>`).join(""); $("rbB").innerHTML=$("rbA").innerHTML; $("rbA").value=rb.a; $("rbB").value=rb.b;
+function rbUpd(){ const r=rbRate(rb.a,rb.b), L=rb.last;
+  $("rbAo").textContent=`place ${rb.a+1} of 12`; $("rbBo").textContent=`place ${rb.b+1} of 12`; $("rbNo").textContent=String(rb.n);
+  setReadout($("rbOut"),[["Rod becomes",r<0?"negative (gains e⁻)":r>0?"positive (loses e⁻)":"uncharged"],["Cloth becomes",r>0?"negative (gains e⁻)":r<0?"positive (loses e⁻)":"uncharged"],["Last rod reading",L?nC(L[1]):"–"],["Last cloth reading",L?nC(L[2]):"–"],["Total charge",L?nC(+(L[1]+L[2]).toFixed(1))+" (≈ 0)":"–"],["Readings",String(rb.data.length)]]);
+  rbC.redraw(); }
+function rbTable(){ $("rbTable").innerHTML=rb.data.map(([n,qr,qc],k)=>`<tr><td>${n}</td><td>${fq(qr)}</td><td>${fq(qc)}</td><td>${fq(+(qr+qc).toFixed(1))||"0"}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("rbEmpty").hidden=rb.data.length>0; if(rbGraph) rbGraph.redraw(); }
+function rbFinish(){ const qt=rbRate(rb.a,rb.b)*rb.n, qr=+(qt*noise(0.05)).toFixed(1), qc=+(-qt*noise(0.02)).toFixed(1);
+  rb.rubbing=false; rb.q=qr; rb.last=[rb.n,qr,qc]; rb.data=rb.data.filter(d=>d[0]!==rb.n); rb.data.push(rb.last); rb.data.sort((x,y)=>x[0]-y[0]); rbTable(); rbUpd(); }
+$("rbGo").addEventListener("click",()=>{ if(rb.rubbing) return; rb.rubbing=true; rb.el=0; rb.q=0; if(reduce) rbFinish(); else { rbUpd(); setTimeout(()=>{ if(rb.rubbing) rbFinish(); },1700); } });
+$("rbN").addEventListener("input",e=>{ rb.n=+e.target.value; rbUpd(); });
+["rbA","rbB"].forEach(id=>$(id).addEventListener("change",e=>{ rb[id==="rbA"?"a":"b"]=+e.target.value; rb.data=[]; rb.last=null; rb.q=0; rbTable(); rbUpd(); }));
+$("rbClear").addEventListener("click",()=>{ rb.data=[]; rb.last=null; rb.q=0; rbTable(); rbUpd(); });
+$("rbTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ rb.data.splice(+k,1); rbTable(); rbUpd(); } });
+
+// 3. Forces between charges
+const pb = { qa:2, qb:0, msg:"" };
+function pbUpd(){ const g=pbAngles(pb.qa,pb.qb,pbC.w||600,pbC.h||330,false);
+  if(g.touch){ const sh=(pb.qa+pb.qb)/2; pb.msg=`The attraction pulled the balls together until they touched. Charge flowed between the conductors and was shared: ${fq(pb.qa*10)} + ${pb.qb?fq(pb.qb*10):"0"} = ${fq((pb.qa+pb.qb)*10)} nC, so each now has ${fq(sh*10)} nC and they ${sh?"repel":"hang straight down"}.`; pb.qa=sh; pb.qb=sh; return pbUpd(); }
+  $("pbA").value=pb.qa; $("pbB").value=pb.qb; $("pbAo").textContent=pb.qa?fq(pb.qa*10)+" nC":"neutral"; $("pbBo").textContent=pb.qb?fq(pb.qb*10)+" nC":"neutral";
+  const F=pbForce(pb.qa,pb.qb), kind=F>0?"Repulsion":F<0?"Attraction":"No force";
+  setReadout($("pbOut"),[["Force",kind],["Why",pb.qa&&pb.qb?(F>0?"like charges":"unlike charges"):(pb.qa||pb.qb)?"polarisation of the neutral ball":"both neutral"],["Swing of each ball",Math.abs(g.th*180/Math.PI).toFixed(0)+"°"],["Total charge",fq((pb.qa+pb.qb)*10)+" nC"]]);
+  $("pbWork").innerHTML=(pb.msg?pb.msg+" ":"")+(F>0?"Both balls carry the same sign of charge, so they push each other apart.":F<0?(pb.qa&&pb.qb?"The balls have opposite charges, so they pull together.":"The charged ball pulls the neutral ball's free electrons towards it (if it is positive) or pushes them away (if negative). The near side gets the opposite charge, which is closer, so attraction wins."):"No charge, no electric force: the threads hang straight down.")+" Each ball feels the same size of force (Newton's third law), so they swing by the same angle.";
+  pb.msg=""; pbC.redraw(); }
+$("pbA").addEventListener("input",e=>{ pb.qa=+e.target.value; pbUpd(); });
+$("pbB").addEventListener("input",e=>{ pb.qb=+e.target.value; pbUpd(); });
+$("pbTouch").addEventListener("click",()=>{ const sh=(pb.qa+pb.qb)/2; pb.msg=`They touched: ${fq((pb.qa+pb.qb)*10)} nC in total is shared, ${fq(sh*10)} nC each. Charge is conserved.`; pb.qa=sh; pb.qb=sh; pbUpd(); });
+$("pbEarth").addEventListener("click",()=>{ pb.msg=`Ball B was touched to earth: its ${pb.qb?fq(pb.qb*10)+" nC":"zero charge"} ${pb.qb?"flowed to (or was cancelled from) the Earth":"stays zero"}.`; pb.qb=0; pbUpd(); });
+$("pbReset").addEventListener("click",()=>{ pb.qa=2; pb.qb=0; pbUpd(); });
+const AR = [["A rubbed balloon held near a neutral wall","A","The balloon polarises the wall."],["Two balloons both rubbed on your hair","R","Both are negative: like charges."],["A charged polythene rod near bits of paper","A","The paper is polarised."],["A positive glass rod near a negative polythene rod","A","Unlike charges attract."],["Two uncharged metal spheres","N","No charge, no electric force."],["Strands of hair after rubbing with a balloon","R","Every strand has the same (positive) charge."],["A charged comb near a thin stream of tap water","A","The water is polarised and bends towards the comb."],["The two gold leaves of a charged electroscope","R","Both leaves carry the same charge."],["A negative rod near a suspended negative rod","R","Like charges repel."],["An uncharged plastic ruler near uncharged paper","N","Neither is charged."]];
+const ARN = {A:"Attract",R:"Repel",N:"No force"}, arS={order:[],ans:{}};
+function arRender(){ sorter("arList","arOut",AR,ARN,arS); }
+function arNew(){ arS.order=shuffle(AR.map((s,k)=>k)); arS.ans={}; arRender(); }
+$("arList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; arS.ans[b.dataset.k]=b.dataset.v; arRender(); });
+$("arReset").addEventListener("click",arNew);
+
+// 4. Conductors and insulators
+const es = { mat:0, q:1, sign:-1, conn:false, t:0, el:0 };
+$("esMat").innerHTML=MATS.map(([n],i)=>`<button data-m="${i}" aria-pressed="${i===0}">${n}</button>`).join("");
+function esUpd(){ const M=MATS[es.mat];
+  setReadout($("esOut"),[["Material",M[0]],["Connected to earth",es.conn?"yes":"no"],["Leaf divergence",Math.round(es.q*100)+"%"],["Charge left",Math.round(es.q*100)+"% of the start"],["Result",!es.conn?"–":M[1]==="C"?(es.q<0.1?"leaves collapsed: conductor":"leaves falling…"):"leaves stay up: insulator"]]);
+  $("esWork").innerHTML=!es.conn? `The electroscope is negatively charged: the cap, rod and both leaves carry extra electrons, so the leaves repel. Press "Connect to earth" to join the cap to earth through ${M[0].toLowerCase()}.`
+    : M[1]==="C"? `${M[0]} is a <b>conductor</b>: it has free electrons (or ions) that can move, so the extra electrons flow through it to earth and the leaves collapse.${M[0]==="Your finger"?" Your body is a conductor because of the salty water in it. The charge is far too small to give you a shock you can feel.":""}${M[0]==="Damp string"?" Water makes string conduct slowly; dry string is a good insulator.":""}`
+    : `${M[0]} is an <b>insulator</b>: its electrons are bound to their atoms, so the charge can't flow to earth and the leaves stay apart.`;
+  esC.redraw(); }
+$("esMat").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; es.mat=+b.dataset.m; es.conn=false; pressGroup([...$("esMat").querySelectorAll("button")],b); esUpd(); });
+$("esGo").addEventListener("click",()=>{ es.conn=true; es.el=0; es.t0=performance.now(); es.q0=es.q; if(reduce){ es.q*=Math.exp(-2/MATS[es.mat][2]); } esUpd(); setTimeout(()=>{ if(es.conn&&es.t0){ es.q=Math.min(es.q,es.q0*Math.exp(-((performance.now()-es.t0)/1000)/MATS[es.mat][2])); esUpd(); } },1500); });
+$("esCharge").addEventListener("click",()=>{ es.q=1; es.conn=false; esUpd(); });
+const CI = [["Copper","C","A metal with free electrons."],["Polythene","I","A plastic: electrons are bound."],["Graphite","C","Has free electrons."],["Glass","I","Electrons are bound."],["Salty water","C","Ions carry the charge."],["Rubber","I","Used to insulate cables."],["Aluminium","C","A metal."],["Dry wood","I","Dry wood is an insulator (damp wood conducts a little)."],["The human body","C","Salty water inside you conducts."],["Dry air","I","Air only conducts in a spark."],["Gold","C","A metal: used for the electroscope leaves."],["Nylon","I","A plastic."]];
+const CIN = {C:"Conductor",I:"Insulator"}, ciS={order:[],ans:{}};
+function ciRender(){ sorter("ciList","ciOut",CI,CIN,ciS); }
+function ciNew(){ ciS.order=shuffle(CI.map((s,k)=>k)); ciS.ans={}; ciRender(); }
+$("ciList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; ciS.ans[b.dataset.k]=b.dataset.v; ciRender(); });
+$("ciReset").addEventListener("click",ciNew);
+
+// 5. Induction
+const ind = { step:0, s:-1, t:0 };
+function inUpd(){ const s=ind.s, st=ind.step, rodN=s<0?"negative":"positive", sphN=s<0?"positive":"negative";
+  const net= st>=2? (s<0?"positive":"negative") : "neutral";
+  setReadout($("inOut"),[["Step",`${st} of 4`],["Rod",rodN],["Sphere overall",net],["Rod touched the sphere?","never"]]);
+  const W = [
+    `The sphere is a conductor with free electrons, on an insulating stand. Equal amounts of + and − charge: neutral.`,
+    `The ${rodN} rod ${s<0?"repels":"attracts"} the free electrons. They move to the ${s<0?"far":"near"} side, so the near side becomes <b>${sphN}</b> and the far side <b>${rodN}</b>. The sphere is still neutral overall.`,
+    `Touching the sphere earths it. Electrons ${s<0?"repelled by the rod flow <b>down to earth</b>":"flow <b>up from earth</b>, attracted by the rod"}. The ${sphN} charge on the near side is held there by the rod.`,
+    `The earth connection is broken first, so electrons can't ${s<0?"come back":"return to earth"}. The sphere is now ${sphN}.`,
+    `With the rod gone, the ${sphN} charge spreads out evenly over the outside of the sphere. Result: the sphere has the <b>opposite charge to the rod</b>, and the rod still has all its own charge.`];
+  $("inWork").innerHTML=W[st]; $("inBack").disabled=st===0; $("inNext").disabled=st===4; inC.redraw(); }
+$("inSign").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ind.s=+b.dataset.s; pressGroup([...$("inSign").querySelectorAll("button")],b); inUpd(); });
+$("inNext").addEventListener("click",()=>{ ind.step=Math.min(4,ind.step+1); ind.t=0; inUpd(); });
+$("inBack").addEventListener("click",()=>{ ind.step=Math.max(0,ind.step-1); inUpd(); });
+$("inRestart").addEventListener("click",()=>{ ind.step=0; inUpd(); });
+const SO = [["Bring the charged rod near the sphere, without touching","1","First the rod separates the charges."],["Touch the sphere with your finger to earth it","2","Electrons can now flow to or from earth."],["Take your finger away (remove the earth)","3","This traps the charge on the sphere."],["Move the charged rod away","4","Last: the charge spreads over the sphere."],["Touch the rod onto the sphere","X","That's charging by contact, not induction."]];
+const SON = {"1":"1st","2":"2nd","3":"3rd","4":"4th",X:"Not a step"}, soS={order:[],ans:{}};
+function soRender(){ sorter("soList","soOut",SO,SON,soS); }
+function soNew(){ soS.order=shuffle(SO.map((s,k)=>k)); soS.ans={}; soRender(); }
+$("soList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; soS.ans[b.dataset.k]=b.dataset.v; soRender(); });
+$("soReset").addEventListener("click",soNew);
+
+// 6. Distribution of charge
+let shGraph=null;
+const sh = { shape:"sphere", ins:0, probe:-1, data:[] };
+$("shProbe").innerHTML="ABCDE".split("").map((L,k)=>`<button data-p="${k}">${L}</button>`).join("");
+function shCur(){ const vals=[null,null,null,null,null]; sh.data.forEach(d=>{ if(d[3]===sh.shape&&d[4]===sh.ins) vals["ABCDE".indexOf(d[1])]=d[2]; }); return vals; }
+function shUpd(){ const vals=shCur(), got=vals.map((v,k)=>[v,k]).filter(x=>x[0]!=null), hi=got.length?got.reduce((a,b)=>b[0]>a[0]?b:a):null;
+  setReadout($("shOut"),[["Object",SHAPES[sh.shape]],["Material",sh.ins?"insulator":"conductor"],["Last point",sh.probe>=0?"ABCDE"[sh.probe]:"–"],["Last reading",sh.probe>=0&&vals[sh.probe]!=null?vals[sh.probe].toFixed(1):"–"],["Highest so far",hi?`${"ABCDE"[hi[1]]} (${hi[0].toFixed(1)})`:"–"]]);
+  pressGroup([...$("shShape").querySelectorAll("button")],$("shShape").querySelector(`[data-s="${sh.shape}"]`));
+  document.querySelectorAll("#shProbe button").forEach((b,k)=>b.classList.toggle("on",k===sh.probe));
+  shC.redraw(); if(shGraph) shGraph.redraw(); }
+function shTable(){ $("shTable").innerHTML=sh.data.map((d,k)=>`<tr><td>${SHAPES[d[3]]}${d[4]?" (insulator)":""}</td><td>${d[1]}</td><td>${d[2].toFixed(1)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join(""); $("shEmpty").hidden=sh.data.length>0; }
+$("shShape").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sh.shape=b.dataset.s; sh.probe=-1; shUpd(); });
+$("shMat").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sh.ins=+b.dataset.m; sh.probe=-1; pressGroup([...$("shMat").querySelectorAll("button")],b); shUpd(); });
+$("shProbe").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const k=+b.dataset.p, r=Math.max(0,probeRho(sh.shape,sh.ins,k)*10*noise(0.05)), L="ABCDE"[k];
+  sh.probe=k; sh.data=sh.data.filter(d=>!(d[3]===sh.shape&&d[4]===sh.ins&&d[1]===L)); sh.data.push([SHAPES[sh.shape],L,r<0.05?0:r,sh.shape,sh.ins]); shTable(); shUpd(); });
+$("shTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ sh.data.splice(+k,1); shTable(); shUpd(); } });
+
+/* ================= CREATE CANVASES ================= */
+const hero = makeCanvas($("heroCanvas"), 0.7, 240, s => drawHero(s.ctx,s.w,s.h,reduce?1.2:heroT), 420);
+const atC = makeCanvas($("atC"), 0.55, 300, s => drawAtom(s.ctx,s.w,s.h,at), 440);
+const rbC = makeCanvas($("rbC"), 0.42, 240, s => drawRub(s.ctx,s.w,s.h,rb), 340);
+const pbC = makeCanvas($("pbC"), 0.55, 330, s => drawBalls(s.ctx,s.w,s.h,pb), 420);
+const esC = makeCanvas($("esC"), 0.55, 320, s => drawScope(s.ctx,s.w,s.h,es), 420);
+const inC = makeCanvas($("inC"), 0.55, 300, s => drawInduce(s.ctx,s.w,s.h,ind), 420);
+const shC = makeCanvas($("shC"), 0.55, 320, s => drawShape(s.ctx,s.w,s.h,sh), 440);
+rbGraph = makeCanvas($("rbGraph"), 0.72, 190, s => {
+  const pts=rb.data.map(([n,q])=>[n,Math.abs(q)]), fit=pts.length>=3? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,20],yr:[0,5],xl:"strokes",yl:"|Q| on rod (nC)",fit});
+  if(!fit){ $("rbResult").innerHTML="Record three or more different numbers of strokes to draw the line."; return; }
+  const per=fit[0]*1e-9/EC;
+  $("rbResult").innerHTML=`Straight line through the origin (intercept ${fit[1].toFixed(1)} nC), so the charge is proportional to the number of strokes. Slope = <b>${fit[0].toFixed(2)} nC per stroke</b>. Electrons moved per stroke = slope ÷ e = ${fit[0].toFixed(2)} × 10⁻⁹ ÷ 1.6 × 10⁻¹⁹ = <b>${sci(per)}</b>.`;
+}, 300);
+shGraph = makeCanvas($("shGraph"), 0.72, 190, s => {
+  const vals=shCur(); drawBars(s,vals,["A","B","C","D","E"],{yl:"reading"});
+  const got=vals.filter(v=>v!=null);
+  if(got.length<2){ $("shResult").innerHTML="Probe two or more points on this object to compare them."; return; }
+  const mx=Math.max(...got), mn=Math.min(...got);
+  $("shResult").innerHTML= sh.ins? "On the insulator the charge stays where the rod was rubbed (near the left end). Points elsewhere read about zero."
+    : sh.shape==="sphere"? `All points read about the same (${mn.toFixed(1)} to ${mx.toFixed(1)}): on a sphere the charge spreads evenly.`
+    : sh.shape==="can"? `Inside points read ${vals[2]!=null?vals[2].toFixed(1):"–"} (C) and ${vals[3]!=null?vals[3].toFixed(1):"–"} (D): there is no charge on the inside of a hollow conductor. The outside rim and corners read highest.`
+    : `Highest reading ${mx.toFixed(1)}, lowest ${mn.toFixed(1)}: the charge density is greatest where the surface is most sharply curved.`;
+}, 300);
+predC = makeCanvas($("predC"), 0.5, 190, s => drawDrill(s.ctx,s.w,s.h,{...pd,bgc:C["surface-2"]}), 280);
+pdNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    atom:s=>drawAtom(s.ctx,s.w,s.h,{...o,compact:true}),
+    rub:s=>drawRub(s.ctx,s.w,s.h,{...o,compact:true}),
+    balls:s=>drawBalls(s.ctx,s.w,s.h,{...o,compact:true}),
+    scope:s=>drawScope(s.ctx,s.w,s.h,{...o,compact:true}),
+    induce:s=>drawInduce(s.ctx,s.w,s.h,{...o,compact:true}),
+    shape:s=>drawShape(s.ctx,s.w,s.h,{...o,compact:true}),
+  };
+  makeCanvas(el, 0.8, 220, draws[kind], 420);
+});
+// Infographic canvases
+function drawInduce4(ctx,w,h,o){ bg(ctx,w,h,o.bgc); for(let k=1;k<=4;k++){ const x=((k-1)%2)*w/2, y=Math.floor((k-1)/2)*h/2; ctx.save(); ctx.translate(x,y); ctx.beginPath(); ctx.rect(0,0,w/2,h/2); ctx.clip(); drawInduce(ctx,w/2,h/2,{step:k,s:-1,compact:true,bgc:o.bgc,t:0.3}); ctx.restore(); }
+  line(ctx,w/2,4,w/2,h-4,C.line,1); line(ctx,4,h/2,w-4,h/2,C.line,1); }
+document.querySelectorAll("canvas[data-case]").forEach(el=>{ const k=el.dataset.case, o={bgc:C["surface-2"]};
+  const d = k==="tribo"? s=>drawTribo(s.ctx,s.w,s.h,{bgc:C["surface-2"]}) : k==="induce4"? s=>drawInduce4(s.ctx,s.w,s.h,{bgc:C["surface-2"]}) : s=>drawShape(s.ctx,s.w,s.h,{shape:"point",ins:0,probe:-1,compact:true,bgc:C["surface-2"]});
+  makeCanvas(el, k==="tribo"?1.0:0.75, 220, d, 420); });
+["free","bound","polar"].forEach(k=>document.querySelectorAll(`canvas[data-mini=${k}]`).forEach(el=>makeCanvas(el,0.7,160,s=>drawLattice(s.ctx,s.w,s.h,{kind:k,bgc:C["surface-2"]}))));
+atUpd(); fbNew(); rbTable(); rbUpd(); pbUpd(); arNew(); esUpd(); ciNew(); inUpd(); soNew(); shTable(); shUpd();
+
+/* ================= LOOP / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(view==="labs" && !reduce){
+    if(lab==="atoms"){ at.t+=dt; atC.redraw(); }
+    if(lab==="friction" && rb.rubbing){ rb.t+=dt; rb.el+=dt; if(rb.el>1.4) rbFinish(); else rbC.redraw(); }
+    if(lab==="conductors"){ es.t+=dt; if(es.conn){ es.q*=Math.exp(-dt/MATS[es.mat][2]); es.el+=dt; if(Math.floor(es.el*4)!==Math.floor((es.el-dt)*4)) esUpd(); } esC.redraw(); }
+    if(lab==="induction" && ind.step===2){ ind.t+=dt; inC.redraw(); }
+  }
+  requestAnimationFrame(loop);
+})(performance.now());
+
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+
+</script>

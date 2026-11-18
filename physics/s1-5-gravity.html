@@ -1,0 +1,1753 @@
+<title>Gravitational Fields</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<style>
+:root{--band-ink:#3b2b21}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--surface)}
+.xlink:hover{border-color:var(--terra)}
+.working.wrap{white-space:normal;font-family:var(--f-body);font-size:.9rem}
+.spec-bullets{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+</style>
+<style>
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.rc-card{display:grid;gap:8px;padding:16px}
+.rc-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.rc-card .ico svg{width:24px;height:24px}
+.rc-card p{font-size:.9rem;margin:0}
+.rc-card p b{color:var(--terra)}
+</style>
+<style>
+.cases .rc-card canvas{width:100%;display:block;border-radius:12px}
+.sec td,.sec th{padding:4px 8px;text-align:right;font-family:var(--f-mono);font-size:.85rem;white-space:nowrap}
+.sec{border-collapse:collapse;width:100%}
+.sec tr+tr td{border-top:1px solid var(--line)}
+.secwrap{overflow-x:auto}
+.srt .row .btns button{padding:6px 10px;font-size:.85rem}
+.predopts .btns button{min-width:84px}
+</style>
+
+
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 18c3-12 6-12 8-4s5 6 6 0 3-6 6 0"/><path d="M2 21h20"/></svg></div>
+        <div style="min-width:0"><b>Gravitational Fields</b><span>Leaving Cert Physics · Strand 1 · Section 1.5</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details open><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="here"><span class="mono">1.5</span>Gravitational fields</li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 1 · Section 1.5 · Forces acting in a gravitational field</span>
+          <h1 style="margin-top:12px">Drop it.<br>Swing it.<br><em>Escape it.</em></h1>
+          <p class="lede">Gravity pulls every mass towards every other mass. Measure g four different ways, use Newton's law of universal gravitation to find g anywhere around a planet, and work out how fast a rocket must go to leave for good.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="The Earth with gravitational field lines pointing to its centre and the Moon moving around it, pulled towards the Earth"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/3</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">1.5.1</span><span>verify at least one model to determine g using primary data and all four using secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">1.5.2</span><span>model the gravitational field strength at any point in a gravitational field, including at the surface of a planet</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">1.5.3</span><span>calculate escape velocity from celestial bodies</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">Students learn about:</p>
+        <ul class="spec-bullets"><li>mathematical models for g, the acceleration due to gravity</li><li>Newton's law of Universal Gravitation as an inverse square law</li></ul>
+        <p class="result" style="margin-top:10px">Equations in the specification for 1.5: g = 4π²l/T², g = 2s/t², g = GM/R², g = F/m, F = Gm₁m₂/d² and vₑ = √(2GM/r). Builds on 1.1 (s = ut + ½at²), 1.2 (W = mg) and 1.4 (energy). Circular orbits come next in 1.6.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Time a falling ball, swing a pendulum, weigh masses on four worlds, test the inverse square law, probe a planet's field and launch rockets. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="fall">
+        <div class="labhead"><span class="pill t">Experiment: g by free fall</span><p class="goal">An electromagnet holds a steel ball a height s above a trapdoor. Switching it off starts the timer; the ball hits the trapdoor and stops it. From rest, s = ½gt², so g = 2s/t². Drop from five or more heights and plot s against t²: the slope is ½g.</p></div>
+        <div class="panel sim">
+          <canvas id="ffC" aria-label="A steel ball falling from an electromagnet to a trapdoor, with the height marked and an electronic timer"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Where?</span><div class="btns" id="ffPl"><button data-p="earth" aria-pressed="true">Earth</button><button data-p="moon" aria-pressed="false">Moon</button><button data-p="mars" aria-pressed="false">Mars</button><button data-p="x" aria-pressed="false">Mystery planet</button></div></div>
+            <div class="ctl"><label for="ffS">Height s <output id="ffSo">0.80 m</output></label><input type="range" id="ffS" min="0.2" max="1.6" step="0.1" value="0.8"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="ffGo">Drop</button><button id="ffClear">Clear</button><button id="ffNew">New mystery</button><button id="ffReveal">Reveal g</button></div></div>
+          </div>
+          <div class="readout" id="ffOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>s (m)</th><th>t (s)</th><th>t² (s²)</th><th>2s/t² (m/s²)</th><th></th></tr></thead><tbody id="ffTable"></tbody></table><div class="empty" id="ffEmpty">No drops yet. Drop from five or more heights.</div></div>
+            <div class="graphbox"><canvas id="ffGraph" aria-label="Graph of height against time squared with a line of best fit"></canvas><p class="result" id="ffResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Simulated timer readings to 0.001 s with a small random error (about 0.5%). No air resistance on a small steel ball over 1.6 m.</p>
+        <div class="tries"><div class="try"><b>1</b>Drop from 0.4 m and 1.6 m. Does four times the height take four times as long?</div><div class="try"><b>2</b>Why plot s against t² rather than s against t?</div><div class="try"><b>3</b>Find g on the mystery world, then press "Reveal g" to see which world it was.</div></div>
+      </div>
+
+      <div class="lab" data-lab="pendulum" hidden>
+        <div class="labhead"><span class="pill t">Experiment: g by a simple pendulum</span><p class="goal">Set the length l (pivot to the centre of the bob), give a small swing and time 20 full oscillations. T = 2π√(l/g), so T² = (4π²/g) l. Plot T² against l: g = 4π² ÷ slope.</p></div>
+        <div class="panel sim">
+          <canvas id="pnC" aria-label="A pendulum swinging from a split cork pivot, with its length marked and a stopwatch"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Where?</span><div class="btns" id="pnPl"><button data-p="earth" aria-pressed="true">Earth</button><button data-p="moon" aria-pressed="false">Moon</button><button data-p="mars" aria-pressed="false">Mars</button><button data-p="x" aria-pressed="false">Mystery planet</button></div></div>
+            <div class="ctl"><label for="pnL">Length l <output id="pnLo">0.80 m</output></label><input type="range" id="pnL" min="0.2" max="1.5" step="0.05" value="0.8"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="pnGo">Time 20 swings</button><button id="pnClear">Clear</button><button id="pnNew">New mystery</button><button id="pnReveal">Reveal g</button></div></div>
+          </div>
+          <div class="readout" id="pnOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>l (m)</th><th>20T (s)</th><th>T (s)</th><th>T² (s²)</th><th></th></tr></thead><tbody id="pnTable"></tbody></table><div class="empty" id="pnEmpty">No timings yet. Time 20 swings at five or more lengths.</div></div>
+            <div class="graphbox"><canvas id="pnGraph" aria-label="Graph of period squared against length with a line of best fit"></canvas><p class="result" id="pnResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Simulated stopwatch: your reaction time adds up to about ±0.15 s to each 20-swing time. Small swings (under about 10°) are assumed.</p>
+        <div class="tries"><div class="try"><b>1</b>Make the pendulum four times longer. What happens to T?</div><div class="try"><b>2</b>Why time 20 swings and divide by 20, instead of timing one?</div><div class="try"><b>3</b>Take the pendulum to the Moon. Is the period longer or shorter? Why?</div></div>
+      </div>
+
+      <div class="lab" data-lab="weight" hidden>
+        <div class="labhead"><span class="pill t">Weight and g = F/m</span><p class="goal">Hang masses on a newton balance on four different worlds. The balance reads the weight F. The force on each kilogram, F/m, is the gravitational field strength g. Your mass stays the same everywhere; your weight doesn't.</p></div>
+        <div class="panel sim">
+          <canvas id="wtC" aria-label="A newton balance holding a mass, beside bars showing your weight on the Moon, Mars, Earth and Jupiter"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Where?</span><div class="btns" id="wtPl"><button data-p="moon" aria-pressed="false">Moon</button><button data-p="mars" aria-pressed="false">Mars</button><button data-p="earth" aria-pressed="true">Earth</button><button data-p="jupiter" aria-pressed="false">Jupiter</button></div></div>
+            <div class="ctl"><label for="wtM">Mass on the balance <output id="wtMo">0.30 kg</output></label><input type="range" id="wtM" min="0.1" max="1" step="0.1" value="0.3"></div>
+            <div class="ctl"><label for="wtY">Your mass <output id="wtYo">60 kg</output></label><input type="range" id="wtY" min="30" max="120" step="5" value="60"></div>
+          </div>
+          <div class="readout" id="wtOut"></div>
+          <div class="working wrap" id="wtWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Mass or weight?</h3></div>
+          <div class="srt" id="mwList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="mwReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="mwOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Hang 0.5 kg on Earth, then on the Moon. What changes and what doesn't?</div><div class="try"><b>2</b>Why is g in N/kg the same thing as g in m/s²?</div><div class="try"><b>3</b>On which world would you weigh about 2.5 times your Earth weight?</div></div>
+      </div>
+
+      <div class="lab" data-lab="newton" hidden>
+        <div class="labhead"><span class="pill t">Newton's law of universal gravitation</span><p class="goal">Every mass attracts every other mass. F = Gm₁m₂/d²: double one mass and the force doubles; double the distance and it drops to a quarter. Pick a pair, then scale the masses and the distance.</p></div>
+        <div class="panel sim">
+          <canvas id="nwC" aria-label="Two masses pulling on each other with equal and opposite force arrows, above a graph of force against distance"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Pair</span><div class="btns" id="nwPre"></div></div>
+            <div class="ctl"><label for="nwA">Mass m₁ × <output id="nwAo">1</output></label><input type="range" id="nwA" min="0.5" max="4" step="0.5" value="1"></div>
+            <div class="ctl"><label for="nwB">Mass m₂ × <output id="nwBo">1</output></label><input type="range" id="nwB" min="0.5" max="4" step="0.5" value="1"></div>
+            <div class="ctl"><label for="nwD">Distance d × <output id="nwDo">1</output></label><input type="range" id="nwD" min="0.5" max="4" step="0.5" value="1"></div>
+          </div>
+          <div class="readout" id="nwOut"></div>
+          <div class="working wrap" id="nwWork"></div>
+        </div>
+        <p class="result">G = 6.67 × 10⁻¹¹ N m² kg⁻². d is measured between the centres of the two masses. Arrow lengths show the force compared with the starting pair (very long arrows are capped).</p>
+        <div class="tries"><div class="try"><b>1</b>Set d × 2, then d × 3. What fraction of the starting force is left each time?</div><div class="try"><b>2</b>Can you find settings that give the same force as the start, with both masses changed?</div><div class="try"><b>3</b>The Earth pulls you with about 600 N. How hard do you pull the Earth?</div></div>
+      </div>
+
+      <div class="lab" data-lab="field" hidden>
+        <div class="labhead"><span class="pill t">Model: g at any point in a field</span><p class="goal">Outside a planet, g = GM/r², where r is the distance from the planet's centre. At the surface r = R, so g = GM/R². Move the probe away from the planet and watch g fall as an inverse square.</p></div>
+        <div class="panel sim">
+          <canvas id="fdC" aria-label="A planet with field lines pointing to its centre and a probe at a distance r, above a graph of g against r"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Body</span><div class="btns" id="fdPl"><button data-p="moon" aria-pressed="false">Moon</button><button data-p="mars" aria-pressed="false">Mars</button><button data-p="earth" aria-pressed="true">Earth</button><button data-p="jupiter" aria-pressed="false">Jupiter</button></div></div>
+            <div class="ctl"><label for="fdH">Height above the surface <output id="fdHo">0 km</output></label><input type="range" id="fdH" min="0" max="6" step="0.01" value="0"></div>
+            <div class="ctl"><span class="lbl">Earth orbits</span><div class="btns" id="fdPre"><button data-h="400">ISS</button><button data-h="20200">GPS</button><button data-h="35786">Geostationary</button></div></div>
+          </div>
+          <div class="readout" id="fdOut"></div>
+          <div class="working wrap" id="fdWork"></div>
+        </div>
+        <p class="result">Data: Moon M = 7.35 × 10²² kg, R = 1.74 × 10⁶ m; Mars 6.42 × 10²³ kg, 3.39 × 10⁶ m; Earth 5.97 × 10²⁴ kg, 6.37 × 10⁶ m; Jupiter 1.90 × 10²⁷ kg, 6.99 × 10⁷ m. Planets are treated as uniform spheres; the slider goes up to 6 radii above the surface (r = 7R).</p>
+        <div class="tries"><div class="try"><b>1</b>Go one radius above the surface (r = 2R). What fraction of the surface g is left?</div><div class="try"><b>2</b>Pick the ISS. Is gravity really "zero" up there?</div><div class="try"><b>3</b>Jupiter is 300 times as massive as Earth. Why is its surface g only about 2.6 times Earth's?</div></div>
+      </div>
+
+      <div class="lab" data-lab="escape" hidden>
+        <div class="labhead"><span class="pill t">Escape velocity</span><p class="goal">Fire a probe straight up (no air, no engine after launch). Too slow and gravity pulls it back. At the escape velocity vₑ = √(2GM/r) its kinetic energy is just enough to get infinitely far away.</p></div>
+        <div class="panel sim">
+          <canvas id="esC" aria-label="A probe launched straight up from a planet, rising and falling back or escaping, with a bar comparing its launch speed with the escape velocity"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Launch from</span><div class="btns" id="esPl"><button data-p="moon" aria-pressed="false">Moon</button><button data-p="mars" aria-pressed="false">Mars</button><button data-p="earth" aria-pressed="true">Earth</button><button data-p="jupiter" aria-pressed="false">Jupiter</button></div></div>
+            <div class="ctl"><label for="esV">Launch speed <output id="esVo">8.0 km/s</output></label><input type="range" id="esV" min="10" max="130" step="1" value="72"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="esGo">Launch</button><button id="esReset">Reset</button></div></div>
+          </div>
+          <div class="readout" id="esOut"></div>
+          <div class="working wrap" id="esWork"></div>
+        </div>
+        <p class="result">Model: the probe moves straight up from the surface with no air resistance and no engine after launch; the planet's rotation is ignored. The slider sets the launch speed as 10–130% of that body's escape velocity.</p>
+        <div class="tries"><div class="try"><b>1</b>Launch at 70% of vₑ, then 90%. How much higher does the probe go?</div><div class="try"><b>2</b>Does a heavier probe need a bigger escape velocity? Check with ½mv² = GMm/r.</div><div class="try"><b>3</b>Why is it so much easier to leave the Moon than the Earth?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of gravitational fields"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Secondary data · LO 1.5.1</p><h2>Four models for g, four data sets</h2></div><p>Sample results (made up for practice, close to real school data). Each one fits a straight line, and the slope gives g.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>Graphs to know</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="inv"></canvas><h3>g ∝ 1/r²</h3><p>Outside a planet, g falls as an inverse square: twice as far from the centre, a quarter of the field.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="t2l"></canvas><h3>T² ∝ l</h3><p>A pendulum's period squared is proportional to its length. Slope = 4π²/g, so a weaker g gives a steeper line.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="esc"></canvas><h3>Escape velocities</h3><p>vₑ = √(2GM/R): from 2.4 km/s on the Moon to 60 km/s on Jupiter.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Model the field · LO 1.5.2</p><h2>The worlds compared</h2></div><p>Surface field strength and escape velocity, worked out from each body's mass and radius.</p></div>
+        <div class="secwrap"><table class="sec" id="secT"></table></div>
+        <p class="result" id="secRes" style="margin-top:10px"></p>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Where you meet it</p><h2>Gravity around you</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Know <b>all four models</b> for g: 2s/t² (free fall), 4π²l/T² (pendulum), F/m (weight per kg) and GM/R² (from the planet's mass and radius).</li>
+            <li>In g = GM/r², <b>r is measured from the centre</b> of the planet: add the planet's radius to the height above the surface.</li>
+            <li>Square the distance, and <b>convert km to m</b> before you substitute. Most wrong answers here are off by a power of 10.</li>
+            <li>Inverse square shortcuts: <b>2 × the distance → ¼ of the force</b>, 3 × → 1/9, 10 × → 1/100.</li>
+            <li>Mass is in kg and never changes; <b>weight is a force</b> in N and depends on g (W = mg).</li>
+            <li>For graphs, say what you plot and what the <b>slope</b> means: s v t² has slope ½g; T² v l has slope 4π²/g.</li>
+            <li>Escape velocity <b>doesn't depend on the mass</b> of the rocket: m cancels in ½mv² = GMm/r.</li>
+            <li>Gravity is <b>always attractive</b>, and the forces on the two masses are equal and opposite (Newton's third law).</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The verb tells you what the examiner wants. The learning outcomes for this section use verify, model and calculate.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="text" placeholder="e.g. 9.81 or 1.98e20" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>What happens to the force?</h2></div></div>
+          <canvas id="predC" aria-label="Two masses before and after their masses and distance are changed"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" data-g="0"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: field, weight, G, escape…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>Gravitational fields. G = 6.67 × 10⁻¹¹ N m² kg⁻²; g = 9.8 m/s² at the Earth's surface.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Model 1: free fall</span><span class="big">g = 2s / t²</span><dl><dt>s</dt><dd>distance fallen from rest, m</dd><dt>t</dt><dd>time taken, s</dd></dl><div class="ex">0.80 m in 0.404 s: g = 9.80 m/s²</div></div>
+        <div class="panel fcell"><span class="pill">Model 2: pendulum</span><span class="big">g = 4π²l / T²</span><dl><dt>l</dt><dd>length, pivot to centre of bob, m</dd><dt>T</dt><dd>period (one full swing), s</dd></dl><div class="ex">l = 1.00 m, T = 2.01 s: 9.77 m/s²</div></div>
+        <div class="panel fcell"><span class="pill">Model 3: weight</span><span class="big">g = F / m</span><dl><dt>F</dt><dd>weight (gravitational force), N</dd><dt>m</dt><dd>mass, kg</dd></dl><div class="ex">0.50 kg reads 4.9 N: 9.8 N/kg</div></div>
+        <div class="panel fcell"><span class="pill">Model 4: planet data</span><span class="big">g = GM / R²</span><dl><dt>M</dt><dd>mass of the planet, kg</dd><dt>R</dt><dd>radius of the planet, m</dd></dl><div class="ex">Earth: 9.81 N/kg</div></div>
+        <div class="panel fcell"><span class="pill a">Universal gravitation</span><span class="big">F = Gm₁m₂ / d²</span><dl><dt>d</dt><dd>distance between centres, m</dd><dt>G</dt><dd>6.67 × 10⁻¹¹ N m² kg⁻²</dd></dl><div class="ex">Earth–Moon: 1.98 × 10²⁰ N</div></div>
+        <div class="panel fcell"><span class="pill a">g at any point</span><span class="big">g = GM / r²</span><dl><dt>r</dt><dd>distance from the centre = R + h</dd></dl><div class="ex">ISS, h = 400 km: 8.69 N/kg</div></div>
+        <div class="panel fcell"><span class="pill a">Escape velocity</span><span class="big">vₑ = √(2GM / r)</span><dl><dt>from</dt><dd>½mvₑ² = GMm/r</dd></dl><div class="ex">Earth's surface: 11.2 km/s</div></div>
+        <div class="panel fcell"><span class="pill">Weight</span><span class="big">W = mg</span><dl><dt>W</dt><dd>weight, N</dd><dt>g</dt><dd>field strength, N/kg</dd></dl><div class="ex">70 kg on the Moon: 113 N</div></div>
+        <div class="panel fcell"><span class="pill">Inverse square</span><span class="big">g₂ / g₁ = (r₁ / r₂)²</span><dl><dt>use</dt><dd>scaling without G or M</dd></dl><div class="ex">r × 3: g ÷ 9</div></div>
+        <div class="panel fcell"><span class="pill">Planet's mass</span><span class="big">M = gR² / G</span><dl><dt>use</dt><dd>"weighing" a planet</dd></dl><div class="ex">Earth: 5.96 × 10²⁴ kg</div></div>
+        <div class="panel fcell"><span class="pill">Pendulum period</span><span class="big">T = 2π√(l / g)</span><dl><dt>note</dt><dd>small swings; T doesn't depend on the mass</dd></dl><div class="ex">1.00 m on Earth: 2.01 s</div></div>
+        <div class="panel fcell"><span class="pill">Units</span><span class="big">1 N/kg = 1 m/s²</span><dl><dt>G</dt><dd>N m² kg⁻²</dd><dt>vₑ</dt><dd>m/s (often km/s)</dd></dl><div class="ex">g is a vector, towards the centre</div></div>
+      </div>
+      <footer>
+        <p>Built on section 1.5 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes are quoted from the specification. Experiment readings and data tables are simulated or made up for practice; planetary data are rounded standard values.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent","--band-ink"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+/* ---------- icons + topics ---------- */
+const ICON = {
+  fall:'<path d="M6 3h12v3H6z"/><circle cx="12" cy="11" r="2.5"/><path d="M12 15v3M10 17l2 2 2-2M5 21h14"/>',
+  pendulum:'<path d="M4 3h16M12 3l5 13"/><circle cx="17.5" cy="17.5" r="2.5"/><path d="M12 3v12" stroke-dasharray="2 2"/>',
+  weight:'<path d="M12 2v3"/><rect x="9" y="5" width="6" height="9" rx="1"/><path d="M12 14v2"/><path d="M8 16h8l1.5 5h-11z"/>',
+  newton:'<circle cx="6" cy="12" r="3.5"/><circle cx="19" cy="12" r="2.5"/><path d="M10 12h3M12 10.5l1.5 1.5-1.5 1.5M15.5 12h-1"/>',
+  field:'<circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.5 2.5M19 5l-2.5 2.5M5 19l2.5-2.5M19 19l-2.5-2.5"/>',
+  escape:'<path d="M12 2c3 3 4 7 3 11h-6c-1-4 0-8 3-11z"/><path d="M9 13l-3 4h4M15 13l3 4h-4M12 17v4"/>',
+  iss:'<rect x="9" y="10" width="6" height="4" rx="1"/><path d="M2 8h6v8H2zM16 8h6v8h-6zM8 12h1M15 12h1"/>',
+  tide:'<path d="M2 15c3-3 5 3 8 0s5 3 8 0 3-1 4 0"/><path d="M2 19c3-3 5 3 8 0s5 3 8 0 3-1 4 0"/><circle cx="18" cy="6" r="3"/>',
+  gps:'<path d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+  feather:'<path d="M20 4C10 4 5 10 4 20"/><path d="M20 4c0 8-5 12-12 12M10 14h5M13 10h4"/>',
+  balance:'<path d="M3 6h18M12 3v18M8 21h8"/><circle cx="5" cy="10" r="2"/><circle cx="19" cy="10" r="2"/>',
+  planet:'<circle cx="12" cy="12" r="6"/><ellipse cx="12" cy="12" rx="11" ry="3.5" transform="rotate(-20 12 12)"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"fall", name:"g by free fall", short:"From rest, s = ½gt², so g = 2s/t². Time a dropping ball and plot s against t².", tint:"var(--blush)"},
+  {id:"pendulum", name:"g by a pendulum", short:"T = 2π√(l/g), so g = 4π²l/T². Time 20 swings and plot T² against l.", tint:"var(--apricot)"},
+  {id:"weight", name:"Weight and g = F/m", short:"g is the force on each kilogram, in N/kg. Mass stays the same; weight changes.", tint:"var(--sage)"},
+  {id:"newton", name:"Universal gravitation", short:"F = Gm₁m₂/d²: every mass attracts every other mass, as an inverse square law.", tint:"var(--cream)"},
+  {id:"field", name:"g at any point", short:"g = GM/r² outside a planet; g = GM/R² at its surface. Distance from the centre.", tint:"var(--blush)"},
+  {id:"escape", name:"Escape velocity", short:"vₑ = √(2GM/r): just enough kinetic energy to get away for good.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Acceleration due to gravity","g","The acceleration of a freely falling object. 9.8 m/s² near the Earth's surface, the same for every mass (ignoring air resistance).","fall","g = 9.8 m/s²"],
+  ["Free fall","","Motion where the only force acting is gravity. Every object in free fall at the same place has the same acceleration, g.","fall"],
+  ["Electromagnet release","","A coil that holds a steel ball while current flows. Switching it off releases the ball and starts the timer at the same instant.","fall"],
+  ["Trapdoor switch","","A hinged plate at the bottom of a free-fall apparatus. The falling ball opens it, stopping the timer.","fall"],
+  ["Electronic timer","","A clock started and stopped by switches, reading to 0.001 s. It removes reaction-time error.","fall"],
+  ["Equations of motion","suvat","s = ut + ½at², v = u + at and v² = u² + 2as (from 1.1). From rest with a = g, s = ½gt².","fall","s = ½gt²"],
+  ["Air resistance","drag","A frictional force from the air. It is why a feather falls slowly on Earth but not on the Moon.","fall"],
+  ["Simple pendulum","","A small heavy bob on a light, inextensible string, swinging through a small angle (under about 10°).","pendulum","T = 2π√(l/g)"],
+  ["Period","T","The time for one complete oscillation (there and back). Measured in seconds.","pendulum"],
+  ["Oscillation","","One complete swing of a pendulum: from one side to the other and back again.","pendulum"],
+  ["Length of a pendulum","l","The distance from the point of suspension to the centre of the bob.","pendulum"],
+  ["Bob","","The small, heavy mass at the end of a pendulum's string.","pendulum"],
+  ["Split cork","","Two halves of a cork clamped around the string. It gives a fixed, sharp point of suspension.","pendulum"],
+  ["Fiducial mark","","A fixed reference mark (e.g. a pin) at the lowest point of the swing. Start and stop the stopwatch as the bob passes it.","pendulum"],
+  ["Reaction time","","The delay between seeing something and pressing the stopwatch: about 0.1–0.2 s. Timing 20 swings makes it a much smaller percentage error.","pendulum"],
+  ["Mass","m","The amount of matter in an object, in kilograms. It is the same everywhere in the universe.","weight"],
+  ["Weight","W","The gravitational force on an object. It depends on where the object is.","weight","W = mg"],
+  ["Gravitational field","","A region of space where a mass experiences a force because of another mass.","weight"],
+  ["Gravitational field strength","g","The force per unit mass on a mass placed at a point in a gravitational field. Units N/kg (the same as m/s²).","weight","g = F/m"],
+  ["Newton balance","spring balance","A spring and scale that reads a force in newtons. Hang a mass from it to read its weight.","weight"],
+  ["Newton per kilogram","N/kg","The unit of gravitational field strength. 1 N/kg = 1 m/s², because 1 N = 1 kg m/s².","weight"],
+  ["Weightlessness","apparent weightlessness","The feeling of having no weight when you and everything around you are in free fall together, e.g. in an orbiting spacecraft. Gravity still acts.","weight"],
+  ["Newton's law of universal gravitation","","Any two point masses attract each other with a force that is proportional to the product of their masses and inversely proportional to the square of the distance between them.","newton","F = Gm₁m₂/d²"],
+  ["Gravitational constant","G","The constant in Newton's law of gravitation: 6.67 × 10⁻¹¹ N m² kg⁻². It is the same everywhere.","newton","G = 6.67 × 10⁻¹¹ N m² kg⁻²"],
+  ["Inverse square law","","A quantity that is proportional to 1/d². Doubling the distance gives a quarter; tripling gives a ninth.","newton","F ∝ 1/d²"],
+  ["Point mass","","A mass treated as if it were all at one point. A uniform sphere acts like a point mass at its centre.","newton"],
+  ["Distance between centres","d","In F = Gm₁m₂/d², measure d from the centre of one mass to the centre of the other.","newton"],
+  ["Newton's third law","","If A exerts a force on B, B exerts an equal and opposite force on A. You pull the Earth as hard as it pulls you.","newton"],
+  ["Cavendish experiment","","A 1798 torsion-balance experiment that measured the tiny attraction between lead spheres, giving a value for G.","newton"],
+  ["Field line","","A line showing the direction of the force on a mass. Around a planet they point straight to its centre; closer lines mean a stronger field.","field"],
+  ["Radial field","","A field whose lines all point to (or from) one centre, like the field around a planet.","field"],
+  ["Distance from the centre","r","In g = GM/r², r = the planet's radius R + the height h above the surface.","field","r = R + h"],
+  ["Radius of a planet","R","Distance from the planet's centre to its surface. Earth: 6.37 × 10⁶ m.","field"],
+  ["Mass of a planet","M","Earth: 5.97 × 10²⁴ kg. Can be found from g and R: M = gR²/G.","field","M = gR²/G"],
+  ["Surface field strength","","g at a planet's surface, g = GM/R². Earth 9.8 N/kg, Moon 1.6 N/kg, Mars 3.7 N/kg, Jupiter 26 N/kg.","field","g = GM/R²"],
+  ["Satellite","","Any object in orbit around a planet: the Moon, the ISS, GPS satellites. Gravity provides the force that keeps it in orbit (1.6).","field"],
+  ["Geostationary orbit","","An orbit about 35 800 km above the equator where a satellite takes 24 hours to go round, so it stays above one spot.","field"],
+  ["Escape velocity","vₑ","The minimum speed an object needs at a point to escape completely from a body's gravitational field (with no further push).","escape","vₑ = √(2GM/r)"],
+  ["Celestial body","","A natural object in space: a planet, moon, star or asteroid.","escape"],
+  ["Gravitational potential energy (in a field)","","Energy due to position in a field. Far from a planet, mgh is not accurate because g changes with height; vₑ comes from ½mv² = GMm/r.","escape"],
+  ["Black hole","","A body so dense that its escape velocity is greater than the speed of light, so not even light can leave.","escape"],
+  ["Atmosphere retention","","A body keeps a gas if its molecules move much slower than the escape velocity. The Moon's low vₑ is why it has almost no atmosphere.","escape"],
+  ["Primary data","","Data you collect yourself in an experiment.","fall"],
+  ["Secondary data","","Data collected by someone else, e.g. a textbook table, a teacher's datalogger file or published planetary data.","fall"],
+  ["Slope","gradient","Rise ÷ run of a straight-line graph. s v t²: slope = ½g. T² v l: slope = 4π²/g. F v m: slope = g.","pendulum"],
+  ["g","field strength","Symbol for gravitational field strength (N/kg) or the acceleration due to gravity (m/s²): the same number.","weight"],
+  ["G","constant","Symbol for the universal gravitational constant, 6.67 × 10⁻¹¹ N m² kg⁻². Capital G: don't mix it up with g.","newton"],
+  ["T","period","Symbol for the period of a pendulum, in seconds.","pendulum"],
+  ["vₑ","escape velocity","Symbol for escape velocity, in m/s (often given in km/s).","escape"],
+  ["m₁, m₂","masses","The two masses in Newton's law of gravitation, in kg.","newton"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["free fall","Free fall"],["pendulum","Simple pendulum"],["period","Period"],["weight","Weight"],["field strength","Gravitational field strength"],["inverse square","Inverse square law"],["escape velocity","Escape velocity"],["reaction time","Reaction time"],["electronic timer","Electronic timer"],["fiducial","Fiducial mark"],["field line","Field line"],["universal gravitation","Newton's law of universal gravitation"],["gravitational constant","Gravitational constant"],["third law","Newton's third law"],["weightless","Weightlessness"],["secondary data","Secondary data"],["slope","Slope"],["point mass","Point mass"],["geostationary","Geostationary orbit"]];
+
+/* ---------- glossary links + canvas helpers ---------- */
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function dbl(ctx,x1,y1,x2,y2,color,w=2){ line(ctx,x1,y1,x2,y2,color,w); const a=Math.atan2(y2-y1,x2-x1); arrowHead(ctx,x2,y2,a,color,8); arrowHead(ctx,x1,y1,a+Math.PI,color,8); }
+function dimArrow(ctx,xa,xb,y,label,col){ line(ctx,xa,y,xb,y,col,1.4); arrowHead(ctx,xa,y,Math.PI,col,7); arrowHead(ctx,xb,y,0,col,7); line(ctx,xa,y-5,xa,y+5,col,1.2); line(ctx,xb,y-5,xb,y+5,col,1.2); if(label) text(ctx,label,(xa+xb)/2,y-5,col,F(12),"center"); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const s3 = x => (+x.toPrecision(3)).toString();
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
+const sup = n => String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(x,d=3){ if(x===0) return "0"; let e=Math.floor(Math.log10(Math.abs(x))), ms=(x/Math.pow(10,e)).toFixed(d-1);
+  if(Math.abs(+ms)>=10){ e++; ms=(x/Math.pow(10,e)).toFixed(d-1); } return e===0? ms : `${ms} × 10${sup(e)}`; }
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+function coilV(ctx,x,y1,y2,n,wd,col,lw=2){ const lead=Math.min(8,(y2-y1)*0.12), a=y1+lead, b=y2-lead, seg=(b-a)/(2*n);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x,a);
+  for(let i=0;i<2*n;i++) ctx.lineTo(x+(i%2?-1:1)*wd/2, a+seg*(i+0.5)); ctx.lineTo(x,b); ctx.lineTo(x,y2); ctx.stroke(); ctx.restore(); }
+function coilH(ctx,x1,x2,y,n,ht,col,lw=2){ const lead=Math.min(8,(x2-x1)*0.12), a=x1+lead, b=x2-lead, seg=(b-a)/(2*n);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(a,y);
+  for(let i=0;i<2*n;i++) ctx.lineTo(a+seg*(i+0.5), y+(i%2?-1:1)*ht/2); ctx.lineTo(b,y); ctx.lineTo(x2,y); ctx.stroke(); ctx.restore(); }
+function massBlock(ctx,x,y,wd,ht,label){ rrect(ctx,x-wd/2,y,wd,ht,5,C.apricot,C.ink,1.4); text(ctx,label,x,y+ht/2+4,"#3b2b21",F(11),"center"); }
+function vdim(ctx,x,ya,yb,label,col){ line(ctx,x,ya,x,yb,col,1.4); line(ctx,x-5,ya,x+5,ya,col,1.2); line(ctx,x-5,yb,x+5,yb,col,1.2);
+  if(Math.abs(yb-ya)>16){ const d=yb>ya?1:-1; arrowHead(ctx,x,ya,-d*Math.PI/2,col,7); arrowHead(ctx,x,yb,d*Math.PI/2,col,7); }
+  if(label) text(ctx,label,x+8,(ya+yb)/2+4,col,F(12)); }
+/* ================= MODELS + DRAWINGS ================= */
+const G = 6.67e-11, GE = 9.8, TAU = 2*Math.PI;
+const BODIES = {
+  moon:{n:"Moon",M:7.35e22,R:1.74e6,col:"sage"},
+  mars:{n:"Mars",M:6.42e23,R:3.39e6,col:"terra"},
+  earth:{n:"Earth",M:5.97e24,R:6.37e6,col:"olive"},
+  jupiter:{n:"Jupiter",M:1.90e27,R:6.99e7,col:"apricot"},
+};
+const BKEYS = ["moon","mars","earth","jupiter"];
+const gS = b => G*b.M/(b.R*b.R);
+const vEsc = b => Math.sqrt(2*G*b.M/b.R);
+const fmtN = x => { const t=s3(x); return Math.abs(x)>=10000? t.replace(/\B(?=(\d{3})+(?!\d))/g," ") : t; };
+const fx2 = x => (Math.abs(x)<0.005?0:x).toFixed(2);
+const PLN = {earth:"Earth",moon:"the Moon",mars:"Mars",jupiter:"Jupiter",x:"the mystery planet"};
+function planetDisc(ctx,x,y,r,b){ circle(ctx,x,y,r,C[b.col],C.ink,1.5);
+  ctx.save(); ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.clip(); ctx.globalAlpha=0.18; ctx.fillStyle=C.ink;
+  ctx.beginPath(); ctx.ellipse(x-r*0.3,y-r*0.25,r*0.35,r*0.18,0.3,0,7); ctx.fill(); ctx.beginPath(); ctx.ellipse(x+r*0.35,y+r*0.3,r*0.25,r*0.12,-0.4,0,7); ctx.fill(); ctx.restore(); }
+
+// Free fall apparatus
+function drawFall(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, top=30, bot=h-28, sc=(bot-top-30)/1.6;
+  const px=Math.min(w*0.3,150), sx=px-44, y0=top+19, ball=y0+o.u*o.s*sc, yTrap=y0+9+o.s*sc;
+  rrect(ctx,sx-4,top-16,8,bot-top+18,2,C.olive); line(ctx,sx-26,bot+4,sx+30,bot+4,C.ink,3);
+  rrect(ctx,sx,top-16,px-sx+2,7,2,C.olive); rrect(ctx,px-15,top-10,30,18,4,C.terra,C.ink,1.2); text(ctx,"EM",px,top+3,"#3b2b21",F(10),"center");
+  line(ctx,sx,yTrap+3,px-18,yTrap+3,C.olive,3);
+  if(o.u>=1){ ctx.save(); ctx.translate(px-18,yTrap+3); ctx.rotate(0.9); line(ctx,0,0,36,0,C.ink,3); ctx.restore(); } else line(ctx,px-18,yTrap+3,px+18,yTrap+3,C.ink,3);
+  circle(ctx,px,ball,9,C.muted,C.ink,1.4);
+  vdim(ctx,px+28,y0+9,yTrap,cp?"s":"s = "+o.s.toFixed(2)+" m",C.terra);
+  const bx=Math.max(px+(cp?92:120),w*0.56), bw=Math.min(w-bx-10,200);
+  if(bw>50){ rrect(ctx,bx,top,bw,64,10,C["surface-2"],C.line,1.5); text(ctx,"timer",bx+10,top+16,C.muted,F(11));
+    text(ctx,o.t==null?"0.000 s":o.t.toFixed(3)+" s",bx+bw/2,top+48,C.ink,M(Math.min(22,bw/5.5)),"center");
+    if(!cp){ line(ctx,px+15,top,bx,top+24,C.muted,1.2,[4,4]); line(ctx,px+18,yTrap+3,bx,top+52,C.muted,1.2,[4,4]); }
+    text(ctx,"on "+PLN[o.p],bx+bw/2,top+86,C.muted,F(12),"center");
+    if(!cp && o.g) text(ctx,"g = 2s/t²",bx+bw/2,top+106,C.ink,F(13),"center"); }
+}
+// Simple pendulum
+function drawPend(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, pX=w*(cp?0.42:0.34), pY=24, sc=(h-64)/1.5, L=o.l*sc;
+  rrect(ctx,pX-50,8,100,8,2,C.olive); rrect(ctx,pX-6,14,12,10,2,C.apricot,C.ink,1);
+  line(ctx,pX,pY,pX,pY+L+22,C.muted,1,[4,4]);
+  ctx.save(); ctx.fillStyle=C.terra; ctx.beginPath(); ctx.moveTo(pX,pY+L+16); ctx.lineTo(pX-6,pY+L+28); ctx.lineTo(pX+6,pY+L+28); ctx.closePath(); ctx.fill(); ctx.restore();
+  const bx=pX+L*Math.sin(o.ang), by=pY+L*Math.cos(o.ang);
+  line(ctx,pX,pY,bx,by,C.ink,1.6); circle(ctx,bx,by,10,C.apricot,C.ink,1.5);
+  vdim(ctx,pX-34,pY,pY+L,"",C.terra); text(ctx,"l",pX-48,pY+L/2+4,C.terra,F(14),"center");
+  if(!cp){ const sx=Math.max(pX+90,w*0.62), sw=Math.min(w-sx-10,200);
+    if(sw>60){ rrect(ctx,sx,30,sw,92,10,C["surface-2"],C.line,1.5); text(ctx,"stopwatch",sx+10,46,C.muted,F(11));
+      text(ctx,(o.t||0).toFixed(2)+" s",sx+sw/2,78,C.ink,M(Math.min(22,sw/5.5)),"center");
+      text(ctx,`swings: ${o.n||0} / 20`,sx+sw/2,106,C.muted,F(12),"center");
+      text(ctx,"l = "+o.l.toFixed(2)+" m",sx+sw/2,148,C.ink,F(13),"center"); text(ctx,"on "+PLN[o.p],sx+sw/2,168,C.muted,F(12),"center"); } }
+  text(ctx,"fiducial mark",pX+10,pY+L+28,C.muted,F(10));
+}
+// Newton balance + your weight on four worlds
+function drawWeight(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, b=BODIES[o.p], g=gS(b), F1=o.m*g, max=o.p==="jupiter"?30:10;
+  const lw=cp? w : Math.min(w*0.42,260), cx=lw/2, top=26, bh=Math.min(h*0.5,190), y1=top+bh;
+  line(ctx,cx-40,10,cx+40,10,C.olive,5); line(ctx,cx,10,cx,top,C.ink,2);
+  rrect(ctx,cx-22,top,44,bh,8,C["surface-2"],C.ink,1.5);
+  for(let v=0;v<=max;v+=max/10){ const y=top+12+v/max*(bh-24); line(ctx,cx+6,y,cx+18,y,C.ink,1); if(Math.round(v)%(max/5)===0) text(ctx,String(Math.round(v)),cx+20,y+3,C.muted,M(9)); }
+  const py=top+12+Math.min(F1,max)/max*(bh-24); coilV(ctx,cx-6,top+6,py,7,10,C.olive,1.6);
+  line(ctx,cx-14,py,cx+14,py,C.terra,3); line(ctx,cx-6,py,cx-6,y1+6,C.ink,1.6);
+  const mh=14+o.m*30; massBlock(ctx,cx-6,y1+6,38+o.m*16,mh,o.m.toFixed(1)+" kg");
+  text(ctx,"F = "+s3(F1)+" N",cx+30,y1+6+mh/2+4,C.terra,F(13));
+  rrect(ctx,0,h-14,lw,14,0,C[b.col]); text(ctx,b.n+": g = "+g.toFixed(2)+" N/kg",cx,h-20,C.ink,F(12),"center");
+  if(cp) return;
+  const x0=lw+20, x1=w-12, rh=Math.min(40,(h-70)/4), top2=40, maxW=o.you*gS(BODIES.jupiter);
+  text(ctx,`Weight of a ${o.you} kg person`,x0,24,C.ink,F(12));
+  BKEYS.forEach((k,i)=>{ const B=BODIES[k], W=o.you*gS(B), y=top2+i*(rh+10), bw=Math.max(2,W/maxW*(x1-x0-70));
+    rrect(ctx,x0,y,bw,rh,5,C[B.col],k===o.p?C.ink:null,2); text(ctx,B.n,x0+6,y+rh/2+4,"#3b2b21",F(11));
+    text(ctx,fmtN(Math.round(W))+" N",x0+bw+6,y+rh/2+4,C.ink,M(11)); });
+  text(ctx,`Mass is ${o.you} kg on every world.`,x0,top2+4*(rh+10)+12,C.muted,F(11));
+}
+// Two masses: universal gravitation
+const NW_PRE = [
+  {k:"stud",n:"Two students",m1:60,m2:70,d:1.0,l1:"student A",l2:"student B",r1:12,r2:12.5},
+  {k:"em",n:"Earth & Moon",m1:5.97e24,m2:7.35e22,d:3.84e8,l1:"Earth",l2:"Moon",r1:15,r2:7},
+  {k:"se",n:"Sun & Earth",m1:1.99e30,m2:5.97e24,d:1.50e11,l1:"Sun",l2:"Earth",r1:16,r2:6},
+  {k:"ye",n:"You & Earth",m1:5.97e24,m2:60,d:6.37e6,l1:"Earth",l2:"you",r1:16,r2:4},
+];
+function drawNewton(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const P=NW_PRE[o.pi], cp=o.compact, ht=h*0.5, cy=ht/2+6;
+  const r1=P.r1*Math.cbrt(o.a), r2=P.r2*Math.cbrt(o.b), D0=(w-60)/4.5, sep=Math.max(D0*o.d, r1+r2+6), x1=w/2-sep/2, x2=w/2+sep/2, f=o.a*o.b/(o.d*o.d);
+  const cols=[C.olive,C.sage,C.apricot,C.olive], c1=P.k==="se"?C.apricot:P.k==="stud"?C.blush:C.olive, c2=P.k==="ye"?C.terra:P.k==="em"?C.sage:P.k==="se"?C.olive:C.apricot;
+  line(ctx,x1,cy,x2,cy,C.muted,1,[3,4]); circle(ctx,x1,cy,r1,c1,C.ink,1.4); circle(ctx,x2,cy,r2,c2,C.ink,1.4);
+  const L=Math.max(8,26+3.2*Math.log2(f)), rm=Math.max(r1,r2);
+  arrow(ctx,x1,cy-rm-10,x1+L,cy-rm-10,C.terra,2.4); arrow(ctx,x2,cy+rm+10,x2-L,cy+rm+10,C.terra,2.4);
+  text(ctx,"F",x1+L/2,cy-rm-15,C.terra,F(12),"center"); text(ctx,"F",x2-L/2,cy+rm+26,C.terra,F(12),"center");
+  text(ctx,P.l1+(o.a!==1?" ×"+o.a:""),x1,cy+rm+(cp?20:44),C.ink,F(11),"center"); text(ctx,P.l2+(o.b!==1?" ×"+o.b:""),x2,cy-rm-(cp?16:30),C.ink,F(11),"center");
+  // graph F/F0 against d multiple
+  const gx=40, gy=ht+16, gw=w-gx-14, gh=h-gy-30, ymax=o.a*o.b*4, X=v=>gx+(v-0.5)/3.5*gw, Y=v=>gy+gh-Math.min(v,ymax)/ymax*gh;
+  line(ctx,gx,gy+gh,gx+gw,gy+gh,C.ink,1.4); line(ctx,gx,gy,gx,gy+gh,C.ink,1.4);
+  [0.5,1,2,3,4].forEach(v=>text(ctx,"×"+v,X(v),gy+gh+13,C.muted,M(9),"center")); text(ctx,"distance d",gx+gw,gy+gh-5,C.ink,F(10),"right"); text(ctx,"F (× start)",gx+5,gy+10,C.ink,F(10));
+  [0,0.5,1].forEach(q=>text(ctx,trim(q*ymax),gx-4,Y(q*ymax)+3,C.muted,M(9),"right"));
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2.2; ctx.beginPath(); for(let i=0;i<=100;i++){ const d=0.5+3.5*i/100, y=Y(o.a*o.b/(d*d)); i?ctx.lineTo(X(d),y):ctx.moveTo(X(d),y); } ctx.stroke(); ctx.restore();
+  circle(ctx,X(o.d),Y(f),5,C.ink); text(ctx,"×"+trim(f),X(o.d)+8,Y(f)-6,C.ink,M(11));
+}
+// Field around a body + g against r graph
+function drawField(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const b=BODIES[o.p], cp=o.compact, ph=h*0.5, Rp=Math.min(ph*0.25,(w-30)/8.4), cx=12+Rp, cy=ph/2+4, rr=1+o.x;
+  for(let k=0;k<12;k++){ const a=k*Math.PI/6, ra=Rp*1.9, rb=Rp*1.15; arrow(ctx,cx+Math.cos(a)*ra,cy+Math.sin(a)*ra,cx+Math.cos(a)*rb,cy+Math.sin(a)*rb,C.muted,1.3); }
+  planetDisc(ctx,cx,cy,Rp,b); text(ctx,b.n,cx,cy+4,"#3b2b21",F(Math.max(9,Math.min(12,Rp/2.6))),"center");
+  const px=cx+rr*Rp, g=gS(b)/(rr*rr), L=Math.max(4,46/(rr*rr));
+  line(ctx,cx,cy,px,cy,C.terra,1.2,[4,4]); circle(ctx,px,cy,5,C.terra,C.ink,1.2); arrow(ctx,px-6,cy-14,px-6-L,cy-14,C.terra,2.4);
+  text(ctx,"r = "+trim(rr)+"R",(cx+px)/2+Rp*0.5,cy+16,C.terra,F(11),"center"); if(!cp) text(ctx,"g = "+s3(g)+" N/kg",Math.min(px+8,w-90),cy-24,C.ink,F(12));
+  const gx=40, gy=ph+14, gw=w-gx-14, gh=h-gy-28, X=v=>gx+v/7*gw, Y=v=>gy+gh-v*gh;
+  line(ctx,gx,gy+gh,gx+gw,gy+gh,C.ink,1.4); line(ctx,gx,gy,gx,gy+gh,C.ink,1.4);
+  for(let v=1;v<=7;v++) text(ctx,v+"R",X(v),gy+gh+13,C.muted,M(9),"center"); text(ctx,"distance from centre r",gx+gw,gy+gh-5,C.ink,F(10),"right"); text(ctx,"g (N/kg)",gx+5,gy+10,C.ink,F(10));
+  [1,0.25].forEach(q=>{ text(ctx,s3(gS(b)*q),gx-4,Y(q)+3,C.muted,M(9),"right"); line(ctx,gx,Y(q),gx+gw,Y(q),C.grid,1); });
+  ctx.save(); ctx.fillStyle=C[b.col]; ctx.globalAlpha=0.35; ctx.fillRect(gx,gy,X(1)-gx,gh); ctx.restore(); text(ctx,"inside",(gx+X(1))/2,gy+gh-6,C.muted,F(9),"center");
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2.2; ctx.beginPath(); for(let i=0;i<=120;i++){ const r=1+6*i/120; i?ctx.lineTo(X(r),Y(1/(r*r))):ctx.moveTo(X(r),Y(1)); } ctx.stroke(); ctx.restore();
+  circle(ctx,X(rr),Y(1/(rr*rr)),5,C.ink);
+}
+// Escape velocity: straight-up launch
+function drawEscape(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const b=BODIES[o.p], cp=o.compact, gnd=h-34, topY=22, TOPR=6, Y=r=>gnd-(r-1)/(TOPR-1)*(gnd-topY), rx=w*(cp?0.45:0.38);
+  const big=w*1.6; ctx.save(); ctx.beginPath(); ctx.arc(rx,gnd+big,big,0,7); ctx.fillStyle=C[b.col]; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.5; ctx.stroke(); ctx.restore();
+  text(ctx,b.n,rx,h-12,"#3b2b21",F(12),"center");
+  for(let r=2;r<=TOPR;r++){ line(ctx,34,Y(r),w-(cp?10:110),Y(r),C.grid,1); text(ctx,(r-1)+"R",30,Y(r)+3,C.muted,M(9),"right"); }
+  text(ctx,"height",34,14,C.muted,F(10));
+  const f=o.f, rmax=f<1? 1/(1-f*f) : Infinity;
+  if(rmax<TOPR){ line(ctx,40,Y(rmax),w-(cp?10:110),Y(rmax),C.terra,1.4,[6,4]); if(!cp) text(ctx,"max height",w-114,Y(rmax)-4,C.terra,F(10),"right"); }
+  const ry=Y(Math.min(o.r,TOPR+0.4));
+  if(o.r<=TOPR+0.3){ ctx.save(); ctx.translate(rx,ry); ctx.fillStyle=C.surface; ctx.strokeStyle=C.ink; ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(0,-16); ctx.quadraticCurveTo(7,-8,6,6); ctx.lineTo(-6,6); ctx.quadraticCurveTo(-7,-8,0,-16); ctx.closePath(); ctx.fill(); ctx.stroke();
+    if(o.flying && o.v>0){ ctx.fillStyle=C.apricot; ctx.beginPath(); ctx.moveTo(-4,7); ctx.lineTo(0,16); ctx.lineTo(4,7); ctx.fill(); } ctx.restore(); }
+  else text(ctx,"↑ escaped!",rx,topY+10,C.good,F(13),"center");
+  if(cp) return;
+  const bx=w-80, bw=26, bb=gnd, bt=topY+20, vf=f/1.3, Yb=q=>bb-q*(bb-bt);
+  rrect(ctx,bx,bt,bw,bb-bt,6,C["surface-2"],C.line,1.2); rrect(ctx,bx,Yb(vf),bw,bb-Yb(vf),6,f>=1?C.good:C.apricot);
+  line(ctx,bx-6,Yb(1/1.3),bx+bw+6,Yb(1/1.3),C.ink,2); text(ctx,"vₑ",bx+bw+8,Yb(1/1.3)+4,C.ink,F(12)); text(ctx,"launch",bx+bw/2,bb+14,C.muted,F(10),"center");
+}
+// Hero: Earth, field lines and the orbiting Moon
+function drawHero(ctx,w,h,t){ bg(ctx,w,h); const cx=w*0.45, cy=h*0.52, R=Math.min(w,h)*0.16, a=t*0.35, ox=Math.min(w*0.4,h*0.62), oy=Math.min(h*0.36,ox*0.55);
+  ctx.save(); ctx.strokeStyle=C.grid; ctx.setLineDash([4,6]); ctx.beginPath(); ctx.ellipse(cx,cy,ox,oy,0,0,7); ctx.stroke(); ctx.restore();
+  for(let k=0;k<16;k++){ const q=k*Math.PI/8; arrow(ctx,cx+Math.cos(q)*R*2,cy+Math.sin(q)*R*2,cx+Math.cos(q)*R*1.18,cy+Math.sin(q)*R*1.18,C.muted,1.2); }
+  planetDisc(ctx,cx,cy,R,BODIES.earth); text(ctx,"Earth",cx,cy+5,"#3b2b21",F(13),"center");
+  const mx=cx+Math.cos(a)*ox, my=cy+Math.sin(a)*oy, d=Math.hypot(cx-mx,cy-my);
+  planetDisc(ctx,mx,my,R*0.36,BODIES.moon); arrow(ctx,mx,my,mx+(cx-mx)/d*R*0.9,my+(cy-my)/d*R*0.9,C.terra,2.4);
+  text(ctx,"F = Gm₁m₂/d²",14,24,C.ink,F(14)); text(ctx,"g = GM/r²",14,44,C.terra,F(13));
+}
+// Drill: before and after
+function drawDrill(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const base=Math.min(70,(w-80)/3);
+  [[1,1,1,"before",h*0.3],[o.a,o.b,o.c,"after",h*0.74]].forEach(([a,b,c,lab,y])=>{ const sep=base*c, x1=(w-sep)/2+10, x2=x1+sep;
+    text(ctx,lab,12,y+4,C.muted,F(12)); line(ctx,x1,y,x2,y,C.muted,1,[3,4]);
+    circle(ctx,x1,y,9*Math.cbrt(a),C.apricot,C.ink,1.3); circle(ctx,x2,y,9*Math.cbrt(b),C.sage,C.ink,1.3);
+    text(ctx,a===1?"m₁":"×"+a,x1,y-16*Math.cbrt(a)+2,C.ink,F(11),"center"); text(ctx,b===1?"m₂":"×"+b,x2,y-16*Math.cbrt(b)+2,C.ink,F(11),"center");
+    text(ctx,c===1?"d":"d ×"+c,(x1+x2)/2,y+24,C.terra,F(11),"center"); });
+}
+// Infographic minis
+function axesBox(ctx,w,h,xl,yl){ const p=30; line(ctx,p,h-p+6,w-10,h-p+6,C.ink,1.4); line(ctx,p,10,p,h-p+6,C.ink,1.4); text(ctx,yl,p+5,18,C.ink,F(11)); text(ctx,xl,w-10,h-p,C.ink,F(11),"right"); return {x0:p,y0:h-p+6,x1:w-10,y1:12}; }
+function drawInvMini(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const A=axesBox(ctx,w,h,"r","g"), X=r=>A.x0+(r/5)*(A.x1-A.x0), Y=v=>A.y0-v*(A.y0-A.y1-6);
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2.4; ctx.beginPath(); for(let i=0;i<=80;i++){ const r=1+4*i/80; i?ctx.lineTo(X(r),Y(1/(r*r))):ctx.moveTo(X(r),Y(1)); } ctx.stroke(); ctx.restore();
+  [[1,"g₀"],[2,"g₀/4"],[3,"g₀/9"]].forEach(([r,l])=>{ circle(ctx,X(r),Y(1/(r*r)),4,C.ink); text(ctx,l,X(r)+6,Y(1/(r*r))-6,C.ink,M(10)); text(ctx,r+"R",X(r),A.y0+13,C.muted,M(9),"center"); }); }
+function drawT2Mini(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const A=axesBox(ctx,w,h,"l","T²"), X=l=>A.x0+l*(A.x1-A.x0), Y=v=>A.y0-v/12*(A.y0-A.y1);
+  [["Earth",gS(BODIES.earth),C.olive],["Mars",gS(BODIES.mars),C.terra]].forEach(([n,g,c])=>{ const s=4*Math.PI*Math.PI/g, le=Math.min(1,12/s); line(ctx,X(0),Y(0),X(le),Y(s*le),c,2.6); text(ctx,n,X(le)-4,Y(s*le)-6,c,F(11),"right"); }); }
+function drawEscMini(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const A=axesBox(ctx,w,h,"","vₑ (km/s)"), n=4, gap=(A.x1-A.x0)/n, mx=vEsc(BODIES.jupiter)/1000;
+  BKEYS.forEach((k,i)=>{ const B=BODIES[k], v=vEsc(B)/1000, bh=v/mx*(A.y0-A.y1-14), x=A.x0+gap*(i+0.5); rrect(ctx,x-gap*0.3,A.y0-bh,gap*0.6,Math.max(bh,1),4,C[B.col]); text(ctx,v.toFixed(1),x,A.y0-bh-4,C.ink,M(10),"center"); text(ctx,B.n,x,A.y0+13,C.muted,F(10),"center"); }); }
+
+function axes(ctx,w,h,xl,yl,pad=28){ line(ctx,pad,h-pad,w-10,h-pad,C.ink,1.5); line(ctx,pad,10,pad,h-pad,C.ink,1.5); text(ctx,yl,pad+5,18,C.ink,F(11)); text(ctx,xl,w-10,h-pad-6,C.ink,F(11),"right"); }
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h,o.bgc);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ if(p[2]) circle(ctx,X(p[0]),Y(p[1]),4.5,null,C.olive,2); else { ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); } });
+}
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "work", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+const loIds=["lo1","lo2","lo3"]; const loState=store.get("s15-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s15-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s15-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+/* ================= LEARN ================= */
+const LEARN = {
+  fall:{ vis:[["fall",{s:0.8,u:1,t:0.404,p:"earth"}]], cap:"A ball falls 0.80 m from rest in 0.404 s. From s = ut + ½gt² with u = 0: g = 2s/t² = 2 × 0.80 ÷ 0.404² = 9.80 m/s².",
+    keys:[["½","From rest, s = ½gt² (1.1 with a = g). Rearranged: g = 2s/t². An electromagnet releases the ball and starts an electronic timer; a trapdoor stops it."],["t²","Drop from several heights and plot s against t². A straight line through the origin shows s ∝ t²; its slope is ½g, so g = 2 × slope."],["=","Every object in free fall at the same place has the same acceleration, whatever its mass. On Earth air resistance spoils this for light objects; on the Moon a feather and a hammer land together."]],
+    f:"g = 2s / t²", mistake:"Using g = s/t² or forgetting to square t. The ½ in s = ½gt² gives the 2 in g = 2s/t²." },
+  pendulum:{ vis:[["pend",{l:1.0,ang:0.15}]], cap:"A 1.00 m pendulum on Earth: T = 2π√(l/g) = 2π√(1.00 ÷ 9.8) = 2.01 s. Time 20 swings (40.1 s) and divide by 20.",
+    keys:[["T","The period T of a simple pendulum depends only on its length l and g: T = 2π√(l/g), so g = 4π²l/T². The mass of the bob doesn't matter."],["20","Time 20 oscillations with a fiducial mark at the lowest point, then divide by 20. Your reaction time becomes a tiny fraction of the total."],["/","Plot T² against l: a straight line through the origin with slope 4π²/g. Then g = 4π² ÷ slope. Keep swings small (under about 10°)."]],
+    f:"g = 4π²l / T²", mistake:"Measuring l to the top of the bob or timing half a swing. l goes to the centre of the bob, and one oscillation is there and back." },
+  weight:{ vis:[["weight",{p:"earth",m:0.5}]], cap:"A 0.50 kg mass on a newton balance on Earth reads 4.9 N. The force on each kilogram is g = F/m = 4.9 ÷ 0.50 = 9.8 N/kg.",
+    keys:[["N/kg","Gravitational field strength g is the force per unit mass on a mass in the field: g = F/m. Unit N/kg, the same as m/s²."],["kg","Mass is the amount of matter (kg) and never changes. Weight is the gravitational force on it, W = mg (N), and depends on where you are."],["☾","On the Moon g = 1.6 N/kg, so a 60 kg astronaut weighs about 97 N there, about a sixth of their 588 N weight on Earth."]],
+    f:"g = F / m · W = mg", mistake:"Saying \"my weight is 60 kg\". 60 kg is your mass; your weight on Earth is 60 × 9.8 = 588 N." },
+  newton:{ vis:[["newton",{pi:1,a:1,b:1,d:1}]], cap:"The Earth and the Moon pull each other with equal and opposite forces: F = Gm₁m₂/d² = 6.67 × 10⁻¹¹ × 5.97 × 10²⁴ × 7.35 × 10²² ÷ (3.84 × 10⁸)² = 1.98 × 10²⁰ N.",
+    keys:[["∝","Newton's law of universal gravitation: any two point masses attract with a force proportional to the product of their masses and inversely proportional to the square of the distance between them."],["d²","It is an inverse square law: double the distance, a quarter of the force; triple it, a ninth. d is measured between the centres."],["G","G = 6.67 × 10⁻¹¹ N m² kg⁻² is tiny, so the force is only noticeable when at least one mass is enormous. The forces on the two masses are equal and opposite (Newton's third law)."]],
+    f:"F = Gm₁m₂ / d²", mistake:"Halving the force when the distance doubles. It's an inverse square law: 2 × d gives F ÷ 4." },
+  field:{ vis:[["field",{p:"earth",x:1}]], cap:"One Earth radius above the surface, the probe is 2R from the centre: g = 9.81 ÷ 2² = 2.45 N/kg, a quarter of the surface value.",
+    keys:[["r","The field strength at distance r from the centre of a planet of mass M: g = F/m = (GMm/r²)/m = GM/r²."],["R","At the surface r = R, so g = GM/R². This is the fourth model for g; it gives 9.81 N/kg for the Earth."],["+","Above the surface, r = R + h. At the ISS (h = 400 km) g is still 8.69 N/kg: astronauts float because they are in free fall, not because gravity is gone."]],
+    f:"g = GM / r²", mistake:"Using the height above the surface for r. r is from the centre: add the planet's radius first." },
+  escape:{ vis:[["escape",{p:"earth",f:0.85,r:2.8}]], cap:"Launched at 85% of the escape velocity, the probe rises about 2.6 Earth radii and falls back. At 11.2 km/s or more it never returns.",
+    keys:[["vₑ","Escape velocity is the minimum speed needed at a point to escape completely from a body's gravitational field, with no further push."],["=","Set the kinetic energy equal to the energy needed to escape: ½mvₑ² = GMm/r, so vₑ = √(2GM/r). The probe's mass cancels."],["🚀","Earth 11.2 km/s, Moon 2.4 km/s, Mars 5.0 km/s, Jupiter 60 km/s. A low escape velocity is why the Moon has almost no atmosphere."]],
+    f:"vₑ = √(2GM / r)", mistake:"Thinking a heavier rocket needs a higher escape velocity. It needs more energy, but the same speed: m cancels." },
+};
+/* ================= INFOGRAPHICS ================= */
+const R6 = [6.37,6.77,8.37,12.74,26.6,42.2];
+const GM_E = G*BODIES.earth.M;
+const CASES = [
+  {id:"fall", n:"Model 1 · Free fall", eq:"g = 2s/t²", d:"Steel ball, electromagnet and trapdoor with an electronic timer.",
+    cols:["s (m)","t (s)"], rows:[[0.20,0.203],[0.40,0.285],[0.60,0.351],[0.80,0.403],[1.00,0.453],[1.20,0.494]], pt:r=>[r[1]*r[1],r[0]], xl:"t² (s²)", yl:"s (m)",
+    res:m=>`Slope of s against t² = ${m.toFixed(2)} m/s² = ½g, so g = 2 × ${m.toFixed(2)} = <b>${(2*m).toFixed(1)} m/s²</b>.`},
+  {id:"pendulum", n:"Model 2 · Simple pendulum", eq:"g = 4π²l/T²", d:"Time for 20 oscillations at five lengths.",
+    cols:["l (m)","20T (s)"], rows:[[0.30,22.1],[0.50,28.3],[0.70,33.7],[0.90,38.0],[1.10,42.2]], pt:r=>[r[0],(r[1]/20)**2], xl:"l (m)", yl:"T² (s²)",
+    res:m=>`Slope of T² against l = ${m.toFixed(2)} s²/m = 4π²/g, so g = 39.48 ÷ ${m.toFixed(2)} = <b>${(4*Math.PI*Math.PI/m).toFixed(1)} m/s²</b>.`},
+  {id:"weight", n:"Model 3 · Weight per kilogram", eq:"g = F/m", d:"Slotted masses hung on a newton balance.",
+    cols:["m (kg)","F (N)"], rows:[[0.10,1.0],[0.20,2.0],[0.30,2.9],[0.40,3.9],[0.50,4.9],[0.60,5.9]], pt:r=>[r[0],r[1]], xl:"m (kg)", yl:"F (N)",
+    res:m=>`Slope of F against m = <b>${m.toFixed(1)} N/kg</b> = g.`},
+  {id:"field", n:"Model 4 · From the planet", eq:"g = GM/R²", d:"g from satellite tracking at the surface and five orbits (r from the Earth's centre).",
+    cols:["r (×10⁶ m)","g (N/kg)"], rows:R6.map(r=>[r,+s3(GM_E/(r*r*1e12))]), pt:r=>[100/(r[0]*r[0]),r[1]], xl:"1/r² (×10⁻¹⁴ m⁻²)", yl:"g (N/kg)",
+    res:m=>`g against 1/r² is a straight line: g ∝ 1/r². Slope = GM = ${m.toFixed(2)} × 10¹⁴ N m² kg⁻¹, so M = slope ÷ G = <b>${sci(m*1e14/G)} kg</b>. At the surface g = GM/R² = ${m.toFixed(2)} × 10¹⁴ ÷ (6.37 × 10⁶)² = <b>${(m*1e14/(6.37e6*6.37e6)).toFixed(2)} N/kg</b>.`},
+];
+CASES.forEach(S=>{ S.pts=S.rows.map(S.pt); S.fit=linfit(S.pts); });
+$("cases").innerHTML = CASES.map((S,i)=>`<div class="panel rc-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${TOPICS.find(t=>t.id===S.id).tint}">${svg(S.id)}</div><div><h3>${S.n}</h3><span class="formula">${S.eq}</span></div></div><p>${S.d}</p>
+  <div class="secwrap"><table class="sec"><tr>${S.cols.map((c,j)=>`<th style="${j?"":"text-align:left"}">${c}</th>`).join("")}</tr>${S.rows.map(r=>`<tr><td style="text-align:left">${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</table></div>
+  <canvas data-case="${i}" aria-label="${S.n}: graph of ${S.yl} against ${S.xl} with a line of best fit"></canvas><p>${S.res(S.fit[0])}</p></div>`).join("");
+$("secT").innerHTML = `<tr><th style="text-align:left">Body</th><th>M (kg)</th><th>R (m)</th><th>g = GM/R² (N/kg)</th><th>vₑ (km/s)</th><th>60 kg weighs (N)</th></tr>`
+  + BKEYS.map(k=>{ const B=BODIES[k]; return `<tr><td style="text-align:left">${B.n}</td><td>${sci(B.M)}</td><td>${sci(B.R)}</td><td>${gS(B).toFixed(2)}</td><td>${(vEsc(B)/1000).toFixed(1)}</td><td>${Math.round(60*gS(B))}</td></tr>`; }).join("");
+$("secRes").innerHTML = `Jupiter has 318 times the Earth's mass, but its radius is 11 times bigger, and g = GM/R² divides by R². So its surface g is only about 2.6 times the Earth's. The Moon has 1/81 of the Earth's mass and about 0.27 of its radius: g = 9.81 × (1/81) ÷ 0.27² ≈ 1.6 N/kg.`;
+const AROUND = [
+  ["iss","Floating on the ISS","At 400 km up, g is still 8.7 N/kg. Astronauts feel weightless because they and the station are falling around the Earth together.",[["g = GM/r²","neutral"],["Free fall","real"]],"var(--blush)"],
+  ["tide","Tides","The Moon's pull is stronger on the near side of the Earth than the far side (inverse square), stretching the oceans into two bulges.",[["Inverse square","neutral"],["Twice a day","real"]],"var(--sage)"],
+  ["gps","GPS satellites","GPS satellites orbit 20 200 km up, where g is about 0.56 N/kg. Gravity keeps them in orbit (more in 1.6).",[["Satellites","real"],["Weak field","neutral"]],"var(--apricot)"],
+  ["feather","Hammer and feather","In 1971 an Apollo 15 astronaut dropped a hammer and a feather on the Moon. With no air, they landed together.",[["Free fall","real"],["Same g","neutral"]],"var(--cream)"],
+  ["balance","Weighing the Earth","Cavendish's torsion balance (1798) measured the pull between lead spheres, giving G. Then M = gR²/G gave the Earth's mass.",[["Measuring G","real"],["M = gR²/G","neutral"]],"var(--blush)"],
+  ["planet","Atmospheres","Gas molecules move at hundreds of metres per second. Earth (vₑ = 11.2 km/s) keeps its air; the Moon (2.4 km/s) has lost almost all of its gas.",[["Escape velocity","neutral"],["Why no air?","alert"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"fall",label:"Free fall",col:"var(--blush)",leaves:[["g = 2s/t²","From s = ½gt²."],["Electromagnet","Starts the timer as the ball drops."],["s v t²","Slope = ½g."],["Same for all","Every mass falls with g (no air)."]]},
+  {id:"pendulum",label:"Pendulum",col:"var(--apricot)",leaves:[["g = 4π²l/T²","From T = 2π√(l/g)."],["20 swings","Cuts the reaction-time error."],["T² v l","Slope = 4π²/g."],["Small angle","Under about 10°."]]},
+  {id:"weight",label:"g = F/m",col:"var(--sage)",leaves:[["N/kg","Force per kilogram."],["W = mg","Weight is a force."],["Mass","Same everywhere."]]},
+  {id:"newton",label:"Universal gravitation",col:"var(--cream)",leaves:[["F = Gm₁m₂/d²","Every mass attracts every mass."],["Inverse square","2d → F/4."],["G","6.67 × 10⁻¹¹ N m² kg⁻²."],["Third law","Equal and opposite pulls."]]},
+  {id:"field",label:"g at any point",col:"var(--blush)",leaves:[["g = GM/r²","r from the centre."],["Surface","g = GM/R²."],["r = R + h","Add the radius."],["Field lines","Point to the centre."]]},
+  {id:"escape",label:"Escape velocity",col:"var(--sage)",leaves:[["vₑ = √(2GM/r)","From ½mv² = GMm/r."],["11.2 km/s","From the Earth's surface."],["m cancels","Same for any rocket."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["fall","What is the acceleration due to gravity near the Earth's surface?","g = 9.8 m/s², the same for every object in free fall (ignoring air resistance)."],
+  ["fall","Derive g = 2s/t² for a ball dropped from rest.","s = ut + ½at² with u = 0 and a = g gives s = ½gt², so g = 2s/t²."],
+  ["fall","In the free-fall experiment, how is the timer started and stopped?","Switching off the electromagnet releases the ball and starts the timer; the ball hitting the trapdoor stops it."],
+  ["fall","What graph do you plot for free fall, and what is its slope?","s against t²: a straight line through the origin with slope ½g. g = 2 × slope."],
+  ["fall","A ball falls 1.0 m from rest in 0.452 s. Find g.","g = 2s/t² = 2 × 1.0 ÷ 0.452² = 9.79 m/s²."],
+  ["pendulum","Give the formula for the period of a simple pendulum.","T = 2π√(l/g), so g = 4π²l/T²."],
+  ["pendulum","Why time 20 oscillations rather than one?","The reaction-time error (about 0.2 s) is the same however long you time, so it becomes a much smaller percentage of a longer time."],
+  ["pendulum","What graph do you plot for the pendulum, and how do you get g?","T² against l: a straight line through the origin with slope 4π²/g. g = 4π² ÷ slope."],
+  ["pendulum","How is the length of a pendulum measured?","From the point of suspension (the split cork) to the centre of the bob."],
+  ["pendulum","A 0.80 m pendulum makes 20 swings in 35.9 s. Find g.","T = 35.9 ÷ 20 = 1.795 s. g = 4π² × 0.80 ÷ 1.795² = 9.80 m/s²."],
+  ["weight","Define gravitational field strength.","The force per unit mass on a mass placed at a point in a gravitational field: g = F/m. Unit: N/kg."],
+  ["weight","What is the difference between mass and weight?","Mass is the amount of matter (kg) and is the same everywhere. Weight is the gravitational force on an object (N): W = mg."],
+  ["weight","Why is 1 N/kg the same as 1 m/s²?","1 N = 1 kg m/s², so 1 N/kg = 1 (kg m/s²)/kg = 1 m/s²."],
+  ["weight","Find the weight of a 70 kg astronaut on the Moon (g = 1.6 N/kg).","W = mg = 70 × 1.6 = 112 N. Their mass is still 70 kg."],
+  ["newton","State Newton's law of universal gravitation.","Any two point masses attract each other with a force proportional to the product of their masses and inversely proportional to the square of the distance between them: F = Gm₁m₂/d²."],
+  ["newton","What is G, and what is its value?","The universal gravitational constant: 6.67 × 10⁻¹¹ N m² kg⁻²."],
+  ["newton","The distance between two masses is doubled. What happens to the force?","It falls to a quarter (inverse square law)."],
+  ["newton","The Earth pulls you down with 600 N. How hard do you pull the Earth?","600 N upwards: Newton's third law. The Earth's acceleration is tiny because its mass is huge."],
+  ["newton","Find the force between two 60 kg students 1.0 m apart.","F = 6.67 × 10⁻¹¹ × 60 × 60 ÷ 1.0² = 2.4 × 10⁻⁷ N: far too small to notice."],
+  ["field","Derive g = GM/r² for a planet of mass M.","Force on a mass m: F = GMm/r². g = F/m = GM/r²."],
+  ["field","In g = GM/r², what is r?","The distance from the centre of the planet. Above the surface, r = R + h."],
+  ["field","Find g at the Earth's surface (M = 5.97 × 10²⁴ kg, R = 6.37 × 10⁶ m).","g = GM/R² = 6.67 × 10⁻¹¹ × 5.97 × 10²⁴ ÷ (6.37 × 10⁶)² = 9.81 N/kg."],
+  ["field","What is g at a height of one Earth radius above the surface?","r = 2R, so g = 9.8 ÷ 4 = 2.45 N/kg."],
+  ["field","Why do astronauts on the ISS feel weightless?","They and the station are in free fall together around the Earth. Gravity still acts: g is about 8.7 N/kg there."],
+  ["escape","Define escape velocity.","The minimum speed an object needs at a point to escape completely from a body's gravitational field, with no further push."],
+  ["escape","Derive vₑ = √(2GM/r).","Kinetic energy = energy needed to escape: ½mvₑ² = GMm/r. m cancels: vₑ² = 2GM/r."],
+  ["escape","What is the escape velocity from the Earth's surface?","About 11.2 km/s (11 200 m/s)."],
+  ["escape","Why does the Moon have almost no atmosphere?","Its escape velocity is low (2.4 km/s), so over time gas molecules reach escape speed and leave."],
+];
+
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Gravity &amp;</text><text x="${cx}" y="${cy+22}" text-anchor="middle">fields</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("s15-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s15-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s15-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s15-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["fall","A ball dropped from rest falls 1.25 m in 0.505 s. The value of g from these results is:",["4.95 m/s²","9.80 m/s²","2.48 m/s²","19.6 m/s²"],1,"g = 2s/t² = 2 × 1.25 ÷ 0.505² = 2.5 ÷ 0.255 = 9.80 m/s²."],
+  ["fall","Students plot s (distance fallen) against t² for a falling ball. The slope of the line equals:",["g","2g","½g","√g"],2,"s = ½gt², so s against t² is a straight line through the origin with slope ½g."],
+  ["fall","An astronaut drops a hammer and a feather together on the Moon. What happens?",["The hammer lands first","The feather lands first","They land at the same time","Neither falls, because there is no air"],2,"There is no air resistance on the Moon, so both fall with the same acceleration, g = 1.6 m/s²."],
+  ["pendulum","A simple pendulum of length 0.80 m has a period of 1.80 s. The value of g is:",["9.75 m/s²","4.39 m/s²","17.5 m/s²","1.39 m/s²"],0,"g = 4π²l/T² = 39.48 × 0.80 ÷ 1.80² = 31.58 ÷ 3.24 = 9.75 m/s²."],
+  ["pendulum","Why do students time 20 oscillations and divide by 20, rather than timing one?",["To make the swings smaller","To reduce the percentage error caused by reaction time","Because g changes during one swing","To keep the length constant"],1,"Reaction time adds the same small error whatever you time, so it is a much smaller percentage of a long time."],
+  ["pendulum","A graph of T² against l for a pendulum is a straight line through the origin. Its slope is:",["g","4π²g","4π²/g","g/4π²"],2,"T² = (4π²/g) l, so the slope is 4π²/g and g = 4π² ÷ slope."],
+  ["weight","An 80 kg astronaut stands on the Moon, where g = 1.6 N/kg. Their mass and weight there are:",["80 kg and 128 N","13 kg and 784 N","80 kg and 784 N","50 kg and 80 N"],0,"Mass doesn't change: 80 kg. Weight W = mg = 80 × 1.6 = 128 N."],
+  ["weight","Gravitational field strength is defined as:",["The force per unit mass on a mass placed in the field","The mass per unit force","The speed of a falling object","The weight of a 1 N object"],0,"g = F/m: the force on each kilogram, in N/kg."],
+  ["weight","The unit N/kg is equivalent to:",["m/s","m/s²","kg m","N m"],1,"1 N = 1 kg m/s², so 1 N/kg = 1 m/s². That's why g is both a field strength and an acceleration."],
+  ["newton","Newton's law of universal gravitation says the force between two point masses is:",["Proportional to the product of the masses and inversely proportional to the square of the distance between them","Proportional to the distance between them","Inversely proportional to the product of the masses","The same at every distance"],0,"F = Gm₁m₂/d²: proportional to m₁m₂, inversely proportional to d²."],
+  ["newton","The distance between two masses is tripled. The gravitational force between them becomes:",["3 times bigger","⅓ of its value","1/9 of its value","9 times bigger"],2,"Inverse square: F ∝ 1/d², so 3 × d gives F ÷ 9."],
+  ["newton","The Earth pulls the Moon with a force F. The Moon pulls the Earth with a force of:",["F/81","F","81F","zero"],1,"Newton's third law: the forces are equal in size and opposite in direction, even though the masses are very different."],
+  ["field","At a height of one Earth radius above the Earth's surface, g is about:",["4.9 N/kg","2.45 N/kg","9.8 N/kg","0 N/kg"],1,"r = 2R from the centre, so g = 9.8 ÷ 2² = 2.45 N/kg."],
+  ["field","Astronauts on the International Space Station (400 km up) feel weightless because:",["There is no gravity in space","g there is about 8.7 N/kg, but they are in free fall together with the station","The station's walls block gravity","They have no mass in orbit"],1,"g = GM/r² is still about 8.7 N/kg. The astronauts and the station fall together, so nothing pushes on them."],
+  ["field","The formula g = GM/R² shows that the field strength at a planet's surface depends on:",["The mass of the object that is falling","The planet's mass and radius","Only the planet's radius","How fast the planet spins"],1,"g depends on M and R of the planet. The falling mass cancels."],
+  ["escape","The escape velocity from the Earth's surface is about:",["11.2 km/s","7.9 km/s","340 m/s","300 000 km/s"],0,"vₑ = √(2GM/R) = √(2 × 6.67 × 10⁻¹¹ × 5.97 × 10²⁴ ÷ 6.37 × 10⁶) = 11.2 km/s. (7.9 km/s is the speed for a low orbit.)"],
+  ["escape","A planet has the same radius as the Earth but four times its mass. Its escape velocity is:",["Four times the Earth's","Twice the Earth's","The same as the Earth's","Half the Earth's"],1,"vₑ = √(2GM/R) ∝ √M, so four times the mass gives √4 = 2 times the escape velocity."],
+  ["escape","The escape velocity of a rocket does not depend on the rocket's mass because:",["Heavier rockets carry more fuel","The mass cancels in ½mv² = GMm/r","Gravity doesn't act on rockets","Air resistance balances the weight"],1,"½mvₑ² = GMm/r: m appears on both sides and cancels, leaving vₑ = √(2GM/r)."],
+];
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Verify","Show by experiment or calculation that a model or law is true, comparing your result with the expected value.","Verify a model for g using a simple pendulum."],
+  ["Model","Describe a real situation using physics ideas and equations, stating what you assume.","Model the gravitational field strength at the height of the ISS."],
+  ["Calculate","Write the formula, substitute the numbers, give the answer with a unit.","Calculate the escape velocity from Mars."],
+  ["Define","Give the exact meaning in one full, precise sentence.","Define gravitational field strength."],
+  ["State","Give a short fact, law or value. No explanation needed.","State Newton's law of universal gravitation."],
+  ["Derive","Start from a known law and show each step to reach the result.","Derive g = GM/R² from Newton's law of gravitation."],
+  ["Explain","Give reasons, using physics ideas, for why something happens.","Explain why astronauts on the ISS feel weightless."],
+  ["Describe","Give the steps or features in a clear order.","Describe how to measure g with a free-fall apparatus."],
+  ["Investigate","Observe, study or examine in detail to establish facts and reach new conclusions.","Investigate how the period of a pendulum depends on its length."],
+];
+
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s15-best",null); if(best==null||pct>best) store.set("s15-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+// Calculation trainer
+function parseNum(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,ch=>({"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-"})[ch]);
+  s=s.replace(/[x×*]10\^?/i,"e");
+  return parseFloat(s);
+}
+const r1 = x => Math.round(x*10)/10;
+const sn = x => (Math.abs(x)>=1e4||Math.abs(x)<1e-3)? sci(x) : String(x);
+const PTYPES = {
+  fall:{ name:"g = 2s/t²", gen(){ const s=pick([0.5,0.8,1.0,1.2,1.5]), t=Math.round(Math.sqrt(2*s/GE)*(1+(Math.random()*2-1)*0.004)*1000)/1000, g=2*s/(t*t);
+    return { q:`A steel ball is released from rest and falls <b>${s} m</b> in <b>${t.toFixed(3)} s</b>. Calculate g.`, ans:g, unit:"m/s²", steps:["From rest, s = ½gt², so g = 2s / t²",`g = 2 × ${s} ÷ ${t.toFixed(3)}² = ${s3(2*s)} ÷ ${(t*t).toFixed(4)}`,`g = ${g.toFixed(2)} m/s²`] }; } },
+  pend:{ name:"g = 4π²l/T²", gen(){ const l=pick([0.4,0.6,0.8,1.0,1.2]), T20=Math.round(20*TAU*Math.sqrt(l/GE)*(1+(Math.random()*2-1)*0.003)*10)/10, T=T20/20, g=4*Math.PI*Math.PI*l/(T*T);
+    return { q:`A simple pendulum of length <b>${l.toFixed(2)} m</b> makes 20 complete oscillations in <b>${T20.toFixed(1)} s</b>. Calculate g.`, ans:g, unit:"m/s²", steps:[`T = ${T20.toFixed(1)} ÷ 20 = ${T.toFixed(3)} s`,"g = 4π²l / T²",`g = 39.48 × ${l.toFixed(2)} ÷ ${T.toFixed(3)}² = ${g.toFixed(2)} m/s²`] }; } },
+  pendT:{ name:"Period T", gen(){ const [pn,g]=pick([["Earth",9.8],["the Moon",1.6],["Mars",3.7]]), l=pick([0.25,0.5,1.0,1.5,2.0]), T=TAU*Math.sqrt(l/g);
+    return { q:`Calculate the period of a simple pendulum of length <b>${l} m</b> on ${pn}, where g = <b>${g} m/s²</b>.`, ans:T, unit:"s", steps:["T = 2π√(l / g)",`T = 2π × √(${l} ÷ ${g}) = 2π × ${s3(Math.sqrt(l/g))}`,`T = ${s3(T)} s`] }; } },
+  weight:{ name:"W = mg", gen(){ const [pn,g]=pick([["the Moon",1.6],["Mars",3.7],["Jupiter",26],["Earth",9.8]]), m=pick([2,5,12,60,75,90]), W=m*g;
+    return { q:`Calculate the weight of a <b>${m} kg</b> mass on ${pn}, where g = <b>${g} N/kg</b>.`, ans:W, unit:"N", steps:["W = mg",`W = ${m} × ${g}`,`W = ${s3(W)} N`] }; } },
+  gfm:{ name:"g = F/m", gen(){ const g=pick([1.6,3.7,9.8,26]), m=pick([0.2,0.5,1.5,2.5]), F=Math.round(m*g*100)/100, gg=F/m;
+    return { q:`A <b>${m} kg</b> mass hangs from a newton balance on another world. The balance reads <b>${F} N</b>. Calculate the gravitational field strength there.`, ans:gg, unit:"N/kg", steps:["g = F / m",`g = ${F} ÷ ${m}`,`g = ${s3(gg)} N/kg`] }; } },
+  newton:{ name:"F = Gm₁m₂/d²", gen(){ const [desc,m1,m2,d]=pick([["two students",60,70,1.5],["the Earth and the Moon",5.97e24,7.35e22,3.84e8],["the Sun and the Earth",1.99e30,5.97e24,1.50e11],["a 70 kg person and the Earth (d = the Earth's radius)",70,5.97e24,6.37e6],["two 5.0 kg lead spheres",5,5,0.10]]), Fv=G*m1*m2/(d*d);
+    return { q:`Calculate the gravitational force between ${desc}: m₁ = <b>${sn(m1)} kg</b>, m₂ = <b>${sn(m2)} kg</b>, distance between centres d = <b>${sn(d)} m</b>. (G = 6.67 × 10⁻¹¹ N m² kg⁻²)`, ans:Fv, unit:"N", steps:["F = Gm₁m₂ / d²",`F = 6.67 × 10⁻¹¹ × ${sn(m1)} × ${sn(m2)} ÷ (${sn(d)})²`,`F = ${sci(Fv)} N`] }; } },
+  gsurf:{ name:"g = GM/R²", gen(){ const B=BODIES[pick(BKEYS)], g=gS(B);
+    return { q:`${B.n} has mass M = <b>${sci(B.M)} kg</b> and radius R = <b>${sci(B.R)} m</b>. Calculate the gravitational field strength at its surface. (G = 6.67 × 10⁻¹¹ N m² kg⁻²)`, ans:g, unit:"N/kg", steps:["g = GM / R²",`g = 6.67 × 10⁻¹¹ × ${sci(B.M)} ÷ (${sci(B.R)})²`,`g = ${s3(g)} N/kg`] }; } },
+  galt:{ name:"g above the Earth", gen(){ const [n,hk]=pick([["the ISS",400],["a satellite",1000],["a GPS satellite",20200],["a geostationary satellite",35800],["a probe",6370]]), r=6.37e6+hk*1000, g=GM_E/(r*r);
+    return { q:`Calculate g at the height of ${n}, <b>${fmtN(hk)} km</b> above the Earth's surface. (M = 5.97 × 10²⁴ kg, R = 6.37 × 10⁶ m, G = 6.67 × 10⁻¹¹ N m² kg⁻²)`, ans:g, unit:"N/kg", steps:[`r = R + h = 6.37 × 10⁶ + ${sci(hk*1000)} = ${sci(r)} m`,"g = GM / r²",`g = 6.67 × 10⁻¹¹ × 5.97 × 10²⁴ ÷ (${sci(r)})² = ${s3(g)} N/kg`] }; } },
+  ratio:{ name:"Inverse square", gen(){ const k=pick([2,3,4,5,10]), g=9.8/(k*k);
+    return { q:`g at the Earth's surface is 9.8 N/kg. Calculate g at a height of <b>${k-1} Earth radi${k-1===1?"us":"i"}</b> above the surface.`, ans:g, unit:"N/kg", steps:[`r = R + ${k-1}R = ${k}R from the centre`,`g ∝ 1/r², so g = 9.8 ÷ ${k}² = 9.8 ÷ ${k*k}`,`g = ${s3(g)} N/kg`] }; } },
+  escape:{ name:"Escape velocity", gen(){ const B=BODIES[pick(BKEYS)], v=vEsc(B);
+    return { q:`Calculate the escape velocity from the surface of ${B.n}, in km/s. (M = <b>${sci(B.M)} kg</b>, R = <b>${sci(B.R)} m</b>, G = 6.67 × 10⁻¹¹ N m² kg⁻²)`, ans:v/1000, unit:"km/s", steps:["vₑ = √(2GM / R)",`vₑ = √(2 × 6.67 × 10⁻¹¹ × ${sci(B.M)} ÷ ${sci(B.R)}) = √(${sci(v*v)})`,`vₑ = ${fmtN(Math.round(v))} m/s = ${s3(v/1000)} km/s`] }; } },
+  mass:{ name:"Mass of a planet", gen(){ const [n,g,R]=pick([["Mars",3.7,3.39e6],["the Moon",1.6,1.74e6],["the Earth",9.8,6.37e6],["Venus",8.9,6.05e6]]), M=g*R*R/G;
+    return { q:`The gravitational field strength at the surface of ${n} is <b>${g} N/kg</b> and its radius is <b>${sci(R)} m</b>. Calculate its mass. (G = 6.67 × 10⁻¹¹ N m² kg⁻²)`, ans:M, unit:"kg", steps:["g = GM / R², so M = gR² / G",`M = ${g} × (${sci(R)})² ÷ (6.67 × 10⁻¹¹)`,`M = ${sci(M)} kg`] }; } },
+};
+
+let pType="fall", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseNum($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 12.5 or 0.68.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.abs(pCur.ans)*0.02;
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: convert km to m; square the distance (or t, or T); r is from the centre (R + h); type powers of ten as e.g. 1.98e20. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+// Drill: what happens to the force?
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+const frac=(n,d)=>{ const k=gcd(n,d); n/=k; d/=k; return d===1? "× "+n : `× ${n}/${d}`; };
+let pd = { a:1, b:1, c:2, ans:"", opts:[], sel:null, shown:false, streak:0 };
+let predC=null;
+function pdNew(){ let a,b,c;
+  do{ const t=Math.random(); a=t<0.35?1:pick([1,2,3,4]); b=t<0.35?1:pick([1,2,3]); c=pick([1,2,3,4]); if(t<0.35&&c===1) c=2; } while(a===1&&b===1&&c===1);
+  const ans=frac(a*b,c*c), set=new Set([ans]);
+  [frac(a*b,c),frac(a*b*c*c,1),frac(c*c,a*b),frac(a*b,1),frac(a*b*c,1),frac(1,1),frac(2*a*b,c*c)].forEach(x=>{ if(set.size<4) set.add(x); });
+  pd={...pd,a,b,c,ans,opts:shuffle([...set]),sel:null,shown:false};
+  const ch=[a!==1?`m₁ is multiplied by <b>${a}</b>`:"", b!==1?`m₂ is multiplied by <b>${b}</b>`:"", c!==1?`the distance between them is multiplied by <b>${c}</b>`:"the distance stays the same"].filter(Boolean);
+  $("predQ").innerHTML=`Two masses attract each other with a force F. ${ch.join(", ")}. What is the new force?`;
+  $("predOpts").querySelector(".btns").innerHTML=pd.opts.map(x=>`<button data-a="${x}">F ${x}</button>`).join("");
+  $("predFb").innerHTML=""; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const ok=pd.sel===pd.ans; pd.streak=ok?pd.streak+1:0; pd.shown=true;
+  const why=`F = Gm₁m₂/d². The masses multiply F by ${pd.a} × ${pd.b} = ${pd.a*pd.b}; the distance is squared, so it divides F by ${pd.c}² = ${pd.c*pd.c}. New force = F ${pd.ans}.`;
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Measuring g with a simple pendulum", intro:"A student measures the time for 20 oscillations of a simple pendulum for different lengths l:<br>l (m): 0.40 · 0.60 · 0.80 · 1.00 · 1.20<br>20T (s): 25.4 · 31.1 · 35.9 · 40.1 · 44.0",
+    parts:[["a","Explain why the student timed 20 oscillations rather than one.",6,"The reaction-time error in starting and stopping the watch is the same for any time (3), so it is a much smaller percentage of a longer time / reduces the percentage error (3)."],
+      ["b","Calculate the period T and T² for each length.",9,"T = 1.27, 1.555, 1.795, 2.005, 2.20 s (3); T² = 1.61, 2.42, 3.22, 4.02, 4.84 s² (6, deduct 1 per error)."],
+      ["c","Draw a graph of T² against l.",12,"Axes labelled with quantities and units (3); suitable scale (3); points plotted correctly (3); straight line of best fit through the origin (3)."],
+      ["d","Use your graph to calculate g.",9,"Slope ≈ 4.03 s²/m (accept 3.9–4.1) (3); slope = 4π²/g (3); g = 39.48 ÷ 4.03 = 9.8 m/s² (accept 9.6–10.1) (3)."],
+      ["e","Give two precautions the student should take to get an accurate result.",6,"Any two (3 each): keep the angle of swing small (under 10°); measure l to the centre of the bob; use a split cork / rigid clamp for a fixed pivot; time from the lowest point using a fiducial mark; repeat and average."]] },
+  { title:"Newton's law of universal gravitation", intro:"The Earth has mass 5.97 × 10²⁴ kg. The Moon has mass 7.35 × 10²² kg and radius 1.74 × 10⁶ m. The distance between their centres is 3.84 × 10⁸ m. (G = 6.67 × 10⁻¹¹ N m² kg⁻²)",
+    parts:[["a","State Newton's law of universal gravitation.",6,"Any two point masses attract each other with a force (2) proportional to the product of their masses (2) and inversely proportional to the square of the distance between them (2)."],
+      ["b","Calculate the gravitational force the Earth exerts on the Moon.",9,"F = Gm₁m₂/d² (3); = 6.67 × 10⁻¹¹ × 5.97 × 10²⁴ × 7.35 × 10²² ÷ (3.84 × 10⁸)² (3); = 1.98 × 10²⁰ N (3)."],
+      ["c","What force does the Moon exert on the Earth? Explain.",6,"1.98 × 10²⁰ N towards the Moon (3); Newton's third law: equal and opposite forces (3)."],
+      ["d","If the Moon were twice as far away, what would the force be?",6,"Inverse square law: 2 × d gives F ÷ 4 (3); 1.98 × 10²⁰ ÷ 4 = 4.96 × 10¹⁹ N (3)."],
+      ["e","Calculate the gravitational field strength at the surface of the Moon.",9,"g = GM/R² (3); = 6.67 × 10⁻¹¹ × 7.35 × 10²² ÷ (1.74 × 10⁶)² (3); = 1.62 N/kg (3)."],
+      ["f","An astronaut has a mass of 75 kg. Explain why their weight on the Moon is different from their weight on Earth, but their mass is not.",6,"Mass is the amount of matter, so it doesn't change (2); weight W = mg depends on g (2); g on the Moon (1.62 N/kg) is less than on Earth, so W = 75 × 1.62 ≈ 122 N instead of 735 N (2)."]] },
+  { title:"Mars: field strength and escape velocity", intro:"Mars has mass 6.42 × 10²³ kg and radius 3.39 × 10⁶ m. (G = 6.67 × 10⁻¹¹ N m² kg⁻²)",
+    parts:[["a","Define gravitational field strength and give its unit.",6,"The force per unit mass on a mass placed at a point in a gravitational field (3); N/kg (or m/s²) (3)."],
+      ["b","Derive an expression for g at the surface of a planet of mass M and radius R.",6,"Force on a mass m at the surface: F = GMm/R² (3); g = F/m = GM/R² (3)."],
+      ["c","Calculate g at the surface of Mars.",6,"g = 6.67 × 10⁻¹¹ × 6.42 × 10²³ ÷ (3.39 × 10⁶)² (3) = 3.73 N/kg (3)."],
+      ["d","A probe orbits 3390 km above the surface of Mars. Calculate g at the probe.",9,"r = R + h = 6.78 × 10⁶ m = 2R (3); g ∝ 1/r², so g = 3.73 ÷ 4 (3) = 0.93 N/kg (3)."],
+      ["e","Calculate the escape velocity from the surface of Mars.",9,"vₑ = √(2GM/R) (3); = √(2 × 6.67 × 10⁻¹¹ × 6.42 × 10²³ ÷ 3.39 × 10⁶) = √(2.53 × 10⁷) (3); = 5.0 × 10³ m/s (5.03 km/s) (3)."],
+      ["f","Explain why the escape velocity does not depend on the mass of the probe.",6,"The kinetic energy needed equals the energy to escape: ½mvₑ² = GMm/R (3); m appears on both sides and cancels (3)."]] },
+];
+
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+const RAG = ["Derive g = 2s/t² from s = ut + ½at²","Describe the free-fall experiment (electromagnet, trapdoor, timer)","Plot s against t² and get g from the slope","Use T = 2π√(l/g) and g = 4π²l/T²","Describe the pendulum experiment and its precautions","Plot T² against l and get g from the slope","Define gravitational field strength (g = F/m, N/kg)","Explain the difference between mass and weight","State Newton's law of universal gravitation","Use F = Gm₁m₂/d² with powers of ten","Apply the inverse square law (2d → F/4)","Derive g = GM/R² and use it for any planet","Find g at a height h using r = R + h","Calculate escape velocity with vₑ = √(2GM/r)","Explain why escape velocity doesn't depend on the rocket's mass"];
+
+const ragState=store.get("s15-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s15-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Plan a fair test","Independent variable: height s (or length l). Dependent: time t (or 20T). Controlled: the same ball (or bob), apparatus and small swing angle.","Free-fall and pendulum labs"],["Reduce timing errors","Use an electronic timer for free fall. For a pendulum, time 20 oscillations from a fiducial mark at the lowest point.","Free-fall and pendulum labs"],["Measure lengths carefully","Free fall: bottom of the ball to the trapdoor. Pendulum: pivot to the centre of the bob.","Free-fall and pendulum labs"],["Choose the right graph","Plot s against t² (slope ½g) or T² against l (slope 4π²/g): straight lines through the origin.","Free-fall and pendulum labs"],["Use secondary data","Fit a line to someone else's data for all four models and compare the values of g.","Infographics: four data sets"],["Handle powers of ten","Use scientific notation and convert km to m before using G, M and r.","Gravitation and field labs"],["Know the limits of a model","g = GM/r² treats the planet as a uniform sphere; vₑ ignores air resistance and spin.","Field and escape labs"],["Work safely","Keep feet clear of falling masses; don't overload a newton balance; clamp stands firmly.","Free-fall and weight labs"]];
+
+const skState=store.get("s15-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s15-skills",skState); });
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+const MYST = [["Mercury",3.70],["Venus",8.87],["Saturn",10.4],["Neptune",11.2],["Pluto",0.62],["Titan (Saturn's largest moon)",1.35],["Io (a moon of Jupiter)",1.80]];
+// Free fall experiment
+let ffGraph=null;
+const ff = { p:"earth", s:0.8, data:[], u:0, t:null, anim:null, x:MYST[1], revealed:false };
+const ffG = () => ff.p==="x"? ff.x[1] : gS(BODIES[ff.p]);
+function ffUpd(){ $("ffSo").textContent=ff.s.toFixed(2)+" m"; $("ffNew").disabled=ff.p!=="x"; const done=ff.t!=null&&ff.u>=1&&!ff.anim;
+  setReadout($("ffOut"),[["Place",PLN[ff.p]],["Height s",ff.s.toFixed(2)+" m"],["Timer",done? ff.t.toFixed(3)+" s":"–"],["2s/t² for this drop",done? (2*ff.s/(ff.t*ff.t)).toFixed(2)+" m/s²":"–"],["Readings",String(ff.data.length)]]);
+  ffC.redraw(); }
+function ffTable(){ $("ffTable").innerHTML=ff.data.map(([s,t],k)=>`<tr><td>${s.toFixed(2)}</td><td>${t.toFixed(3)}</td><td>${(t*t).toFixed(4)}</td><td>${(2*s/(t*t)).toFixed(2)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("ffEmpty").hidden=ff.data.length>0; if(ffGraph) ffGraph.redraw(); }
+function ffFinish(){ ff.u=1; ff.t=ff.anim.t; ff.data=ff.data.filter(d=>Math.abs(d[0]-ff.s)>1e-9); ff.data.push([ff.s,ff.t]); ff.data.sort((a,b)=>a[0]-b[0]); ff.anim=null; ffTable(); ffUpd(); }
+$("ffGo").addEventListener("click",()=>{ if(ff.anim) return; const tt=Math.sqrt(2*ff.s/ffG()), t=Math.round(tt*(1+(Math.random()*2-1)*0.005)*1000)/1000;
+  ff.anim={el:0,dur:Math.min(2.2,0.25+tt*1.2),t}; ff.u=0; ff.t=0; if(reduce) ffFinish(); });
+$("ffPl").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ff.p=b.dataset.p; pressGroup([...$("ffPl").querySelectorAll("button")],b); ff.data=[]; ff.anim=null; ff.u=0; ff.t=null; ff.revealed=false; ffTable(); ffUpd(); });
+$("ffS").addEventListener("input",e=>{ ff.s=+e.target.value; if(!ff.anim){ ff.u=0; ff.t=null; } ffUpd(); });
+$("ffClear").addEventListener("click",()=>{ ff.data=[]; ff.u=0; ff.t=null; ffTable(); ffUpd(); });
+$("ffNew").addEventListener("click",()=>{ let n; do{ n=pick(MYST); } while(n===ff.x); ff.x=n; ff.data=[]; ff.revealed=false; ff.u=0; ff.t=null; ffTable(); ffUpd(); });
+$("ffReveal").addEventListener("click",()=>{ ff.revealed=!ff.revealed; ffTable(); });
+$("ffTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ ff.data.splice(+k,1); ffTable(); ffUpd(); } });
+// Pendulum experiment
+let pnGraph=null;
+const pn = { p:"earth", l:0.8, data:[], phase:0, anim:null, n:0, t:0, x:MYST[0], revealed:false };
+const pnG = () => pn.p==="x"? pn.x[1] : gS(BODIES[pn.p]);
+const pnT = () => TAU*Math.sqrt(pn.l/pnG());
+function pnUpd(){ $("pnLo").textContent=pn.l.toFixed(2)+" m"; $("pnNew").disabled=pn.p!=="x"; const last=pn.data.find(d=>Math.abs(d[0]-pn.l)<1e-9);
+  setReadout($("pnOut"),[["Place",PLN[pn.p]],["Length l",pn.l.toFixed(2)+" m"],["20T at this length",last&&!pn.anim? last[1].toFixed(2)+" s":"–"],["T = 20T ÷ 20",last&&!pn.anim? (last[1]/20).toFixed(3)+" s":"–"],["Readings",String(pn.data.length)]]);
+  pnC.redraw(); }
+function pnTable(){ $("pnTable").innerHTML=pn.data.map(([l,t20],k)=>{ const T=t20/20; return `<tr><td>${l.toFixed(2)}</td><td>${t20.toFixed(2)}</td><td>${T.toFixed(3)}</td><td>${(T*T).toFixed(3)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`; }).join("");
+  $("pnEmpty").hidden=pn.data.length>0; if(pnGraph) pnGraph.redraw(); }
+function pnFinish(){ const m=pn.anim.m20; pn.data=pn.data.filter(d=>Math.abs(d[0]-pn.l)>1e-9); pn.data.push([pn.l,m]); pn.data.sort((a,b)=>a[0]-b[0]); pn.t=m; pn.n=20; pn.anim=null; pnTable(); pnUpd(); }
+$("pnGo").addEventListener("click",()=>{ if(pn.anim) return; const T=pnT(), m20=Math.round((20*T+(Math.random()*2-1)*0.15)*100)/100;
+  pn.anim={el:0,dur:Math.min(4,1.5+T*0.4),m20}; pn.n=0; pn.t=0; if(reduce) pnFinish(); });
+$("pnPl").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pn.p=b.dataset.p; pressGroup([...$("pnPl").querySelectorAll("button")],b); pn.data=[]; pn.anim=null; pn.n=0; pn.t=0; pn.revealed=false; pnTable(); pnUpd(); });
+$("pnL").addEventListener("input",e=>{ pn.l=+e.target.value; if(!pn.anim){ pn.n=0; pn.t=0; } pnUpd(); });
+$("pnClear").addEventListener("click",()=>{ pn.data=[]; pn.n=0; pn.t=0; pnTable(); pnUpd(); });
+$("pnNew").addEventListener("click",()=>{ let n; do{ n=pick(MYST); } while(n===pn.x); pn.x=n; pn.data=[]; pn.revealed=false; pnTable(); pnUpd(); });
+$("pnReveal").addEventListener("click",()=>{ pn.revealed=!pn.revealed; pnTable(); });
+$("pnTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ pn.data.splice(+k,1); pnTable(); pnUpd(); } });
+// Weight on four worlds
+const wt = { p:"earth", m:0.3, you:60 };
+function wtUpd(){ const B=BODIES[wt.p], g=gS(B), F1=wt.m*g, W=wt.you*g;
+  $("wtMo").textContent=wt.m.toFixed(2)+" kg"; $("wtYo").textContent=wt.you+" kg";
+  setReadout($("wtOut"),[["Place",B.n],["Balance reads F",s3(F1)+" N"],["g = F ÷ m",g.toFixed(2)+" N/kg"],["Your weight here",fmtN(Math.round(W))+" N"],["Your mass here",wt.you+" kg"]]);
+  $("wtWork").innerHTML=`g = F/m = ${s3(F1)} ÷ ${wt.m.toFixed(2)} = <b>${g.toFixed(2)} N/kg</b> on ${B.n}, whatever mass you hang. Your weight W = mg = ${wt.you} × ${g.toFixed(2)} = <b>${fmtN(Math.round(W))} N</b>`+(wt.p==="earth"? "." : `, which is ${(g/gS(BODIES.earth)).toFixed(2)} × your weight on Earth. Your mass is still ${wt.you} kg.`);
+  wtC.redraw(); }
+$("wtPl").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; wt.p=b.dataset.p; pressGroup([...$("wtPl").querySelectorAll("button")],b); wtUpd(); });
+$("wtM").addEventListener("input",e=>{ wt.m=+e.target.value; wtUpd(); });
+$("wtY").addEventListener("input",e=>{ wt.you=+e.target.value; wtUpd(); });
+const MW = [["Measured in kilograms","M","Mass is in kg; weight is a force, in N."],["Measured in newtons","W","Weight is a force."],["Read directly by a newton balance","W","A newton balance measures a force."],["The same on the Moon as on Earth","M","Mass is the amount of matter: it doesn't depend on g."],["About a sixth as big on the Moon as on Earth","W","W = mg, and g on the Moon is about 1.6 N/kg."],["Has a direction: towards the centre of the planet","W","Weight is a force, so it is a vector."],["Almost zero in deep space, far from any star or planet","W","There g ≈ 0, so W ≈ 0. The mass is unchanged."],["Compared on an equal-arm beam balance","M","g pulls equally on both pans, so a beam balance compares masses."],["Calculated with W = mg","W","That's the weight formula."],["The amount of matter in an object","M","That's the definition of mass."]];
+const MWN = {M:"Mass",W:"Weight"}, mwS = { order:[], ans:{} };
+function mwRender(){ sorter("mwList","mwOut",MW,MWN,mwS); }
+function mwNew(){ mwS.order=shuffle(MW.map((s,k)=>k)); mwS.ans={}; mwRender(); }
+$("mwList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; mwS.ans[b.dataset.k]=b.dataset.v; mwRender(); });
+$("mwReset").addEventListener("click",mwNew);
+// Universal gravitation
+const nw = { pi:0, a:1, b:1, d:1 };
+$("nwPre").innerHTML = NW_PRE.map((P,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${P.n}</button>`).join("");
+function nwUpd(){ const P=NW_PRE[nw.pi], m1=P.m1*nw.a, m2=P.m2*nw.b, d=P.d*nw.d, Fv=G*m1*m2/(d*d), f=nw.a*nw.b/(nw.d*nw.d);
+  $("nwAo").textContent=nw.a; $("nwBo").textContent=nw.b; $("nwDo").textContent=nw.d;
+  setReadout($("nwOut"),[["m₁ ("+P.l1+")",sn(m1)+" kg"],["m₂ ("+P.l2+")",sn(m2)+" kg"],["Distance d",sn(d)+" m"],["Force on each",sci(Fv)+" N"],["Compared with the start","× "+trim(f)]]);
+  $("nwWork").innerHTML=`F = Gm₁m₂/d² = 6.67 × 10⁻¹¹ × ${sn(m1)} × ${sn(m2)} ÷ (${sn(d)})² = <b>${sci(Fv)} N</b>. Masses × ${nw.a} and × ${nw.b}, distance × ${nw.d}: the force changes by ${nw.a} × ${nw.b} ÷ ${nw.d}² = <b>× ${trim(f)}</b>. Each mass feels the same size of force, towards the other.`
+    +(P.k==="stud"? " Between people the force is far too small to notice." : P.k==="ye"&&f===1? " This is the person's weight, mg." : "");
+  nwC.redraw(); }
+$("nwPre").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; nw.pi=+b.dataset.i; pressGroup([...$("nwPre").querySelectorAll("button")],b); nwUpd(); });
+[["nwA","a"],["nwB","b"],["nwD","d"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ nw[k]=+e.target.value; nwUpd(); }));
+// Field at any point
+const fd = { p:"earth", x:0 };
+function fdUpd(){ const B=BODIES[fd.p], rr=1+fd.x, r=rr*B.R, hh=fd.x*B.R, g=gS(B)/(rr*rr);
+  $("fdHo").textContent=fmtN(Math.round(hh/1000))+" km";
+  setReadout($("fdOut"),[["Height h",fmtN(Math.round(hh/1000))+" km"],["r = R + h",sci(r)+" m"],["r ÷ R",rr.toFixed(2)],["g here",s3(g)+" N/kg"],["g ÷ surface g",(1/(rr*rr)).toFixed(3)],["70 kg astronaut's weight",fmtN(Math.round(70*g))+" N"]]);
+  $("fdWork").innerHTML=`g = GM/r² = 6.67 × 10⁻¹¹ × ${sci(B.M)} ÷ (${sci(r)})² = <b>${s3(g)} N/kg</b>. Inverse square check: ${s3(gS(B))} ÷ ${rr.toFixed(2)}² = ${s3(gS(B)/(rr*rr))} N/kg.`+(fd.x===0? " At the surface r = R, so g = GM/R²." : "");
+  fdC.redraw(); }
+$("fdPl").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; fd.p=b.dataset.p; pressGroup([...$("fdPl").querySelectorAll("button")],b); fdUpd(); });
+$("fdH").addEventListener("input",e=>{ fd.x=+e.target.value; fdUpd(); });
+$("fdPre").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; fd.p="earth"; pressGroup([...$("fdPl").querySelectorAll("button")],$("fdPl").querySelector('[data-p="earth"]'));
+  fd.x=+b.dataset.h*1000/BODIES.earth.R; $("fdH").value=fd.x; fdUpd(); });
+// Escape velocity
+const es = { p:"earth", pct:72, r:1, v:0, flying:false, done:false };
+function esUpd(){ const B=BODIES[es.p], ve=vEsc(B), f=es.pct/100, v0=f*ve, rmax=f<1? 1/(1-f*f) : Infinity, km=x=>fmtN(Math.round(x/1000))+" km";
+  $("esVo").textContent=(v0/1000).toFixed(1)+" km/s ("+es.pct+"% of vₑ)";
+  setReadout($("esOut"),[["Escape velocity vₑ",(ve/1000).toFixed(1)+" km/s"],["Launch speed",(v0/1000).toFixed(1)+" km/s"],["Prediction",f>=1? "escapes" : "rises "+km((rmax-1)*B.R)],["Now",es.flying? "flying" : es.done? (es.r>7? "escaped" : "landed again") : "on the pad"],["Height now",es.r>7&&es.done? "far away" : km((es.r-1)*B.R)]]);
+  $("esWork").innerHTML=`vₑ = √(2GM/R) = √(2 × 6.67 × 10⁻¹¹ × ${sci(B.M)} ÷ ${sci(B.R)}) = <b>${fmtN(Math.round(ve))} m/s</b>. `
+    +(f>=1? `At ${es.pct}% of vₑ the probe's kinetic energy ½mv² is at least GMm/R, the energy needed to escape, so it never comes back.`
+      : `At ${es.pct}% of vₑ, energy conservation gives r<sub>max</sub> = R ÷ (1 − (v/vₑ)²) = ${rmax.toFixed(2)}R: it rises ${km((rmax-1)*B.R)} and falls back.`);
+  esC.redraw(); }
+function esReset(){ es.r=1; es.v=0; es.flying=false; es.done=false; esUpd(); }
+$("esPl").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; es.p=b.dataset.p; pressGroup([...$("esPl").querySelectorAll("button")],b); esReset(); });
+$("esV").addEventListener("input",e=>{ es.pct=+e.target.value; if(!es.flying) esReset(); else esUpd(); });
+$("esGo").addEventListener("click",()=>{ const f=es.pct/100; es.r=1; es.v=f; es.flying=true; es.done=false;
+  if(reduce){ es.flying=false; es.done=true; es.r=f>=1? 9 : 1; } esUpd(); });
+$("esReset").addEventListener("click",esReset);
+function esStep(dt){ const k=dt*(2+1.5*es.r), n=20, hs=k/n; for(let i=0;i<n;i++){ es.v-=hs/(2*es.r*es.r); es.r+=es.v*hs; if(es.r<=1){ es.r=1; es.v=0; es.flying=false; es.done=true; break; } if(es.r>9){ es.flying=false; es.done=true; break; } } }
+
+/* ================= CREATE CANVASES ================= */
+const hero = makeCanvas($("heroCanvas"), 0.7, 240, s => drawHero(s.ctx,s.w,s.h,reduce?1.2:heroT), 420);
+const ffC = makeCanvas($("ffC"), 0.5, 300, s => drawFall(s.ctx,s.w,s.h,{s:ff.s,u:ff.u,t:ff.t,p:ff.p,g:true}), 420);
+const pnC = makeCanvas($("pnC"), 0.5, 300, s => drawPend(s.ctx,s.w,s.h,{l:pn.l,ang:0.17*Math.cos(pn.phase),t:pn.t,n:pn.n,p:pn.p}), 420);
+const wtC = makeCanvas($("wtC"), 0.5, 320, s => drawWeight(s.ctx,s.w,s.h,wt), 420);
+const nwC = makeCanvas($("nwC"), 0.6, 340, s => drawNewton(s.ctx,s.w,s.h,nw), 460);
+const fdC = makeCanvas($("fdC"), 0.62, 340, s => drawField(s.ctx,s.w,s.h,fd), 480);
+const esC = makeCanvas($("esC"), 0.55, 320, s => drawEscape(s.ctx,s.w,s.h,{p:es.p,f:es.pct/100,r:es.r,v:es.v,flying:es.flying}), 440);
+ffGraph = makeCanvas($("ffGraph"), 0.72, 190, s => {
+  const pts=ff.data.map(([sv,t])=>[t*t,sv]), fit=pts.length>=3? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,0.05],yr:[0,0.2],xl:"t² (s²)",yl:"s (m)",fit});
+  const truth = ff.revealed? ` <b>Answer:</b> ${ff.p==="x"? `the mystery world was ${ff.x[0]}, g = ${ff.x[1]} m/s²` : `g on ${PLN[ff.p]} is ${ffG().toFixed(2)} m/s²`}.` : "";
+  if(!fit){ $("ffResult").innerHTML="Record three or more heights to draw the line."+truth; return; }
+  $("ffResult").innerHTML=`Slope = <b>${fit[0].toFixed(3)} m/s²</b> = ½g, intercept ${fit[1].toFixed(3)} m (close to 0). g = 2 × slope = <b>${(2*fit[0]).toFixed(2)} m/s²</b>.`+truth;
+}, 300);
+pnGraph = makeCanvas($("pnGraph"), 0.72, 190, s => {
+  const pts=pn.data.map(([l,t20])=>[l,(t20/20)**2]), fit=pts.length>=3? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,0.2],yr:[0,1],xl:"l (m)",yl:"T² (s²)",fit});
+  const truth = pn.revealed? ` <b>Answer:</b> ${pn.p==="x"? `the mystery world was ${pn.x[0]}, g = ${pn.x[1]} m/s²` : `g on ${PLN[pn.p]} is ${pnG().toFixed(2)} m/s²`}.` : "";
+  if(!fit){ $("pnResult").innerHTML="Record three or more lengths to draw the line."+truth; return; }
+  $("pnResult").innerHTML=`Slope = <b>${fit[0].toFixed(3)} s²/m</b> = 4π²/g, intercept ${fit[1].toFixed(3)} s². g = 4π² ÷ slope = 39.48 ÷ ${fit[0].toFixed(3)} = <b>${(4*Math.PI*Math.PI/fit[0]).toFixed(2)} m/s²</b>.`+truth;
+}, 300);
+predC = makeCanvas($("predC"), 0.6, 220, s => drawDrill(s.ctx,s.w,s.h,{...pd,bgc:C["surface-2"]}), 320);
+pdNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    fall:s=>drawFall(s.ctx,s.w,s.h,{...o,compact:true}),
+    pend:s=>drawPend(s.ctx,s.w,s.h,{...o,compact:true}),
+    weight:s=>drawWeight(s.ctx,s.w,s.h,{...o,compact:true}),
+    newton:s=>drawNewton(s.ctx,s.w,s.h,{...o,compact:true}),
+    field:s=>drawField(s.ctx,s.w,s.h,{...o,compact:true}),
+    escape:s=>drawEscape(s.ctx,s.w,s.h,{...o,compact:true}),
+  };
+  makeCanvas(el, kind==="fall"||kind==="pend"? 0.75 : 0.85, 220, draws[kind], 420);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-case]").forEach(el=>{ const S=CASES[+el.dataset.case]; makeCanvas(el,0.62,180,s=>scatter(s,S.pts,{xr:[0,0],yr:[0,0],xl:S.xl,yl:S.yl,fit:S.fit,bgc:C["surface-2"]}),280); });
+document.querySelectorAll("canvas[data-mini=inv]").forEach(el=>makeCanvas(el,0.7,160,s=>drawInvMini(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=t2l]").forEach(el=>makeCanvas(el,0.7,160,s=>drawT2Mini(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=esc]").forEach(el=>makeCanvas(el,0.7,160,s=>drawEscMini(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+ffTable(); ffUpd(); pnTable(); pnUpd(); wtUpd(); mwNew(); nwUpd(); fdUpd(); esUpd();
+
+/* ================= LOOP / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(ff.anim){ ff.anim.el+=dt; const f=Math.min(1,ff.anim.el/ff.anim.dur); ff.u=f*f; ff.t=f*ff.anim.t; ffC.redraw(); if(f>=1) ffFinish(); }
+  if(view==="labs" && lab==="pendulum" && !reduce){ const T=pn.anim? Math.max(0.6,Math.min(1.6,pnT()*0.5)) : Math.max(0.8,Math.min(4,pnT())); pn.phase+=dt*TAU/T;
+    if(pn.anim){ pn.anim.el+=dt; const f=Math.min(1,pn.anim.el/pn.anim.dur); pn.t=f*pn.anim.m20; pn.n=Math.floor(f*20); if(f>=1) pnFinish(); }
+    pnC.redraw(); }
+  if(es.flying){ esStep(dt); esUpd(); }
+  requestAnimationFrame(loop);
+})(performance.now());
+
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>

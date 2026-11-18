@@ -1,0 +1,1636 @@
+<title>Idea Development</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.sh-card{display:grid;gap:8px;padding:16px}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card p b{color:var(--terra)}
+.fbbox{padding:0 16px 14px}
+.offers{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 14px}
+.predopts .btns button{min-width:110px}
+.qmvb{display:flex;flex-wrap:wrap;gap:5px}
+.qmvb button{font-size:.78rem;padding:5px 9px}
+.qmvb button[aria-pressed="false"]{opacity:.7;text-decoration:line-through}
+.srt .row .ctl{flex:0 1 170px}
+</style>
+
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 018 8M20 12l-2.5-2M20 12l2-2.5"/><circle cx="12" cy="12" r="2.5"/></svg></div>
+        <div style="min-width:0"><b>Idea Development</b><span>Leaving Cert Business · Strand 2 · Topic 2</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html" class="on" aria-current="page">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Cheat sheet</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>U · Investigating Business</summary><ol><li><span class="mono">U</span>Research skills (all year)</li></ol></details>
+      <details><summary>1 · Business Environment</summary><ol><li class="link"><a href="s1-1-stakeholders.html"><span class="mono">1.1</span>Key stakeholders</a></li><li class="link"><a href="s1-2-forms-of-business.html"><span class="mono">1.2</span>Forms of business &amp; governance</a></li><li class="link"><a href="s1-3-economy.html"><span class="mono">1.3</span>Business &amp; the economy</a></li><li class="link"><a href="s1-4-policy.html"><span class="mono">1.4</span>National &amp; EU policy</a></li><li class="link"><a href="s1-5-global.html"><span class="mono">1.5</span>Irish business globally</a></li><li><span class="mono">1.6</span>Applying my learning</li></ol></details>
+      <details open><summary>2 · Understanding Enterprise</summary><ol><li class="link"><a href="s2-1-enterprise.html"><span class="mono">2.1</span>Enterprise</a></li><li class="here"><span class="mono">2.2</span>Idea development</li><li class="link"><a href="s2-3-planning.html"><span class="mono">2.3</span>Business planning</a></li><li class="link"><a href="s2-4-target-market.html"><span class="mono">2.4</span>The target market</a></li><li class="link"><a href="s2-5-operations-finance.html"><span class="mono">2.5</span>Operations &amp; finance</a></li><li class="link"><a href="s2-6-growth.html"><span class="mono">2.6</span>Growth &amp; expansion</a></li><li><span class="mono">2.7</span>Managing risk</li><li><span class="mono">2.8</span>Applying my learning</li></ol></details>
+      <details><summary>3 · Leading in Business</summary><ol><li><span class="mono">3.1</span>Leading an organisation</li><li><span class="mono">3.2</span>Leading people</li><li><span class="mono">3.3</span>Communication</li><li><span class="mono">3.4</span>Planning</li><li><span class="mono">3.5</span>Applying my learning</li></ol></details>
+      <details><summary>4 · Informed Decisions</summary><ol><li><span class="mono">4.1</span>Informed consumer</li><li><span class="mono">4.2</span>Informed financial decisions</li><li><span class="mono">4.3</span>Informed employee</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 2 · Understanding enterprise</span>
+          <h1 style="margin-top:12px">Find a problem.<br>Shape an idea.<br><em>Test before you invest.</em></h1>
+          <p class="lede">Every business starts as an idea, but most ideas need a lot of work before they're worth money. Learn where ideas come from, what helps or blocks them, how design thinking turns a problem into a tested solution, and why a feasibility study comes before the big spend.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="The four phases of design thinking, clarify, ideate, develop and implement, arranged in a loop around the user"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/3</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">2.2.1</span><span>determine the factors that impact on the development of business ideas.</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">2.2.2</span><span>outline design thinking as an innovative approach to idea development and appreciate how the process is iterative and both solution- and person-centred.</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">2.2.3</span><span>appreciate the importance of conducting a feasibility study to evaluate a business idea.</span></label></li>
+        </ul>
+        <div class="result" style="margin-top:10px"><p><b>Students learn about:</b></p>
+          <ul style="margin:6px 0 0 18px;display:grid;gap:4px">
+            <li>how business ideas are developed</li>
+            <li>the significance of design thinking* (including the four phases of clarify, ideate, develop, and implement) to support idea development and the importance of evaluating a business idea to determine the potential future viability of the business.</li>
+          </ul>
+          <p style="margin-top:8px"><b>*Design thinking</b>, from the specification's glossary: "An innovative, non-linear approach to the development of products and services which focuses on solutions for the end user."</p></div>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Sort sources of ideas, weigh up the factors behind three ideas, run a design thinking project, screen ideas with your own weights, test an idea's feasibility and run a survey to decide go, pivot or stop.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="sources">
+        <div class="labhead"><span class="pill t">Where did that idea come from?</span><p class="goal">Ideas come from inside a business (staff, research, records) or from outside it (customers, competitors, trends, technology). Sort each one.</p></div>
+        <div class="panel sim">
+          <canvas id="srC" aria-label="Two circles, internal and external sources of ideas, filling up as you sort correctly"></canvas>
+          <div class="srt" id="srList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="srReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="srOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Which sources would a one-person start-up rely on most?</div><div class="try"><b>2</b>Why might a big firm set up a suggestion scheme?</div><div class="try"><b>3</b>Name one problem you met this week that could be a business idea.</div></div>
+      </div>
+
+      <div class="lab" data-lab="factors" hidden>
+        <div class="labhead"><span class="pill t">Factors that shape an idea</span><p class="goal">Pick an idea. For each factor, decide whether it helps the idea develop or holds it back. The scales show the balance.</p></div>
+        <div class="panel sim">
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Idea</span><div class="btns" id="faIdea"></div></div></div>
+          <p class="result" id="faDesc" style="padding:0 16px"></p>
+          <canvas id="faC" aria-label="A balance scale with factors that help on one side and factors that hinder on the other"></canvas>
+          <div class="srt" id="faList"></div>
+          <div class="readout" id="faOut"></div>
+          <div class="working wrap" id="faWork"></div>
+        </div>
+        <p class="result">Illustrative ideas and situations. A factor that hinders isn't always a dead end: the founder can plan around it.</p>
+        <div class="tries"><div class="try"><b>1</b>Which factors does the founder control, and which are outside their control?</div><div class="try"><b>2</b>Pick one hindering factor. How could the founder reduce its effect?</div><div class="try"><b>3</b>Which idea looks strongest? Is counting factors enough to decide?</div></div>
+      </div>
+
+      <div class="lab" data-lab="design" hidden>
+        <div class="labhead"><span class="pill t">Design thinking project: the canteen queue</span><p class="goal">Students lose 15 minutes of a 40-minute lunch queuing in the canteen. Guide the student council through the four phases. Choose the best action at each step; watch for the moment the process loops back.</p></div>
+        <div class="panel sim">
+          <canvas id="dtC" aria-label="The four design thinking phases in a loop, with the current phase highlighted and an arrow looping back when the team iterates"></canvas>
+          <p class="result" id="dtQ" style="padding:0 16px"></p>
+          <div class="srt" id="dtOpts"></div>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="dtNext">Next step</button><button id="dtReset">Start again</button></div></div></div>
+          <div class="readout" id="dtOut"></div>
+          <div class="working wrap" id="dtWork"></div>
+        </div>
+        <p class="result">An illustrative school project. The same four phases work for a product, a service or a public service.</p>
+        <div class="tries"><div class="try"><b>1</b>Where in the project was it person-centred? Where was it solution-centred?</div><div class="try"><b>2</b>Why was a paper prototype better than building an app first?</div><div class="try"><b>3</b>The project went back a phase. Is that a failure? Why not?</div></div>
+      </div>
+
+      <div class="lab" data-lab="ideate" hidden>
+        <div class="labhead"><span class="pill t">Idea screening matrix</span><p class="goal">A TY mini-company has four ideas, each scored 1–5 on five criteria. Set how much each criterion matters to you (its weight). The chart ranks the ideas by weighted score.</p></div>
+        <div class="panel sim">
+          <canvas id="scC" aria-label="Horizontal bars ranking four ideas by their weighted scores"></canvas>
+          <div class="controls" id="scW"></div>
+          <div class="readout" id="scOut"></div>
+          <div class="working wrap" id="scWork"></div>
+          <div class="tablewrap" style="padding:0 16px 16px"><table><thead id="scHead"></thead><tbody id="scTable"></tbody></table></div>
+        </div>
+        <p class="result">Illustrative scores. Screening narrows many ideas down to the one or two worth a full feasibility study.</p>
+        <div class="tries"><div class="try"><b>1</b>Set "low start-up cost" to 5 and the rest to 1. Which idea wins? Why?</div><div class="try"><b>2</b>Find weights that make the smoothie stall win.</div><div class="try"><b>3</b>Who should decide the weights in a real business?</div></div>
+      </div>
+
+      <div class="lab" data-lab="feasibility" hidden>
+        <div class="labhead"><span class="pill t">Run a feasibility study</span><p class="goal">Pick an idea. Adjust price, costs and expected sales to check financial feasibility on the break-even chart, then tick the other parts of the study that are in place. Read the verdict.</p></div>
+        <div class="panel sim">
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Idea</span><div class="btns" id="feIdea"></div></div></div>
+          <canvas id="feC" aria-label="Break-even chart with revenue, total costs and fixed costs lines, the break-even point and expected sales marked"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="feP">Selling price <output id="fePo"></output></label><input type="range" id="feP"></div>
+            <div class="ctl"><label for="feV">Variable cost per unit <output id="feVo"></output></label><input type="range" id="feV"></div>
+            <div class="ctl"><label for="feF">Fixed costs per year <output id="feFo"></output></label><input type="range" id="feF"></div>
+            <div class="ctl"><label for="feQ">Expected sales per year <output id="feQo"></output></label><input type="range" id="feQ"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Other parts of the study (tick what is in place)</span><div class="btns" id="feChecks"></div></div>
+          </div>
+          <div class="readout" id="feOut"></div>
+          <div class="working wrap" id="feWork"></div>
+        </div>
+        <p class="result">Illustrative figures. A real study would also look at cash flow, funding and risks (topics 2.3, 2.5 and 2.7).</p>
+        <div class="tries"><div class="try"><b>1</b>Café: how many meals a year are needed to break even? What's the margin of safety?</div><div class="try"><b>2</b>Raise the price by €1. Why does the break-even point fall?</div><div class="try"><b>3</b>The numbers work but a licence isn't in place. Is the idea feasible yet?</div></div>
+      </div>
+
+      <div class="lab" data-lab="viability" hidden>
+        <div class="labhead"><span class="pill t">Test the idea: a market survey</span><p class="goal">Before launching, survey a sample of the target market about the product concept. Choose a sample size and run the survey. Is enough of the market interested to reach break-even? Decide: go, pivot or stop.</p></div>
+        <div class="panel sim">
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Product concept</span><div class="btns" id="svIdea"></div></div></div>
+          <p class="result" id="svDesc" style="padding:0 16px"></p>
+          <canvas id="svC" aria-label="Bar chart of survey answers from definitely buy to definitely not, with the share likely to buy compared with the share needed to break even"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="svN">Sample size <output id="svNo">50 people</output></label><input type="range" id="svN" min="10" max="400" step="10" value="50"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="svGo">Run the survey</button><button id="svReveal">Reveal the true figure</button></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Your decision</span><div class="btns" id="svDec"><button data-d="go">Go: launch it</button><button data-d="pivot">Pivot: change the idea</button><button data-d="more">Survey more people</button></div></div>
+          </div>
+          <div class="readout" id="svOut"></div>
+          <div class="working wrap" id="svWork"></div>
+        </div>
+        <p class="result">Simulated responses: each concept has a hidden true share of the market likely to buy, and each survey is a random sample. The ± figure is a rough guide (about 100 ÷ √sample size, in percentage points).</p>
+        <div class="tries"><div class="try"><b>1</b>Run a survey of 20 people three times. Why do the results jump around?</div><div class="try"><b>2</b>What happens to the ± range with 400 people?</div><div class="try"><b>3</b>Why might people say "definitely" in a survey but not buy in a shop?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of idea development"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it · LO 2.2.1 and 2.2.2</p><h2>How famous ideas were developed</h2></div><p>Widely reported stories of where ideas came from and how they were tested and changed. Check a source before using one in your own work.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>Loop, screen, break even</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="loop"></canvas><h3>Design thinking loops</h3><p>Clarify, ideate, develop, implement, with the user at the centre. Testing often sends you back a step.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="screen"></canvas><h3>Screen many, test few</h3><p>Score ideas against weighted criteria and take the best one or two forward.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="be"></canvas><h3>Break even first</h3><p>Where revenue meets total costs. Expected sales should be comfortably above it.</p></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">LO 2.2.3 · Appreciate</p><h2>The five parts of a feasibility study</h2></div><p>Each asks one question. An idea needs a "yes" to all five before the big spend.</p></div>
+      <div class="cases" id="impacts"></div>
+
+      <div class="head"><div><p class="eyebrow">In Ireland</p><h2>Help to develop an idea</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% Business Alive Investigative Study">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>Higher or Ordinary level, set by the SEC. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Business Alive Investigative Study · 40%</b><p>An investigation based on a common brief from the SEC. The same brief for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Sources of ideas: say whether each is <b>internal or external</b>, and apply it to the case.</li>
+            <li>"Determine the factors": name the factor, explain <b>how it helps or hinders</b> the idea, and link it to the business in the question.</li>
+            <li>Learn the four phases in order: <b>clarify, ideate, develop, implement</b>, with one action for each.</li>
+            <li><b>Iterative</b> means you loop back and improve after testing. <b>Person-centred</b> means you start with the user's needs. <b>Solution-centred</b> means you keep working towards something that solves the problem.</li>
+            <li>Learn the spec's definition of design thinking: <b>an innovative, non-linear approach</b> to developing products and services <b>which focuses on solutions for the end user</b>.</li>
+            <li>A feasibility study covers <b>market, technical, financial, legal and environmental/ethical</b> questions. Say why each matters <b>before</b> money is committed.</li>
+            <li>Break-even = <b>fixed costs ÷ contribution per unit</b>. Show the formula and units.</li>
+            <li>"Appreciate the importance" questions want <b>benefits</b>: reduces risk, attracts finance, saves money and time, finds problems early.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Action verbs</h2></div><p>Meanings summarised from the specification's glossary of action verbs, which will be aligned with the exam's command words.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Business and financial literacy</p><h2>Numbers trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which phase?</h2></div></div>
+          <canvas id="predC" aria-label="The design thinking phase, shown after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns" data-g="0"><button data-a="cl">Clarify</button><button data-a="id">Ideate</button><button data-a="dv">Develop</button><button data-a="im">Implement</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Skills the Business Alive Investigative Study rewards (from the Investigating Business strand). Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term in this chapter. Learn the definitions: "define" and "outline" questions reward precise wording.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: ideate, feasibility, prototype…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= CHEAT SHEET ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Cheat sheet</h2></div><p>The whole chapter on one page, plus the numbers you might meet in a feasibility question.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Sources of ideas</span><span class="big">Internal: staff, R&amp;D, brainstorming, sales records · External: customers, competitors, trends, technology, travel, market research</span></div>
+        <div class="panel fcell"><span class="pill">Factors (LO 2.2.1)</span><span class="big">Demand · competition · finance · skills · technology · law · economy · social trends · ethics and sustainability · location</span></div>
+        <div class="panel fcell"><span class="pill">Design thinking (spec)</span><span class="big">An innovative, non-linear approach to the development of products and services which focuses on solutions for the end user</span></div>
+        <div class="panel fcell"><span class="pill">Four phases</span><span class="big">Clarify → Ideate → Develop → Implement</span><dl><dt>Clarify</dt><dd>understand users, define the problem</dd><dt>Ideate</dt><dd>generate many ideas</dd><dt>Develop</dt><dd>prototype and test</dd><dt>Implement</dt><dd>launch, monitor, improve</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Iterative</span><span class="big">Test, learn, loop back, improve</span><dl><dt>Person-centred</dt><dd>starts from the user's needs</dd><dt>Solution-centred</dt><dd>focused on solving the problem</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Screening</span><span class="big">Weighted score = Σ (score × weight)</span><div class="ex">4×3 + 2×5 + 3×1 = 25</div></div>
+        <div class="panel fcell"><span class="pill">Feasibility study</span><span class="big">Market · technical · financial · legal · environmental and ethical</span><dl><dt>Why</dt><dd>reduces risk, finds problems early, attracts finance, saves money</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Testing</span><span class="big">Prototype · user testing · test marketing · survey · minimum viable product</span><dl><dt>Then</dt><dd>go, pivot or stop</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Contribution per unit = price − variable cost</span><div class="ex">€25 − €10 = €15</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Break-even (units) = fixed costs ÷ contribution per unit</span><div class="ex">€30 000 ÷ €15 = 2 000 units</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Profit = units × contribution − fixed costs</span><div class="ex">2 500 × €15 − €30 000 = €7 500</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Margin of safety = expected sales − break-even sales</span><div class="ex">2 500 − 2 000 = 500 units</div></div>
+      </div>
+      <footer>
+        <p>Built on Strand 2, topic 2 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/business/" target="_blank" rel="noopener">Leaving Certificate Business Specification</a> (NCCA, for introduction September 2025). Learning outcomes and the definition of design thinking are quoted from the specification. Cases, scores, survey results and euro figures are illustrative unless stated.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("bs-theme","auto"), font = store.get("bs-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("bs-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("bs-font",font); applyFont(); });
+
+
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  sources:'<circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.5 2.5M16.5 16.5L19 19M5 19l2.5-2.5M16.5 7.5L19 5"/>',
+  factors:'<path d="M12 3v18M5 21h14"/><path d="M4 8h16"/><path d="M4 8l-2 5h4zM20 8l-2 5h4z"/>',
+  design:'<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 018 8M20 12l-2.5-2M20 12l2-2.5"/><circle cx="12" cy="12" r="2.5"/>',
+  ideate:'<path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0012 3z"/>',
+  feasibility:'<path d="M3 3v18h18"/><path d="M3 15l18-9"/><path d="M3 11h18" stroke-dasharray="3 3"/><circle cx="11" cy="11" r="1.6"/>',
+  viability:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8l2 2 4-4M8 15h8"/>',
+  plane:'<path d="M2 12l20-8-8 20-3-9z"/>',
+  wind:'<path d="M3 8h11a3 3 0 10-3-3M3 12h15a3 3 0 11-3 3M3 16h7"/>',
+  note:'<path d="M5 3h14v12l-6 6H5z"/><path d="M13 21v-6h6"/>',
+  leaf:'<path d="M5 19c0-9 6-14 15-14 0 9-5 15-14 15"/><path d="M5 19l8-8"/>',
+  tv:'<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  school:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>',
+  gov:'<path d="M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 21h18"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/>',
+  people:'<circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20c0-3 3-6 6-6s6 3 6 6M14 20c0-2 1.5-4.5 3.5-4.5S21 18 21 20"/>',
+  euro:'<path d="M17 6a7 7 0 100 12"/><path d="M4 10h9M4 14h9"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"sources", name:"Where ideas come from", short:"Internal and external sources: staff, R&D, customers, competitors, trends and technology.", tint:"var(--blush)"},
+  {id:"factors", name:"Factors that shape an idea", short:"Demand, competition, finance, skills, technology, law, the economy and more.", tint:"var(--apricot)"},
+  {id:"design", name:"Design thinking", short:"Clarify, ideate, develop, implement: iterative, person- and solution-centred.", tint:"var(--sage)"},
+  {id:"ideate", name:"Generating and screening ideas", short:"Brainstorming, 'how might we' questions and a weighted screening matrix.", tint:"var(--cream)"},
+  {id:"feasibility", name:"The feasibility study", short:"Market, technical, financial, legal and environmental checks, with break-even.", tint:"var(--blush)"},
+  {id:"viability", name:"Testing an idea", short:"Prototypes, surveys and test marketing: go, pivot or stop.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Business idea","","A possible product or service that could meet a need or want and earn income.","sources"],
+  ["Idea generation","","Coming up with possible ideas for new products, services or processes.","sources"],
+  ["Internal source","","An idea that comes from inside the business: staff, managers, research and development, sales records.","sources"],
+  ["External source","","An idea that comes from outside the business: customers, competitors, trends, technology, travel, published research.","sources"],
+  ["Suggestion scheme","","A system that invites and rewards employees' ideas for improvements.","sources"],
+  ["Research and development","R&D","Work done inside a business to create new products and processes or improve existing ones.","sources"],
+  ["Market research","","Gathering and analysing information about customers, competitors and the market.","sources"],
+  ["Primary research","field research","Collecting new information yourself, e.g. surveys, interviews, observation, focus groups.","sources"],
+  ["Secondary research","desk research","Using information that already exists, e.g. CSO statistics, reports, websites, sales records.","sources"],
+  ["Gap in the market","","A need or want that no business is meeting yet.","sources"],
+  ["Trend","","A general change in what people do or want, e.g. more plant-based eating or more remote working.","sources"],
+  ["Market demand","","How many customers want the product and can afford it. Without demand an idea won't develop into a business.","factors"],
+  ["Competition","","Other businesses selling the same or similar products to the same customers.","factors"],
+  ["Finance","","The money needed to develop and launch an idea: savings, loans, grants or investors.","factors"],
+  ["Skills and experience","","What the founder or team knows and can do. Gaps can be filled by training, partners or hiring.","factors"],
+  ["Technology","","Tools and systems that can make an idea possible or cheaper, or make it out of date.","factors"],
+  ["Legislation","","Laws a business must follow, e.g. food safety, data protection (GDPR), consumer and employment law.","factors"],
+  ["Economic conditions","","The state of the economy: growth or recession, interest rates, inflation, incomes.","factors"],
+  ["Demographics","","Facts about a population: age, gender, location, income, family size.","factors"],
+  ["Ethics","","Doing what is morally right, e.g. fair pay, honesty with customers, responsible sourcing.","factors"],
+  ["Sustainability","","Meeting today's needs without harming the ability of future generations to meet theirs.","factors"],
+  ["Design thinking","","An innovative, non-linear approach to the development of products and services which focuses on solutions for the end user. (Specification glossary)","design"],
+  ["Clarify","","Phase 1 of design thinking: understand the users and their problem through research and empathy, then define the problem clearly.","design"],
+  ["Ideate","","Phase 2 of design thinking: generate as many possible solutions as you can, without judging them too early.","design"],
+  ["Develop","","Phase 3 of design thinking: build prototypes of the best ideas and test them with users.","design"],
+  ["Implement","","Phase 4 of design thinking: launch the solution, then monitor it and keep improving it.","design"],
+  ["Iterative","","Repeating steps to improve: test, learn from feedback, go back and change, test again.","design"],
+  ["Person-centred","human-centred","Starting from the needs, feelings and experiences of the people who will use the product or service.","design"],
+  ["Solution-centred","","Focused on finding something that actually solves the problem, rather than only describing it.","design"],
+  ["Empathy","","Understanding how other people feel and what they experience.","design"],
+  ["Problem statement","","A short, clear description of the user's problem, often written as a \"How might we…?\" question.","design"],
+  ["End user","","The person who will actually use the product or service.","design"],
+  ["Brainstorming","","A group session where people suggest as many ideas as possible without criticising them.","ideate"],
+  ["Mind mapping","","Drawing a central problem with branches of linked ideas around it.","ideate"],
+  ["Reverse brainstorming","","Asking \"How could we make this problem worse?\" and then turning the answers around into solutions.","ideate"],
+  ["Idea screening","","Checking ideas against criteria to drop the weak ones early and keep the most promising.","ideate"],
+  ["Screening criteria","","The tests each idea is scored against, e.g. demand, cost, skills, competition, sustainability.","ideate"],
+  ["Weighted score","","A total where each criterion's score is multiplied by how important it is (its weight).","ideate","Σ (score × weight)"],
+  ["Feasibility study","","An investigation into whether a business idea is practical and likely to succeed, done before large amounts of money are committed.","feasibility"],
+  ["Market feasibility","","Is there enough demand from a clear target market, at a price people will pay?","feasibility"],
+  ["Technical feasibility","","Can the product be made or the service delivered, with the equipment, materials and skills available?","feasibility"],
+  ["Financial feasibility","","Will sales cover the costs and make a profit? Can the start-up costs be funded?","feasibility","break-even = FC ÷ contribution"],
+  ["Legal feasibility","","Can the business meet the laws, licences, permits and regulations involved?","feasibility"],
+  ["Environmental feasibility","","Is the idea acceptable for the environment and society, and does it meet ethical standards?","feasibility"],
+  ["Fixed costs","","Costs that stay the same however much is sold, e.g. rent and insurance.","feasibility"],
+  ["Variable costs","","Costs that rise with each unit sold, e.g. ingredients and packaging.","feasibility"],
+  ["Contribution","","Selling price minus variable cost per unit: what each sale contributes towards fixed costs and then profit.","feasibility","price − variable cost"],
+  ["Break-even point","","The level of sales where total revenue equals total costs: no profit and no loss.","feasibility","fixed costs ÷ contribution per unit"],
+  ["Margin of safety","","How far expected sales are above the break-even point.","feasibility","expected sales − break-even"],
+  ["Viability","","Whether a business can survive and make a profit in the long term.","viability"],
+  ["Prototype","","An early model of a product, built cheaply to test the idea.","viability"],
+  ["Minimum viable product","MVP","The simplest version of a product that real customers can use, launched to learn from their feedback.","viability"],
+  ["Test marketing","","Selling a product in a small area or to a small group before a full launch.","viability"],
+  ["Survey","questionnaire","A set of questions asked of a sample of people to gather primary data.","viability"],
+  ["Sample","","The group of people actually asked in research. Bigger, well-chosen samples give more reliable results.","viability"],
+  ["Focus group","","A small group discussing a product with a researcher, giving detailed opinions.","viability"],
+  ["Pivot","","Changing an important part of an idea (product, customer or price) after testing shows the original won't work.","viability"],
+  ["Intellectual property","IP","Creations of the mind that can be protected by law, e.g. by patents, trademarks and copyright.","viability"],
+  ["Patent","","A legal right that stops others copying an invention for a set number of years.","viability"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["design thinking","Design thinking"],["iterative","Iterative"],["person-centred","Person-centred"],["solution-centred","Solution-centred"],["feasibility study","Feasibility study"],["prototype","Prototype"],["brainstorm","Brainstorming"],["break-even","Break-even point"],["contribution","Contribution"],["margin of safety","Margin of safety"],["pivot","Pivot"],["suggestion scheme","Suggestion scheme"],["R&D","Research and development"],["gap in the market","Gap in the market"],["empathy","Empathy"],["test marketing","Test marketing"],["sample","Sample"],["screening","Idea screening"],["sustainability","Sustainability"],["demographics","Demographics"]];
+
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function arrow(ctx,x1,y1,x2,y2,col,w=3,dash){ line(ctx,x1,y1,x2,y2,col,w,dash); const a=Math.atan2(y2-y1,x2-x1), s=8+w; ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-s*Math.cos(a-0.45),y2-s*Math.sin(a-0.45)); ctx.lineTo(x2-s*Math.cos(a+0.45),y2-s*Math.sin(a+0.45)); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const n0 = x => Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const eur = x => "€"+n0(x);
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+function wrapText(ctx,str,maxW){ const words=str.split(" "), out=[]; let cur=""; words.forEach(wd=>{ const t=cur?cur+" "+wd:wd; if(ctx.measureText(t).width>maxW && cur){ out.push(cur); cur=wd; } else cur=t; }); if(cur) out.push(cur); return out; }
+const f2 = x => x.toFixed(2);
+// box with centred (wrapped) label
+function box(ctx,cx,cy,bw,bh,label,fill,stroke,col,fs){ rrect(ctx,cx-bw/2,cy-bh/2,bw,bh,12,fill,stroke,2); ctx.save(); ctx.font=F(fs); const ls=wrapText(ctx,label,bw-10); ctx.restore(); ls.forEach((s,i)=>text(ctx,s,cx,cy+(i-(ls.length-1)/2)*(fs+3)+fs*0.35,col,F(fs),"center")); }
+const fm = x => f2(x).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const sgn = v => (v>0?"+€":v<0?"−€":"€")+Math.abs(Math.round(v*100)/100);
+
+
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+/* ================= MODELS + DRAWINGS ================= */
+// Internal v external sources
+function drawSources(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, r=Math.min(w*0.22,h*0.38), cy=h/2+(cp?6:10);
+  [["Internal","inside the business",C.terra,w*0.28,o.counts[0]||0],["External","outside the business",C.olive,w*0.72,o.counts[1]||0]].forEach(([n,sub,col,cx,cnt])=>{
+    ctx.save(); ctx.globalAlpha=.22; circle(ctx,cx,cy,r,col); ctx.restore(); circle(ctx,cx,cy,r,null,col,2.5);
+    text(ctx,n,cx,cy-r*0.45,C.ink,F(cp?12:15),"center"); if(!cp) text(ctx,sub,cx,cy-r*0.45+16,C.muted,F(11,600),"center");
+    const d=cp?6:8; for(let j=0;j<cnt;j++){ const a=j*2.4, rr=d*1.6*Math.sqrt(j+0.5); circle(ctx,cx+Math.cos(a)*rr,cy+r*0.12+Math.sin(a)*rr*0.8,d,col,C.ink,1); } });
+  rrect(ctx,w/2-12,cy-14,24,28,4,C["surface-2"],C.ink,1.4); line(ctx,w/2-6,cy-6,w/2+6,cy-6,C.ink,1.2); line(ctx,w/2-6,cy+2,w/2+6,cy+2,C.ink,1.2);
+}
+// Balance scale: helps v hinders
+function drawScale(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, cx=w/2, py=cp?h*0.3:h*0.32, L=Math.min(w*0.36,240), ang=Math.max(-0.35,Math.min(0.35,((o.hind||0)-(o.help||0))*0.07));
+  rrect(ctx,cx-30,h-18,60,10,4,C.muted); line(ctx,cx,py,cx,h-14,C.muted,5);
+  const lx=cx-Math.cos(ang)*L, ly=py-Math.sin(ang)*L, rx=cx+Math.cos(ang)*L, ry=py+Math.sin(ang)*L;
+  line(ctx,lx,ly,rx,ry,C.ink,4); circle(ctx,cx,py,6,C.ink);
+  [[lx,ly,o.help||0,C.olive,"Helps"],[rx,ry,o.hind||0,C.terra,"Hinders"]].forEach(([x,y,n,col,lab])=>{
+    const pw=Math.min(110,w*0.22), pd=cp?34:48; line(ctx,x,y,x-pw/2,y+pd,C.muted,1.4); line(ctx,x,y,x+pw/2,y+pd,C.muted,1.4);
+    rrect(ctx,x-pw/2-4,y+pd,pw+8,6,3,C.ink);
+    const bs=cp?12:16; for(let j=0;j<n;j++){ const col2=j%3, row=Math.floor(j/3); rrect(ctx,x-bs*1.6+col2*bs*1.1,y+pd-bs-row*bs*1.05,bs,bs,3,col,C.ink,1); }
+    text(ctx,`${lab}: ${n}`,x,y+pd+(cp?18:22),C.ink,F(cp?11:13),"center"); });
+}
+// Design thinking loop
+const PHASES = [["Clarify","understand the user","sage"],["Ideate","lots of ideas","apricot"],["Develop","prototype and test","terra"],["Implement","launch and improve","blush"]];
+function drawLoop(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, cx=w/2, cy=h/2+4, rx=Math.min(w*0.33,260), ry=Math.min(h*0.32,150), bw=cp?82:Math.min(150,w*0.3), bh=cp?30:46, fs=cp?11:14;
+  const pos=[[cx,cy-ry],[cx+rx,cy],[cx,cy+ry],[cx-rx,cy]];
+  for(let i=0;i<4;i++){ const [x1,y1]=pos[i], [x2,y2]=pos[(i+1)%4], dx=x2-x1, dy=y2-y1, d=Math.hypot(dx,dy), ux=dx/d, uy=dy/d, s1=Math.min(bw*0.55,d*0.35), s2=Math.min(bw*0.6,d*0.4);
+    arrow(ctx,x1+ux*s1,y1+uy*s1,x2-ux*s2,y2-uy*s2,i===3?C.line:C.muted,cp?2:2.5,i===3?[5,5]:null); }
+  // iteration arrow: develop back to ideate
+  const [dx0,dy0]=pos[2], [ix,iy]=pos[1];
+  ctx.save(); ctx.strokeStyle=o.back?C.bad:C.line; ctx.lineWidth=o.back?3.5:1.6; ctx.setLineDash([6,5]); ctx.beginPath(); ctx.moveTo(dx0+bw*0.2,dy0-bh*0.5); ctx.quadraticCurveTo(cx+rx*0.25,cy+ry*0.1,ix-bw*0.35,iy+bh*0.5); ctx.stroke(); ctx.restore();
+  if(!cp) text(ctx,"test → learn → loop back",cx+rx*0.18,cy+ry*0.42,o.back?C.bad:C.muted,F(11),"center");
+  circle(ctx,cx,cy-8,cp?9:13,C.cream,C.ink,1.5); ctx.save(); ctx.beginPath(); ctx.arc(cx,cy+(cp?14:22),cp?14:20,Math.PI,0); ctx.fillStyle=C.cream; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.5; ctx.stroke(); ctx.restore();
+  text(ctx,"end user",cx,cy+(cp?30:44),C.ink,F(cp?10:12),"center");
+  PHASES.forEach(([n,sub,col],i)=>{ const [x,y]=pos[i], on=o.cur===i;
+    rrect(ctx,x-bw/2,y-bh/2,bw,bh,bh/2,C[col],on?C.ink:C.line,on?3.5:1.2);
+    text(ctx,`${i+1} ${n}`,x,y+(cp?4:(sub?0:5)),"#3b2b21",F(fs),"center");
+    if(!cp) text(ctx,sub,x,y+15,"#3b2b21",F(10,600),"center"); });
+  if(o.dot!=null){ const i=Math.floor(o.dot)%4, f=o.dot%1, [x1,y1]=pos[i], [x2,y2]=pos[(i+1)%4]; circle(ctx,x1+(x2-x1)*f,y1+(y2-y1)*f,5,C.bad); }
+}
+// Screening bars
+function drawScreen(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, rows=[...o.totals].sort((a,b)=>b[1]-a[1]), max=Math.max(1,o.max), lw=cp?Math.min(96,w*0.36):Math.min(190,w*0.34), top=cp?8:30, rh=(h-top-8)/rows.length;
+  if(!cp) text(ctx,"Weighted score",lw,18,C.muted,F(11,600));
+  rows.forEach(([n,v],i)=>{ const y=top+i*rh, bw=(w-lw-58)*v/max;
+    ctx.save(); ctx.font=F(cp?10:13); const ls=wrapText(ctx,n,lw-10); ctx.restore(); ls.slice(0,2).forEach((s,j)=>text(ctx,s,lw-8,y+rh/2+4+(j-(Math.min(2,ls.length)-1)/2)*14,C.ink,F(cp?10:13),"right"));
+    rrect(ctx,lw,y+rh*0.18,Math.max(2,bw),rh*0.64,8,i===0?C.terra:C.sage,i===0?C.ink:null,1.2);
+    text(ctx,String(v),lw+bw+6,y+rh/2+5,C.ink,M(cp?11:13)); });
+}
+// Break-even chart
+function drawBE(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, c=o.P-o.V, be=c>0? o.F/c : null, xmax=Math.max(o.Q, be||0, 1)*1.3, ymax=Math.max(o.P*xmax, o.F+o.V*xmax)*1.05;
+  const pl=cp?40:62, pr=12, pt=cp?12:22, pb=cp?24:36, X=v=>pl+v/xmax*(w-pl-pr), Y=v=>h-pb-v/ymax*(h-pt-pb);
+  line(ctx,pl,h-pb,w-pr,h-pb,C.ink,1.4); line(ctx,pl,pt,pl,h-pb,C.ink,1.4);
+  const fy=v=> v>=1e6? "€"+(+(v/1e6).toFixed(2))+"m" : v>=10000? "€"+(+(v/1000).toFixed(1))+"k" : "€"+n0(v);
+  const nice=r=>{ const p=Math.pow(10,Math.floor(Math.log10(r))), m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }, sy=nice(ymax/4), sx=nice(xmax/4);
+  for(let v=sy;v<=ymax+1e-9;v+=sy){ line(ctx,pl,Y(v),w-pr,Y(v),C.grid,1); text(ctx,fy(v),pl-4,Y(v)+4,C.muted,M(cp?9:10),"right"); }
+  for(let v=sx;v<=xmax+1e-9;v+=sx){ text(ctx,n0(v),X(v),h-pb+(cp?12:14),C.muted,M(cp?9:10),"center"); }
+  if(!cp){ text(ctx,"units sold per year",w-pr,h-6,C.ink,F(11),"right"); text(ctx,"€",pl+6,pt+4,C.ink,F(12)); }
+  line(ctx,X(0),Y(o.F),X(xmax),Y(o.F),C.muted,1.6,[6,5]);
+  line(ctx,X(0),Y(o.F),X(xmax),Y(o.F+o.V*xmax),C.bad,2.6);
+  line(ctx,X(0),Y(0),X(xmax),Y(o.P*xmax),C.olive,2.6);
+  if(!cp){ text(ctx,"revenue",X(xmax)-4,Y(o.P*xmax)+16,C["olive-ink"],F(11),"right"); text(ctx,"total costs",X(xmax)-4,Y(o.F+o.V*xmax)-6,C.bad,F(11),"right"); text(ctx,"fixed costs",X(xmax*0.02)+4,Y(o.F)-5,C.muted,F(11)); }
+  line(ctx,X(o.Q),pt,X(o.Q),h-pb,C.terra,1.8,[4,4]); text(ctx,cp?"expected":`expected ${n0(o.Q)}`,X(o.Q)+4,pt+10,C["terra-ink"],F(cp?10:11));
+  if(be!=null && be<=xmax){ circle(ctx,X(be),Y(o.P*be),6,C.ink,C.surface,2); text(ctx,cp?"BE":`break-even ${n0(Math.ceil(be-1e-9))}`,X(be)-6,Y(o.P*be)-10,C.ink,F(cp?10:12),"right"); }
+  else if(be==null) text(ctx,"Price is not above variable cost: it never breaks even",w/2,pt+28,C.bad,F(12),"center");
+}
+// Survey results
+const SVCAT = ["Definitely","Probably","Maybe","Probably not","Definitely not"];
+function drawSurvey(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, cnt=o.counts||[0,0,0,0,0], n=cnt.reduce((a,b)=>a+b,0), gh=cp?34:56, ch=h-gh-(cp?26:36), bw=(w-24)/5, cols=[C.olive,C.sage,C.cream,C.apricot,C.terra], mx=Math.max(1,...cnt);
+  cnt.forEach((v,i)=>{ const x=12+i*bw, bh=(ch-24)*v/mx; rrect(ctx,x+6,ch-bh,bw-12,Math.max(1,bh),6,cols[i],C.ink,1);
+    text(ctx,String(v),x+bw/2,ch-bh-5,C.ink,M(cp?10:12),"center"); text(ctx,cp?SVCAT[i].replace("Definitely","Def.").replace("Probably","Prob."):SVCAT[i],x+bw/2,ch+14,C.ink,F(cp?9:11),"center"); });
+  if(!n){ text(ctx,"Run the survey to see the answers",w/2,ch/2,C.muted,F(13),"center"); }
+  const gy=h-gh/2-(cp?2:6), X=p=>14+p/100*(w-28);
+  rrect(ctx,14,gy-6,w-28,12,6,C["surface-2"],C.line,1);
+  if(n){ const lo=Math.max(0,o.est-o.moe), hi=Math.min(100,o.est+o.moe); rrect(ctx,X(lo),gy-6,Math.max(3,X(hi)-X(lo)),12,6,C.olive); circle(ctx,X(o.est),gy,6,C.ink);
+    if(!cp) text(ctx,`likely to buy: ${Math.round(o.est)}% ± ${Math.round(o.moe)}`,X(o.est),gy-12,C["olive-ink"],F(11),"center"); }
+  line(ctx,X(o.need),gy-14,X(o.need),gy+14,C.bad,3); if(!cp) text(ctx,`need ${o.need}%`,X(o.need),gy+26,C.bad,F(11),"center");
+  if(o.truth!=null){ line(ctx,X(o.truth),gy-12,X(o.truth),gy+12,C.terra,2,[3,3]); if(!cp) text(ctx,`true ${o.truth}%`,X(o.truth),gy-22,C["terra-ink"],F(11),"center"); }
+}
+// Drill picture
+const PH = {cl:["Clarify","Understand the user and the problem","sage"],id:["Ideate","Generate lots of ideas","apricot"],dv:["Develop","Prototype and test","terra"],im:["Implement","Launch, monitor and improve","blush"]};
+function drawWhich(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const [n,d,c]=PH[o.ans]; const bw=Math.min(w-40,300);
+  rrect(ctx,w/2-bw/2,h/2-40,bw,80,18,C[c],C.ink,1.5); text(ctx,n,w/2,h/2-4,"#3b2b21",F(22),"center"); text(ctx,d,w/2,h/2+22,"#3b2b21",F(13,600),"center"); }
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "sources", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3"]; const loState=store.get("b22-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("b22-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("b22-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+/* ================= LEARN ================= */
+const LEARN = {
+  sources:{ vis:[["sources",{counts:[4,5]}]], cap:"Ideas come from inside a business and from the world outside it.",
+    keys:[["🏢","Internal sources: employees and suggestion schemes, research and development (R&D), brainstorming sessions, sales records and managers' experience."],["🌍","External sources: customers' complaints and requests, competitors, trends, new technology, travel, hobbies and published market research."],["?","Many good ideas start with a problem: something annoying, slow or missing. That's a gap in the market."]],
+    f:"Internal (inside the firm) · External (outside it)", mistake:"Listing sources without saying where they come from. Say internal or external, then link it to the business in the question." },
+  factors:{ vis:[["scale",{help:3,hind:2}]], cap:"An idea is pulled forward by some factors and held back by others.",
+    keys:[["📈","Market factors: demand, competition, social trends and demographics decide whether enough people will buy."],["💶","Resource factors: finance, the founder's skills and experience, technology and location decide whether it can be done."],["⚖","Rules and values: legislation (e.g. GDPR, food safety), economic conditions, ethics and sustainability can open doors or close them."]],
+    f:"Demand · competition · finance · skills · technology · law · economy · ethics", mistake:"Naming a factor without saying how it affects the idea. 'Finance' earns little; 'the founder has €15 000 savings, so she can fit out the café without a loan' earns full marks." },
+  design:{ vis:[["loop",{cur:2,back:true}]], cap:"Design thinking: four phases around the end user, with testing that loops back.",
+    keys:[["1","Clarify: research the users (interviews, observation, empathy) and define the problem, e.g. \"How might we…?\""],["2","Ideate: generate many ideas without judging them. Develop: build cheap prototypes and test them with users. Implement: launch, monitor and keep improving."],["↺","It's iterative (test, learn, go back, improve), person-centred (starts from the user's needs) and solution-centred (keeps working towards something that solves the problem)."]],
+    f:"Clarify → Ideate → Develop → Implement", mistake:"Describing design thinking as a straight line. The specification calls it non-linear: teams loop back whenever testing shows something isn't working." },
+  ideate:{ vis:[["screen",{totals:[["Upcycled tote bags",60],["Healthy smoothie stall",51],["Homework-help app",42],["Personalised phone cases",39]],max:75}]], cap:"Four mini-company ideas ranked by weighted score.",
+    keys:[["💡","Brainstorming, mind maps, reverse brainstorming and \"How might we…?\" questions produce lots of ideas. Quantity first, judging later."],["🔎","Idea screening drops weak ideas early, before time and money are spent on them."],["×","A screening matrix scores each idea against criteria, multiplies by how much each criterion matters (weight) and adds up."]],
+    f:"Weighted score = Σ (score × weight)", mistake:"Judging ideas during a brainstorm. Criticism stops people sharing; screen the ideas afterwards." },
+  feasibility:{ vis:[["be",{P:25,V:10,F:30000,Q:2500}]], cap:"Bake Box: €25 price, €10 variable cost, €30 000 fixed costs. Break-even at 2 000 boxes; 2 500 expected.",
+    keys:[["5","A feasibility study asks five questions: is there a market? Can it be made? Will it make a profit? Is it legal? Is it environmentally and ethically acceptable?"],["€","Financial feasibility uses break-even: fixed costs ÷ (price − variable cost). Expected sales should be well above it: a margin of safety."],["✓","Why it matters: it reduces risk, finds problems before money is spent, helps get loans and grants, and can stop a bad idea early."]],
+    f:"Break-even = fixed costs ÷ contribution per unit", mistake:"Thinking a feasibility study is only about money. An idea that makes a profit on paper still fails if it can't get a licence or nobody wants it." },
+  viability:{ vis:[["survey",{counts:[9,12,14,9,6],est:42,moe:14,need:25}]], cap:"A survey of 50 people: about 42% likely to buy (± 14), comfortably above the 25% needed to break even.",
+    keys:[["🧪","Test cheaply before launching: a prototype, a minimum viable product (MVP), a survey, a focus group or test marketing in one area."],["📊","Bigger samples give more reliable results. People also say they'll buy more than they actually do, so treat survey answers with care."],["↪","Then decide: go ahead, pivot (change the product, customer or price) or stop. Stopping early is a success: it saves money."]],
+    f:"Test → evaluate → go, pivot or stop", mistake:"Treating one small survey as proof. A sample of 20 friends is neither large nor representative of the target market." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+/* ================= INFOGRAPHICS ================= */
+const TINTS = ["var(--blush)","var(--apricot)","var(--sage)","var(--cream)"];
+const BIZ = [
+  {n:"Airbnb", ic:"plane", chip:["External source · a problem","real"], who:"Founded in San Francisco in 2008 by Brian Chesky, Joe Gebbia and Nathan Blecharczyk.", job:"Widely reported to have started when the founders rented out air mattresses in their flat during a design conference, when local hotels were full.", ie:"A problem (no rooms, high rent) became an idea, tested cheaply with real guests before it grew."},
+  {n:"Dyson bagless vacuum", ic:"wind", chip:["Develop · iterate","real"], who:"James Dyson, a British inventor, in the late 1970s and 1980s.", job:"Widely reported to have built 5,127 prototypes before the design worked well enough to sell.", ie:"Develop and test, learn, change, test again: iteration in action."},
+  {n:"Post-it Note", ic:"note", chip:["Internal source · R&D","real"], who:"3M scientists Spencer Silver (a weak glue, 1968) and Art Fry (the bookmark idea, 1974).", job:"A 'failed' glue found a use years later when an employee needed bookmarks that wouldn't fall out.", ie:"An internal source: R&D plus an employee's own problem, supported by the company (intrapreneurship)."},
+  {n:"Velcro", ic:"leaf", chip:["External source · nature","real"], who:"Swiss engineer George de Mestral, after a walk in the 1940s.", job:"He studied the burrs stuck to his dog's coat under a microscope and copied their tiny hooks.", ie:"Observation of the world outside the business can spark a product idea."},
+  {n:"Netflix", ic:"tv", chip:["Pivot","real"], who:"Founded in 1997 in California as a DVD-by-post rental service.", job:"Moved into streaming in 2007 as broadband and technology improved.", ie:"Technology was a factor that changed the idea: the business pivoted rather than standing still."},
+  {n:"A TY mini-company", ic:"school", chip:["Feasibility · illustrative","neutral"], who:"Four Transition Year students with €400 of start-up money.", job:"They screened five ideas, surveyed 60 students, sold a trial batch of 20 tote bags, then changed the design before a full run.", ie:"Screen, research, test small, then scale: the whole chapter in one project."},
+];
+$("cases").innerHTML = BIZ.map((c,k)=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${TINTS[k%4]}">${svg(c.ic)}</div><h3>${c.n}</h3></div><div class="chips">${chipsHTML([c.chip])}</div><p><b>Who:</b> ${c.who}</p><p><b>What:</b> ${c.job}</p><p><b>Lesson:</b> ${c.ie}</p></div>`).join("");
+const IMPACTS = [
+  ["people","Market","Is there enough demand? Who is the target market, how big is it, what will they pay, and who are the competitors?","var(--apricot)"],
+  ["gear","Technical","Can it be made or delivered? Are the equipment, materials, suppliers, premises and skills available?","var(--sage)"],
+  ["euro","Financial","What will it cost to start and run? Will sales cover costs (break-even) and make a profit? Where will the money come from?","var(--blush)"],
+  ["shield","Legal","Which laws, licences, permits and registrations apply? Is the idea protected (patent, trademark) or does it copy someone else's?","var(--cream)"],
+  ["leaf","Environmental and ethical","What is its impact on the environment and the community? Is it fair to workers, suppliers and customers?","var(--sage)"],
+];
+$("impacts").innerHTML = IMPACTS.map(([i,t,p,tn])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${t}</h3></div><p>${p}</p></div>`).join("");
+const AROUND = [
+  ["gov","Local Enterprise Office feasibility support","LEOs can support early research into whether an idea will work, along with Start Your Own Business courses and mentoring. Check your local office for current schemes.",[["Feasibility","real"],["LEO","neutral"]],"var(--blush)"],
+  ["school","Student Enterprise Programme","Second-level students take a mini-company from idea to market, with LEO support, judges and national finals.",[["Idea to market","real"]],"var(--apricot)"],
+  ["euro","Innovation Vouchers","An Enterprise Ireland scheme that helps small firms work with a college or research centre to explore a new idea.",[["R&D","neutral"],["Enterprise Ireland","real"]],"var(--sage)"],
+  ["people","New Frontiers","Enterprise Ireland's programme for early-stage founders, run through technological universities and institutes around the country.",[["Start-ups","real"]],"var(--cream)"],
+  ["shield","Intellectual Property Office of Ireland","Registers patents, trademarks and designs, so a new idea can be protected before it's shown widely.",[["Legal feasibility","neutral"]],"var(--blush)"],
+  ["tv","Dragons' Den","A TV format (with an Irish version) where founders pitch to investors, who probe their market research, numbers and feasibility.",[["Pitching","neutral"],["Finance","real"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"sources",label:"Sources",col:"var(--blush)",leaves:[["Internal","Staff, R&D, suggestion schemes, sales records."],["External","Customers, competitors, trends, technology."],["Problems","A gap in the market starts many ideas."]]},
+  {id:"factors",label:"Factors",col:"var(--apricot)",leaves:[["Market","Demand, competition, trends."],["Resources","Finance, skills, technology, location."],["Rules and values","Law, the economy, ethics, sustainability."]]},
+  {id:"design",label:"Design thinking",col:"var(--sage)",leaves:[["Clarify","Understand the user; define the problem."],["Ideate","Many ideas, no judging."],["Develop","Prototype and test."],["Implement","Launch, monitor, improve."]]},
+  {id:"ideate",label:"Screening",col:"var(--cream)",leaves:[["Brainstorm","Quantity first."],["Criteria","Demand, cost, skills, competition."],["Weights","Score × weight, then add."]]},
+  {id:"feasibility",label:"Feasibility",col:"var(--blush)",leaves:[["5 areas","Market, technical, financial, legal, environmental."],["Break-even","Fixed costs ÷ contribution."],["Why","Less risk, finds problems early, wins finance."]]},
+  {id:"viability",label:"Testing",col:"var(--sage)",leaves:[["Prototype","Cheap early model."],["Survey","Bigger samples, more reliable."],["Decide","Go, pivot or stop."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["sources","What is an internal source of business ideas? Give two examples.","An idea from inside the business, e.g. staff suggestions (a suggestion scheme), research and development, brainstorming, sales records."],
+  ["sources","What is an external source of business ideas? Give two examples.","An idea from outside the business, e.g. customers' complaints, competitors, trends, new technology, travel, published market research."],
+  ["sources","What is a suggestion scheme?","A system that invites employees to put forward ideas for improvements, often with a reward if an idea is used."],
+  ["sources","How can a problem become a business idea?","If a problem affects many people and nobody solves it well, it's a gap in the market: a product or service that solves it could sell."],
+  ["sources","Distinguish primary and secondary research.","Primary: new information you collect yourself (surveys, interviews, observation). Secondary: information that already exists (CSO data, reports, websites)."],
+  ["factors","Name five factors that impact on the development of a business idea.","Market demand, competition, finance, skills and experience, technology, legislation, economic conditions, social trends, ethics and sustainability, location."],
+  ["factors","How does competition affect the development of an idea?","Strong competition makes it harder to win customers, so the idea needs a clear difference (price, quality, service). Little competition may mean a gap in the market."],
+  ["factors","How can technology help the development of an idea?","It can make an idea possible or cheaper (apps, online payments, 3D printing) and reach more customers. It can also make an old idea out of date."],
+  ["factors","Give an example of how legislation affects a business idea.","A food business must register with the food safety authorities and follow hygiene law; an app must protect users' data under GDPR."],
+  ["factors","Why are ethics and sustainability factors in idea development?","Customers, investors and grant schemes increasingly expect fair, green businesses; an unethical idea risks its reputation and may break the law."],
+  ["design","Define design thinking (specification).","An innovative, non-linear approach to the development of products and services which focuses on solutions for the end user."],
+  ["design","Name the four phases of design thinking in order.","Clarify, ideate, develop, implement."],
+  ["design","What happens in the clarify phase?","The team researches the users (interviews, observation, empathy) and defines the problem clearly, often as a \"How might we…?\" question."],
+  ["design","What happens in the develop phase?","The best ideas are turned into cheap prototypes and tested with real users; feedback shows what to improve."],
+  ["design","Why is design thinking described as iterative?","Teams test, learn from feedback and loop back to earlier phases to improve the idea, repeating until it works."],
+  ["design","What does person-centred mean in design thinking?","The process starts from the needs, feelings and experiences of the end user, not from what the business wants to sell."],
+  ["design","What does solution-centred mean in design thinking?","The process keeps working towards a practical solution that solves the problem, rather than only analysing it."],
+  ["ideate","Give three rules for a good brainstorming session.","No criticism; go for quantity; build on others' ideas; welcome wild ideas; one conversation at a time."],
+  ["ideate","What is idea screening?","Checking ideas against criteria so that weak ones are dropped early and only the most promising go on to a feasibility study."],
+  ["ideate","How is a weighted score worked out?","Multiply each criterion's score by its weight (importance), then add the results: Σ (score × weight)."],
+  ["feasibility","What is a feasibility study?","An investigation into whether a business idea is practical and likely to succeed, done before large amounts of money are committed."],
+  ["feasibility","Name the five areas of a feasibility study.","Market, technical, financial, legal, and environmental/ethical."],
+  ["feasibility","Give three reasons why a feasibility study is important.","It reduces risk; it finds problems before money is spent; it supports applications for loans and grants; it can stop a bad idea early; it helps with planning."],
+  ["feasibility","How do you calculate the break-even point?","Break-even (units) = fixed costs ÷ contribution per unit, where contribution = selling price − variable cost per unit."],
+  ["feasibility","What is the margin of safety?","How far expected sales are above break-even sales: expected sales − break-even sales."],
+  ["viability","What is a prototype?","An early, often cheap model of a product, built to test the idea with users before full production."],
+  ["viability","What is test marketing?","Selling a product in a small area or to a small group before a full launch, to see how customers react."],
+  ["viability","What does it mean to pivot?","To change an important part of an idea (product, target customer or price) after testing shows the original version won't work."],
+  ["viability","Why can a small survey be misleading?","A small or unrepresentative sample gives results that vary a lot by chance, and people often say they'll buy when they won't."],
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Ideas</text><text x="${cx}" y="${cy+22}" text-anchor="middle">development</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("b22-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("b22-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("b22-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("b22-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["sources","Which of these is an INTERNAL source of business ideas?",["A competitor's new product","A staff suggestion scheme","A trend reported in the news","A customer's complaint"],1,"A suggestion scheme collects ideas from the business's own employees. The others come from outside."],
+  ["sources","A café owner notices a rival café's queue every morning for its breakfast rolls. This is an idea from:",["Research and development","An internal source","A competitor (external source)","A suggestion scheme"],2,"Watching what competitors do is an external source of ideas."],
+  ["sources","Using CSO population figures to estimate demand is an example of:",["Secondary research","Primary research","Test marketing","Brainstorming"],0,"The data already exists (published by the CSO), so it's secondary (desk) research."],
+  ["factors","Which factor is MOST about whether enough people want to buy the product?",["Legislation","Technology","Market demand","Location"],2,"Market demand is how many customers want the product and can afford it."],
+  ["factors","A start-up app must protect users' personal data. Which factor is this?",["Economic conditions","Legislation (GDPR)","Competition","Skills and experience"],1,"Data protection law (GDPR) is a legal factor the idea must meet."],
+  ["factors","An idea for e-bike rental on a greenway gets few customers from November to March. This factor is:",["Seasonality (demand changes through the year)","Finance","Ethics","Technology"],0,"Demand that rises and falls with the seasons affects how the idea can develop (e.g. off-season income)."],
+  ["design","The specification describes design thinking as an innovative approach that is:",["Linear and step-by-step","Non-linear and focused on solutions for the end user","Focused only on reducing costs","Used only by large companies"],1,"Spec glossary: \"An innovative, non-linear approach to the development of products and services which focuses on solutions for the end user.\""],
+  ["design","What is the correct order of the four phases of design thinking?",["Ideate, clarify, implement, develop","Clarify, develop, ideate, implement","Clarify, ideate, develop, implement","Develop, clarify, ideate, implement"],2,"Clarify the problem, ideate solutions, develop and test prototypes, implement the solution."],
+  ["design","A team interviews users and watches them at work to understand their problem. Which phase is this?",["Clarify","Ideate","Develop","Implement"],0,"Clarify is about understanding the users and defining the problem."],
+  ["design","After testing, a team goes back to change its idea and tests again. This shows that design thinking is:",["Person-centred","Iterative","Linear","Cost-centred"],1,"Iterative means repeating the cycle of test, learn and improve."],
+  ["ideate","The main rule of brainstorming is:",["Judge each idea as soon as it is suggested","Only the manager may suggest ideas","Go for lots of ideas and don't criticise them","Choose the cheapest idea first"],2,"Quantity first, no criticism: judging comes later during screening."],
+  ["ideate","An idea scores 4 on demand (weight 3) and 2 on cost (weight 2). Its weighted score for these two criteria is:",["6","16","10","24"],1,"4 × 3 + 2 × 2 = 12 + 4 = 16."],
+  ["feasibility","A feasibility study is carried out:",["After the business has opened","Before large amounts of money are committed","Only when a bank asks for one","Only for products, not services"],1,"Its purpose is to check the idea will work before investing heavily."],
+  ["feasibility","Which question belongs to TECHNICAL feasibility?",["Will customers pay €10?","Can we make the product with the equipment and skills available?","Do we need a licence?","Will we break even?"],1,"Technical feasibility asks whether the product can be made or the service delivered."],
+  ["feasibility","Price €20, variable cost €12, fixed costs €16 000. The break-even point is:",["800 units","2 000 units","1 333 units","500 units"],1,"Contribution = 20 − 12 = €8. Break-even = 16 000 ÷ 8 = 2 000 units."],
+  ["feasibility","Which is NOT a benefit of a feasibility study?",["It reduces risk","It guarantees the business will succeed","It can help get a loan or grant","It finds problems early"],1,"It lowers the risk but can never guarantee success."],
+  ["viability","A cheap early model of a product, built to test the idea, is a:",["Patent","Prototype","Trademark","Franchise"],1,"A prototype lets users try the idea before full production."],
+  ["viability","After testing, a business changes its target customers from teenagers to parents. This is called:",["A pivot","Test marketing","Break-even","Screening"],0,"Pivoting means changing an important part of the idea after learning from tests."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("b22-best",null); if(best==null||pct>best) store.set("b22-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Determine","Establish or ascertain based on information, usually after investigation.","Determine the factors that impact on the development of the idea."],
+  ["Outline","Give the main points; restrict to essential points of information.","Outline design thinking as an approach to idea development."],
+  ["Appreciate","Recognise the meaning, value or importance of something, or have a practical understanding of it.","Appreciate the importance of a feasibility study."],
+  ["Explain","Give a detailed account including reasons or causes.","Explain why design thinking is iterative."],
+  ["Identify","Recognise patterns, facts or details; name them.","Identify two sources of ideas in the case."],
+  ["Discuss","Offer a considered, balanced review that includes a range of arguments, factors or hypotheses, supported by evidence.","Discuss the factors that helped Ana's idea develop."],
+  ["Assess","Judge, evaluate or estimate the value of something.","Assess the feasibility of the idea."],
+  ["Calculate","Obtain a numerical answer showing the relevant stages in the working.","Calculate the break-even point."],
+  ["Suggest","Propose a solution, hypothesis or other possible answer.","Suggest how the business could test its idea cheaply."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+
+// Numbers trainer
+const r1 = x => Math.round(x*10)/10, r2 = x => Math.round(x*100)/100;
+const PTYPES = {
+  contrib:{ name:"Contribution", gen(){ const P=rnd(8,60), V=rnd(2,P-3);
+    return { q:`A product sells for <b>€${P}</b> and has a variable cost of <b>€${V}</b> per unit. Calculate the contribution per unit.`, ans:P-V, unit:"€", steps:["Contribution = selling price − variable cost per unit",`= €${P} − €${V}`,`= €${P-V}`] }; } },
+  be:{ name:"Break-even", gen(){ const c=pick([2,4,5,8,10,15,20]), q=pick([500,800,1000,1500,2000,2500]), V=rnd(2,20), P=V+c, F=c*q;
+    return { q:`Selling price <b>€${P}</b>, variable cost <b>€${V}</b> per unit, fixed costs <b>€${n0(F)}</b> a year. Calculate the break-even point in units.`, ans:q, unit:"units", steps:[`Contribution = ${P} − ${V} = €${c}`,"Break-even = fixed costs ÷ contribution",`= ${n0(F)} ÷ ${c} = ${n0(q)} units`] }; } },
+  profit:{ name:"Profit", gen(){ const c=pick([4,5,8,10,12,15]), V=rnd(3,20), P=V+c, F=pick([6000,10000,15000,24000,30000]), Q=pick([1500,2000,2500,3000,4000]), pr=Q*c-F;
+    return { q:`A business expects to sell <b>${n0(Q)}</b> units at <b>€${P}</b> each. Variable cost is <b>€${V}</b> per unit and fixed costs are <b>€${n0(F)}</b>. Calculate the expected profit (a loss is negative).`, ans:pr, unit:"€", steps:[`Contribution = ${P} − ${V} = €${c} per unit`,`Total contribution = ${n0(Q)} × ${c} = €${n0(Q*c)}`,`Profit = ${n0(Q*c)} − ${n0(F)} = ${pr<0?"−€"+n0(-pr):"€"+n0(pr)}`] }; } },
+  mos:{ name:"Margin of safety", gen(){ const c=pick([5,8,10,20]), be=pick([600,1000,1200,2000]), F=c*be, Q=be+pick([100,200,300,500,800]);
+    return { q:`Fixed costs are <b>€${n0(F)}</b> and contribution is <b>€${c}</b> per unit. Expected sales are <b>${n0(Q)}</b> units. Calculate the margin of safety in units.`, ans:Q-be, unit:"units", steps:[`Break-even = ${n0(F)} ÷ ${c} = ${n0(be)} units`,"Margin of safety = expected sales − break-even sales",`= ${n0(Q)} − ${n0(be)} = ${n0(Q-be)} units`] }; } },
+  target:{ name:"Target profit", gen(){ const c=pick([4,5,8,10]), u1=pick([1000,1500,2000]), u2=pick([250,500,750,1000]), F=c*u1, T=c*u2;
+    return { q:`Fixed costs are <b>€${n0(F)}</b> and contribution is <b>€${c}</b> per unit. How many units must be sold to make a profit of <b>€${n0(T)}</b>?`, ans:u1+u2, unit:"units", steps:["Units = (fixed costs + target profit) ÷ contribution",`= (${n0(F)} + ${n0(T)}) ÷ ${c}`,`= ${n0(F+T)} ÷ ${c} = ${n0(u1+u2)} units`] }; } },
+  survey:{ name:"Survey %", gen(){ const n=pick([40,50,80,120,150,200]), y=rnd(Math.round(n*0.1),Math.round(n*0.6)), p=y/n*100;
+    return { q:`In a survey of <b>${n}</b> people in the target market, <b>${y}</b> said they would definitely or probably buy the product. What percentage is this? (1 decimal place)`, ans:r1(p), unit:"%", steps:["% = part ÷ whole × 100",`= ${y} ÷ ${n} × 100`,`= ${r1(p)}%`] }; } },
+  market:{ name:"Estimate demand", gen(){ const pop=pick([8000,12000,20000,45000]), pc=pick([10,15,20,25]), t=pick([2,4,12]), u=pop*pc/100*t;
+    return { q:`A town has <b>${n0(pop)}</b> people in the target market. Research suggests <b>${pc}%</b> would buy the product, each about <b>${t} times</b> a year. Estimate yearly sales in units.`, ans:u, unit:"units", steps:[`Buyers = ${n0(pop)} × ${pc}% = ${n0(pop*pc/100)}`,`Yearly units = ${n0(pop*pc/100)} × ${t}`,`= ${n0(u)} units`] }; } },
+  weighted:{ name:"Weighted score", gen(){ const s=[rnd(1,5),rnd(1,5),rnd(1,5)], wt=[rnd(1,5),rnd(1,5),rnd(1,5)], tot=s[0]*wt[0]+s[1]*wt[1]+s[2]*wt[2];
+    return { q:`An idea scores <b>${s[0]}</b> for demand (weight ${wt[0]}), <b>${s[1]}</b> for low cost (weight ${wt[1]}) and <b>${s[2]}</b> for skills (weight ${wt[2]}). Calculate its weighted score.`, ans:tot, unit:"points", steps:["Weighted score = Σ (score × weight)",`= ${s[0]}×${wt[0]} + ${s[1]}×${wt[1]} + ${s[2]}×${wt[2]}`,`= ${s[0]*wt[0]} + ${s[1]*wt[1]} + ${s[2]*wt[2]} = ${tot}`] }; } },
+  markup:{ name:"Price from mark-up", gen(){ const cost=pick([4,6,8,12,15,20,24]), m=pick([25,40,50,60,100]), p=cost*(1+m/100);
+    return { q:`A prototype product costs <b>€${cost}</b> per unit to make. The business adds a mark-up of <b>${m}%</b> on cost. Calculate the selling price.`, ans:r2(p), unit:"€", steps:[`Mark-up = ${m}% × €${cost} = €${f2(cost*m/100)}`,"Price = cost + mark-up",`= €${cost} + €${f2(cost*m/100)} = €${f2(p)}`] }; } },
+};
+let pType="contrib", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const raw=$("paIn").value.replace(/[€%£$\sm]/g,"").replace(/years?/i,"").replace(/[−–]/g,"-").replace(/,(?=\d{3}(\D|$))/g,"").replace(",",".");
+  const x=parseFloat(raw);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 1500 or 59.3.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(0.05, Math.abs(pCur.ans)*0.005);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: write the formula first; a percentage is part ÷ whole × 100; contribution = price − variable cost; break-even = fixed costs ÷ contribution. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Which phase? [statement, key, why]
+const PRED = [
+  ["The team spends a morning watching how shoppers use the self-checkout machines.","cl","Observing users to understand the problem."],
+  ["Staff write 60 ideas on sticky notes in 20 minutes without judging any of them.","id","Generating lots of ideas."],
+  ["The designers make a cardboard model of the new kiosk and ask five customers to try it.","dv","A cheap prototype tested with users."],
+  ["The new booking system goes live in all branches, and staff collect feedback each week.","im","Launching, then monitoring and improving."],
+  ["The team writes: \"How might we help older people pay for parking without a smartphone?\"","cl","Defining the problem as a 'How might we' question."],
+  ["Interviews show patients mostly want to know how long they'll wait.","cl","Research that clarifies what users really need."],
+  ["The group uses reverse brainstorming: \"How could we make the queue even longer?\"","id","A creative technique for generating ideas."],
+  ["A simple web page lets customers pre-order before the real app is built.","dv","A minimum viable product to test the idea."],
+  ["Testers find the buttons too small, so the team redesigns the screen and tests it again.","dv","Testing and improving a prototype: iteration."],
+  ["The council rolls out the new recycling bins to every street and tracks how full they get.","im","Full roll-out with monitoring."],
+  ["The team mind-maps every possible way to reduce food waste in the canteen.","id","Exploring many possible solutions."],
+  ["After launch, the company adds a feature that users kept asking for.","im","Improving after implementation."],
+];
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k && PRED.length>1); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>${PRED[k][0]}</b> Which phase of design thinking is this?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick one of the four phases first.</div>`; return; }
+  const [,ans,why]=PRED[pd.k], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> It's ${PH[ans][0].toLowerCase()}. ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"GreenGo Cups", intro:"Ana works as a barista in Galway. Customers kept asking why the café still used throwaway cups, and she read that Ireland plans to cut single-use cup waste. With a friend who is a web developer, she plans GreenGo Cups: a deposit scheme where customers borrow a reusable cup in one café and return it to any café in the city. A local business adviser told her to carry out a feasibility study before spending her €8 000 savings. (Illustrative case.)",
+    parts:[["a","Identify two sources of Ana's idea and say whether each is internal or external.",8,"2 × 4 (source 2 + internal/external with link 2): customers' questions/complaints (external); a trend or news about reducing single-use waste / government plans (external); her own work experience as a barista (accept as personal experience). Must link to the case."],
+      ["b","Determine three factors that could impact on the development of GreenGo Cups.",15,"3 × 5 (factor 2 + how it helps or hinders 2 + link to case 1): e.g. demand (customers already asking); legislation / government policy on single-use cups (helps); skills (friend can build the app, helps); finance (€8 000 savings may not cover cups and app); competition (other cup schemes); sustainability trend (helps); getting enough cafés to join (hinders)."],
+      ["c","Outline how Ana could use the four phases of design thinking to develop her idea.",12,"4 × 3, one action per phase applied: clarify (interview café owners and customers, define the problem, e.g. 'How might we make reusing a cup as easy as a paper cup?'); ideate (brainstorm ways to collect and clean cups); develop (prototype with 50 cups in two cafés, gather feedback); implement (launch city-wide, monitor returns, improve)."],
+      ["d","Explain why design thinking is described as iterative and person-centred, with reference to GreenGo Cups.",10,"Iterative (2): test, learn, loop back and improve, e.g. if customers forget to return cups she redesigns the deposit or adds return points (3). Person-centred (2): starts from the needs of customers and café owners, e.g. interviewing them about what would make them reuse a cup (3)."],
+      ["e","Appreciate the importance of a feasibility study for Ana before she spends her savings.",10,"Two developed points × 5: reduces risk of losing her €8 000; checks there's enough demand from cafés and customers; finds technical problems early (washing, tracking cups); checks legal/hygiene rules; supports a grant or loan application; may show the idea needs changing (pivot) before launch."]] },
+  { title:"Bake Box: financial feasibility", intro:"Darragh plans to sell monthly boxes of home-baked treats by subscription. Each box sells for €25 and has a variable cost of €10. Fixed costs (kitchen rental, insurance, website) are €30 000 a year. Market research suggests he can sell 2 500 boxes a year. (Illustrative case.)",
+    parts:[["a","Calculate the contribution per box.",4,"Contribution = price − variable cost (2) = 25 − 10 = €15 (2)."],
+      ["b","Calculate the break-even point in boxes.",6,"Break-even = fixed costs ÷ contribution (3) = 30 000 ÷ 15 = 2 000 boxes (3)."],
+      ["c","Calculate the expected profit and the margin of safety.",8,"Profit = 2 500 × 15 − 30 000 = €7 500 (4). Margin of safety = 2 500 − 2 000 = 500 boxes (4)."],
+      ["d","Illustrate the break-even point on a fully labelled break-even chart.",12,"Axes labelled (units, €) (2); fixed costs line at €30 000 (2); total costs line from €30 000 to €55 000 at 2 500 boxes (3); revenue line from 0 to €62 500 at 2 500 (3); break-even point at 2 000 boxes / €50 000 marked (2)."],
+      ["e","Outline two other (non-financial) areas Darragh's feasibility study should examine.",10,"2 × 5: technical (can he bake, pack and post 200+ boxes a month; equipment, kitchen, delivery); legal (food business registration, hygiene rules, allergen labelling, consumer law for subscriptions); market (is 2 500 realistic, who are the competitors); environmental/ethical (packaging, waste, sourcing)."],
+      ["f","Suggest one way Darragh could test the idea before committing to a year's kitchen rental.",5,"e.g. sell a trial batch of 50 boxes to friends and local customers / pre-orders / a simple website as a minimum viable product / a market stall (3) and explain what he'd learn (2)."]] },
+  { title:"Design thinking in a public service", intro:"A county council wants more people to use its new library e-book service. Only 4% of library members use it. It decides to use design thinking. (Illustrative case.)",
+    parts:[["a","Outline what is meant by design thinking.",6,"The spec's definition or equivalent (3): an innovative, non-linear approach to developing products and services which focuses on solutions for the end user (3)."],
+      ["b","Describe what the council's team should do in the clarify phase.",9,"3 × 3: interview and observe library members (users and non-users); use empathy to find out why they don't use e-books (e.g. don't know about it, app too hard, no device); define the problem as 'How might we…?'."],
+      ["c","Suggest two ideas the team might produce in the ideate phase, and say how it should choose between them.",9,"2 × 3 ideas, e.g. help desk sessions in the library, simpler app sign-in with the library card, lending tablets, posters in schools. Choosing (3): screen against criteria (cost, user benefit, ease) with weights, or test both cheaply."],
+      ["d","Explain why the team should build and test a prototype before implementing a solution in every library.",8,"Cheap to change before roll-out (3); feedback from real users shows problems early (3); avoids wasting public money / iterate until it works (2)."],
+      ["e","Discuss whether design thinking is useful for organisations that don't aim to make a profit.",8,"Balanced points: yes, any organisation has end users and limited budgets; it improves services and saves public money; it's person-centred, so suits public services. Limits: takes time; needs staff skills and a culture that accepts failure. A justified conclusion (2)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist
+const RAG = ["Give internal and external sources of business ideas","Distinguish primary and secondary research","Determine factors that impact on the development of an idea","Explain how each factor helps or hinders, applied to a case","Quote the spec's definition of design thinking","Name and outline the four phases: clarify, ideate, develop, implement","Explain iterative, person-centred and solution-centred","Describe brainstorming and idea screening","Calculate a weighted score","Name the five areas of a feasibility study","Explain why a feasibility study matters before investing","Calculate contribution, break-even, profit and margin of safety","Draw and label a break-even chart","Describe ways to test an idea: prototype, MVP, survey, test marketing","Explain go, pivot or stop"];
+const ragState=store.get("b22-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("b22-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Ask good questions","Turn a topic into a clear research question, e.g. \"Would students at my school use a uniform-swap service?\"","Design thinking project"],["Understand the people involved","Interview or observe the people affected before deciding on a solution.","Design thinking project"],["Plan primary research","Write short, clear survey questions with answer options; avoid leading questions.","Market survey lab"],["Choose a fair sample","Ask enough people, from the real target market, not only friends.","Market survey lab"],["Use secondary sources","Use CSO data, reports and reliable websites; note each source.","Factors lab"],["Analyse numbers","Work out percentages, contribution and break-even, and show the working.","Feasibility lab"],["Weigh up evidence","Use criteria and weights to compare options, and justify the weights.","Screening lab"],["Reach and justify a conclusion","Decide go, pivot or stop, and back the decision with your evidence and its limits.","Market survey lab"]];
+const skState=store.get("b22-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("b22-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+// Where did that idea come from?
+const SRC = [["A hotel's staff suggestion box","I","Ideas from the business's own employees."],["A customer complains the gym has no early-morning classes","E","Customers are outside the business."],["The food company's R&D team develops a new recipe","I","Research and development inside the firm."],["A trend for plant-based food spotted on social media","E","A trend in the wider market."],["A brainstorming session at the weekly team meeting","I","Generated by the team inside the business."],["A competitor launches a loyalty app","E","Watching rivals is an external source."],["A holiday abroad where you see a bike-sharing scheme","E","Travel: ideas from other places."],["Sales records show one product sells out every Friday","I","The business's own records."],["A CSO report on Ireland's ageing population","E","Published secondary research."],["Feedback from the firm's own delivery drivers","I","Staff knowledge from inside the business."],["Cheap 3D printers become widely available","E","A change in technology outside the firm."],["A manager's idea after 20 years in the industry","I","Experience inside the business."]];
+const SRN = {I:"Internal",E:"External"}, srS = { order:[], ans:{} };
+const srCounts = () => ["I","E"].map(k=>Object.entries(srS.ans).filter(([i,a])=>a===k && SRC[i][1]===k).length);
+const srRender=()=>{ sorter("srList","srOut",SRC,SRN,srS); srC.redraw(); };
+function srNew(){ srS.order=shuffle(SRC.map((s,k)=>k)); srS.ans={}; srRender(); }
+$("srList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b) return; srS.ans[+b.dataset.k]=b.dataset.v; srRender(); });
+$("srReset").addEventListener("click",srNew);
+// Factors that shape an idea
+const FA = [
+  {n:"Vegan café in a county town", d:"Aoife, a trained chef, wants to open a vegan café on the main street of a town of 20 000 people.", items:[["Demand: more people in the town are choosing plant-based food","H","Growing demand pulls the idea forward."],["Competition: two cafés on the same street already offer vegan dishes","X","She'll need a clear difference to win customers."],["Finance: she has €15 000 savings and an offer of support from her Local Enterprise Office","H","Money to fit out the café without a large loan."],["Skills: she is a trained chef with ten years' experience","H","Her skills make the idea possible and lower the risk."],["Costs: town-centre rents have risen 20% this year","X","Higher fixed costs raise her break-even point."],["Legislation: she must register as a food business and meet hygiene rules before opening","X","A hurdle to plan for, with time and cost."]]},
+  {n:"An app to book sports pitches", d:"Cian, a computer science graduate, wants to build an app for clubs and schools to book local pitches.", items:[["Technology: low-cost app tools and online payments make it quick to build","H","Technology makes the idea cheaper and faster to develop."],["Skills: he studied computer science and has built apps before","H","He can build it himself."],["Competition: a large national booking app already exists","X","He must offer something the big app doesn't, e.g. local clubs."],["Demand: club secretaries say booking by phone wastes hours","H","A clear problem that users want solved."],["Finance: building and marketing the app could cost €40 000 before any income","X","He'll need funding or a smaller first version."],["Legislation: users' personal data must be protected under GDPR","X","Extra work and cost to stay legal."]]},
+  {n:"E-bike rental on a greenway", d:"Siobhán owns a shop beside a popular greenway and wants to add e-bike rental.", items:[["Social trend: more tourists want active, green holidays","H","A growing market for her idea."],["Location: the greenway passes her shop door","H","Customers are already walking past."],["Seasonality: few tourists from November to March","X","Little income for five months of the year."],["Economy: a downturn could cut tourists' spending","X","Rentals are a 'nice to have' that people cut first."],["Sustainability: e-bikes replace car journeys, which may suit green grant schemes","H","Helps her image and may open funding."],["Insurance: public liability cover for rentals is expensive","X","A high fixed cost to build into her prices."]]},
+];
+const FAN = {H:"Helps",X:"Hinders"}, fa = { i:0, S:{order:[],ans:{}} };
+$("faIdea").innerHTML = FA.map((f,k)=>`<button data-k="${k}" aria-pressed="${k===0}">${f.n}</button>`).join("");
+function faNew(){ fa.S.order=shuffle(FA[fa.i].items.map((s,k)=>k)); fa.S.ans={}; faRender(); }
+function faRender(){ const D=FA[fa.i].items; $("faDesc").textContent=FA[fa.i].d; sorter("faList","faOut",D,FAN,fa.S);
+  const a=Object.values(fa.S.ans), help=a.filter(x=>x==="H").length, hind=a.filter(x=>x==="X").length, done=a.length===D.length;
+  $("faWork").innerHTML = done? `Your balance: ${help} helping, ${hind} hindering. Counting isn't enough: weigh how big each factor is, and which ones the founder can control (skills, finance, how she competes) and which she can't (the economy, seasons, the law). For each hindering factor, a good answer suggests a response, e.g. a winter offer, a smaller first version, or a clear point of difference.` : "Sort every factor to see the balance and the advice.";
+  faC.redraw(); }
+$("faIdea").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; fa.i=+b.dataset.k; pressGroup([...$("faIdea").querySelectorAll("button")],b); faNew(); });
+$("faList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b) return; fa.S.ans[+b.dataset.k]=b.dataset.v; faRender(); });
+// Design thinking project
+const DT = [
+  {ph:0, q:"Clarify: the student council wants to fix the queue. What should it do first?", opts:[["Interview students and canteen staff, and time the queue to see where the hold-ups are",1,"Person-centred: understand the users and the real problem first. They find that paying with cash and choosing hot food cause most of the delay. Problem statement: \"How might we get every student their lunch within 5 minutes?\""],["Buy a second till straight away",0,"That jumps to a solution before understanding the problem. The till might not be the hold-up."],["Ask the principal to decide what to do",0,"Not person-centred: the people with the problem (students and canteen staff) haven't been asked."]]},
+  {ph:1, q:"Ideate: how should the council come up with solutions?", opts:[["Brainstorm as many ideas as possible without judging them: pre-ordering, a grab-and-go fridge, cashless cards, staggered lunch times…",1,"Quantity first. Twenty ideas are screened down to two: paper pre-order forms and a grab-and-go fridge."],["Go with the first idea anyone suggests",0,"The first idea is rarely the best. Generate many, then screen."],["Only consider ideas that cost nothing",0,"Screening comes after ideating. Ruling ideas out too early may lose the best one."]]},
+  {ph:2, q:"Develop: what's the best next step?", opts:[["Prototype cheaply: paper pre-order forms for two classes for one week, and collect feedback",1,"A cheap test with real users. Result: pre-ordered lunches took under 2 minutes, but 30% of students forgot to fill in the form."],["Pay €5 000 for a custom pre-order app now",0,"Too expensive before the idea has been tested. A cheap prototype comes first."],["Keep discussing until everyone agrees",0,"Design thinking is solution-centred: build something and test it."]]},
+  {ph:1, back:true, q:"Testing showed 30% of students forgot to pre-order. What now?", opts:[["Loop back: ideate and develop again (a reminder at morning roll call, plus a grab-and-go fridge for anyone who forgets), then test again",1,"That's iteration. The second test: 95% of students got lunch in under 5 minutes."],["Give up: the idea failed",0,"Feedback isn't failure: it shows what to improve. Loop back and try again."],["Launch it anyway and ignore the feedback",0,"Ignoring users isn't person-centred: 30% would still queue."]]},
+  {ph:3, q:"Implement: how should the council roll it out?", opts:[["Roll it out to every year group, train canteen staff, and keep collecting feedback to improve it",1,"Implementation includes monitoring. A term later, average queuing time is down from 15 minutes to 4."],["Launch it and never look at it again",0,"Implementation includes monitoring and improving: needs change over time."],["Keep testing it with two classes for the rest of the year",0,"Once it works, put it into use so everyone benefits."]]},
+];
+const dt = { i:0, order:[], picked:{}, solved:false, tries:0 };
+function dtStep(){ dt.order=shuffle(DT[dt.i].opts.map((o,k)=>k)); dt.picked={}; dt.solved=false; dtRender(); }
+function dtRender(){ const done=dt.i>=DT.length;
+  if(done){ $("dtQ").innerHTML="<b>Project complete.</b> Four phases, one loop back, and a solution that works for the users."; $("dtOpts").innerHTML=""; $("dtNext").disabled=true;
+    setReadout($("dtOut"),[["Steps","5 / 5"],["Wrong choices",String(dt.tries)],["Loops back","1"]]);
+    $("dtWork").innerHTML="Person-centred: it started by asking students and staff. Solution-centred: each phase moved towards a working fix. Iterative: the first prototype's feedback sent the team back to ideate and develop. Non-linear: the path went 1 → 2 → 3 → 2 → 3 → 4, not straight through."; dtC.redraw(); return; }
+  const S=DT[dt.i]; $("dtQ").innerHTML=`<b>Step ${dt.i+1} of ${DT.length}.</b> ${S.q}`;
+  $("dtOpts").innerHTML=dt.order.map(k=>{ const [t,ok,why]=S.opts[k], p=dt.picked[k]; return `<div class="row ${p?(ok?"ok":"no"):""}"><span>${t}${p?`<small>${ok?"✓":"✗"} ${why}</small>`:""}</span><div class="btns"><button data-o="${k}" ${p||dt.solved?"disabled":""}>Choose</button></div></div>`; }).join("");
+  $("dtNext").disabled=!dt.solved;
+  setReadout($("dtOut"),[["Step",`${dt.i+1} / ${DT.length}`],["Phase",PHASES[S.ph][0]+(S.back?" (again)":"")],["Wrong choices so far",String(dt.tries)]]);
+  $("dtWork").innerHTML = S.back? "Looping back to an earlier phase after testing is what makes design thinking iterative." : `Phase ${S.ph+1}, ${PHASES[S.ph][0].toLowerCase()}: ${PHASES[S.ph][1]}.`;
+  dtC.redraw(); }
+$("dtOpts").addEventListener("click",e=>{ const b=e.target.closest("button[data-o]"); if(!b) return; const k=+b.dataset.o, ok=DT[dt.i].opts[k][1]; dt.picked[k]=1; if(ok) dt.solved=true; else dt.tries++; dtRender(); });
+$("dtNext").addEventListener("click",()=>{ if(!dt.solved) return; dt.i++; if(dt.i<DT.length) dtStep(); else dtRender(); });
+$("dtReset").addEventListener("click",()=>{ dt.i=0; dt.tries=0; $("dtNext").disabled=false; dtStep(); });
+// Idea screening matrix
+const SCI = ["Personalised phone cases","Healthy smoothie stall","Homework-help app","Upcycled tote bags"];
+const SCC = ["Demand","Low start-up cost","Our skills","Little competition","Sustainability"];
+const SCS = [[4,3,2,2,2],[5,2,3,3,4],[3,3,2,2,4],[3,4,4,4,5]];
+const sc = { w:[3,3,3,3,3] };
+$("scW").innerHTML = SCC.map((c,j)=>`<div class="ctl"><label for="scw${j}">${c} <output id="scw${j}o">3</output></label><input type="range" id="scw${j}" min="0" max="5" step="1" value="3"></div>`).join("");
+$("scHead").innerHTML = `<tr><th>Idea</th>${SCC.map(c=>`<th>${c}</th>`).join("")}<th>Total</th></tr>`;
+const scTotals = () => SCI.map((n,i)=>[n,SCS[i].reduce((a,s,j)=>a+s*sc.w[j],0)]);
+function scUpd(){ const T=scTotals(), best=[...T].sort((a,b)=>b[1]-a[1]), tie=best[0][1]===best[1][1], wi=SCI.indexOf(best[0][0]);
+  SCC.forEach((c,j)=>$(`scw${j}o`).textContent=sc.w[j]);
+  $("scTable").innerHTML = SCI.map((n,i)=>`<tr><td>${n}</td>${SCS[i].map((s,j)=>`<td>${s} × ${sc.w[j]}</td>`).join("")}<td><b>${T[i][1]}</b></td></tr>`).join("");
+  setReadout($("scOut"),[["Top idea",tie?"A tie":best[0][0]],["Its score",`${best[0][1]} / ${5*sc.w.reduce((a,b)=>a+b,0)}`],["Runner-up",best[1][0]+" ("+best[1][1]+")"]]);
+  $("scWork").innerHTML = `${best[0][0]}: ${SCS[wi].map((s,j)=>`${s}×${sc.w[j]}`).join(" + ")} = <b>${best[0][1]}</b>. `+(tie?"Two ideas tie: add a criterion or test both cheaply.":"Change the weights and watch the ranking move: the weights are a judgement, so justify them.");
+  scC.redraw(); }
+SCC.forEach((c,j)=>$(`scw${j}`).addEventListener("input",e=>{ sc.w[j]=+e.target.value; scUpd(); }));
+// Feasibility study
+const FE = [
+  {n:"Smoothie stall (TY)", P:4, V:1.5, F:500, Q:400, unit:"smoothies", rng:{P:[2,8,0.5],V:[0.5,4,0.25],F:[100,1500,50],Q:[50,1000,10]}},
+  {n:"Vegan café", P:9, V:4, F:60000, Q:15000, unit:"meals", rng:{P:[5,16,0.5],V:[2,8,0.5],F:[20000,120000,5000],Q:[2000,30000,500]}},
+  {n:"E-bike rental", P:35, V:8, F:54000, Q:2400, unit:"rental days", rng:{P:[15,60,1],V:[2,20,1],F:[20000,100000,2000],Q:[500,5000,100]}},
+];
+const FCK = [["market","Market research shows enough demand"],["tech","Equipment, suppliers and skills in place"],["legal","Licences, permits and insurance sorted"],["env","Environmental and ethical impact acceptable"]];
+const fe = { i:0, P:0, V:0, F:0, Q:0, chk:{market:true,tech:true,legal:false,env:true} };
+const eurx = v => Number.isInteger(v)? eur(v) : "€"+f2(v);
+$("feIdea").innerHTML = FE.map((f,k)=>`<button data-k="${k}" aria-pressed="${k===0}">${f.n}</button>`).join("");
+$("feChecks").innerHTML = FCK.map(([k,t])=>`<button data-c="${k}">${t}</button>`).join("");
+function feSet(i){ fe.i=i; const D=FE[i]; ["P","V","F","Q"].forEach(k=>{ const el=$("fe"+k), [a,b,s]=D.rng[k]; el.min=a; el.max=b; el.step=s; el.value=D[k]; fe[k]=D[k]; }); fe.chk={market:true,tech:true,legal:false,env:true}; feUpd(); }
+function feUpd(){ const D=FE[fe.i], c=fe.P-fe.V, be=c>0? Math.ceil(fe.F/c-1e-9) : null, pr=fe.Q*c-fe.F, miss=FCK.filter(([k])=>!fe.chk[k]);
+  $("fePo").textContent=eurx(fe.P); $("feVo").textContent=eurx(fe.V); $("feFo").textContent=eur(fe.F); $("feQo").textContent=n0(fe.Q)+" "+D.unit;
+  document.querySelectorAll("#feChecks button").forEach(b=>b.setAttribute("aria-pressed",fe.chk[b.dataset.c]?"true":"false"));
+  const verdict = c<=0||pr<=0? "Not feasible yet" : miss.length? "Feasible with conditions" : "Feasible";
+  setReadout($("feOut"),[["Contribution per unit",eurx(r2(c))],["Break-even",be==null?"never":n0(be)+" "+D.unit],["Expected profit",(pr<0?"−":"")+eur(Math.abs(pr))],["Margin of safety",be==null?"–":n0(fe.Q-be)+" "+D.unit],["Verdict",verdict]]);
+  $("feWork").innerHTML = (c>0? `Contribution = ${eurx(fe.P)} − ${eurx(fe.V)} = ${eurx(r2(c))}. Break-even = ${eur(fe.F)} ÷ ${eurx(r2(c))} = <b>${n0(be)} ${D.unit}</b>. Profit at ${n0(fe.Q)} = ${n0(fe.Q)} × ${eurx(r2(c))} − ${eur(fe.F)} = <b>${(pr<0?"−":"")+eur(Math.abs(pr))}</b>. ` : "The price doesn't cover the variable cost, so every sale loses money. ")
+    + (c<=0||pr<=0? "<b>Not financially feasible:</b> raise the price, cut costs or find more customers, or drop the idea before money is spent." : miss.length? `<b>Financially feasible, but not yet fully feasible:</b> still to sort out: ${miss.map(m=>m[1].toLowerCase()).join("; ")}.` : "<b>Feasible on all five counts:</b> the idea can go forward into a business plan (topic 2.3).");
+  feC.redraw(); }
+$("feIdea").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pressGroup([...$("feIdea").querySelectorAll("button")],b); feSet(+b.dataset.k); });
+["P","V","F","Q"].forEach(k=>$("fe"+k).addEventListener("input",e=>{ fe[k]=+e.target.value; feUpd(); }));
+$("feChecks").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; fe.chk[b.dataset.c]=!fe.chk[b.dataset.c]; feUpd(); });
+// Market survey
+const SV = [
+  {n:"Reusable cup scheme", d:"Target market: 6 000 café customers in a town. To break even, 25% of them must sign up.", truth:34, need:25},
+  {n:"Premium dog-walking app", d:"Target market: 3 000 dog owners in a suburb. Break-even needs 30% to subscribe.", truth:18, need:30},
+  {n:"Late-night study café", d:"Target market: 4 000 college students. Break-even needs 20% to become regular customers.", truth:27, need:20},
+];
+const sv = { i:0, n:50, counts:null, est:0, moe:0, reveal:false, dec:null };
+$("svIdea").innerHTML = SV.map((s,k)=>`<button data-k="${k}" aria-pressed="${k===0}">${s.n}</button>`).join("");
+function svRun(){ const p=SV[sv.i].truth/100, c=[0,0,0,0,0];
+  for(let j=0;j<sv.n;j++){ const r=Math.random(); if(r<p){ c[Math.random()<0.45?0:1]++; } else { const q=Math.random(); c[q<0.35?2:q<0.7?3:4]++; } }
+  sv.counts=c; sv.est=(c[0]+c[1])/sv.n*100; sv.moe=100/Math.sqrt(sv.n); sv.dec=null; svUpd(); }
+function svUpd(){ const S=SV[sv.i]; $("svDesc").textContent=S.d; $("svNo").textContent=sv.n+" people";
+  document.querySelectorAll("#svDec button").forEach(b=>b.setAttribute("aria-pressed",sv.dec===b.dataset.d?"true":"false"));
+  setReadout($("svOut"),[["Sample",sv.counts? sv.counts.reduce((a,b)=>a+b,0)+" people" : "–"],["Likely to buy",sv.counts? `${Math.round(sv.est)}% ± ${Math.round(sv.moe)}` : "–"],["Needed to break even",S.need+"%"],["True figure",sv.reveal? S.truth+"%" : "hidden"]]);
+  let tx;
+  if(!sv.counts) tx="Run the survey first.";
+  else { const lo=sv.est-sv.moe, hi=sv.est+sv.moe, right= lo>S.need? "go" : hi<S.need? "pivot" : "more";
+    const why = right==="go"? `Even the low end of the range (${Math.round(lo)}%) is above the ${S.need}% needed: the evidence supports going ahead (and testing further after launch).` : right==="pivot"? `Even the high end of the range (${Math.round(hi)}%) is below the ${S.need}% needed: change the idea (price, product or target market) or stop.` : `The range (${Math.round(Math.max(0,lo))}–${Math.round(Math.min(100,hi))}%) includes the ${S.need}% needed, so you can't tell yet: survey more people or test-market it.`;
+    tx = sv.dec? (sv.dec===right? `<b style="color:var(--good)">Good decision.</b> ${why}` : `<b style="color:var(--bad)">Look again.</b> ${why}`) : `Survey says about ${Math.round(sv.est)}% are likely to buy, give or take ${Math.round(sv.moe)} points. Now make a decision.`; }
+  $("svWork").innerHTML=tx; svC.redraw(); }
+$("svIdea").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sv.i=+b.dataset.k; pressGroup([...$("svIdea").querySelectorAll("button")],b); sv.counts=null; sv.reveal=false; sv.dec=null; svUpd(); });
+$("svN").addEventListener("input",e=>{ sv.n=+e.target.value; svUpd(); });
+$("svGo").addEventListener("click",svRun);
+$("svReveal").addEventListener("click",()=>{ sv.reveal=!sv.reveal; svUpd(); });
+$("svDec").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sv.dec=b.dataset.d; svUpd(); });
+
+/* ================= CREATE CANVASES ================= */
+const hero = makeCanvas($("heroCanvas"), 0.75, 260, s => drawLoop(s.ctx,s.w,s.h,{cur:reduce?0:Math.floor(heroT*0.5)%4,dot:reduce?null:(heroT*0.5)%4}), 440);
+const srC = makeCanvas($("srC"), 0.4, 220, s => drawSources(s.ctx,s.w,s.h,{counts:srCounts()}), 320);
+const faC = makeCanvas($("faC"), 0.4, 220, s => { const a=Object.values(fa.S.ans); drawScale(s.ctx,s.w,s.h,{help:a.filter(x=>x==="H").length,hind:a.filter(x=>x==="X").length}); }, 320);
+const dtC = makeCanvas($("dtC"), 0.55, 300, s => drawLoop(s.ctx,s.w,s.h,{cur:dt.i<DT.length?DT[dt.i].ph:-1,back:dt.i<DT.length&&!!DT[dt.i].back}), 440);
+const scC = makeCanvas($("scC"), 0.4, 220, s => drawScreen(s.ctx,s.w,s.h,{totals:scTotals(),max:5*sc.w.reduce((a,b)=>a+b,0)}), 320);
+const feC = makeCanvas($("feC"), 0.55, 280, s => drawBE(s.ctx,s.w,s.h,fe), 420);
+const svC = makeCanvas($("svC"), 0.5, 260, s => drawSurvey(s.ctx,s.w,s.h,{counts:sv.counts,est:sv.est,moe:sv.moe,need:SV[sv.i].need,truth:sv.reveal?SV[sv.i].truth:null}), 400);
+predC = makeCanvas($("predC"), 0.5, 180, s => { const ans=PRED[pd.k<0?0:pd.k][1];
+  if(pd.shown) drawWhich(s.ctx,s.w,s.h,{ans,bgc:C["surface-2"]});
+  else { bg(s.ctx,s.w,s.h,C["surface-2"]); text(s.ctx,"?",s.w/2,s.h/2+18,C.muted,F(56),"center"); text(s.ctx,"The answer appears here",s.w/2,s.h-14,C.muted,F(11,600),"center"); } }, 300);
+pdNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    sources:s=>drawSources(s.ctx,s.w,s.h,{...o,compact:true}),
+    scale:s=>drawScale(s.ctx,s.w,s.h,{...o,compact:true}),
+    loop:s=>drawLoop(s.ctx,s.w,s.h,{...o,compact:true}),
+    screen:s=>drawScreen(s.ctx,s.w,s.h,{...o,compact:true}),
+    be:s=>drawBE(s.ctx,s.w,s.h,{...o,compact:true}),
+    survey:s=>drawSurvey(s.ctx,s.w,s.h,{...o,compact:true}),
+  };
+  makeCanvas(el, 0.62, 230, draws[kind], 380);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-mini=loop]").forEach(el=>makeCanvas(el,0.7,180,s=>drawLoop(s.ctx,s.w,s.h,{compact:true,cur:2,back:true,bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=screen]").forEach(el=>makeCanvas(el,0.7,180,s=>drawScreen(s.ctx,s.w,s.h,{compact:true,totals:SCI.map((n,i)=>[n,SCS[i].reduce((a,v)=>a+v*3,0)]),max:75,bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=be]").forEach(el=>makeCanvas(el,0.7,180,s=>drawBE(s.ctx,s.w,s.h,{compact:true,P:25,V:10,F:30000,Q:2500,bgc:C["surface-2"]})));
+srNew(); faNew(); dtStep(); scUpd(); feSet(0); svUpd();
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>

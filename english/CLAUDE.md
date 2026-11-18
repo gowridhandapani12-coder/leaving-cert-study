@@ -1,0 +1,65 @@
+# Leaving Cert English interactive course
+
+Interactive, visual study pages for Irish Leaving Certificate English (Higher Level focus), one page per
+text or paper section. Same design and page format as the sister courses in `..\physics`, `..\business`
+and `..\applied-maths` (see Physics CLAUDE.md for the full format rules).
+
+Course progress and build order: `COURSE-PLAN.md`. Update it whenever a page is built.
+
+Built so far: `hamlet.html` (Paper 2 single text: Hamlet, Higher Level, exam 2028). No hub `index.html` yet.
+
+## Run it locally
+
+```
+node server.js
+```
+Then open http://localhost:5183. `/` serves `index.html` if it exists, otherwise `hamlet.html`.
+The preview config is named "english" (in this folder's and the Physics folder's `.claude/launch.json`).
+
+## The syllabus and prescribed texts (source of truth)
+
+- Current *Leaving Certificate English Syllabus* (for examination to June 2028). Page:
+  https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/english/
+  PDF path: `/getmedia/3bb84cb3-59af-4ab3-8965-61656bddc5d7/SCSEC14_English_Syllabus.pdf` (22 pages).
+  Read it with the pdf.js-in-the-browser method from Physics CLAUDE.md (works on curriculumonline).
+  Useful sections: 4.5.1 aesthetic use of language, 5.4 Higher Level minimum requirements, 6 literature,
+  7 examinations (Paper 2: Section A single text, B comparative, C poetry).
+- A new LC English specification exists on the same page but "will not be given effect" before September 2027
+  at the earliest; current 5th/6th years sit the old syllabus. Check before building pages for later cohorts.
+- Prescribed texts change every year (Department circulars). 2026 and 2027 lists are PDFs on curriculumonline.
+  The 2028 list is Circular 0024/2026 on gov.ie (assets.gov.ie PDF downloads instead of opening; the browser
+  can't read it inline). Hamlet is the 2028 Higher Level single-text Shakespeare play per several sources; it is
+  NOT on the 2026 or 2027 lists (Othello is the 2027 Shakespeare). Confirm the 2028 comparative and poetry lists
+  from the circular before building those pages.
+- Marks (from SEC papers and marking schemes, not the syllabus): Paper 1 200, Paper 2 200 (single text 60,
+  comparative 70, unseen poem 20, prescribed poetry 50). Answers are marked on PCLM: Purpose 30%, Coherence 30%,
+  Language 30%, Mechanics 10%. Label practice questions as not official SEC papers.
+- Play text: quotations were checked against the public-domain MIT text (http://shakespeare.mit.edu/hamlet/full.html;
+  Gutenberg was down). Word counts per act and lines per speaker were computed from that page in the browser.
+
+## Page format differences from Physics
+
+- File name: the text's name (`hamlet.html`); later e.g. `comparative.html`, `poetry-<poet>.html`, `paper1-*.html`.
+- Head/CSS = Physics `refraction-lenses.html` lines 1–395; body/script spliced from
+  `..\applied-maths\s1-1-mathematical-modelling.html` (shared code between fixed markers) plus page data and labs.
+- "Learning outcomes" panel quotes the syllabus (4.5.1 and 5.4) instead of a spec's outcomes.
+- Last tab is "Quote bank" (hash still `#formulae`). The calculation trainer is a multiple-choice quote trainer
+  (who said it / which act / finish the quote); the drill is "Which theme?".
+- Labs: tension timeline, soliloquy mood graph, character web (lines spoken = real counts), theme word counts
+  per act with a fitted trend (real counts), image sorter, PCLM essay builder. Tension/mood scores are our
+  interpretation and labelled as such.
+- localStorage prefix `enh-` for Hamlet (use `en<short>-` per page); theme/font keys `en-theme` / `en-font`.
+
+## Quality checks
+
+Same as Physics: `node --check` the script, open the page, no console errors, every tab and lab has sized
+canvases, no horizontal scroll at 375 px, check every quiz answer and every quotation against the text.
+Note: if the browser pane tab is hidden, canvases measure 0 wide; front the tab (or set a viewport size) first.
+
+## Usage budget
+
+The user is on the Pro plan and needs most of the weekly allowance for other work. Build only when the user
+asks, or with credit that would otherwise expire. Since 2026-11-18 English is in both scheduled build tasks
+(`courses-five-hour-build`, `physics-course-weekly-build`), rotating with Physics, Business and Applied Maths.
+Those runs build an English page only when the needed 2028 prescribed list is confirmed from an official source;
+otherwise they build a list-free page (unseen poetry, Paper 1) or log the skip here.

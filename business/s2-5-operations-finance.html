@@ -1,0 +1,1625 @@
+<title>Operations and Finance</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.sh-card{display:grid;gap:8px;padding:16px}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card p b{color:var(--terra)}
+.fbbox{padding:0 16px 14px}
+.offers{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 14px}
+.predopts .btns button{min-width:110px}
+.qmvb{display:flex;flex-wrap:wrap;gap:5px}
+.qmvb button{font-size:.78rem;padding:5px 9px}
+.qmvb button[aria-pressed="false"]{opacity:.7;text-decoration:line-through}
+.srt .row .ctl{flex:0 1 170px}
+</style>
+
+
+
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></div>
+        <div style="min-width:0"><b>Operations &amp; Finance</b><span>Leaving Cert Business · Strand 2 · Topic 5</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html" class="on" aria-current="page">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Cheat sheet</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>U · Investigating Business</summary><ol><li><span class="mono">U</span>Research skills (all year)</li></ol></details>
+      <details><summary>1 · Business Environment</summary><ol><li class="link"><a href="s1-1-stakeholders.html"><span class="mono">1.1</span>Key stakeholders</a></li><li class="link"><a href="s1-2-forms-of-business.html"><span class="mono">1.2</span>Forms of business &amp; governance</a></li><li class="link"><a href="s1-3-economy.html"><span class="mono">1.3</span>Business &amp; the economy</a></li><li class="link"><a href="s1-4-policy.html"><span class="mono">1.4</span>National &amp; EU policy</a></li><li class="link"><a href="s1-5-global.html"><span class="mono">1.5</span>Irish business globally</a></li><li><span class="mono">1.6</span>Applying my learning</li></ol></details>
+      <details open><summary>2 · Understanding Enterprise</summary><ol><li class="link"><a href="s2-1-enterprise.html"><span class="mono">2.1</span>Enterprise</a></li><li class="link"><a href="s2-2-ideas.html"><span class="mono">2.2</span>Idea development</a></li><li class="link"><a href="s2-3-planning.html"><span class="mono">2.3</span>Business planning</a></li><li class="link"><a href="s2-4-target-market.html"><span class="mono">2.4</span>The target market</a></li><li class="here"><span class="mono">2.5</span>Operations &amp; finance</li><li class="link"><a href="s2-6-growth.html"><span class="mono">2.6</span>Growth &amp; expansion</a></li><li><span class="mono">2.7</span>Managing risk</li><li><span class="mono">2.8</span>Applying my learning</li></ol></details>
+      <details><summary>3 · Leading in Business</summary><ol><li><span class="mono">3.1</span>Leading an organisation</li><li><span class="mono">3.2</span>Leading people</li><li><span class="mono">3.3</span>Communication</li><li><span class="mono">3.4</span>Planning</li><li><span class="mono">3.5</span>Applying my learning</li></ol></details>
+      <details><summary>4 · Informed Decisions</summary><ol><li><span class="mono">4.1</span>Informed consumer</li><li><span class="mono">4.2</span>Informed financial decisions</li><li><span class="mono">4.3</span>Informed employee</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 2 · Understanding enterprise</span>
+          <h1 style="margin-top:12px">Who helps you?<br>What does it cost?<br><em>Is there cash in the bank?</em></h1>
+          <p class="lede">Every business runs on two engines. Operations: the key partners, key activities and key resources that make and deliver the product. Finance: the costs it pays, the revenue streams it earns, the sources of finance it uses and the cash flowing in and out. Both change as the business grows, so a good owner watches them and acts early.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="A product life cycle curve showing sales and profit, with a dot moving through introduction, growth, maturity and decline"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/3</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">2.5.1</span><span>outline the main elements that are key to the operational model of a business and explain why these may change over time.</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">2.5.2</span><span>identify the key costs and sources of finance for a business and explore why these may change over the lifecycle of the product or service.</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">2.5.3</span><span>analyse the cashflow of a business and recommend a suitable course of action for the business to address the issues arising from the analysis.</span></label></li>
+        </ul>
+        <div class="result" style="margin-top:10px"><p><b>Students learn about:</b></p>
+          <ul style="margin:6px 0 0 18px;display:grid;gap:4px">
+            <li>the elements of the operational aspect of the business including the key partners a business may have, the key activities of the business and the key resources, while also understanding how these may evolve over time.</li>
+            <li>the financial aspect of a business including the key costs incurred (variable costs, fixed costs) and the potential revenue streams (single transactions or recurring sales) for the business, understanding that these may evolve over time and that the business may need to take action to address issues that arise.</li>
+          </ul>
+          <p style="margin-top:8px"><b>Business model canvas</b>, from the specification's glossary: "A business model canvas is a tool used to map out a business model and includes the key partners, activities and resources, the value proposition (why the customer would choose the product/service), customers, customer relations and channels, costs, and revenues." This topic zooms in on the operations side (partners, activities, resources) and the finance side (costs, revenues) of that canvas. See <a href="s2-3-planning.html">2.3 Business planning</a> for the whole canvas.</p></div>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Map a bakery's operational model, follow it through its life cycle, find its fixed and variable costs from monthly records, compare one-off and recurring revenue, match each need to a source of finance, and fix a cash flow forecast.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="ops">
+        <div class="labhead"><span class="pill t">Map the operational model</span><p class="goal">Crumb &amp; Co (illustrative) is a small Irish bakery. It bakes sourdough, supplies local cafés and sells a weekly bread-box subscription. Sort each item: is it a key partner, a key activity or a key resource?</p></div>
+        <div class="panel sim">
+          <canvas id="opC" aria-label="Three columns, key partners, key activities and key resources, filling with Crumb and Co's items as you sort them"></canvas>
+          <div class="srt" id="opList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="opReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="opOut"></div>
+        </div>
+        <p class="result">Crumb &amp; Co is illustrative. Partners are outside organisations the business relies on; activities are what it must do well; resources are what it needs to have.</p>
+        <div class="tries"><div class="try"><b>1</b>Is the delivery van a partner or a resource? What about the courier firm that delivers bread boxes?</div><div class="try"><b>2</b>Which three items would hurt the business most if they disappeared tomorrow?</div><div class="try"><b>3</b>Pick a business you know. Name one key partner, one key activity and one key resource.</div></div>
+      </div>
+
+      <div class="lab" data-lab="evolve" hidden>
+        <div class="labhead"><span class="pill t">Grow over time</span><p class="goal">Follow Crumb &amp; Co through the life cycle of its product. At each stage, see how its partners, activities, resources, costs, finance and revenue streams change, and what issue the owner must deal with.</p></div>
+        <div class="panel sim">
+          <canvas id="evC" aria-label="A life cycle curve of sales and profit with the chosen stage highlighted"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Stage</span><div class="btns" id="evStage"></div></div>
+          </div>
+          <div class="readout" id="evOut"></div>
+          <div class="srt" id="evList"></div>
+        </div>
+        <p class="result">Figures are illustrative monthly amounts for a small bakery.</p>
+        <div class="tries"><div class="try"><b>1</b>Why is cash tightest at the start, even if the product is good?</div><div class="try"><b>2</b>Which sources of finance appear only once the business has a track record? Why?</div><div class="try"><b>3</b>At decline, what could Crumb &amp; Co change in its activities to start a new period of growth?</div></div>
+      </div>
+
+      <div class="lab" data-lab="costs" hidden>
+        <div class="labhead"><span class="pill t">Cost detective and break-even</span><p class="goal">The accountant is on holiday. Use the bakery's monthly records to work out its fixed costs and its variable cost per unit. Record some months, fit a line through the points, then set a price and find the break-even point.</p></div>
+        <div class="panel sim">
+          <canvas id="beC" aria-label="A break-even chart: recorded monthly costs as points, the fitted total cost line, fixed costs and the sales revenue line"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Product</span><div class="btns" id="beProd"></div></div>
+            <div class="ctl"><span class="lbl">Records</span><div class="btns"><button class="primary" id="beRec">Record a month</button><button id="beRec6">Record 6 months</button><button id="beClear">Clear</button></div></div>
+            <div class="ctl"><label for="beP">Selling price <output id="bePo"></output></label><input type="range" id="beP" min="0" max="100" step="1" value="50"></div>
+          </div>
+          <div class="readout" id="beOut"></div>
+          <div class="working wrap" id="beWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Fixed or variable cost?</h3></div>
+          <div class="srt" id="fvList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="fvReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="fvOut"></div>
+        </div>
+        <p class="result">Monthly records are simulated: each month's total cost is fixed costs + variable cost × output, with a small random error (about ±3%) from things like waste and price changes.</p>
+        <div class="tries"><div class="try"><b>1</b>Record 2 months, then 10. How much does your estimate of fixed costs move?</div><div class="try"><b>2</b>Raise the price. What happens to the contribution per unit and the break-even point?</div><div class="try"><b>3</b>Where does the total cost line meet the € axis? Why does that point equal the fixed costs?</div></div>
+      </div>
+
+      <div class="lab" data-lab="revenue" hidden>
+        <div class="labhead"><span class="pill t">Single or recurring revenue?</span><p class="goal">Crumb &amp; Co could earn money from single transactions (selling a bread-making kit once) or recurring sales (a monthly bread-box subscription). Set the prices, new customers each month and how many subscribers cancel, and compare the two revenue streams over two years.</p></div>
+        <div class="panel sim">
+          <canvas id="rvC" aria-label="Monthly revenue over 24 months for a single-sale product and a subscription"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="rvP1">Kit price (one-off) <output id="rvP1o"></output></label><input type="range" id="rvP1" min="20" max="120" step="5" value="60"></div>
+            <div class="ctl"><label for="rvP2">Subscription price per month <output id="rvP2o"></output></label><input type="range" id="rvP2" min="5" max="50" step="1" value="20"></div>
+            <div class="ctl"><label for="rvN">New customers each month <output id="rvNo"></output></label><input type="range" id="rvN" min="10" max="200" step="10" value="50"></div>
+            <div class="ctl"><label for="rvCh">Subscribers who cancel each month (churn) <output id="rvCho"></output></label><input type="range" id="rvCh" min="1" max="25" step="1" value="8"></div>
+          </div>
+          <div class="readout" id="rvOut"></div>
+          <div class="working wrap" id="rvWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Single transaction or recurring sale?</h3></div>
+          <div class="srt" id="srList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="srReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="srOut"></div>
+        </div>
+        <p class="result">A simple model: the same number of new customers each month for both streams; a fixed percentage of subscribers cancel each month. Figures are illustrative.</p>
+        <div class="tries"><div class="try"><b>1</b>In month 1, which stream earns more? And in month 24?</div><div class="try"><b>2</b>Push churn up to 25%. Why do subscription businesses work so hard to keep customers?</div><div class="try"><b>3</b>Why might a bank prefer to lend to a business with recurring sales?</div></div>
+      </div>
+
+      <div class="lab" data-lab="finance" hidden>
+        <div class="labhead"><span class="pill t">Match the finance</span><p class="goal">Crumb &amp; Co needs money for different things at different stages. Match each need to the most suitable source of finance. The ladder shows short-, medium- and long-term sources as you find them.</p></div>
+        <div class="panel sim">
+          <canvas id="fnC" aria-label="Sources of finance arranged as short term, medium term and long term, lighting up as you match them"></canvas>
+          <div class="srt" id="fnList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="fnReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="fnOut"></div>
+        </div>
+        <p class="result">Rule of thumb: match the length of the finance to the life of what it pays for. Day-to-day gaps → short term; equipment and vehicles → medium term; buildings and expansion → long term.</p>
+        <div class="tries"><div class="try"><b>1</b>Why is an overdraft a bad way to pay for a €40 000 oven?</div><div class="try"><b>2</b>What does the owner give up when a business angel invests? What do they gain?</div><div class="try"><b>3</b>Which sources must be repaid with interest, and which never have to be repaid?</div></div>
+      </div>
+
+      <div class="lab" data-lab="cash" hidden>
+        <div class="labhead"><span class="pill t">Fix the cash flow</span><p class="goal">Here is Crumb &amp; Co's cash flow forecast for July to December. It plans to buy a €18 000 delivery van in September. Analyse the forecast: when does the bank balance go negative, and why? Then switch on actions to fix it and recommend a course of action.</p></div>
+        <div class="panel sim">
+          <canvas id="cfC" aria-label="Bars showing the closing bank balance for each month from July to December, with the overdraft limit when one is arranged"></canvas>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Actions (tap to switch on or off)</span><div class="btns" id="cfAct"></div></div></div>
+          <div class="readout" id="cfOut"></div>
+          <div style="overflow-x:auto;padding:0 16px 12px"><table id="cfTbl" style="min-width:520px"></table></div>
+          <div class="working wrap" id="cfWork"></div>
+        </div>
+        <p class="result">Figures are illustrative. A cash flow forecast shows money expected in (receipts) and out (payments) each month; closing balance = opening balance + net cash flow.</p>
+        <div class="tries"><div class="try"><b>1</b>With no actions, which month first goes negative? What single payment causes it?</div><div class="try"><b>2</b>Switch on only the overdraft. Is it enough? What else would make the plan work?</div><div class="try"><b>3</b>Find the smallest set of actions that keeps the balance above zero every month.</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of operations and finance"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it · LO 2.5.1 and 2.5.2</p><h2>Operations and revenue in the real world</h2></div><p>Well-known businesses and one part of their operations or revenue model, in general terms. Check a current source before using one in your own work.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>Model, break-even, cash</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="ops"></canvas><h3>Partners, activities, resources</h3><p>The operational model: who you rely on, what you must do well and what you need to have.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="be"></canvas><h3>Where revenue meets cost</h3><p>Below the break-even point the business makes a loss; above it, every unit adds its contribution to profit.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="cash"></canvas><h3>Profit is not cash</h3><p>A profitable business can still run out of cash if big payments come before receipts.</p></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Digital transformation</p><h2>How digital tools changed operations and finance</h2></div><p>Faster, cheaper and more visible, with new risks too.</p></div>
+      <div class="cases" id="impacts"></div>
+
+      <div class="head"><div><p class="eyebrow">In Ireland</p><h2>Where small businesses find finance and help</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% Business Alive Investigative Study">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>Higher or Ordinary level, set by the SEC. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Business Alive Investigative Study · 40%</b><p>An investigation based on a common brief from the SEC. The same brief for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Use the spec's three operational elements: <b>key partners, key activities, key resources</b>. Give an example of each for the business in the question.</li>
+            <li>"Why may they change over time?" Link each change to a <b>stage of the life cycle</b>, growth, new technology, new customers or new competitors.</li>
+            <li><b>Fixed costs</b> stay the same whatever the output (rent, insurance). <b>Variable costs</b> rise with each unit made (raw materials, packaging).</li>
+            <li>Revenue streams: <b>single transactions</b> (paid once) or <b>recurring sales</b> (paid again and again, such as subscriptions).</li>
+            <li>Match finance to its use: <b>short term</b> for day-to-day gaps, <b>medium term</b> for equipment and vehicles, <b>long term</b> for buildings and expansion.</li>
+            <li>In a cash flow question, find the <b>months with a negative balance</b>, name the <b>cause</b> (a big payment, slow receipts, seasonal sales) and match each <b>recommendation</b> to a cause.</li>
+            <li>Show every <b>formula and working</b>: contribution, break-even, net cash flow, closing balance.</li>
+            <li>Remember: <b>profit is not cash</b>. A profitable business can still run out of money.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Action verbs</h2></div><p>Meanings summarised from the specification's glossary of action verbs, which will be aligned with the exam's command words.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Business and financial literacy</p><h2>Numbers trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which element is it?</h2></div></div>
+          <canvas id="predC" aria-label="The element of the business model, shown after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns" data-g="0"><button data-a="P">Key partner</button><button data-a="A">Key activity</button><button data-a="R">Key resource</button><button data-a="F">Fixed cost</button><button data-a="V">Variable cost</button><button data-a="S">Revenue stream</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Skills the Business Alive Investigative Study rewards (from the Investigating Business strand). Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term in this chapter. Learn the definitions: "define" and "outline" questions reward precise wording.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: fixed cost, overdraft, cash flow…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= CHEAT SHEET ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Cheat sheet</h2></div><p>The whole chapter on one page, plus the numbers you might meet in an operations and finance question.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Operational model (LO 2.5.1)</span><span class="big">Key partners · Key activities · Key resources</span><dl><dt>Partners</dt><dd>suppliers, couriers, banks, stockists, technology providers</dd><dt>Activities</dt><dd>making, delivering, marketing, quality control, serving customers</dd><dt>Resources</dt><dd>physical, human, financial, intellectual (brand, recipes, patents)</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Why the model changes</span><span class="big">Growth · life cycle stage · technology · competition · customers · costs</span></div>
+        <div class="panel fcell"><span class="pill">Key costs (LO 2.5.2)</span><span class="big">Fixed: same at any output · Variable: rise with each unit</span><dl><dt>Fixed</dt><dd>rent, insurance, salaries, loan repayments, subscriptions</dd><dt>Variable</dt><dd>raw materials, packaging, delivery per order, card fees per sale</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Revenue streams</span><span class="big">Single transactions · Recurring sales</span><dl><dt>Single</dt><dd>paid once: buying a kit, a ticket, a sofa</dd><dt>Recurring</dt><dd>paid again and again: subscriptions, memberships, contracts</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Sources of finance</span><span class="big">Short · Medium · Long term</span><dl><dt>Short (&lt; 1 year)</dt><dd>bank overdraft, trade credit</dd><dt>Medium (1–5 years)</dt><dd>leasing, medium-term loan</dd><dt>Long (5+ years)</dt><dd>owner's capital, grants, equity investors, long-term loan</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Over the life cycle</span><span class="big">Intro: savings, grants · Growth: loans, leasing, overdraft · Maturity: retained earnings · Decline: sell assets, renew</span></div>
+        <div class="panel fcell"><span class="pill">Cash flow (LO 2.5.3)</span><span class="big">Analyse → find negative months → name the cause → recommend</span><dl><dt>Fixes</dt><dd>overdraft, lease not buy, delay spending, trade credit, chase debtors, extra capital, cut costs</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Total cost = fixed costs + variable cost per unit × output</span><div class="ex">€6 000 + €1.40 × 3 000 = €10 200</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Contribution per unit = selling price − variable cost per unit</span><div class="ex">€4.50 − €1.40 = €3.10</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Break-even point (units) = fixed costs ÷ contribution per unit</span><div class="ex">€6 200 ÷ €3.10 = 2 000 loaves</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Profit = contribution per unit × output − fixed costs</span><div class="ex">€3.10 × 2 600 − €6 200 = €1 860</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Net cash flow = receipts − payments · Closing = opening + net</span><div class="ex">€2 000 + (€8 000 − €9 000) = €1 000</div></div>
+      </div>
+      <footer>
+        <p>Built on Strand 2, topic 5 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/business/" target="_blank" rel="noopener">Leaving Certificate Business Specification</a> (NCCA, for introduction September 2025). Learning outcomes and the definition of the business model canvas are quoted from the specification. Crumb &amp; Co, cases, costs and euro figures are illustrative unless stated.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("bs-theme","auto"), font = store.get("bs-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("bs-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("bs-font",font); applyFont(); });
+/* ---------- icons + topics ---------- */
+const ICON = {
+  ops:'<rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="9.5" y="4" width="5" height="16" rx="1.5"/><rect x="16" y="4" width="5" height="16" rx="1.5"/>',
+  evolve:'<path d="M3 20c4 0 5-14 9-14s5 8 9 8"/><circle cx="12" cy="6" r="1.8"/>',
+  costs:'<path d="M3 20h18M4 20V8l16 6v6"/><path d="M4 8h16" stroke-dasharray="2 2"/>',
+  revenue:'<path d="M20 12a8 8 0 11-3-6.2"/><path d="M20 4v5h-5"/><path d="M10 9.5c0-1 1-1.5 2-1.5s2 .6 2 1.5-1 1.3-2 1.6-2 .7-2 1.7 1 1.5 2 1.5 2-.5 2-1.5M12 7v1M12 14v1"/>',
+  finance:'<path d="M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M12 3l9 5H3z"/>',
+  cash:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 9v.01M18 15v.01"/>',
+  plane:'<path d="M2 13l8-2 4-8 2 1-2 7 6 1 2 2-8 1-3 6-2-1 1-5-8 0z"/>',
+  bag:'<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 016 0v2"/>',
+  tv:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 21h8M9 2l3 4 3-4"/>',
+  shop:'<path d="M3 9l2-5h14l2 5"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/>',
+  music:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+  box:'<path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/>',
+  gov:'<path d="M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M12 3l9 5H3z"/>',
+  chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  people:'<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0112 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20a5 5 0 016-4.8"/>',
+  card:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',
+  cloud:'<path d="M7 18a5 5 0 01-.5-10A6 6 0 0118 9a4.5 4.5 0 01-1 9z"/>',
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"ops", name:"The operational model", short:"Key partners, key activities and key resources: how the business makes and delivers its product.", tint:"var(--blush)"},
+  {id:"evolve", name:"Changing over time", short:"How operations, costs, finance and revenue change through the life cycle of a product or service.", tint:"var(--apricot)"},
+  {id:"costs", name:"Fixed and variable costs", short:"Find the key costs, the contribution per unit and the break-even point.", tint:"var(--sage)"},
+  {id:"revenue", name:"Revenue streams", short:"Single transactions or recurring sales: how the business earns money.", tint:"var(--cream)"},
+  {id:"finance", name:"Sources of finance", short:"Short-, medium- and long-term finance, and why the right source changes over time.", tint:"var(--blush)"},
+  {id:"cash", name:"Analysing cash flow", short:"Read a cash flow forecast, find the problem months and recommend what to do.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Operational model","operations","How a business makes and delivers its product or service: its key partners, key activities and key resources.","ops"],
+  ["Key partners","","Outside businesses and organisations a business relies on, such as suppliers, couriers, stockists, banks and technology providers.","ops"],
+  ["Key activities","","The most important things a business must do well to deliver its product, such as producing, delivering, marketing and quality control.","ops"],
+  ["Key resources","","The assets a business needs to have: physical (premises, equipment), human (skilled staff), financial (cash, credit) and intellectual (brand, recipes, patents).","ops"],
+  ["Supplier","","A business that provides the raw materials, stock or services another business needs.","ops"],
+  ["Outsourcing","","Paying another business to carry out an activity, e.g. using a courier instead of running your own delivery fleet.","ops"],
+  ["Business model canvas","","From the spec: a tool used to map out a business model, including key partners, activities and resources, the value proposition, customers, customer relations and channels, costs and revenues.","ops"],
+  ["Value proposition","","Why the customer would choose the product or service over rivals.","ops"],
+  ["Product life cycle","lifecycle","The stages a product or service goes through: introduction, growth, maturity and decline.","evolve"],
+  ["Introduction stage","start-up","The launch stage: low sales, high set-up costs, often losses and tight cash.","evolve"],
+  ["Growth stage","","Sales rise quickly; the business adds partners, staff and equipment, and needs finance to grow.","evolve"],
+  ["Maturity stage","","Sales level off; competition is strong and the focus moves to efficiency and keeping customers.","evolve"],
+  ["Decline stage","","Sales fall. The business cuts costs, changes the product or finds new markets to renew it.","evolve"],
+  ["Extension strategy","","A change that extends a product's life, such as a new range, new market or new revenue stream.","evolve"],
+  ["Overtrading","","Growing faster than the business's cash allows, so it cannot pay its bills even though sales are rising.","evolve"],
+  ["Economies of scale","","Lower cost per unit as output grows, e.g. buying flour in bulk at a cheaper price.","evolve"],
+  ["Fixed costs","overheads","Costs that stay the same whatever the level of output, such as rent, insurance and salaries.","costs"],
+  ["Variable costs","","Costs that rise and fall with output, such as raw materials and packaging for each unit made.","costs","total variable cost = variable cost per unit × output"],
+  ["Total cost","","Fixed costs plus total variable costs.","costs","total cost = fixed costs + variable cost per unit × output"],
+  ["Semi-variable cost","","A cost with a fixed part and a variable part, e.g. a phone bill with a standing charge plus calls.","costs"],
+  ["Contribution","","What each unit sold adds towards paying the fixed costs and then making a profit.","costs","contribution per unit = selling price − variable cost per unit"],
+  ["Break-even point","BEP","The output where total revenue equals total cost: no profit and no loss.","costs","break-even (units) = fixed costs ÷ contribution per unit"],
+  ["Margin of safety","","How far output can fall before the business makes a loss.","costs","margin of safety = planned output − break-even output"],
+  ["Profit","","What is left when total costs are taken from sales revenue.","costs","profit = sales revenue − total costs"],
+  ["Revenue stream","","A way a business earns money from its customers.","revenue"],
+  ["Sales revenue","turnover","The money earned from selling products or services.","revenue","sales revenue = price × units sold"],
+  ["Single transaction","one-off sale","A sale where the customer pays once, e.g. buying a kit, a ticket or a sofa.","revenue"],
+  ["Recurring sales","recurring revenue","Sales that repeat regularly from the same customer, e.g. subscriptions, memberships and contracts.","revenue"],
+  ["Subscription","","A regular payment (weekly, monthly or yearly) for continued access to a product or service.","revenue"],
+  ["Churn rate","","The percentage of subscribers who cancel in a period.","revenue","churn % = customers lost ÷ customers at start × 100"],
+  ["Freemium","","A basic version is free; customers pay for extra features or no adverts.","revenue"],
+  ["Source of finance","","Where a business gets the money it needs: from the owners, lenders, investors, grants or suppliers.","finance"],
+  ["Owner's capital","owner's equity","Money the owner puts into the business, often personal savings. It is not repaid like a loan.","finance"],
+  ["Retained earnings","reinvested profit","Profits kept in the business instead of being paid to the owners. Cheap and no interest, but only available once profitable.","finance"],
+  ["Grant","","Money from a state agency (such as a Local Enterprise Office) that usually does not have to be repaid if the conditions are met.","finance"],
+  ["Bank overdraft","overdraft","Permission to take the business's current account below zero, up to a limit. Short-term finance for day-to-day gaps; interest is charged.","finance"],
+  ["Trade credit","","Buying from a supplier now and paying later, e.g. in 30 or 60 days. Short-term finance.","finance"],
+  ["Leasing","lease","Renting an asset such as a van or machine for a fixed period with regular payments, without owning it.","finance"],
+  ["Hire purchase","HP","Buying an asset in instalments; the business owns it after the final payment.","finance"],
+  ["Term loan","medium-term or long-term loan","A sum borrowed from a bank and repaid with interest over an agreed period: 1–5 years (medium) or 5+ years (long).","finance"],
+  ["Equity finance","","Money from investors (such as a business angel or venture capital firm) in return for a share of ownership.","finance"],
+  ["Business angel","","A wealthy individual who invests in a young business for a share of it, often with advice too.","finance"],
+  ["Security","collateral","An asset a lender can take if a loan is not repaid.","finance"],
+  ["Interest","","The cost of borrowing money, usually a percentage of the amount owed.","finance"],
+  ["Cash flow","","The movement of money into and out of a business over time.","cash"],
+  ["Cash flow forecast","","A month-by-month estimate of receipts, payments and the bank balance for the months ahead.","cash"],
+  ["Receipts","cash in","Money coming into the business, such as cash sales, payments from debtors, loans and grants.","cash"],
+  ["Payments","cash out","Money going out, such as wages, rent, raw materials, equipment and loan repayments.","cash"],
+  ["Net cash flow","","Receipts minus payments for a month.","cash","net cash flow = receipts − payments"],
+  ["Opening balance","","The cash in the bank at the start of a month: last month's closing balance.","cash"],
+  ["Closing balance","","The cash in the bank at the end of a month.","cash","closing balance = opening balance + net cash flow"],
+  ["Debtors","","Customers who have bought on credit and still owe the business money.","cash"],
+  ["Creditors","","Suppliers the business has bought from on credit and still owes money to.","cash"],
+  ["Working capital","","The money available for day-to-day running: current assets minus current liabilities.","cash"],
+  ["Liquidity","","The ability to pay bills as they fall due.","cash"],
+];
+GLOSS.forEach((g,i)=>{ GLOSS[i]={t:g[0],aka:g[1],d:g[2],topic:g[3],f:g[4],id:"g-"+g[0].toLowerCase().replace(/[^a-z0-9]+/g,"-")}; });
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["key partners","Key partners"],["key activities","Key activities"],["key resources","Key resources"],["operational model","Operational model"],["outsourc","Outsourcing"],["life cycle","Product life cycle"],["overtrading","Overtrading"],["economies of scale","Economies of scale"],["fixed costs","Fixed costs"],["variable cost","Variable costs"],["contribution","Contribution"],["break-even","Break-even point"],["margin of safety","Margin of safety"],["single transaction","Single transaction"],["recurring","Recurring sales"],["subscription","Subscription"],["churn","Churn rate"],["overdraft","Bank overdraft"],["trade credit","Trade credit"],["leasing","Leasing"],["grant","Grant"],["retained earnings","Retained earnings"],["business angel","Business angel"],["cash flow forecast","Cash flow forecast"],["closing balance","Closing balance"],["debtors","Debtors"],["liquidity","Liquidity"]];
+
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function arrow(ctx,x1,y1,x2,y2,col,w=3,dash){ line(ctx,x1,y1,x2,y2,col,w,dash); const a=Math.atan2(y2-y1,x2-x1), s=8+w; ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-s*Math.cos(a-0.45),y2-s*Math.sin(a-0.45)); ctx.lineTo(x2-s*Math.cos(a+0.45),y2-s*Math.sin(a+0.45)); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const n0 = x => Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const eur = x => "€"+n0(x);
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+function wrapText(ctx,str,maxW){ const words=str.split(" "), out=[]; let cur=""; words.forEach(wd=>{ const t=cur?cur+" "+wd:wd; if(ctx.measureText(t).width>maxW && cur){ out.push(cur); cur=wd; } else cur=t; }); if(cur) out.push(cur); return out; }
+const f2 = x => x.toFixed(2);
+// box with centred (wrapped) label
+function box(ctx,cx,cy,bw,bh,label,fill,stroke,col,fs){ rrect(ctx,cx-bw/2,cy-bh/2,bw,bh,12,fill,stroke,2); ctx.save(); ctx.font=F(fs); const ls=wrapText(ctx,label,bw-10); ctx.restore(); ls.forEach((s,i)=>text(ctx,s,cx,cy+(i-(ls.length-1)/2)*(fs+3)+fs*0.35,col,F(fs),"center")); }
+const fm = x => f2(x).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const sgn = v => (v>0?"+€":v<0?"−€":"€")+Math.abs(Math.round(v*100)/100);
+
+
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "ops", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3"]; const loState=store.get("b25-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("b25-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("b25-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+/* ================= LEARN ================= */
+const LEARN = {
+  ops:{ vis:[["ops",{}]], cap:"Crumb & Co's operational model: who it relies on, what it must do well and what it needs to have.",
+    keys:[["🤝","Key partners are outside organisations the business relies on: suppliers, couriers, stockists, banks, technology providers. Good partners cut costs and risk."],["⚙","Key activities are what the business must do well to deliver its value: making, delivering, marketing, quality control, serving customers."],["🧰","Key resources are what it needs to have: physical (premises, ovens), human (skilled bakers), financial (cash, credit) and intellectual (brand, recipes)."]],
+    f:"Partners + Activities + Resources = Operations", mistake:"Calling the delivery van a key partner. The van is a resource the business owns or leases; the courier firm that delivers for it is a partner." },
+  evolve:{ vis:[["life",{stage:1}]], cap:"Sales and profit through the life cycle. At the start, spending comes before sales, so profit and cash are negative.",
+    keys:[["🌱","Introduction: few partners, simple activities, small resources, owner's savings and grants. Costs are high per unit and cash is tight."],["📈","Growth and maturity: more partners and staff, new equipment, bank loans and leasing, then retained earnings. Recurring revenue may be added. Costs per unit fall with economies of scale."],["🔄","Why change? Growth, new technology, new competitors, changing customers, rising costs. In decline the business must act: cut costs, change activities or find new revenue streams."]],
+    f:"Introduction → Growth → Maturity → Decline", mistake:"Describing the operational model as fixed. The spec asks why it may change over time, so link each change to a stage or an outside event." },
+  costs:{ vis:[["be",{}]], cap:"Fixed costs (flat), total cost (rising) and sales revenue. They cross at the break-even point: 2 000 loaves a month.",
+    keys:[["📌","Fixed costs stay the same whatever the output: rent, insurance, salaries, loan repayments. Variable costs rise with every unit: flour, packaging, delivery per order."],["➕","Contribution per unit = selling price − variable cost per unit. Each sale contributes towards the fixed costs, then towards profit."],["⚖","Break-even point = fixed costs ÷ contribution per unit. Above it: profit. Below it: loss. Margin of safety = planned output − break-even output."]],
+    f:"BEP = fixed costs ÷ (price − variable cost per unit)", mistake:"Calling all wages fixed. A salaried manager is a fixed cost, but pay per item made (piece rate) or extra hourly staff for busy weeks are variable." },
+  revenue:{ vis:[["rev",{}]], cap:"One-off kit sales stay flat; subscription revenue builds up month by month as subscribers stack up, minus the ones who cancel.",
+    keys:[["🧾","A single transaction is paid once: buying a kit, a ticket, a sofa. The business must find new customers to keep earning."],["🔁","Recurring sales are paid again and again: subscriptions, memberships, service contracts. Revenue is more predictable, which helps planning and borrowing."],["📉","Recurring revenue depends on keeping customers: churn (cancellations) eats into it. Many businesses mix both streams, and the mix changes over time."]],
+    f:"Single (paid once) · Recurring (paid again and again)", mistake:"Thinking a subscription earns more from day one. In month 1 it often earns less; its strength builds as subscribers stay." },
+  finance:{ vis:[["terms",{}]], cap:"Sources of finance by how long they last. Match the finance to what it pays for.",
+    keys:[["⏱","Short term (< 1 year): bank overdraft and trade credit, for day-to-day gaps such as stock and wages before customers pay."],["🚚","Medium term (1–5 years): leasing and medium-term loans, for vehicles and equipment."],["🏛","Long term (5+ years): owner's capital, grants, equity investors and long-term loans, for premises and expansion. Retained earnings appear once the business is profitable."]],
+    f:"Short: day to day · Medium: equipment · Long: buildings, expansion", mistake:"Using an overdraft to buy equipment. Overdrafts are expensive and can be withdrawn at short notice; equipment needs medium-term finance." },
+  cash:{ vis:[["cash",{}]], cap:"Crumb & Co's forecast closing balance. Buying the van outright in September pushes the balance far below zero.",
+    keys:[["📋","A cash flow forecast lists receipts and payments for each month. Net cash flow = receipts − payments; closing balance = opening balance + net cash flow."],["🔎","Analyse it: which months are negative? Why? A big one-off payment, slow-paying customers, seasonal sales or rising costs."],["🛠","Recommend actions that match the cause: lease instead of buy, arrange an overdraft, chase debtors, use trade credit, delay spending, inject capital, cut costs."]],
+    f:"Closing = Opening + (Receipts − Payments)", mistake:"Thinking profit equals cash. A profitable firm can run out of cash if it pays for a van, stock or wages before its customers pay." },
+};
+/* ================= INFOGRAPHICS ================= */
+const TINTS = ["var(--blush)","var(--apricot)","var(--sage)","var(--cream)"];
+const BIZ = [
+  {n:"Netflix", ic:"tv", chip:["Recurring sales","real"], who:"An American streaming service.", job:"Earns most of its revenue from monthly subscriptions, so it works hard on keeping subscribers and reducing cancellations.", ie:"Recurring revenue is predictable, but only while customers keep paying."},
+  {n:"Ryanair", ic:"plane", chip:["Single transactions","real"], who:"An Irish airline, founded in 1984.", job:"Sells each flight as a single transaction, plus extra charges for bags, seats and priority boarding (ancillary revenue).", ie:"One sale can carry several revenue streams."},
+  {n:"IKEA", ic:"box", chip:["Key activities","real"], who:"A Swedish furniture retailer.", job:"Flat-pack design means customers transport and assemble the furniture themselves, cutting the company's own delivery and assembly activities.", ie:"Changing who does an activity changes costs."},
+  {n:"Apple", ic:"bag", chip:["Single + recurring","real"], who:"The American technology company.", job:"Sells devices as single transactions and has grown recurring revenue from services such as cloud storage and music subscriptions.", ie:"Revenue streams evolve over time as a business matures."},
+  {n:"Amazon", ic:"shop", chip:["Key resources · partners","real"], who:"An American online retailer.", job:"Its warehouses and delivery network are key resources; many sellers on its marketplace and delivery firms are key partners. Prime adds a recurring fee.", ie:"Big businesses mix owned resources with partners."},
+  {n:"Spotify", ic:"music", chip:["Freemium","real"], who:"A Swedish music streaming service.", job:"A free version paid for by adverts, and a paid monthly subscription with no adverts. Key partners include record labels.", ie:"A free tier can feed a paid recurring stream."},
+];
+$("cases").innerHTML = BIZ.map((c,k)=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${TINTS[k%4]}">${svg(c.ic)}</div><h3>${c.n}</h3></div><div class="chips">${chipsHTML([c.chip])}</div><p><b>Who:</b> ${c.who}</p><p><b>Operations or revenue:</b> ${c.job}</p><p><b>Lesson:</b> ${c.ie}</p></div>`).join("");
+const IMPACTS = [
+  ["card","Cash and cheques → card and phone payments","Then: customers paid by cash or cheque and invoices were posted. Now: card, phone and online payments arrive in days, which speeds up receipts. But each payment carries a small fee: a variable cost.","var(--blush)"],
+  ["cloud","Ledgers → cloud accounting","Then: handwritten books, updated weekly. Now: cloud accounting software links to the bank and shows cash flow live, so problems are spotted early. But it is a monthly subscription: a fixed cost.","var(--apricot)"],
+  ["revenue","Shop sales → subscriptions","Then: most small firms sold one item at a time. Now: online tools make it easy to sell subscription boxes and memberships, adding recurring revenue.","var(--sage)"],
+  ["people","Bank only → crowdfunding and online lenders","Then: the bank was the main lender. Now: crowdfunding and online platforms add new sources of finance. But fees can be high and a failed campaign is public.","var(--cream)"],
+];
+$("impacts").innerHTML = IMPACTS.map(([i,t,p,tn])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${t}</h3></div><p>${p}</p></div>`).join("");
+const AROUND = [
+  ["people","Local Enterprise Offices (LEOs)","31 offices around Ireland giving small businesses training, mentoring and some grants, such as feasibility and priming grants for start-ups.",[["Grants","real"]],"var(--blush)"],
+  ["finance","Microfinance Ireland","A state-backed lender that gives small loans to micro-enterprises that find it hard to borrow from banks.",[["Loans","real"]],"var(--apricot)"],
+  ["chart","Enterprise Ireland","Supports Irish firms that plan to grow and export, including investment in high-potential start-ups.",[["Equity","real"],["Growth","neutral"]],"var(--sage)"],
+  ["gov","Banks and credit unions","Offer overdrafts, term loans, leasing and hire purchase. They look at a business plan and cash flow forecast before lending.",[["Short to long term","real"]],"var(--cream)"],
+  ["box","Suppliers","Often the cheapest finance of all: trade credit lets a business take goods now and pay in 30 or 60 days.",[["Trade credit","real"]],"var(--blush)"],
+  ["star","Business angels and crowdfunding","Investors such as business angels, and online crowdfunding platforms, offer finance for a share or a reward. Check fees and terms.",[["Equity","neutral"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"ops",label:"Operational model",col:"var(--blush)",leaves:[["Key partners","Who you rely on."],["Key activities","What you must do well."],["Key resources","What you need to have."]]},
+  {id:"evolve",label:"Change over time",col:"var(--apricot)",leaves:[["Introduction","Savings, grants, tight cash."],["Growth","Loans, staff, new partners."],["Maturity","Efficiency, retained profit."],["Decline","Cut costs, renew."]]},
+  {id:"costs",label:"Key costs",col:"var(--sage)",leaves:[["Fixed","Same at any output."],["Variable","Rise with each unit."],["Break-even","FC ÷ contribution."]]},
+  {id:"revenue",label:"Revenue streams",col:"var(--cream)",leaves:[["Single","Paid once."],["Recurring","Paid again and again."],["Churn","Subscribers who leave."]]},
+  {id:"finance",label:"Sources of finance",col:"var(--blush)",leaves:[["Short term","Overdraft, trade credit."],["Medium term","Leasing, loans."],["Long term","Capital, grants, equity."]]},
+  {id:"cash",label:"Cash flow",col:"var(--sage)",leaves:[["Forecast","Receipts and payments."],["Analyse","Find negative months."],["Recommend","Match fix to cause."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["ops","What are the three main elements of a business's operational model?","Key partners, key activities and key resources."],
+  ["ops","What is a key partner? Give two examples.","An outside organisation the business relies on, e.g. a supplier, a courier, a stockist, a bank or a software provider."],
+  ["ops","What are key activities? Give two examples for a bakery.","The most important things the business must do well, e.g. baking every night, delivering to cafés, managing online orders, food-safety checks."],
+  ["ops","Name the four types of key resource, with an example of each.","Physical (ovens, premises), human (skilled bakers), financial (cash, overdraft), intellectual (brand, recipes)."],
+  ["ops","Why do businesses use partners instead of doing everything themselves?","To cut costs, reduce risk, get skills or resources they lack, and focus on their own key activities."],
+  ["evolve","Name the four stages of the product life cycle.","Introduction, growth, maturity and decline."],
+  ["evolve","Give three reasons a business's operational model may change over time.","Growth (more staff, partners and equipment), new technology, new competitors, changing customer needs, rising costs, moving to a new life cycle stage."],
+  ["evolve","Why is cash tight at the introduction stage?","Set-up costs (equipment, premises, marketing) are paid before sales build up, and sales are still low."],
+  ["evolve","What is overtrading?","Growing faster than the business's cash allows, so it can't pay its bills even though sales are rising."],
+  ["evolve","How do sources of finance change as a business matures?","Start-up: owner's savings, grants, small loans. Growth: bank loans, leasing, overdraft. Maturity: retained earnings, maybe equity for expansion."],
+  ["costs","What is the difference between fixed and variable costs?","Fixed costs stay the same whatever the output (rent, insurance); variable costs rise with each unit made (raw materials, packaging)."],
+  ["costs","Give three fixed costs and three variable costs for a bakery.","Fixed: rent, insurance, manager's salary, loan repayments. Variable: flour, packaging, delivery cost per order, card fees per sale."],
+  ["costs","How do you calculate contribution per unit?","Selling price − variable cost per unit."],
+  ["costs","How do you calculate the break-even point in units?","Fixed costs ÷ contribution per unit."],
+  ["costs","What is the margin of safety?","Planned (or actual) output − break-even output: how far sales can fall before a loss."],
+  ["revenue","What is a revenue stream?","A way a business earns money from its customers."],
+  ["revenue","Distinguish single transactions and recurring sales.","Single: the customer pays once (a kit, a ticket). Recurring: the customer pays again and again (subscription, membership, contract)."],
+  ["revenue","Give two advantages of recurring revenue.","Predictable income for planning and cash flow; easier to borrow against; a long-term relationship with customers; more value per customer."],
+  ["revenue","What is churn?","The percentage of subscribers who cancel in a period. High churn shrinks recurring revenue."],
+  ["finance","Name two short-term sources of finance.","Bank overdraft, trade credit."],
+  ["finance","Name two medium-term sources of finance.","Leasing, medium-term loan (also hire purchase)."],
+  ["finance","Name three long-term sources of finance.","Owner's capital, grants, equity from investors (business angels, venture capital), long-term loans, retained earnings."],
+  ["finance","What is trade credit?","Buying from a supplier now and paying later, e.g. in 30 or 60 days."],
+  ["finance","Give one advantage and one disadvantage of leasing a van.","Advantage: no large upfront payment, so cash is kept; maintenance may be included. Disadvantage: the business never owns it; it can cost more in total."],
+  ["finance","What does an owner give up when a business angel invests?","A share of ownership and profits, and some control over decisions."],
+  ["cash","What is a cash flow forecast?","A month-by-month estimate of receipts, payments and the bank balance for the months ahead."],
+  ["cash","How do you calculate the closing balance?","Opening balance + net cash flow (receipts − payments)."],
+  ["cash","Give four ways to fix a cash flow problem.","Arrange an overdraft; lease instead of buying; delay non-essential spending; use trade credit; chase debtors; inject more capital; cut costs."],
+  ["cash","Why is profit not the same as cash?","Profit compares revenue and costs; cash is timing. Big payments can come before customers pay, so a profitable firm can run short of cash."],
+];
+
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Operations</text><text x="${cx}" y="${cy+22}" text-anchor="middle">&amp; finance</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("b25-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("b25-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("b25-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("b25-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["ops","Which of these is a key partner for a bakery?",["Its ovens","The mill that supplies its flour","Baking bread every night","Its recipes"],1,"A supplier is an outside organisation the bakery relies on. Ovens and recipes are resources; baking is an activity."],
+  ["ops","A bakery's brand and secret recipes are examples of:",["Key partners","Key activities","Intellectual key resources","Variable costs"],2,"Brands, recipes and patents are intellectual resources."],
+  ["ops","Using a courier firm instead of running your own vans is called:",["Outsourcing","Overtrading","Leasing","Churn"],0,"Paying another business to carry out an activity is outsourcing; the courier becomes a key partner."],
+  ["evolve","At which stage of the life cycle is cash usually tightest?",["Introduction","Growth only after profits arrive","Maturity","It is the same at every stage"],0,"At introduction, set-up costs are paid before sales build up."],
+  ["evolve","Which source of finance is usually only available once a business has been profitable?",["Owner's savings","A start-up grant","Retained earnings","Trade credit"],2,"Retained earnings are profits kept in the business, so the business must first make a profit."],
+  ["evolve","A fast-growing business can't pay its suppliers even though sales are rising. This is:",["Economies of scale","Overtrading","Break-even","Churn"],1,"Overtrading: growth is outrunning the cash available."],
+  ["costs","Which of these is a fixed cost for a bakery?",["Flour","Packaging for each loaf","Rent for the bakery unit","Delivery cost per order"],2,"Rent stays the same however many loaves are baked."],
+  ["costs","A loaf sells for €4.50 and its variable cost is €1.40. Fixed costs are €6 200 a month. The break-even point is:",["1 378 loaves","2 000 loaves","4 429 loaves","1 409 loaves"],1,"Contribution = €4.50 − €1.40 = €3.10. Break-even = €6 200 ÷ €3.10 = 2 000 loaves."],
+  ["costs","If a business raises its selling price (and costs stay the same), its break-even point:",["Rises","Falls","Stays the same","Becomes zero"],1,"A higher price gives a bigger contribution per unit, so fewer units are needed to cover the fixed costs."],
+  ["revenue","Which is an example of recurring sales?",["Buying a sofa","A monthly gym membership","A concert ticket","Buying a used car"],1,"A membership is paid again and again: recurring. The others are single transactions."],
+  ["revenue","Why do lenders often like businesses with recurring revenue?",["It is always larger","It is more predictable, so repayments are easier to plan","It has no costs","It is tax free"],1,"Predictable income makes it easier to forecast cash flow and repay loans."],
+  ["finance","Which source is most suitable for a short gap when wages are due before customers pay?",["A 20-year mortgage","Selling shares","A bank overdraft","A capital grant"],2,"A short-term need suits short-term finance such as an overdraft."],
+  ["finance","Leasing a delivery van means the business:",["Owns the van from day one","Rents the van for a fixed period with regular payments","Never pays anything","Has sold shares"],1,"With leasing the business uses the van but doesn't own it."],
+  ["finance","Which source of finance gives away part of the ownership of the business?",["Trade credit","Bank loan","Equity from a business angel","Overdraft"],2,"Equity investors get a share of the business in return for their money."],
+  ["cash","Opening balance €2 000, receipts €8 000, payments €9 500. The closing balance is:",["€500","−€500","€3 500","€19 500"],0,"Net cash flow = €8 000 − €9 500 = −€1 500. Closing = €2 000 − €1 500 = €500."],
+  ["cash","A forecast shows a big negative balance only in the month a new van is bought. The best recommendation is:",["Close the business","Lease the van or use a medium-term loan instead of paying cash","Cut prices","Pay staff later than promised"],1,"The cause is one large payment; spreading it over time with leasing or a loan fixes it."],
+  ["cash","Which statement is true?",["A profitable business can never run out of cash","Cash flow and profit are the same thing","A profitable business can still run out of cash","A cash flow forecast shows last year's profit"],2,"Timing matters: payments can come before receipts even when the business is profitable."],
+];
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Outline","Give the main points; restrict to essential points of information.","Outline the main elements of the operational model of a bakery."],
+  ["Explain","Give a detailed account including reasons or causes.","Explain why a business's key partners may change over time."],
+  ["Identify","Recognise patterns, facts or details; name or point out.","Identify the key costs of the business."],
+  ["Explore","Investigate something systematically, looking at it from different angles.","Explore why sources of finance change over the life cycle of a product."],
+  ["Distinguish","Make the differences between two or more things clear.","Distinguish between fixed costs and variable costs."],
+  ["Analyse","Study or examine something in detail, break it down to bring out its parts and how they link.","Analyse the cash flow forecast for July to December."],
+  ["Recommend","Put forward a course of action, supported by reasons.","Recommend a suitable course of action to address the cash flow problem."],
+  ["Calculate","Obtain a numerical answer showing the relevant stages in the working.","Calculate the break-even point."],
+  ["Evaluate","Judge the strengths and weaknesses of something and reach a supported conclusion.","Evaluate leasing as a source of finance for a delivery van."],
+];
+
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("b25-best",null); if(best==null||pct>best) store.set("b25-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+// Numbers trainer
+const r1 = x => Math.round(x*10)/10, r2 = x => Math.round(x*100)/100;
+const mf = x => Number.isInteger(r2(x))? n0(x) : fm(x);
+const PAIRS = [[4.5,1.4,6200],[6,2,8000],[12,7.5,9000],[35,6,8700]];
+const PTYPES = {
+  cpu:{ name:"Contribution per unit", gen(){ const [p,v]=pick(PAIRS), c=p-v;
+    return { q:`A product sells for <b>€${f2(p)}</b>. Its variable cost per unit is <b>€${f2(v)}</b>. Calculate the contribution per unit.`, ans:c, unit:"€", steps:["Contribution per unit = selling price − variable cost per unit",`= €${f2(p)} − €${f2(v)}`,`= <b>€${f2(c)}</b>`] }; } },
+  be:{ name:"Break-even (units)", gen(){ const F=pick([6000,9000,12000,15000]), v=pick([1.5,2,2.5]), c=pick([1.5,2,2.5,3,4]), p=v+c, x=F/c;
+    return { q:`Fixed costs are <b>€${n0(F)}</b> a month. Each unit sells for <b>€${f2(p)}</b> and has a variable cost of <b>€${f2(v)}</b>. Calculate the break-even point in units.`, ans:x, unit:"units", steps:[`Contribution per unit = €${f2(p)} − €${f2(v)} = €${f2(c)}`,"Break-even = fixed costs ÷ contribution per unit",`= €${n0(F)} ÷ €${f2(c)} = <b>${n0(x)} units</b>`] }; } },
+  ber:{ name:"Break-even revenue", gen(){ const [p,v,F]=pick(PAIRS), c=p-v, u=F/c, x=u*p;
+    return { q:`Fixed costs are <b>€${n0(F)}</b>. The selling price is <b>€${f2(p)}</b> and the variable cost per unit is <b>€${f2(v)}</b>. Calculate the break-even point in sales revenue (€).`, ans:x, unit:"€", steps:[`Contribution = €${f2(p)} − €${f2(v)} = €${f2(c)}`,`Break-even units = €${n0(F)} ÷ €${f2(c)} = ${n0(u)}`,`Break-even revenue = ${n0(u)} × €${f2(p)} = <b>€${n0(x)}</b>`] }; } },
+  mos:{ name:"Margin of safety", gen(){ const [p,v,F]=pick(PAIRS), c=p-v, u=F/c, pl=u+pick([300,500,800]), x=pl-u;
+    return { q:`A business breaks even at <b>${n0(u)}</b> units (fixed costs €${n0(F)}, contribution €${f2(c)} a unit). It plans to sell <b>${n0(pl)}</b> units. Calculate the margin of safety in units.`, ans:x, unit:"units", steps:["Margin of safety = planned output − break-even output",`= ${n0(pl)} − ${n0(u)}`,`= <b>${n0(x)} units</b>`] }; } },
+  tc:{ name:"Total cost", gen(){ const F=pick([2500,6000,8000]), v=pick([1.4,2.5,9]), q=pick([400,1500,3000]), x=F+v*q;
+    return { q:`Fixed costs are <b>€${n0(F)}</b> a month and the variable cost is <b>€${f2(v)}</b> per unit. Calculate the total cost of making <b>${n0(q)}</b> units.`, ans:x, unit:"€", steps:["Total cost = fixed costs + variable cost per unit × output",`= €${n0(F)} + €${f2(v)} × ${n0(q)} = €${n0(F)} + €${mf(v*q)}`,`= <b>€${mf(x)}</b>`] }; } },
+  profit:{ name:"Profit or loss", gen(){ const [p,v,F]=pick(PAIRS), c=p-v, u=F/c, q=Math.round(u*pick([0.75,1.2,1.3,1.5])), x=c*q-F;
+    return { q:`A product sells for <b>€${f2(p)}</b> with a variable cost of <b>€${f2(v)}</b> per unit. Fixed costs are <b>€${n0(F)}</b>. Calculate the profit (or loss, as a negative number) if <b>${n0(q)}</b> units are sold.`, ans:x, unit:"€", steps:[`Contribution per unit = €${f2(p)} − €${f2(v)} = €${f2(c)}`,"Profit = contribution per unit × units sold − fixed costs",`= €${f2(c)} × ${n0(q)} − €${n0(F)} = €${mf(c*q)} − €${n0(F)}`,`= <b>${x<0?"−":""}€${mf(Math.abs(x))}</b>`+(x<0?" (a loss)":"")] }; } },
+  close:{ name:"Closing balance", gen(){ const o=pick([2000,-1500,4000,500]), r=pick([8000,9500,12000]), p=pick([9000,11500,7500]), x=o+r-p;
+    const s=v=>(v<0?"−€":"€")+n0(Math.abs(v));
+    return { q:`A business starts the month with an opening balance of <b>${s(o)}</b>. Receipts are <b>${s(r)}</b> and payments are <b>${s(p)}</b>. Calculate the closing balance (negative if overdrawn).`, ans:x, unit:"€", steps:[`Net cash flow = receipts − payments = ${s(r)} − ${s(p)} = ${s(r-p)}`,"Closing balance = opening balance + net cash flow",`= ${s(o)} + (${s(r-p)}) = <b>${s(x)}</b>`] }; } },
+  arr:{ name:"Annual recurring revenue", gen(){ const s=pick([120,250,400]), p=pick([15,20,29]), x=s*p*12;
+    return { q:`A bread-box business has <b>${s}</b> subscribers paying <b>€${p}</b> a month. Calculate its recurring revenue for a year, assuming no one joins or leaves.`, ans:x, unit:"€", steps:["Annual recurring revenue = subscribers × monthly price × 12",`= ${s} × €${p} × 12`,`= <b>€${n0(x)}</b>`] }; } },
+  subs:{ name:"Subscribers after churn", gen(){ const S=pick([200,500,800]), ch=pick([5,8,10]), nw=pick([30,50,80]), lost=S*ch/100, x=S-lost+nw;
+    return { q:`A subscription business has <b>${S}</b> subscribers at the start of the month. <b>${ch}%</b> cancel (churn) and <b>${nw}</b> new subscribers join. How many subscribers does it have at the end of the month?`, ans:x, unit:"subscribers", steps:[`Lost = ${S} × ${ch}% = ${n0(lost)}`,"End = start − lost + new",`= ${S} − ${n0(lost)} + ${nw} = <b>${n0(x)}</b>`] }; } },
+};
+
+let pType="cpu", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const raw=$("paIn").value.replace(/[€%£$\sm]/g,"").replace(/years?/i,"").replace(/[−–]/g,"-").replace(/,(?=\d{3}(\D|$))/g,"").replace(",",".");
+  const x=parseFloat(raw);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 1500 or 59.3.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(0.05, Math.abs(pCur.ans)*0.005);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: write the formula first; a percentage of an amount = amount × rate ÷ 100; monthly × 12 for a year. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+// Which element is it? [statement, key, why]
+const PNAME = {P:["Key partner","An outside organisation the business relies on","blush"],A:["Key activity","Something the business must do well","apricot"],R:["Key resource","Something the business needs to have","sage"],F:["Fixed cost","Stays the same whatever the output","cream"],V:["Variable cost","Rises with each unit made or sold","apricot"],S:["Revenue stream","A way the business earns money","sage"]};
+const PRED = [
+  ["The farm co-op that supplies a café's milk","P","A supplier is a key partner."],
+  ["Roasting coffee beans every morning","A","Making the product is a key activity."],
+  ["The café's espresso machine","R","Equipment is a physical key resource."],
+  ["Monthly rent for the café","F","Rent doesn't change with the number of coffees sold."],
+  ["Coffee beans used in each cup","V","More cups, more beans: a variable cost."],
+  ["Selling coffee to customers who walk in","S","Single transactions: a revenue stream."],
+  ["A monthly coffee-bean subscription sold online","S","Recurring sales: a revenue stream."],
+  ["A delivery app that brings orders to customers' homes","P","An outside business the café relies on: a partner."],
+  ["Training new baristas","A","Building staff skills is a key activity."],
+  ["The café's brand and loyal regulars","R","An intellectual resource."],
+  ["The yearly insurance premium","F","Insurance is the same whatever the sales."],
+  ["Paper cups and lids","V","One per drink: a variable cost."],
+  ["The bank that provides the café's overdraft","P","A bank providing finance is a key partner."],
+  ["Card payment fees charged on each sale","V","The fee rises with each sale: variable."],
+  ["Skilled, friendly baristas","R","People are a human key resource."],
+  ["Cleaning and food-safety checks every evening","A","A key activity the café must do well."],
+];
+// Long questions
+const LONGQ = [
+  { title:"Crumb & Co's operational model", intro:"Aoife set up Crumb & Co (illustrative), a sourdough bakery, three years ago. It now supplies 15 cafés, sells from its own shop and has just launched a weekly bread-box subscription delivered by a courier.",
+    parts:[["a","Outline the main elements that are key to the operational model of Crumb & Co, with an example of each.",9,"3 × 3 (name 1 + outline 1 + example 1): key partners (outside organisations relied on: flour mill, courier, cafés that stock the bread, bank); key activities (what it must do well: baking each night, deliveries, managing subscriptions, food safety); key resources (what it needs: ovens, bakery unit, skilled bakers, brand and recipes, website)."],
+      ["b","Explain why these elements may change over time. Refer to Crumb & Co in your answer.",9,"3 × 3 (reason 2 + applied 1), e.g. growth (more cafés → more ovens, staff, a van or courier); new technology (online subscriptions → website and payment partner); new competitors (new products, new suppliers); moving through the life cycle (start-up → growth → maturity); rising costs (switch to a cheaper supplier)."],
+      ["c","Distinguish between single transactions and recurring sales, with an example of each from Crumb & Co.",6,"Single (2 + 1): paid once, e.g. a loaf in the shop or an order from a café. Recurring (2 + 1): paid again and again, e.g. the weekly bread-box subscription."]] },
+  { title:"Costs, break-even and finance", intro:"Crumb & Co sells a sourdough loaf for €4.50. The variable cost is €1.40 per loaf. Fixed costs are €6 200 a month.",
+    parts:[["a","Distinguish between fixed costs and variable costs, giving two examples of each for Crumb & Co.",8,"Definitions 2 × 2: fixed costs stay the same whatever the output; variable costs change with output. Examples 4 × 1: fixed: rent, insurance, manager's salary, loan repayments; variable: flour, packaging, delivery per order, card fees."],
+      ["b","Calculate the contribution per loaf and the break-even point in loaves per month.",6,"Contribution = €4.50 − €1.40 = €3.10 (3). Break-even = €6 200 ÷ €3.10 = 2 000 loaves a month (3)."],
+      ["c","Crumb & Co expects to sell 2 600 loaves a month. Calculate the profit and the margin of safety.",6,"Profit = €3.10 × 2 600 − €6 200 = €8 060 − €6 200 = €1 860 (4). Margin of safety = 2 600 − 2 000 = 600 loaves (2)."],
+      ["d","Identify suitable sources of finance for Crumb & Co at start-up and as it grows, and explore why these sources change over the life cycle.",10,"Start-up sources (2 × 2): owner's savings, LEO grant, small loan (e.g. Microfinance Ireland). Growth sources (2 × 2): bank term loan for ovens, leasing a van, overdraft, trade credit; later retained earnings or an investor. Why they change (2): no track record at start so banks are cautious; profits and assets later make borrowing easier and retained earnings possible; bigger needs at expansion."]] },
+  { title:"Analysing cash flow", intro:"Here is part of Crumb & Co's cash flow forecast. A new oven costing €6 000 will be paid for in March.",
+    table:`<table><tr><th></th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th></tr><tr><td>Receipts</td><td>€8 000</td><td>€7 000</td><td>€9 000</td><td>€12 000</td></tr><tr><td>Payments</td><td>€9 000</td><td>€9 500</td><td>€15 000</td><td>€9 000</td></tr><tr><td>Net cash flow</td><td>?</td><td>?</td><td>?</td><td>?</td></tr><tr><td>Opening balance</td><td>€2 000</td><td>?</td><td>?</td><td>?</td></tr><tr><td>Closing balance</td><td>?</td><td>?</td><td>?</td><td>?</td></tr></table>`,
+    parts:[["a","Calculate the net cash flow and the closing balance for each month.",8,"Net: Jan −€1 000, Feb −€2 500, Mar −€6 000, Apr +€3 000 (4). Closing: Jan €1 000, Feb −€1 500, Mar −€7 500, Apr −€4 500 (4). Opening of each month = closing of the month before."],
+      ["b","Analyse the cash flow of Crumb & Co.",6,"The balance goes negative from February (2). Causes (2 × 2): payments are higher than receipts in Jan to March (quiet winter sales, Feb receipts fall); the €6 000 oven in March causes the biggest fall; April improves as sales rise but the balance is still −€4 500."],
+      ["c","Recommend a suitable course of action for Crumb & Co to address the issues arising from your analysis.",9,"3 × 3 (action 1 + reason 2), linked to the causes: lease the oven or use a medium-term loan instead of paying €6 000 cash in March; arrange an overdraft (about €8 000) for February to April; ask cafés to pay faster; use trade credit with the flour mill; delay non-essential spending; owner injects capital; winter promotion or subscriptions to raise receipts."],
+      ["d","Explain why a profitable business can still have cash flow problems.",4,"2 × 2: profit is about revenue and costs over a period, cash is about timing; big payments (equipment, stock) can come before receipts; customers on credit pay later; loan repayments and owner's drawings use cash but aren't costs in the same way."]] },
+];
+const RAG = ["Outline key partners, key activities and key resources with examples","Explain why the operational model may change over time","Describe the four stages of the life cycle and what changes at each","Distinguish fixed and variable costs, with examples","Calculate contribution, break-even, profit and margin of safety","Read and explain a break-even chart","Distinguish single transactions and recurring sales","Explain the effect of churn on recurring revenue","Name short-, medium- and long-term sources of finance","Match a source of finance to a need and justify it","Explore why sources of finance change over the life cycle","Complete a cash flow forecast: net cash flow and closing balance","Analyse a cash flow forecast: problem months and causes","Recommend actions that match each cash flow problem","Explain why profit is not the same as cash"];
+const SKILLS = [["Map a real business","Interview a local business owner and map their key partners, activities and resources.","Operations lab"],["Collect and plot data","Record costs at different outputs, plot them and fit a line, as in the cost detective lab.","Costs lab"],["Use secondary data","Look up current LEO grant or bank loan information and note the date and source.","Infographics"],["Show data as a graph","Draw a break-even chart or a cash balance bar chart from your figures.","Costs and cash labs"],["Analyse and recommend","Find the cause of a problem in the data, then recommend a matched action.","Cash flow lab"],["Compare options","Compare leasing and buying, or one-off and recurring revenue, with numbers.","Revenue and finance labs"],["Use numbers as evidence","Show the formula and working for break-even, profit and closing balance.","Numbers trainer"],["Consider change over time","Explain how your findings might change as the business grows.","Life cycle lab"]];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p>${L.table?`<div style="overflow-x:auto;margin-top:8px">${L.table}</div>`:""}</header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k && PRED.length>1); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>${PRED[k][0]}</b> Which element is it?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const [,ans,why]=PRED[pd.k], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> It's a ${PNAME[ans][0].toLowerCase()}. ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+const ragState=store.get("b25-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("b25-rag",ragState); ragRender(); });
+ragRender();
+const skState=store.get("b25-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("b25-skills",skState); });
+/* ================= LAB STATE + WIRING ================= */
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+/* ================= DRAWINGS ================= */
+function niceStep(x){ if(!(x>0)) return 1; const p=10**Math.floor(Math.log10(x)), m=x/p; return (m<1.5?1:m<3.5?2:m<7.5?5:10)*p; }
+const kfmt = v => { const a=Math.abs(v), s=v<0?"−":""; return s+"€"+(a>=1000? r1(a/1000)+"k" : Math.round(a)); };
+const eurS = v => (v<0?"−€":"€")+n0(Math.abs(v));
+function fitTxt(ctx,str,maxW,font){ ctx.save(); ctx.font=font; let s=str; while(s.length>3 && ctx.measureText(s).width>maxW) s=s.slice(0,-2); ctx.restore(); return s===str? s : s.replace(/\s+$/,"")+"…"; }
+// 1. Operational model columns
+const OPK=["P","A","R"], OPNAME=["Key partners","Key activities","Key resources"], OPCOL=["blush","apricot","sage"];
+function drawOps(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, gap=6, cw=(w-gap*4)/3, top=cp?6:8, fs=cp?9.5:11.5, hh=cp?26:32;
+  OPK.forEach((k,i)=>{ const x=gap+i*(cw+gap)+gap/2;
+    rrect(ctx,x,top,cw,h-top-6,12,C["surface-2"],C.line,1); rrect(ctx,x,top,cw,hh,12,C[OPCOL[i]]);
+    const hf=F(cp?10.5:13); text(ctx,fitTxt(ctx,OPNAME[i],cw-8,hf).length<OPNAME[i].length? OPNAME[i].replace("Key ","") : OPNAME[i],x+cw/2,top+hh/2+(cp?4:4.5),"#3b2b21",hf,"center");
+    const its=(o.items||[]).filter(it=>it[1]===k);
+    its.forEach((it,j)=>{ const yy=top+hh+7+j*(fs+13); if(yy+fs+8>h-8) return; const f=F(fs,700), s=fitTxt(ctx,it[0],cw-20,f); ctx.save(); ctx.font=f; const tw=ctx.measureText(s).width+12; ctx.restore();
+      rrect(ctx,x+5,yy,Math.min(cw-10,tw),fs+9,6,C.surface,it[2]===false?C.bad:C.ink,it[2]===false?2:1); text(ctx,s,x+11,yy+fs+2.5,C.ink,f); });
+    if(!its.length && !cp) text(ctx,"sort items",x+cw/2,top+hh+26,C.muted,F(11,600),"center"); });
+}
+// 2. Life cycle
+const STAGEN=["Introduction","Growth","Maturity","Decline"], STB=[0,0.22,0.5,0.78,1];
+const plcS = x => { const L=1/(1+Math.exp(-11*(x-0.33))); return x>0.7? L*(1-0.55*((x-0.7)/0.3)**2) : L; };
+const plcP = x => plcS(x)*0.8 - 0.28 - 0.3*Math.max(0,1-x/0.18);
+function drawLife(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, L=cp?10:18, R=cp?10:16, T=cp?24:32, B=cp?22:32, W=w-L-R, H=h-T-B, ymin=-0.65, ymax=1.08;
+  const X=x=>L+x*W, Y=v=>T+(ymax-v)/(ymax-ymin)*H;
+  STAGEN.forEach((n,i)=>{ const x0=X(STB[i]), x1=X(STB[i+1]); if(o.stage===i){ ctx.fillStyle=C.cream; ctx.fillRect(x0,T,x1-x0,H); }
+    if(i>0) line(ctx,x0,T,x0,T+H,C.grid,1,[4,4]); const f=F(cp?9.5:12); text(ctx,fitTxt(ctx,n,x1-x0-4,f),(x0+x1)/2,T-(cp?8:11),o.stage===i?C.terra:C.muted,f,"center"); });
+  line(ctx,L,Y(0),L+W,Y(0),C.ink,1.3); text(ctx,"€0",L+3,Y(0)-4,C.muted,M(cp?9:10));
+  [[plcS,C.olive,null],[plcP,C.terra,[6,5]]].forEach(([fn,col,d])=>{ ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=cp?2.2:3; if(d) ctx.setLineDash(d); ctx.beginPath(); for(let i=0;i<=100;i++){ const x=i/100; i?ctx.lineTo(X(x),Y(fn(x))):ctx.moveTo(X(x),Y(fn(x))); } ctx.stroke(); ctx.restore(); });
+  if(o.dot!=null){ circle(ctx,X(o.dot),Y(plcS(o.dot)),cp?5:7,C.olive,C.surface,2); circle(ctx,X(o.dot),Y(plcP(o.dot)),cp?4:6,C.terra,C.surface,2); }
+  const ly=T+H+(cp?15:22), lf=F(cp?9.5:11.5); line(ctx,L,ly-4,L+16,ly-4,C.olive,3); text(ctx,"sales",L+20,ly,C.ink,lf); line(ctx,L+64,ly-4,L+80,ly-4,C.terra,3,[5,4]); text(ctx,"profit",L+84,ly,C.ink,lf);
+  text(ctx,"time →",L+W,ly,C.muted,lf,"right");
+}
+// 3. Break-even chart
+function drawBE(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, L=cp?40:56, Rm=cp?10:18, T=cp?14:34, B=cp?22:40, W=w-L-Rm, H=h-T-B, qm=o.qmax;
+  const ymax=Math.max(o.price*qm, o.fc+o.vc*qm)*1.08, X=q=>L+q/qm*W, Y=v=>T+H-v/ymax*H, st=niceStep(ymax/4), qs=niceStep(qm/4);
+  for(let v=0; v<=ymax; v+=st){ line(ctx,L,Y(v),L+W,Y(v),C.grid,1); text(ctx,kfmt(v),L-5,Y(v)+4,C.muted,M(cp?9:10),"right"); }
+  for(let q=0; q<=qm+1e-9; q+=qs) text(ctx,n0(q),X(q),T+H+(cp?13:16),C.muted,M(cp?9:10),"center");
+  line(ctx,L,T+H,L+W,T+H,C.ink,1.4); line(ctx,L,T,L,T+H,C.ink,1.4);
+  const fc=o.fit?o.fit.c:o.fc, vc=o.fit?o.fit.m:o.vc, show=!!o.fit || !o.pts;
+  if(show){ line(ctx,X(0),Y(fc),X(qm),Y(fc),C.sage,2.2,[6,5]); line(ctx,X(0),Y(fc),X(qm),Y(fc+vc*qm),C.terra,2.6); }
+  line(ctx,X(0),Y(0),X(qm),Y(o.price*qm),C.olive,2.6);
+  if(show && o.price>vc){ const be=fc/(o.price-vc); if(be<=qm){ const bx=X(be), by=Y(o.price*be), right=bx>L+W*0.6; line(ctx,bx,by,bx,T+H,C.ink,1.2,[3,4]); circle(ctx,bx,by,cp?4.5:6,C.ink,C.surface,2);
+    text(ctx,`break-even ≈ ${n0(be)}`,bx+(right?-9:9),by+(cp?4:5),C.ink,F(cp?9.5:12),right?"right":"left"); } }
+  if(o.pts) o.pts.forEach(([q,c])=>circle(ctx,X(q),Y(c),cp?3.5:5,C.terra,C.surface,1.5));
+  if(!cp){ let lx=L; const lf=F(Math.min(11.5,w/34)); [["Sales revenue",C.olive,null],["Total cost",C.terra,null],["Fixed costs",C.sage,[6,5]]].forEach(([t,c,d])=>{ line(ctx,lx,T-16,lx+16,T-16,c,3,d); text(ctx,t,lx+20,T-12,C.ink,lf); ctx.save(); ctx.font=lf; lx+=ctx.measureText(t).width+30; ctx.restore(); });
+    text(ctx,`Output (${o.unit||"units"} a month)`,L+W/2,h-6,C.ink,F(12),"center");
+    if(o.pts && !o.fit) text(ctx,o.pts.length? "Record at least 3 months to fit a line" : "Press “Record a month”",L+W/2,T+H*0.35,C.muted,F(13),"center"); }
+}
+// 4. Revenue streams
+function drawRev(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, L=cp?40:56, Rm=cp?10:18, T=cp?14:34, B=cp?22:40, W=w-L-Rm, H=h-T-B, n=o.one.length;
+  const ymax=Math.max(...o.one,...o.rec)*1.1||1, X=i=>L+i/(n-1)*W, Y=v=>T+H-v/ymax*H, st=niceStep(ymax/4);
+  for(let v=0; v<=ymax; v+=st){ line(ctx,L,Y(v),L+W,Y(v),C.grid,1); text(ctx,kfmt(v),L-5,Y(v)+4,C.muted,M(cp?9:10),"right"); }
+  [0,5,11,17,23].forEach(i=>text(ctx,String(i+1),X(i),T+H+(cp?13:16),C.muted,M(cp?9:10),"center"));
+  line(ctx,L,T+H,L+W,T+H,C.ink,1.4); line(ctx,L,T,L,T+H,C.ink,1.4);
+  [[o.one,C.olive],[o.rec,C.terra]].forEach(([a,col])=>{ ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=cp?2.2:3; ctx.beginPath(); a.forEach((v,i)=>i?ctx.lineTo(X(i),Y(v)):ctx.moveTo(X(i),Y(v))); ctx.stroke(); ctx.restore(); if(!cp) a.forEach((v,i)=>circle(ctx,X(i),Y(v),2.6,col)); });
+  const lf=F(cp?9.5:Math.min(11.5,w/34)), ly=cp?T+10:T-12; let lx=L+(cp?6:0); [["Single sales",C.olive],["Recurring",C.terra]].forEach(([t,c])=>{ line(ctx,lx,ly-4,lx+14,ly-4,c,3); text(ctx,t,lx+18,ly,C.ink,lf); ctx.save(); ctx.font=lf; lx+=ctx.measureText(t).width+28; ctx.restore(); });
+  if(!cp) text(ctx,"Month",L+W/2,h-6,C.ink,F(12),"center");
+}
+// 5. Finance ladder
+const TERMS=[["Short term","< 1 year","cream",[["OD","Overdraft"],["TC","Trade credit"]]],["Medium term","1–5 years","apricot",[["LE","Leasing"],["LO","Medium-term loan"]]],["Long term","5+ years","sage",[["OC","Owner's capital"],["GR","Grant"],["IN","Equity investor"],["LO","Long-term loan"]]]];
+function drawTerms(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, gap=6, cw=(w-gap*4)/3, top=cp?6:8, fs=cp?9.5:11.5, hh=cp?36:46;
+  TERMS.forEach(([n,sub,col,src],i)=>{ const x=gap+i*(cw+gap)+gap/2, hf=F(cp?10.5:13);
+    rrect(ctx,x,top,cw,h-top-6,12,C["surface-2"],C.line,1); rrect(ctx,x,top,cw,hh,12,C[col]);
+    text(ctx,fitTxt(ctx,n,cw-8,hf),x+cw/2,top+(cp?15:19),"#3b2b21",hf,"center"); text(ctx,sub,x+cw/2,top+(cp?29:37),"#3b2b21",F(cp?9:11,600),"center");
+    src.forEach(([k,s],j)=>{ const yy=top+hh+8+j*(fs+15), on=o.all||(o.done&&o.done.has(k)), f=F(fs,700), t=fitTxt(ctx,s,cw-20,f); if(yy+fs+10>h-8) return;
+      rrect(ctx,x+5,yy,cw-10,fs+11,8,on?C[col]:C.surface,on?C.ink:C.line,on?1.2:1); text(ctx,t,x+cw/2,yy+fs+3.5,on?"#3b2b21":C.muted,f,"center"); }); });
+}
+// 6. Cash balance bars
+const MON=["Jul","Aug","Sep","Oct","Nov","Dec"];
+function drawCash(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, L=cp?44:58, Rm=cp?8:16, T=cp?14:32, B=cp?20:28, W=w-L-Rm, H=h-T-B, v=o.close;
+  let lo=Math.min(0,...v,o.od||0), hi=Math.max(0,...v); const span=(hi-lo)||1; lo-=span*0.12; hi+=span*0.12;
+  const Y=x=>T+(hi-x)/(hi-lo)*H, gw=W/v.length, bw=Math.min(54,gw*0.62), st=niceStep((hi-lo)/5);
+  for(let x=Math.ceil(lo/st)*st; x<=hi; x+=st){ line(ctx,L,Y(x),L+W,Y(x),C.grid,1); text(ctx,kfmt(x),L-5,Y(x)+4,C.muted,M(cp?9:10),"right"); }
+  if(o.od){ line(ctx,L,Y(o.od),L+W,Y(o.od),C.bad,1.6,[6,5]); text(ctx,"overdraft limit",L+4,Y(o.od)+(cp?11:14),C.bad,F(cp?9:11)); }
+  v.forEach((x,i)=>{ const cx=L+gw*(i+0.5), y0=Y(0), y1=Y(x), col= x>=0? C.sage : (o.od && x>=o.od ? C.apricot : C.bad);
+    rrect(ctx,cx-bw/2,Math.min(y0,y1),bw,Math.max(2,Math.abs(y1-y0)),5,col);
+    const lab = gw<60 && Math.abs(x)>=1000? (x<0?"−":"")+"€"+Math.round(Math.abs(x)/1000)+"k" : kfmt(x); text(ctx,lab,cx,x>=0? y1-5 : y1+(cp?11:14),C.ink,M(cp?8.5:10.5),"center");
+    text(ctx,MON[i],cx,T+H+(cp?14:18),C.ink,F(cp?9.5:12),"center"); });
+  line(ctx,L,Y(0),L+W,Y(0),C.ink,1.4);
+  if(!cp) text(ctx,"Closing bank balance at the end of each month",L,T-14,C.ink,F(Math.min(12,w/32)));
+}
+function drawWhichP(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const [n,d,c]=PNAME[o.ans], bw=Math.min(w-30,340);
+  rrect(ctx,w/2-bw/2,h/2-44,bw,88,18,C[c],C.ink,1.5); text(ctx,n,w/2,h/2-8,"#3b2b21",F(22),"center");
+  ctx.save(); ctx.font=F(12,600); const ls=wrapText(ctx,d,bw-20); ctx.restore(); ls.forEach((s,i)=>text(ctx,s,w/2,h/2+16+i*15,"#3b2b21",F(12,600),"center")); }
+
+/* ================= LAB DATA + WIRING ================= */
+const wireSorter = (listId, S, render) => $(listId).addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; S.ans[b.dataset.k]=b.dataset.v; render(); });
+// 1. Operational model
+const OPS = [["The flour mill that supplies organic flour","P","A supplier: an outside business it relies on.","Flour mill"],["The courier firm that delivers the bread boxes","P","An outside business doing an activity for it: a partner.","Courier"],["Cafés that stock Crumb & Co bread","P","Stockists are partners that help it reach customers.","Local cafés"],["The bank that provides its overdraft","P","A finance partner.","Bank"],["Baking sourdough every night","A","Making the product: the core activity.","Baking"],["Delivering to cafés by 7 am","A","Getting the product to customers on time.","Deliveries"],["Managing online subscription orders","A","Needed for its recurring revenue.","Online orders"],["Food-safety checks and cleaning","A","An activity it must do well to stay open.","Food safety"],["Commercial ovens and mixers","R","Physical resource: equipment.","Ovens"],["Skilled bakers","R","Human resource.","Bakers"],["The Crumb & Co brand and its recipes","R","Intellectual resource.","Brand, recipes"],["The leased delivery van","R","A physical resource it uses. Leased, but still a resource, not a partner.","Van"]];
+const OPS_ALL = OPS.map(x=>[x[3],x[1]]);
+const OPN2 = {P:"Partner",A:"Activity",R:"Resource"}, opS={order:[],ans:{}};
+function opRender(){ sorter("opList","opOut",OPS,OPN2,opS); opC.redraw(); }
+function opNew(){ opS.order=shuffle(OPS.map((s,k)=>k)); opS.ans={}; opRender(); }
+wireSorter("opList",opS,()=>opRender()); $("opReset").addEventListener("click",opNew);
+// 2. Life cycle
+const STAGES = [
+  {sales:6000, staff:"2 (owner + 1)", fin:"Owner's savings + grant", rows:[["Key partners","One flour mill and two local cafés."],["Key activities","Baking, a weekend market stall, building a following on social media."],["Key resources","The founder's baking skills, a second-hand oven in a rented kitchen."],["Key costs","High set-up costs (oven, fit-out). Fixed costs are a big share of each loaf; flour bought in small bags costs more."],["Sources of finance","Owner's savings, a Local Enterprise Office grant, a small microfinance loan. No track record, so banks are cautious."],["Revenue streams","Single transactions only: loaves sold at the stall and to two cafés."],["Issue to act on","Cash is tight because spending comes before sales. Keep costs low and get paid quickly."]]},
+  {sales:25000, staff:"7", fin:"Bank loan, leasing, overdraft", rows:[["Key partners","15 cafés, a packaging supplier, a courier for deliveries, a payments provider."],["Key activities","Night baking shifts, deliveries, hiring and training, online orders."],["Key resources","Commercial ovens, a bakery unit, a leased van, 6 staff, a website."],["Key costs","Fixed costs rise (rent, wages, loan repayments) but bulk flour cuts the variable cost per loaf: economies of scale."],["Sources of finance","Bank term loan for ovens, leasing for the van, overdraft and trade credit for day-to-day gaps."],["Revenue streams","Café orders and shop sales, plus a new weekly bread-box subscription (recurring)."],["Issue to act on","Overtrading: growing faster than the cash allows. Plan cash flow before saying yes to every new café."]]},
+  {sales:40000, staff:"12", fin:"Retained earnings", rows:[["Key partners","Long-term contract with the mill, a regional supermarket, a cloud accounting provider."],["Key activities","Quality control, efficiency, marketing to keep customers from rivals."],["Key resources","A strong brand, tested recipes, automated mixers, loyal staff."],["Key costs","Stable. Focus on cutting costs: energy-efficient ovens, less waste."],["Sources of finance","Retained earnings (profits kept in the business). An investor might fund a second bakery."],["Revenue streams","Subscriptions are now a big share; recurring revenue smooths the quiet months."],["Issue to act on","New competitors and copycat products. Protect the brand and keep subscribers happy (low churn)."]]},
+  {sales:30000, staff:"10", fin:"Sell assets, retained earnings", rows:[["Key partners","Drop unprofitable cafés; renegotiate prices with suppliers."],["Key activities","New products (a gluten-free range), cost cutting, baking classes."],["Key resources","Sell unused equipment; retrain staff for new products."],["Key costs","Cut fixed costs (smaller unit, fewer shifts) so the break-even point falls."],["Sources of finance","Sale of unused assets and retained earnings to fund renewal; avoid new long-term debt."],["Revenue streams","Test new streams: baking classes (single) and a gift-box subscription (recurring)."],["Issue to act on","Falling sales. Act early with an extension strategy before cash runs out."]]},
+];
+let evStage=0;
+$("evStage").innerHTML = STAGEN.map((n,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${n}</button>`).join("");
+$("evStage").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; evStage=+b.dataset.i; pressGroup([...$("evStage").querySelectorAll("button")],b); evRender(); });
+function evRender(){ const S=STAGES[evStage];
+  setReadout($("evOut"),[["Stage",STAGEN[evStage]],["Monthly sales",eur(S.sales)],["Staff",S.staff],["Main finance",S.fin]]);
+  $("evList").innerHTML = S.rows.map(([k,v])=>`<div class="row"><span><b>${k}</b><small>${v}</small></span></div>`).join("");
+  evC.redraw(); }
+// 3. Cost detective
+const PRODS = [{n:"Sourdough loaf",unit:"loaves",fc:6200,vc:1.4,price:4.5,qmax:5000,qr:[800,4200],qs:50,pr:[1.5,8,0.1]},{n:"Bread box",unit:"boxes",fc:2500,vc:9,price:20,qmax:800,qr:[100,700],qs:10,pr:[10,40,0.5]},{n:"Baking class seat",unit:"seats",fc:900,vc:6,price:35,qmax:120,qr:[10,100],qs:2,pr:[10,70,1]}];
+const be = { p:0, pts:[], fit:null };
+function linFit(pts){ const n=pts.length, mx=pts.reduce((s,p)=>s+p[0],0)/n, my=pts.reduce((s,p)=>s+p[1],0)/n; let sxy=0,sxx=0; pts.forEach(([x,y])=>{ sxy+=(x-mx)*(y-my); sxx+=(x-mx)**2; }); if(sxx===0) return null; const m=sxy/sxx; return {m, c:my-m*mx}; }
+function bePrice(){ return +$("beP").value; }
+function beSetProd(i){ be.p=i; be.pts=[]; be.fit=null; const P=PRODS[i]; const s=$("beP"); s.min=P.pr[0]; s.max=P.pr[1]; s.step=P.pr[2]; s.value=P.price; beRender(); }
+function beRecord(k){ const P=PRODS[be.p]; for(let j=0;j<k;j++){ const q=Math.round(rnd(P.qr[0],P.qr[1])/P.qs)*P.qs, c=(P.fc+P.vc*q)*(1+(Math.random()-0.5)*0.06); be.pts.push([q,Math.round(c)]); }
+  be.fit = be.pts.length>=3? linFit(be.pts) : null; beRender(); }
+function beRender(){ const P=PRODS[be.p], pr=bePrice(); $("bePo").textContent="€"+f2(pr);
+  const out=[["Months recorded",String(be.pts.length)]];
+  let work = `Each point is one month: output (${P.unit}) and total cost. Total cost = fixed costs + variable cost per unit × output, so the points lie close to a straight line.`;
+  if(be.fit){ const {m,c}=be.fit, con=pr-m;
+    out.push(["Fixed costs (your estimate)",eur(c)],["Variable cost per unit",`€${f2(m)}`],["Contribution per unit",`€${f2(con)}`]);
+    if(con>0){ const bep=c/con; out.push(["Break-even point",`${n0(Math.ceil(bep))} ${P.unit}`],["Break-even revenue",eur(Math.ceil(bep)*pr)]);
+      work += `<br>Fitted line: total cost = €${n0(c)} + €${f2(m)} × output. The line meets the € axis at the fixed costs (€${n0(c)}) and its slope is the variable cost per unit.<br>Contribution = €${f2(pr)} − €${f2(m)} = €${f2(con)}. Break-even = €${n0(c)} ÷ €${f2(con)} = <b>${n0(bep)} → ${n0(Math.ceil(bep))} ${P.unit}</b> a month.`; }
+    else { out.push(["Break-even point","never"]); work += `<br>The price is below the variable cost per unit, so every sale makes a loss: the business can never break even.`; }
+    if(be.pts.length>=6) work += `<br>The accountant's figures: fixed costs €${n0(P.fc)}, variable cost €${f2(P.vc)} per unit. How close did you get?`; }
+  else work += `<br>Record at least 3 months to fit a line.`;
+  setReadout($("beOut"),out); $("beWork").innerHTML=work; beC.redraw(); }
+$("beProd").innerHTML = PRODS.map((p,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${p.n}</button>`).join("");
+$("beProd").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pressGroup([...$("beProd").querySelectorAll("button")],b); beSetProd(+b.dataset.i); });
+$("beRec").addEventListener("click",()=>beRecord(1)); $("beRec6").addEventListener("click",()=>beRecord(6));
+$("beClear").addEventListener("click",()=>{ be.pts=[]; be.fit=null; beRender(); });
+$("beP").addEventListener("input",beRender);
+const FV = [["Rent for the bakery unit","F","Same every month whatever the output."],["Flour","V","More loaves, more flour."],["Insurance","F","A set yearly or monthly premium."],["Paper bags and labels","V","One per loaf sold."],["The manager's salary","F","Paid the same whatever the output."],["Delivery charge per bread box","V","Rises with every box sent."],["Loan repayments","F","Set by the loan agreement, not by output."],["Card fees on each sale","V","A small fee on every sale."],["Website and accounting software subscriptions","F","A flat monthly fee."],["Electricity for the ovens (mostly per batch)","V","Mainly rises with the number of batches baked (strictly semi-variable: there is also a standing charge)."]];
+const FVN = {F:"Fixed",V:"Variable"}, fvS={order:[],ans:{}};
+function fvRender(){ sorter("fvList","fvOut",FV,FVN,fvS); }
+function fvNew(){ fvS.order=shuffle(FV.map((s,k)=>k)); fvS.ans={}; fvRender(); }
+wireSorter("fvList",fvS,fvRender); $("fvReset").addEventListener("click",fvNew);
+// 4. Revenue streams
+function rvCalc(p1,p2,n,ch){ const one=[], rec=[], subs=[]; let S=0; for(let t=0;t<24;t++){ S=S*(1-ch/100)+n; subs.push(S); one.push(n*p1); rec.push(S*p2); } return {one,rec,subs}; }
+const RV_DEF = rvCalc(60,20,50,8);
+function rvRender(){ const p1=+$("rvP1").value, p2=+$("rvP2").value, n=+$("rvN").value, ch=+$("rvCh").value, r=rvCalc(p1,p2,n,ch);
+  $("rvP1o").textContent="€"+p1; $("rvP2o").textContent="€"+p2; $("rvNo").textContent=n; $("rvCho").textContent=ch+"%";
+  const t1=r.one.reduce((a,b)=>a+b,0), t2=r.rec.reduce((a,b)=>a+b,0), cross=r.rec.findIndex((v,i)=>v>r.one[i]);
+  setReadout($("rvOut"),[["Month 1: single / recurring",`${eur(r.one[0])} / ${eur(r.rec[0])}`],["Month 24: single / recurring",`${eur(r.one[23])} / ${eur(r.rec[23])}`],["2-year total: single",eur(t1)],["2-year total: recurring",eur(t2)],["Subscribers in month 24",n0(r.subs[23])],["Long-run subscribers",n0(n/(ch/100))]]);
+  $("rvWork").innerHTML = `Single: ${n} customers × €${p1} = <b>${eur(n*p1)}</b> every month; the business must win new buyers to keep earning.<br>Recurring: each month subscribers = last month × (1 − ${ch}%) + ${n} new. Revenue = subscribers × €${p2}. Subscribers level off near ${n} ÷ ${ch}% = <b>${n0(n/(ch/100))}</b>, where new joiners just replace those who cancel.<br>` + (cross<0? "With these settings the subscription never earns more in a month than kit sales." : cross===0? "The subscription earns more from month 1." : `The subscription earns more each month from <b>month ${cross+1}</b>.`);
+  rvC.redraw(); }
+["rvP1","rvP2","rvN","rvCh"].forEach(id=>$(id).addEventListener("input",rvRender));
+const SR = [["A monthly gym membership","R","Paid every month: recurring."],["Buying a sofa","S","Paid once: a single transaction."],["A streaming-service subscription","R","Recurring monthly payments."],["A concert ticket","S","One-off purchase."],["A mobile phone bill-pay contract","R","Monthly payments for 12 or 24 months."],["Buying a second-hand car","S","Single transaction."],["A weekly bread-box subscription","R","Recurring sales: paid every week."],["A bread-making kit bought as a gift","S","Paid once."],["Business software paid for every year","R","Annual licence: recurring."],["A haircut paid for on the day","S","Each visit is a single transaction (unless it's a membership)."]];
+const SRN = {S:"Single",R:"Recurring"}, srS={order:[],ans:{}};
+function srRender(){ sorter("srList","srOut",SR,SRN,srS); }
+function srNew(){ srS.order=shuffle(SR.map((s,k)=>k)); srS.ans={}; srRender(); }
+wireSorter("srList",srS,srRender); $("srReset").addEventListener("click",srNew);
+// 5. Sources of finance
+const FN = [["Aoife uses €15 000 of her own savings to start the bakery","OC","Owner's capital: no interest, no repayment, but her own money is at risk."],["A start-up grant from the Local Enterprise Office","GR","A grant usually doesn't have to be repaid if the conditions are met."],["Flour delivered now, paid for 30 days later","TC","Trade credit from the supplier: short term and often free."],["Wages are due on 1 December but cafés pay on 15 December","OD","A short gap: an overdraft covers it."],["A delivery van used for 4 years with monthly payments, never owned","LE","Leasing: use without owning, no big upfront cost."],["New ovens costing €40 000, repaid over 5 years with interest","LO","A medium-term loan matches the life of the ovens."],["A business angel puts in €80 000 for a 20% share to open a second bakery","IN","Equity: no repayments, but she gives up 20% of the business."],["Buying the bakery building, repaid over 20 years","LO","A long-term loan (mortgage) for a long-life asset."],["Packaging bought with 60 days to pay","TC","Trade credit again: pay the supplier later."],["A venture capital firm buys shares to fund expansion into the UK","IN","Equity investor: finance for a share of ownership."]];
+const FNN = {OC:"Owner's capital",GR:"Grant",IN:"Investor",OD:"Overdraft",TC:"Trade credit",LE:"Leasing",LO:"Loan"}, fnS={order:[],ans:{}};
+function fnDone(){ return new Set(Object.entries(fnS.ans).filter(([k,v])=>v===FN[k][1]).map(([k,v])=>v)); }
+function fnRender(){ sorter("fnList","fnOut",FN,FNN,fnS); fnC.redraw(); }
+function fnNew(){ fnS.order=shuffle(FN.map((s,k)=>k)); fnS.ans={}; fnRender(); }
+wireSorter("fnList",fnS,fnRender); $("fnReset").addEventListener("click",fnNew);
+// 6. Cash flow forecast
+const CF0 = { open:4000, shop:[10000,9500,10000,10500,12500,16000], subs:[2000,2200,2400,2600,2800,3000], mat:[3600,3500,3700,3900,6500,4500], wages:[5200,5200,5200,5200,5200,6000], rent:1800, draw:1500, loan:400, van:[0,0,18000,0,0,0] };
+const CA = [["lease","Lease the van (€600 a month) instead of buying it"],["od","Arrange a €10 000 overdraft"],["debt","Ask cafés to pay in 14 days, not 30"],["trade","Get 60 days' credit from the flour mill, not 30"],["draw","Owner takes €500 a month less"],["cap","Owner puts in €5 000 more capital in August"],["promo","Pre-Christmas bread-box promotion"]];
+const cf = { on:new Set() };
+function cfCalc(on){ const z=()=>[0,0,0,0,0,0], other=z(), mkt=z(), vanp=[...CF0.van], mat=on.has("trade")? [0,...CF0.mat.slice(0,5)] : [...CF0.mat], draw=CF0.draw-(on.has("draw")?500:0);
+  if(on.has("lease")) for(let i=0;i<6;i++) vanp[i]= i>=2? 600 : 0;
+  if(on.has("debt")) other[0]+=1500; if(on.has("cap")) other[1]+=5000;
+  if(on.has("promo")){ mkt[3]+=600; other[4]+=1200; other[5]+=1500; }
+  const rec=CF0.shop.map((s,i)=>s+CF0.subs[i]+other[i]), pay=mat.map((m,i)=>m+CF0.wages[i]+CF0.rent+draw+CF0.loan+vanp[i]+mkt[i]), net=rec.map((r,i)=>r-pay[i]), open=[], close=[];
+  let b=CF0.open; net.forEach((n,i)=>{ open.push(b); b+=n; close.push(b); });
+  return {other,mkt,vanp,mat,draw,rec,pay,net,open,close,od:on.has("od")?-10000:0}; }
+const CF_BASE = cfCalc(new Set());
+$("cfAct").innerHTML = CA.map(([k,t])=>`<button data-k="${k}" aria-pressed="false">${t}</button>`).join("");
+$("cfAct").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const k=b.dataset.k; if(cf.on.has(k)) cf.on.delete(k); else cf.on.add(k); b.setAttribute("aria-pressed",cf.on.has(k)); cfRender(); });
+function cfRender(){ const r=cfCalc(cf.on), lo=Math.min(...r.close), li=r.close.indexOf(lo), negs=r.close.filter(x=>x<0).length, overOD=r.close.filter(x=>x<r.od).length;
+  const row=(lbl,a,bold)=>`<tr${bold?' style="font-weight:800"':""}><td>${lbl}</td>${a.map(v=>`<td style="text-align:right;${v<0?"color:var(--bad)":""}">${eurS(v)}</td>`).join("")}</tr>`;
+  $("cfTbl").innerHTML = `<tr><th style="text-align:left">€</th>${MON.map(m=>`<th style="text-align:right">${m}</th>`).join("")}</tr>`
+    + row("Shop and café sales",CF0.shop) + row("Bread-box subscriptions",CF0.subs) + (r.other.some(x=>x)? row("Other receipts",r.other):"") + row("Total receipts",r.rec,true)
+    + row("Flour and materials",r.mat) + row("Wages",CF0.wages) + row("Rent and utilities",[1,1,1,1,1,1].map(()=>CF0.rent)) + row("Owner's drawings",[1,1,1,1,1,1].map(()=>r.draw)) + row("Loan repayment",[1,1,1,1,1,1].map(()=>CF0.loan)) + row(cf.on.has("lease")?"Van lease":"Van purchase",r.vanp) + (r.mkt.some(x=>x)? row("Marketing",r.mkt):"") + row("Total payments",r.pay,true)
+    + row("Net cash flow",r.net,true) + row("Opening balance",r.open) + row("Closing balance",r.close,true);
+  setReadout($("cfOut"),[["Lowest balance",`${eurS(lo)} (${MON[li]})`],["Months below zero",String(negs)],["December closing",eurS(r.close[5])],["Overdraft",r.od?"€10 000 arranged":"none"]]);
+  let rec;
+  if(negs===0) rec = `<b>The plan works:</b> the balance stays above zero every month. Before recommending it, check each action is realistic: will the cafés, the mill or the owner really agree?`;
+  else if(r.od && overOD===0) rec = `<b>Covered by the overdraft</b>, but the business pays interest while overdrawn and the bank can reduce the limit. Add an action that tackles the cause.`;
+  else rec = `<b>Problem:</b> the balance goes below ${r.od?"the overdraft limit":"zero"} in ${negs} month${negs===1?"":"s"}, lowest ${eurS(lo)} in ${MON[li]}. ` + (r.vanp[2]===18000? "The main cause is paying €18 000 cash for the van in September: spread that cost (lease or a medium-term loan). " : "") + "Payments are also close to or above receipts in the summer months.";
+  $("cfWork").innerHTML = rec + `<br>Analysis tip: closing balance = opening balance + (receipts − payments). In the original forecast September's net cash flow is ${eurS(CF_BASE.net[2])}.`;
+  cfC.redraw(); }
+
+/* ================= CREATE CANVASES ================= */
+const hero = makeCanvas($("heroCanvas"), 0.8, 260, s => { const d=reduce? null : (heroT*0.07)%1; drawLife(s.ctx,s.w,s.h,{dot:d,stage:d==null?1:STB.findIndex((b,i)=>d>=b&&d<STB[i+1])}); }, 420);
+const opC = makeCanvas($("opC"), 0.5, 300, s => drawOps(s.ctx,s.w,s.h,{items:Object.entries(opS.ans).map(([k,v])=>[OPS[k][3],v,v===OPS[k][1]])}), 380);
+const evC = makeCanvas($("evC"), 0.45, 250, s => drawLife(s.ctx,s.w,s.h,{stage:evStage,dot:(STB[evStage]+STB[evStage+1])/2}), 360);
+const beC = makeCanvas($("beC"), 0.55, 300, s => { const P=PRODS[be.p]; drawBE(s.ctx,s.w,s.h,{fc:P.fc,vc:P.vc,price:bePrice(),qmax:P.qmax,pts:be.pts,fit:be.fit,unit:P.unit}); }, 440);
+const rvC = makeCanvas($("rvC"), 0.5, 280, s => { const r=rvCalc(+$("rvP1").value,+$("rvP2").value,+$("rvN").value,+$("rvCh").value); drawRev(s.ctx,s.w,s.h,r); }, 400);
+const fnC = makeCanvas($("fnC"), 0.5, 290, s => drawTerms(s.ctx,s.w,s.h,{done:fnDone()}), 360);
+const cfC = makeCanvas($("cfC"), 0.5, 280, s => { const r=cfCalc(cf.on); drawCash(s.ctx,s.w,s.h,{close:r.close,od:r.od}); }, 400);
+predC = makeCanvas($("predC"), 0.5, 180, s => { const ans=PRED[pd.k<0?0:pd.k][1];
+  if(pd.shown) drawWhichP(s.ctx,s.w,s.h,{ans,bgc:C["surface-2"]});
+  else { bg(s.ctx,s.w,s.h,C["surface-2"]); text(s.ctx,"?",s.w/2,s.h/2+18,C.muted,F(56),"center"); text(s.ctx,"The answer appears here",s.w/2,s.h-14,C.muted,F(11,600),"center"); } }, 300);
+pdNew();
+// Learn minis
+const L0 = PRODS[0];
+const MINI = {
+  ops:o=>s=>drawOps(s.ctx,s.w,s.h,{compact:true,items:OPS_ALL,...o}),
+  life:o=>s=>drawLife(s.ctx,s.w,s.h,{compact:true,stage:1,...o}),
+  be:o=>s=>drawBE(s.ctx,s.w,s.h,{compact:true,fc:L0.fc,vc:L0.vc,price:L0.price,qmax:L0.qmax,...o}),
+  rev:o=>s=>drawRev(s.ctx,s.w,s.h,{compact:true,...RV_DEF,...o}),
+  terms:o=>s=>drawTerms(s.ctx,s.w,s.h,{compact:true,all:true,...o}),
+  cash:o=>s=>drawCash(s.ctx,s.w,s.h,{compact:true,close:CF_BASE.close,...o}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, 0.62, 230, MINI[kind](o), 380); });
+// Infographic minis
+document.querySelectorAll("canvas[data-mini]").forEach(el=>makeCanvas(el,0.75,200,s=>MINI[el.dataset.mini]({bgc:C["surface-2"]})(s)));
+opNew(); evRender(); beSetProd(0); fvNew(); rvRender(); srNew(); fnNew(); cfRender();
+
+/* ================= LOOP / THEME / START ================= */
+
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>

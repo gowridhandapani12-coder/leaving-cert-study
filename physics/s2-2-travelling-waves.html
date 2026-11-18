@@ -1,0 +1,1671 @@
+<title>Travelling Waves Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<style>
+:root{--band-ink:#3b2b21}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--surface)}
+.xlink:hover{border-color:var(--terra)}
+.working.wrap{white-space:normal;font-family:var(--f-body);font-size:.9rem}
+.spec-bullets{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+</style>
+<style>
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.rc-card{display:grid;gap:8px;padding:16px}
+.rc-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.rc-card .ico svg{width:24px;height:24px}
+.rc-card p{font-size:.9rem;margin:0}
+.rc-card p b{color:var(--terra)}
+</style>
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2.5-6 5-6 7.5 0s5 6 7.5 0 3.5-4 5-2"/><path d="M16 19h6M19 16l3 3-3 3"/></svg></div>
+        <div style="min-width:0"><b>Travelling Waves</b><span>Leaving Cert Physics · Strand 2 · Section 2.2</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details open><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="here"><span class="mono">2.2</span>Travelling waves</li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 2 · Section 2.2 · Travelling waves</span>
+          <h1 style="margin-top:12px">The wave moves on.<br>The rope <em>stays put</em>.<br>Energy travels.</h1>
+          <p class="lede">A wave is a disturbance that carries energy from place to place without carrying matter. Learn the two kinds of wave, the words that describe them, the wave equation v = fλ, why bigger waves carry more energy, and what happens at resonance.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="A transverse wave travelling along a rope of beads. One marked bead moves only up and down while the energy moves along."></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/2</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">2.2.1</span><span>model wave motion</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">2.2.2</span><span>investigate resonance in real life situations using secondary sources</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">Students learn about: travelling waves as models of disturbances transferring energy without transferring matter</p>
+        <ul class="spec-bullets"><li>mechanical/electromagnetic waves longitudinal/ transverse waves</li><li>radiation</li><li>wave characteristics: rest position, displacement, trough, crest, amplitude, wavelength, velocity, time period, frequency</li><li>the relationship between amplitude and energy carried by a wave</li><li>resonance as the observed phenomenon when driving frequency = the natural frequency of vibration</li></ul>
+        <p class="result" style="margin-top:10px">Equations for this section: T = 1/f, v = fλ and c = fλ. The electromagnetic spectrum is in <a href="s2-4-electromagnetic-energy.html">2.4</a>, sound in <a href="s2-5-sound-energy.html">2.5</a> and stationary waves in <a href="s2-6-superposition.html">2.6</a>.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Shake a rope, push a slinky, measure ripples, pump up the amplitude and drive pendulums into resonance. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="transfer">
+        <div class="labhead"><span class="pill t">Energy, not matter</span><p class="goal">Shake the end of a 4 m rope. Watch the marked bead: does it travel along with the wave?</p></div>
+        <div class="panel sim">
+          <canvas id="trC" aria-label="A rope of beads carrying a transverse wave, with one bead marked"></canvas>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Medium</span><div class="btns" id="trM"><button data-m="trans" aria-pressed="true">Rope</button><button data-m="long">Slinky</button><button data-m="light">Light</button></div></div>
+            <div class="ctl"><label for="trF">Frequency <output id="trFo">1.0 Hz</output></label><input type="range" id="trF" min="0.5" max="3" step="0.1" value="1"></div>
+            <div class="ctl"><label for="trA">Amplitude <output id="trAo">60%</output></label><input type="range" id="trA" min="0.2" max="1" step="0.05" value="0.6"></div>
+            <div class="ctl"><span class="lbl">Animation</span><div class="btns"><button id="trPlay" aria-pressed="true">Pause</button><button id="trReset">Restart clock</button></div></div>
+          </div>
+          <div class="readout" id="trOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Watch the marked bead for 10 s. How far along the rope does it move?</div><div class="try"><b>2</b>Double the frequency. What happens to the wavelength?</div><div class="try"><b>3</b>Light has no beads at all. What is "waving"?</div></div>
+      </div>
+
+      <div class="lab" data-lab="types" hidden>
+        <div class="labhead"><span class="pill t">Transverse or longitudinal?</span><p class="goal">Compare the direction the particles vibrate with the direction the wave travels. Then sort ten real waves.</p></div>
+        <div class="panel sim">
+          <canvas id="tyC" aria-label="Particle model of a wave, transverse or longitudinal, with arrows for vibration and travel"></canvas>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Wave type</span><div class="btns" id="tyM"><button data-m="trans" aria-pressed="true">Transverse</button><button data-m="long" aria-pressed="false">Longitudinal</button></div></div>
+            <div class="ctl"><span class="lbl">Animation</span><div class="btns"><button id="tyPlay" aria-pressed="true">Pause</button></div></div>
+          </div>
+          <div class="readout" id="tyOut"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Sort ten waves</h3></div>
+          <div class="srt" id="tyList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="tyReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="tySOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>In the longitudinal wave, find a compression (C). Does it move along?</div><div class="try"><b>2</b>Why can't sound travel through space?</div><div class="try"><b>3</b>Which seismic wave is transverse: P or S?</div></div>
+      </div>
+
+      <div class="lab" data-lab="char" hidden>
+        <div class="labhead"><span class="pill t">Anatomy of a wave</span><p class="goal">Change the amplitude, wavelength and frequency. Switch between a displacement–distance graph (a snapshot) and a displacement–time graph (one point watched over time).</p></div>
+        <div class="panel sim">
+          <canvas id="chC" aria-label="Graph of a wave with crest, trough, amplitude and wavelength labelled"></canvas>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Graph</span><div class="btns" id="chG"><button data-g="x" aria-pressed="true">Displacement–distance</button><button data-g="t" aria-pressed="false">Displacement–time</button></div></div>
+            <div class="ctl"><label for="chA">Amplitude A <output id="chAo">3.0 cm</output></label><input type="range" id="chA" min="1" max="5" step="0.5" value="3"></div>
+            <div class="ctl"><label for="chL">Wavelength λ <output id="chLo">40 cm</output></label><input type="range" id="chL" min="10" max="60" step="5" value="40"></div>
+            <div class="ctl"><label for="chF">Frequency f <output id="chFo">1.0 Hz</output></label><input type="range" id="chF" min="0.5" max="5" step="0.5" value="1"></div>
+            <div class="ctl"><span class="lbl">Animation</span><div class="btns"><button id="chPlay" aria-pressed="false">Play</button></div></div>
+          </div>
+          <div class="readout" id="chOut"></div>
+          <div class="working wrap" id="chWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>On the time graph, what does the distance between crests show now?</div><div class="try"><b>2</b>Set f = 2 Hz and λ = 50 cm. What is the wave speed?</div><div class="try"><b>3</b>Does changing the amplitude change the speed?</div></div>
+      </div>
+
+      <div class="lab" data-lab="speed" hidden>
+        <div class="labhead"><span class="pill t">Experiment: ripple tank</span><p class="goal">Verify v = fλ. A stroboscope freezes the ripples. For each frequency, slide the ruler so it covers exactly 5 wavelengths (1st to 6th bright line), record it, then plot f against 1/λ.</p></div>
+        <div class="panel sim">
+          <canvas id="tkC" aria-label="Overhead view of a ripple tank with bright lines for crests and a ruler to measure wavelength"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Dipper frequency</span><div class="btns" id="tkF"><button data-v="6" aria-pressed="true">6 Hz</button><button data-v="8">8 Hz</button><button data-v="10">10 Hz</button><button data-v="12">12 Hz</button><button data-v="15">15 Hz</button><button data-v="20">20 Hz</button><button data-v="25">25 Hz</button></div></div>
+            <div class="ctl" style="grid-column:1/-1"><label for="tkD">Ruler length d <output id="tkDo">10.0 cm</output></label><input type="range" id="tkD" min="0.01" max="0.28" step="0.0005" value="0.10"></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="tkRec">Record d</button><button id="tkStrobe" aria-pressed="true">Strobe on</button><button id="tkClear">Clear</button><button id="tkNew">New depth</button><button id="tkReveal">Reveal answer</button></div></div>
+          </div>
+          <div class="readout" id="tkOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>f (Hz)</th><th>5λ (cm)</th><th>λ (cm)</th><th>1/λ (m⁻¹)</th><th></th></tr></thead><tbody id="tkTable"></tbody></table><div class="empty" id="tkEmpty">No readings yet. Measure five or more frequencies.</div></div>
+            <div class="graphbox"><canvas id="tkGraph" aria-label="Graph of frequency f against 1/λ"></canvas><p class="result" id="tkResult"></p></div>
+          </div>
+        </div>
+        <p class="result">The water depth sets the wave speed. Each "new depth" hides a different speed for you to find from your graph.</p>
+        <div class="tries"><div class="try"><b>1</b>Why measure 5 wavelengths and divide by 5, instead of measuring one?</div><div class="try"><b>2</b>Why plot f against 1/λ? What is the slope?</div><div class="try"><b>3</b>Turn the strobe off. Why is it so hard to measure now?</div></div>
+      </div>
+
+      <div class="lab" data-lab="amp" hidden>
+        <div class="labhead"><span class="pill t">Amplitude and energy</span><p class="goal">A wave-energy buoy lights bulbs. Change the wave's amplitude and see how much energy it delivers.</p></div>
+        <div class="panel sim">
+          <canvas id="amC" aria-label="Sea waves lifting a buoy, with up to nine bulbs lit by the energy delivered"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="amA">Amplitude A <output id="amAo">1.0 m</output></label><input type="range" id="amA" min="0.5" max="3" step="0.5" value="1"></div>
+          </div>
+          <div class="readout" id="amOut"></div>
+          <div class="working wrap" id="amWork"></div>
+        </div>
+        <p class="result">Simple model: energy ∝ A². A 1.0 m wave lights one bulb. Real wave-energy devices depend on wave period and design too.</p>
+        <div class="tries"><div class="try"><b>1</b>Double the amplitude from 1 m to 2 m. How many bulbs?</div><div class="try"><b>2</b>What amplitude lights 9 bulbs?</div><div class="try"><b>3</b>Why are storm waves so destructive?</div></div>
+      </div>
+
+      <div class="lab" data-lab="res" hidden>
+        <div class="labhead"><span class="pill t">Barton's pendulums</span><p class="goal">The heavy driver pendulum shakes the string all five pendulums hang from. Change the driver's length and find which pendulum resonates.</p></div>
+        <div class="panel sim">
+          <canvas id="baC" aria-label="A heavy driver pendulum and five lighter pendulums of different lengths hanging from one string"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="baL">Driver length <output id="baLo">0.60 m</output></label><input type="range" id="baL" min="0.2" max="1" step="0.01" value="0.6"></div>
+            <div class="ctl"><span class="lbl">Damping</span><div class="btns" id="baQ"><button data-q="12" aria-pressed="true">Light (air)</button><button data-q="3" aria-pressed="false">Heavy (card sails)</button></div></div>
+            <div class="ctl"><span class="lbl">Animation</span><div class="btns"><button id="baPlay" aria-pressed="true">Pause</button></div></div>
+          </div>
+          <div class="readout" id="baOut"></div>
+        </div>
+        <div class="panel sim">
+          <canvas id="rcC" aria-label="Resonance curves: amplitude of each pendulum against driving frequency, with a line at the current driving frequency"></canvas>
+          <div class="working wrap" id="baWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Set the driver to 0.75 m. Which pendulum swings most, and why?</div><div class="try"><b>2</b>Switch to heavy damping. What happens to the peaks?</div><div class="try"><b>3</b>Name a real bridge that swayed because of resonance.</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of travelling waves"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Secondary sources · LO 2.2.2</p><h2>Resonance in real life</h2></div><p>Six cases to investigate. For each: what vibrated, what drove it, and what we learned. Check every claim against more than one reliable source.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Modelling wave motion · LO 2.2.1</p><h2>Three pictures to know</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="trans"></canvas><h3>Transverse</h3><p>Particles vibrate at right angles to the direction the wave travels.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="long"></canvas><h3>Longitudinal</h3><p>Particles vibrate along the direction of travel, making compressions and rarefactions.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="wave"></canvas><h3>Wave anatomy</h3><p>Rest position, crest, trough, amplitude and wavelength on one graph.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Secondary data</p><h2>How fast do waves travel?</h2></div><p>Typical speeds, on a log scale: each step of the bar is ten times faster.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Where you meet it</p><h2>Travelling waves around you</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>A wave transfers <b>energy</b>, not matter. Say it in those words.</li>
+            <li>Transverse vs longitudinal: compare the <b>direction of vibration</b> with the <b>direction of travel</b>.</li>
+            <li>Mechanical waves need a <b>medium</b>; electromagnetic waves don't.</li>
+            <li>Amplitude is measured from the <b>rest position</b> to a crest, not crest to trough.</li>
+            <li>Write v = fλ, substitute, then answer <b>with a unit</b>. Convert cm to m and MHz to Hz first.</li>
+            <li>T = 1/f: a 50 Hz wave has a period of <b>0.02 s</b>.</li>
+            <li>Energy ∝ A²: double the amplitude, <b>four times</b> the energy.</li>
+            <li>Resonance: <b>driving frequency = natural frequency</b>, so the amplitude becomes large. Give a named real example.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The verb tells you what the examiner wants. The learning outcomes for this section use model and investigate.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="text" placeholder="e.g. 0.68 or 5.2e14" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Read the wave</h2></div></div>
+          <canvas id="predC" aria-label="A wave graph with labelled axes to read values from"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" data-g="0"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next graph</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: amplitude, crest, resonance, Hz…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>Travelling waves. Distances in metres, times in seconds, frequencies in hertz.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Wave equation</span><span class="big">v = fλ</span><dl><dt>v</dt><dd>wave speed, m/s</dd><dt>f</dt><dd>frequency, Hz</dd><dt>λ</dt><dd>wavelength, m</dd></dl><div class="ex">f = 20 Hz, λ = 0.50 m: v = 10 m/s</div></div>
+        <div class="panel fcell"><span class="pill">Period</span><span class="big">T = 1 / f</span><dl><dt>T</dt><dd>time for one complete wave, s</dd></dl><div class="ex">f = 50 Hz: T = 0.02 s</div></div>
+        <div class="panel fcell"><span class="pill">Electromagnetic waves</span><span class="big">c = fλ</span><dl><dt>c</dt><dd>speed of light = 3.0 × 10⁸ m/s in a vacuum</dd></dl><div class="ex">f = 100 MHz: λ = 3.0 × 10⁸ / 1.0 × 10⁸ = 3.0 m</div></div>
+        <div class="panel fcell"><span class="pill">Counting waves</span><span class="big">f = number of waves ÷ time</span><dl><dt>e.g.</dt><dd>30 waves in 10 s → 3 Hz</dd></dl></div>
+        <div class="panel fcell"><span class="pill">From crests</span><span class="big">λ = distance ÷ (number of crests − 1)</span><dl><dt>e.g.</dt><dd>6 crests span 25 cm → λ = 5 cm</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Amplitude and energy</span><span class="big">E ∝ A²</span><dl><dt>×2 amplitude</dt><dd>×4 energy</dd><dt>×3 amplitude</dt><dd>×9 energy</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Resonance</span><span class="big">f(driving) = f(natural)</span><dl><dt>result</dt><dd>large-amplitude vibration; energy transfer is most efficient</dd><dt>damping</dt><dd>lowers and widens the peak</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Graph</span><span class="big">f against 1/λ: slope = v</span><dl><dt>straight line through the origin</dt><dd>verifies f ∝ 1/λ, so v is constant</dd></dl></div>
+      </div>
+      <footer>
+        <p>Built on section 2.2 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes are quoted from the specification. Experiment data is simulated. Wave speeds and real-life cases are rounded summaries of published sources; check them against your own sources for your investigation.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent","--band-ink"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  transfer:'<path d="M2 12c2.5-6 5-6 7.5 0s5 6 7.5 0"/><path d="M17 12h5M19 9l3 3-3 3"/><circle cx="9.5" cy="12" r="1.8"/>',
+  types:'<path d="M2 8c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M3 17h1M6 17h1M8 17h1M10 17h1M15 17h1M18 17h1M20 17h1"/>',
+  char:'<path d="M2 12h20" stroke-dasharray="2 2"/><path d="M2 12c2.5-7 5-7 7.5 0s5 7 7.5 0"/><path d="M5.7 6.8v5"/>',
+  speed:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 5v14M10 5v14M14 5v14M18 5v14"/>',
+  amp:'<path d="M2 14c2-8 4-8 6 0s4 8 6 0"/><path d="M17 4h4M19 2v4"/><circle cx="19" cy="17" r="3"/><path d="M19 14v-2"/>',
+  res:'<path d="M2 4h20"/><path d="M5 4l-2 9M10 4v12M15 4l3 9M20 4l-1 6"/><circle cx="3" cy="14" r="1.6"/><circle cx="10" cy="17" r="1.6"/><circle cx="18" cy="14" r="1.6"/><circle cx="19" cy="11" r="1.6"/>',
+  bridge:'<path d="M2 18h20M4 18v-6M20 18v-6M2 12c4-6 16-6 20 0"/><path d="M8 18v-7M12 18v-8M16 18v-7"/>',
+  march:'<circle cx="7" cy="4" r="2"/><circle cx="16" cy="4" r="2"/><path d="M7 6v7l-2 6M7 13l2 6M16 6v7l-2 6M16 13l2 6"/>',
+  wind:'<path d="M3 8h11a3 3 0 10-3-3M3 12h15a3 3 0 11-3 3M3 16h8"/>',
+  quake:'<path d="M2 12h3l2-5 3 10 3-8 2 5 2-2h5"/>',
+  tower:'<path d="M9 22l1-18h4l1 18M7 22h10M10 8h4M10 13h4"/><circle cx="12" cy="17" r="1.5"/>',
+  glass:'<path d="M7 3h10l-1 7a4 4 0 01-8 0z"/><path d="M12 14v6M8 21h8"/>',
+  radio:'<rect x="3" y="8" width="18" height="12" rx="2"/><circle cx="15" cy="14" r="3"/><path d="M6 12h4M6 15h4M8 8l9-5"/>',
+  sea:'<path d="M2 15c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 20c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><circle cx="16" cy="7" r="3"/>',
+  phone:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+  people:'<circle cx="5" cy="9" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="19" cy="9" r="2"/><path d="M5 11v8M12 8v11M19 11v8"/>',
+  scan:'<path d="M4 20c0-5 3.5-9 8-9s8 4 8 9"/><path d="M12 3v5M9 5l3 3 3-3"/>',
+  guitar:'<path d="M14 10l6-6M18 2l4 4"/><path d="M9.5 9.5a4 4 0 00-5.6 1.1c-1.8 2.6-.6 5.3 1.6 7.4s4.8 3.4 7.4 1.6a4 4 0 001.1-5.6 3 3 0 00-4.5-4.5z"/><circle cx="9" cy="15" r="1.5"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"transfer", name:"Energy, not matter", short:"A wave is a disturbance that carries energy; the medium stays put. Mechanical and electromagnetic waves.", tint:"var(--blush)"},
+  {id:"types", name:"Transverse & longitudinal", short:"Vibration across or along the direction of travel. Compressions and rarefactions.", tint:"var(--apricot)"},
+  {id:"char", name:"Wave characteristics", short:"Rest position, displacement, crest, trough, amplitude, wavelength, period and frequency.", tint:"var(--sage)"},
+  {id:"speed", name:"The wave equation", short:"v = fλ and T = 1/f. Verify it with a ripple tank.", tint:"var(--cream)"},
+  {id:"amp", name:"Amplitude & energy", short:"Bigger waves carry more energy: energy ∝ amplitude².", tint:"var(--blush)"},
+  {id:"res", name:"Resonance", short:"When the driving frequency equals the natural frequency, the amplitude grows large.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as / symbol, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Wave","","A disturbance that transfers energy from one place to another without transferring matter.","transfer"],
+  ["Travelling wave","progressive wave","A wave that moves through a medium or space, carrying energy away from its source.","transfer"],
+  ["Medium","","The material a mechanical wave travels through, e.g. a rope, water, air or rock.","transfer"],
+  ["Mechanical wave","","A wave that needs a medium to travel, e.g. sound, water waves, waves on a string, seismic waves.","transfer"],
+  ["Electromagnetic wave","EM wave","A wave of changing electric and magnetic fields. It needs no medium and travels at 3.0 × 10⁸ m/s in a vacuum.","transfer","c = fλ"],
+  ["Radiation","","The transfer of energy by electromagnetic waves, e.g. heat from the Sun reaching Earth through space.","transfer"],
+  ["Energy transfer","","Moving energy from one place to another. Waves do this without moving the medium along with them.","transfer"],
+  ["Pulse","","A single disturbance that travels through a medium.","transfer"],
+  ["Oscillation","vibration","A repeated back-and-forth motion about a rest position.","transfer"],
+  ["Vacuum","","A space with no particles. Electromagnetic waves can cross it; mechanical waves cannot.","transfer"],
+  ["Transverse wave","","A wave in which the particles vibrate at right angles (perpendicular) to the direction the wave travels, e.g. light, waves on a string.","types"],
+  ["Longitudinal wave","","A wave in which the particles vibrate parallel to the direction the wave travels, e.g. sound.","types"],
+  ["Compression","C","A region of a longitudinal wave where the particles are pushed close together (higher pressure).","types"],
+  ["Rarefaction","R","A region of a longitudinal wave where the particles are spread out (lower pressure).","types"],
+  ["Seismic wave","","A wave that travels through the Earth after an earthquake. P waves are longitudinal; S waves are transverse.","types"],
+  ["P wave","primary wave","A longitudinal seismic wave. It is the fastest and can travel through solids and liquids.","types"],
+  ["S wave","secondary wave","A transverse seismic wave. It is slower than a P wave and cannot travel through liquids.","types"],
+  ["Rest position","equilibrium position","The position of the medium when no wave is passing.","char"],
+  ["Displacement","","How far a point on the wave is from its rest position, in a stated direction.","char"],
+  ["Crest","","A point of maximum positive displacement on a transverse wave (the top of the wave).","char"],
+  ["Trough","","A point of maximum negative displacement on a transverse wave (the bottom of the wave).","char"],
+  ["Amplitude","A","The maximum displacement from the rest position. Unit: metre (m).","char"],
+  ["Wavelength","λ (lambda)","The distance between two neighbouring points in phase, e.g. crest to crest. Unit: metre (m).","char"],
+  ["Frequency","f","The number of complete waves produced (or passing a point) per second. Unit: hertz (Hz).","char","f = 1 / T"],
+  ["Hertz","Hz","The unit of frequency. 1 Hz = one wave per second.","char"],
+  ["Period","T","The time taken for one complete wave to pass a point. Unit: second (s).","char","T = 1 / f"],
+  ["In phase","","Two points that are at the same stage of their vibration at the same time, e.g. two crests.","char"],
+  ["Displacement–distance graph","","A snapshot of the whole wave at one instant. Crest to crest = wavelength.","char"],
+  ["Displacement–time graph","","How one point on the wave moves over time. Crest to crest = period.","char"],
+  ["Wave speed","velocity, v","The distance a wave travels per second. Unit: m/s.","speed","v = fλ"],
+  ["Wave equation","","v = fλ: wave speed equals frequency times wavelength.","speed","v = fλ"],
+  ["Speed of light","c","3.0 × 10⁸ m/s in a vacuum. All electromagnetic waves travel at this speed in a vacuum.","speed","c = fλ"],
+  ["Ripple tank","","A shallow tray of water with a vibrating dipper, used to show and measure water waves.","speed"],
+  ["Stroboscope","strobe","A flashing light. When it flashes at the wave frequency the waves appear to stand still, so they can be measured.","speed"],
+  ["Wavefront","","A line joining points on a wave that are in phase, e.g. a bright line in a ripple tank.","speed"],
+  ["Energy and amplitude","","The energy carried by a wave is proportional to the square of its amplitude.","amp","E ∝ A²"],
+  ["Wave energy","ocean energy","Energy taken from moving sea waves to generate electricity.","amp"],
+  ["Natural frequency","","The frequency at which an object vibrates when it is disturbed and then left to vibrate freely.","res"],
+  ["Driving frequency","forcing frequency","The frequency of a periodic force applied to an object.","res"],
+  ["Forced vibration","forced oscillation","The vibration of an object made to vibrate at the frequency of an outside driving force.","res"],
+  ["Resonance","","The large-amplitude vibration observed when the driving frequency equals the natural frequency of vibration.","res","f(driving) = f(natural)"],
+  ["Damping","","The loss of energy from a vibrating system, e.g. by friction or air resistance. It reduces and widens the resonance peak.","res"],
+  ["Barton's pendulums","","A demonstration in which a heavy driver pendulum makes several lighter pendulums swing; the one of equal length resonates.","res"],
+  ["Tuned mass damper","","A heavy mass mounted in a tall building or bridge that moves to reduce swaying near resonance.","res"],
+  ["Resonance curve","","A graph of amplitude against driving frequency, with a peak at the natural frequency.","res"],
+  ["Secondary source","","Information collected by someone else, e.g. a report, data set, article or video, used in an investigation.","res"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["energy","Energy transfer"],["medium","Medium"],["mechanical","Mechanical wave"],["electromagnetic","Electromagnetic wave"],["radiation","Radiation"],["transverse","Transverse wave"],["longitudinal","Longitudinal wave"],["compressions","Compression"],["rarefactions","Rarefaction"],["rest position","Rest position"],["amplitude","Amplitude"],["wavelength","Wavelength"],["frequency","Frequency"],["period","Period"],["crest","Crest"],["trough","Trough"],["stroboscope","Stroboscope"],["natural frequency","Natural frequency"],["driving frequency","Driving frequency"],["damping","Damping"],["resonance","Resonance"],["Hz","Hertz",1]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function dbl(ctx,x1,y1,x2,y2,color,w=2){ line(ctx,x1,y1,x2,y2,color,w); const a=Math.atan2(y2-y1,x2-x1); arrowHead(ctx,x2,y2,a,color,8); arrowHead(ctx,x1,y1,a+Math.PI,color,8); }
+function dimArrow(ctx,xa,xb,y,label,col){ line(ctx,xa,y,xb,y,col,1.4); arrowHead(ctx,xa,y,Math.PI,col,7); arrowHead(ctx,xb,y,0,col,7); line(ctx,xa,y-5,xa,y+5,col,1.2); line(ctx,xb,y-5,xb,y+5,col,1.2); if(label) text(ctx,label,(xa+xb)/2,y-5,col,F(12),"center"); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const s3 = x => (+x.toPrecision(3)).toString();
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
+const sup = n => String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(x,d=3){ if(x===0) return "0"; let e=Math.floor(Math.log10(Math.abs(x))), ms=(x/Math.pow(10,e)).toFixed(d-1);
+  if(Math.abs(+ms)>=10){ e++; ms=(x/Math.pow(10,e)).toFixed(d-1); } return e===0? ms : `${ms} × 10${sup(e)}`; }
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+
+/* ================= MODELS + DRAWINGS ================= */
+// A 4 m medium carrying a wave at 2 m/s
+const ROPE_L = 4, ROPE_V = 2;
+function drawMedium(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, mode=o.mode||"trans", f=o.f||1, A=o.A==null?0.6:o.A, t=o.t||0, lam=ROPE_V/f, k=2*Math.PI/lam, om=2*Math.PI*f;
+  const L=cp?12:30, R=cp?12:30, mid=h*(cp?0.56:0.58), X=x=>L+x/ROPE_L*(w-L-R), amp=(cp?0.26:0.24)*h*A, ay=cp?12:20;
+  if(o.energy!==false){ arrow(ctx,X(0.2),ay,X(ROPE_L-0.2),ay,C.olive,cp?2.4:3); if(!cp) text(ctx,"energy travels this way →",w/2,ay+18,C.olive,F(12),"center"); }
+  const ph = x => k*x-om*t, markX=2.0;
+  if(mode==="light"){
+    const fE=x=>mid-amp*Math.sin(ph(x)), fB=x=>mid+amp*0.45*Math.sin(ph(x));
+    [[fB,C.olive,[5,4]],[fE,C.terra,null]].forEach(([fn,col,dash])=>{ ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=cp?2.5:3.5; if(dash) ctx.setLineDash(dash); ctx.beginPath(); for(let s=0;s<=160;s++){ const x=s/160*ROPE_L; s?ctx.lineTo(X(x),fn(x)):ctx.moveTo(X(x),fn(x)); } ctx.stroke(); ctx.restore(); });
+    line(ctx,X(0),mid,X(ROPE_L),mid,C.muted,1,[3,4]);
+    if(!cp){ text(ctx,"electric field",X(0.05),mid-amp-10,C.terra,F(12)); text(ctx,"magnetic field (drawn flat)",X(0.05),mid+amp*0.45+22,C.olive,F(12)); text(ctx,"No particles: an EM wave can cross a vacuum",w/2,h-10,C.muted,F(12,600),"center"); }
+    return;
+  }
+  if(mode==="trans"){
+    const N=cp?27:41, xs=Array.from({length:N},(_,i)=>i/(N-1)*ROPE_L), y=x=>mid-amp*Math.sin(ph(x));
+    ctx.save(); ctx.strokeStyle=C.line; ctx.lineWidth=2; ctx.beginPath(); for(let s=0;s<=160;s++){ const x=s/160*ROPE_L; s?ctx.lineTo(X(x),y(x)):ctx.moveTo(X(x),y(x)); } ctx.stroke(); ctx.restore();
+    if(!cp) line(ctx,X(0),mid,X(ROPE_L),mid,C.muted,1,[3,4]);
+    xs.forEach(x=>circle(ctx,X(x),y(x),cp?3:4.5,C.olive));
+    if(o.mark!==false){ if(!cp||o.arrows) dbl(ctx,X(markX)+(cp?10:16),mid-amp-4,X(markX)+(cp?10:16),mid+amp+4,C.terra,1.6); circle(ctx,X(markX),y(markX),cp?5.5:8,C.terra,C.surface,2); }
+    if(o.arrows&&!cp){ text(ctx,"vibration ↕",X(markX)+24,mid+amp+18,C.terra,F(12)); }
+    return;
+  }
+  // longitudinal: columns of particles displaced along the direction of travel
+  const N=cp?30:Math.max(26,Math.min(54,Math.round((w-L-R)/8))), rows=cp?5:7, sp=ROPE_L/(N-1), sA=0.75*A/k, gapY=(cp?0.36:0.34)*h/rows;
+  for(let i=0;i<N;i++){ const x0=i*sp, x=x0+sA*Math.sin(ph(x0)), mk=o.mark!==false && Math.abs(x0-markX)<sp/2;
+    for(let r=0;r<rows;r++){ const yy=mid+(r-(rows-1)/2)*gapY; circle(ctx,X(x),yy,cp?2.4:3.4,mk?C.terra:C.olive); } }
+  if(!cp){ for(let n=-3;n<6;n++){ const xc=(om*t+Math.PI+2*Math.PI*n)/k, xr=(om*t+2*Math.PI*n)/k;
+      if(xc>0.1&&xc<ROPE_L-0.1) text(ctx,"C",X(xc),mid+rows*gapY/2+20,C.terra,F(14),"center");
+      if(xr>0.1&&xr<ROPE_L-0.1) text(ctx,"R",X(xr),mid+rows*gapY/2+20,C.muted,F(14),"center"); } }
+  if(o.mark!==false && (!cp||o.arrows)){ const xm=markX+sA*Math.sin(ph(markX)); dbl(ctx,X(xm)-(cp?14:22),mid-rows*gapY/2-(cp?6:10),X(xm)+(cp?14:22),mid-rows*gapY/2-(cp?6:10),C.terra,1.6); }
+}
+// Wave graph: displacement against distance (cm) or time (s)
+function drawWave(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, g=o.graph||"x", per=g==="x"? o.lam : o.T, xmax=o.xmax||2.5*per, ph=o.ph||0, ymax=o.labels&&!cp?7:6;
+  const L=cp?10:(o.ticks?44:20), R=cp?10:16, T=cp?10:(o.labels?40:16), B=cp?12:(o.ticks?34:16);
+  const X=v=>L+v/xmax*(w-L-R), Y=v=>T+(h-T-B)/2-v/ymax*(h-T-B)/2;
+  if(o.ticks && !cp){ const st=o.step||niceStep(xmax/5);
+    for(let v=0; v<=xmax+1e-9; v+=st){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,trim(v),X(v),h-B+14,C.muted,M(10),"center"); }
+    for(let v=-6; v<=6; v+=2){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,v,L-6,Y(v)+3,C.muted,M(10),"right"); }
+    text(ctx,g==="x"?"distance (cm) →":"time (s) →",w-R,h-4,C.ink,F(11),"right"); text(ctx,"displacement (cm)",L+4,12,C.ink,F(11)); }
+  line(ctx,L,Y(0),w-R,Y(0),C.muted,1.5,[6,5]);
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=cp?2.5:3.5; ctx.beginPath();
+  for(let px=0;px<=w-L-R;px++){ const v=px/(w-L-R)*xmax, yy=Y(o.A*Math.sin(2*Math.PI*v/per-ph)); px?ctx.lineTo(L+px,yy):ctx.moveTo(L+px,yy); } ctx.stroke(); ctx.restore();
+  if(o.labels){ const c0=per*(((ph/(2*Math.PI)+0.25)%1+1)%1), tr=c0+per/2<=xmax? c0+per/2 : c0-per/2;
+    const crests=[]; for(let v=c0; v<=xmax+1e-9; v+=per) crests.push(v);
+    const fs=cp?10:12;
+    if(crests.length){ const cx=crests[0]; text(ctx,"crest",X(cx),Y(o.A)-(cp?6:10),C.ink,F(fs),"center");
+      if(!cp){ dbl(ctx,X(cx)+(crests.length>1?0:14),Y(0),X(cx)+(crests.length>1?0:14),Y(o.A)+3,C.olive,1.6); text(ctx,"A",X(cx)+6,(Y(0)+Y(o.A))/2+4,C.olive,F(13)); } }
+    if(tr>=0 && tr<=xmax) text(ctx,"trough",X(tr),Y(-o.A)+(cp?14:20),C.ink,F(fs),"center");
+    if(crests.length>1){ const yA=Math.max(cp?8:T-14, Y(o.A)-(cp?16:24)); dimArrow(ctx,X(crests[0]),X(crests[1]),yA,g==="x"?"λ":"T",C.terra); }
+    if(!cp) text(ctx,"rest position",w-R-2,Y(0)-6,C.muted,F(11,600),"right"); }
+}
+// Ripple tank, viewed from above (0.30 m wide)
+const TANK = 0.30, TK_X0 = 0.015;
+function drawTank(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, pad=cp?10:20, top=cp?8:14, rulerH=cp?26:46, tw=w-2*pad, th=h-top-rulerH-(cp?4:8), X=x=>pad+x/TANK*tw, lam=o.lam;
+  rrect(ctx,pad,top,tw,th,cp?8:12,C["surface-2"],C.line,1.5);
+  ctx.save(); ctx.beginPath(); ctx.rect(pad,top,tw,th); ctx.clip();
+  ctx.fillStyle=C.olive; ctx.fillRect(X(0.002),top,cp?4:6,th);
+  const x0=TK_X0+(((o.ph||0)%lam)+lam)%lam;
+  for(let x=x0-lam; x<TANK; x+=lam){ if(x<TK_X0-1e-9) continue;
+    ctx.save(); ctx.globalAlpha=o.blur?0.35:0.95; line(ctx,X(x),top,X(x),top+th,C.apricot,cp?2:(o.blur?6:3.5)); ctx.restore();
+    if(x+lam/2<TANK){ ctx.save(); ctx.globalAlpha=.6; line(ctx,X(x+lam/2),top,X(x+lam/2),top+th,C.grid,cp?1.5:2.5); ctx.restore(); } }
+  ctx.restore();
+  const ry=top+th+(cp?12:16);
+  line(ctx,X(0),ry,X(TANK),ry,C.ink,1.5);
+  for(let mm=0; mm<=300; mm+=5){ const x=mm/1000, big=mm%50===0, mid=mm%10===0; if(cp && !mid) continue; line(ctx,X(x),ry,X(x),ry-(big?9:mid?6:3),C.ink,1); if(big && !cp) text(ctx,mm/10,X(x),ry+14,C.muted,M(10),"center"); }
+  if(!cp) text(ctx,"cm",X(TANK),ry+26,C.muted,M(10),"right");
+  if(o.d!=null){ const xs=TK_X0+(o.blur?0:0), xe=Math.min(TANK,xs+o.d), col=o.match?C.good:C.terra;
+    line(ctx,X(xs),ry-14,X(xe),ry-14,col,cp?3:4); line(ctx,X(xs),ry-20,X(xs),ry-8,col,2); line(ctx,X(xe),ry-20,X(xe),ry-8,col,2);
+    ctx.save(); ctx.setLineDash([3,3]); line(ctx,X(xe),top,X(xe),ry-14,col,1.4); line(ctx,X(xs),top,X(xs),ry-14,col,1.4); ctx.restore();
+    if(!cp) text(ctx,`d = ${(o.d*100).toFixed(2)} cm`,Math.min(X(xe),w-pad-60),top+16,col,F(12),"center"); }
+}
+// Amplitude and energy: sea, buoy and bulbs (energy ∝ A²)
+function drawEnergy(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, A=o.A, E=A*A, t=o.t||0, ww=w*(cp?0.56:0.6), mid=h*0.58, sc=(h*0.12), pad=cp?8:16;
+  const y=x=>mid-sc*A*Math.sin(2*Math.PI*(x/(ww*0.5))-t*2);
+  ctx.save(); ctx.fillStyle=C.sage; ctx.globalAlpha=.55; ctx.beginPath(); ctx.moveTo(pad,h); for(let x=pad;x<=ww;x+=2) ctx.lineTo(x,y(x)); ctx.lineTo(ww,h); ctx.closePath(); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.strokeStyle=C.olive; ctx.lineWidth=cp?2:3; ctx.beginPath(); for(let x=pad;x<=ww;x+=2) x===pad?ctx.moveTo(x,y(x)):ctx.lineTo(x,y(x)); ctx.stroke(); ctx.restore();
+  line(ctx,pad,mid,ww,mid,C.muted,1,[4,4]);
+  const bx=ww*0.62, by=y(bx); rrect(ctx,bx-(cp?8:12),by-(cp?12:18),cp?16:24,cp?16:24,4,C.terra); line(ctx,bx,by-(cp?12:18),bx,by-(cp?22:32),C.ink,2);
+  if(!cp){ dbl(ctx,pad+14,mid,pad+14,mid-sc*A,C.terra,1.6); text(ctx,`A = ${A.toFixed(1)} m`,pad+22,mid-sc*A/2,C.terra,F(12)); }
+  const gx=ww+(w-ww)*0.1, gw=(w-ww)*0.8, cell=Math.min(gw/3,(h-(cp?16:40))/3), r=cell*0.32, oy=cp?8:28;
+  for(let i=0;i<9;i++){ const cx=gx+(i%3+0.5)*(gw/3), cy=oy+(Math.floor(i/3)+0.5)*cell, lit=Math.max(0,Math.min(1,E-i));
+    if(lit>0){ ctx.save(); ctx.globalAlpha=0.25*lit; circle(ctx,cx,cy,r*1.7,C.apricot); ctx.restore(); }
+    circle(ctx,cx,cy,r,lit>0? C.apricot : null, C.muted, 1.5);
+    if(lit>0 && lit<1){ ctx.save(); ctx.fillStyle=C.surface; ctx.globalAlpha=0.6; ctx.beginPath(); ctx.arc(cx,cy,r-1,-Math.PI/2,-Math.PI/2+2*Math.PI*(1-lit)); ctx.lineTo(cx,cy); ctx.fill(); ctx.restore(); }
+    line(ctx,cx-r*0.35,cy+r,cx+r*0.35,cy+r,C.muted,2); }
+  if(!cp) text(ctx,`E ∝ A² → ${s3(E)} bulb${E===1?"":"s"}`,gx+gw/2,18,C.ink,F(12),"center");
+}
+// Barton's pendulums
+const G = 9.8, BA_L = [0.30,0.45,0.60,0.75,0.90], BA_N = ["A","B","C","D","E"], BA_COL = ["olive","apricot","sage","ray","blush"];
+const fNat = L => Math.sqrt(G/L)/(2*Math.PI);
+function resp(fd,fn,Q){ const p=fd/fn, r=1/Math.sqrt(Math.pow(1-p*p,2)+Math.pow(p/Q,2)); return { a:Math.min(1,r/12), ph:Math.atan2(p/Q,1-p*p) }; }
+function drawBarton(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, top=cp?12:22, pad=cp?14:30, scale=(h-top-(cp?20:46))/1.0, fd=fNat(o.Ld), wd=2*Math.PI*fd, t=o.t||0;
+  line(ctx,pad,top,w-pad,top,C.ink,2); line(ctx,pad,top-6,pad,top+6,C.ink,3); line(ctx,w-pad,top-6,w-pad,top+6,C.ink,3);
+  const n=BA_L.length, xs=k=>pad+(w-2*pad)*((k+1.5)/(n+1.5)), dx=pad+(w-2*pad)*0.06;
+  const th0=0.28*Math.sin(wd*t), Ld=o.Ld*scale; line(ctx,dx,top,dx+Ld*Math.sin(th0),top+Ld*Math.cos(th0),C.ink,2);
+  circle(ctx,dx+Ld*Math.sin(th0),top+Ld*Math.cos(th0),cp?8:13,C.terra,C.ink,1.5);
+  if(!cp) text(ctx,"driver",dx,h-26,C.terra,F(12),"center");
+  let best=-1, bA=0; BA_L.forEach((L,k)=>{ const r=resp(fd,fNat(L),o.Q); if(r.a>bA){ bA=r.a; best=k; } });
+  BA_L.forEach((L,k)=>{ const r=resp(fd,fNat(L),o.Q), th=(0.04+0.5*r.a)*Math.sin(wd*t-r.ph)*(o.still?0:1) + (o.still? (0.04+0.5*r.a)*0.9 : 0), x=xs(k), len=L*scale;
+    const bxp=x+len*Math.sin(th), byp=top+len*Math.cos(th);
+    line(ctx,x,top,bxp,byp,C.muted,1.5); circle(ctx,bxp,byp,cp?5:8,C[BA_COL[k]],k===best&&bA>0.5?C.ink:null,2);
+    if(!cp) text(ctx,`${BA_N[k]} ${L.toFixed(2)} m`,x,h-26+((k%2)*14),k===best&&bA>0.5?C.ink:C.muted,F(11),"center"); });
+}
+// Resonance curves for the five pendulums
+const RC_F0 = 0.4, RC_F1 = 1.2;
+function drawCurves(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, L=cp?16:44, R=cp?10:16, T=cp?10:14, B=cp?16:34, X=f=>L+(f-RC_F0)/(RC_F1-RC_F0)*(w-L-R), Y=a=>h-B-a*(h-T-B)/1.05;
+  line(ctx,L,h-B,w-R,h-B,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(!cp){ for(let f=0.4; f<=1.2001; f+=0.2){ text(ctx,f.toFixed(1),X(f),h-B+14,C.muted,M(10),"center"); line(ctx,X(f),h-B,X(f),h-B+4,C.ink,1); }
+    text(ctx,"driving frequency (Hz) →",w-R,h-4,C.ink,F(11),"right"); text(ctx,"amplitude",L+6,T+10,C.ink,F(11)); }
+  const list=o.only!=null? [o.only] : BA_L.map((_,k)=>k);
+  list.forEach(k=>{ const fn=fNat(BA_L[k]); ctx.save(); ctx.strokeStyle=C[BA_COL[k]]; ctx.lineWidth=cp?2.5:2.5; ctx.beginPath();
+    for(let px=0;px<=w-L-R;px+=2){ const f=RC_F0+px/(w-L-R)*(RC_F1-RC_F0), a=resp(f,fn,o.Q).a; px?ctx.lineTo(L+px,Y(a)):ctx.moveTo(L+px,Y(a)); } ctx.stroke(); ctx.restore();
+    if(!cp) text(ctx,BA_N[k],X(fn),Y(resp(fn,fn,o.Q).a)-6,C[BA_COL[k]],F(12),"center"); });
+  if(o.fd!=null){ line(ctx,X(o.fd),T,X(o.fd),h-B,C.terra,2,[5,4]); list.forEach(k=>{ const a=resp(o.fd,fNat(BA_L[k]),o.Q).a; circle(ctx,X(o.fd),Y(a),cp?3.5:5,C.terra); });
+    if(!cp) text(ctx,`driver ${o.fd.toFixed(2)} Hz`,Math.min(X(o.fd)+6,w-R-90),T+30,C.terra,F(12)); }
+}
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); });
+}
+
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "transfer", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2"]; const loState=store.get("s22-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s22-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s22-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  transfer:{ vis:[["medium",{mode:"trans",t:0.3,arrows:true}]], cap:"The wave (and its energy) moves to the right. The marked bead only moves up and down about its rest position.",
+    keys:[["E","A travelling wave is a disturbance that transfers energy from place to place without transferring matter."],["~","Mechanical waves (sound, water waves, waves on a rope) need a medium. Electromagnetic waves (light, radio, X-rays) don't: they can cross a vacuum."],["☀","Radiation is energy carried by electromagnetic waves, e.g. heat and light from the Sun reaching Earth through empty space."]],
+    f:"wave → energy moves · medium → stays put", mistake:"Saying the water travels with a wave. A floating cork bobs up and down as the wave passes, but it stays in roughly the same place." },
+  types:{ vis:[["medium",{mode:"trans",t:0.3,arrows:true,energy:false}],["medium",{mode:"long",t:0.3,arrows:true,energy:false}]], cap:"Top: transverse, vibration across the direction of travel. Bottom: longitudinal, vibration along it, making compressions and rarefactions.",
+    keys:[["⊥","Transverse: particles vibrate perpendicular to the direction of travel. e.g. light and all EM waves, waves on a string, S waves."],["∥","Longitudinal: particles vibrate parallel to the direction of travel. e.g. sound, ultrasound, P waves, a slinky pushed and pulled."],["C R","Longitudinal waves have compressions (particles squeezed together) and rarefactions (particles spread out)."]],
+    f:"compare: direction of vibration vs direction of travel", mistake:"Thinking longitudinal waves have no wavelength. The wavelength is the distance from one compression to the next." },
+  char:{ vis:[["wave",{A:3,lam:40,xmax:100,labels:true}]], cap:"A displacement–distance graph: the dashed line is the rest position. A is the amplitude; λ is the wavelength.",
+    keys:[["A","Amplitude: the maximum displacement from the rest position. Crest = highest point, trough = lowest point."],["λ","Wavelength: the distance between neighbouring points in phase, e.g. crest to crest."],["f","Frequency: waves per second, in hertz (Hz). Period T: time for one wave. T = 1/f."]],
+    f:"T = 1 / f", mistake:"Measuring amplitude from crest to trough. That's twice the amplitude; measure from the rest position." },
+  speed:{ vis:[["tank",{lam:0.024,d:0.12,match:true}]], cap:"Ripple tank with a stroboscope: bright lines are crests. The ruler spans 5 wavelengths, so λ = d ÷ 5.",
+    keys:[["v","The wave equation: v = fλ. Speed (m/s) = frequency (Hz) × wavelength (m)."],["c","For electromagnetic waves in a vacuum, c = fλ with c = 3.0 × 10⁸ m/s."],["↔","In one medium the speed is fixed, so a higher frequency gives a shorter wavelength."]],
+    f:"v = fλ", mistake:"Forgetting to convert units: cm to m and MHz to Hz (× 10⁶) before using v = fλ." },
+  amp:{ vis:[["energy",{A:2}]], cap:"Doubling the amplitude from 1 m to 2 m lights four bulbs, not two: energy ∝ A².",
+    keys:[["A²","The energy carried by a wave is proportional to the square of its amplitude."],["×4","Double the amplitude: four times the energy. Triple it: nine times."],["🌊","That's why storm waves do so much damage, and why loud sounds (big pressure amplitude) can damage hearing."]],
+    f:"E ∝ A²", mistake:"Saying energy is proportional to amplitude. Doubling A gives ×4 energy, not ×2." },
+  res:{ vis:[["curves",{Q:12,fd:0.643,only:2}]], cap:"Amplitude against driving frequency for one pendulum. The peak is at its natural frequency: resonance.",
+    keys:[["f₀","Every object has a natural frequency: the frequency it vibrates at when disturbed and left alone."],["=","Resonance: when the driving frequency equals the natural frequency, energy transfers efficiently and the amplitude becomes large."],["↓","Damping removes energy, lowering and widening the peak. Engineers add dampers to bridges and tall buildings."]],
+    f:"resonance: f(driving) = f(natural)", mistake:"Thinking resonance needs a large force. A small force at the right frequency builds up a large amplitude, like pushing a swing." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const TINTS = ["var(--blush)","var(--apricot)","var(--sage)","var(--cream)"];
+const CASES = [
+  {i:"bridge", n:"Millennium Bridge, London (2000)", what:"The new footbridge swayed sideways on its opening weekend.", why:"Walkers' footsteps fell into step with the bridge's sideways natural frequency, about 1 Hz, so each step pushed at the right moment.", fix:"Closed after two days; dampers were fitted and it reopened in 2002.", chip:["Resonance","real"]},
+  {i:"march", n:"Broughton Suspension Bridge (1831)", what:"A bridge near Manchester collapsed while soldiers marched across it.", why:"Marching in step drove the bridge at a steady frequency close to a natural frequency.", fix:"Soldiers are now told to break step when crossing bridges.", chip:["Resonance","real"]},
+  {i:"quake", n:"Mexico City earthquake (1985)", what:"Many medium-height buildings collapsed while shorter and taller ones survived.", why:"The soft old lake-bed shook at about 2 s per cycle, close to the natural period of buildings of roughly 6 to 15 storeys.", fix:"Building codes now consider the ground's shaking period.", chip:["Resonance","real"]},
+  {i:"tower", n:"Taipei 101 tuned mass damper", what:"A 660-tonne steel ball hangs near the top of the 508 m skyscraper.", why:"Wind and earthquakes could drive the tower near its natural frequency. The ball swings out of step with the building and absorbs energy.", fix:"Damping reduces the sway felt by people inside.", chip:["Damping","neutral"]},
+  {i:"wind", n:"Tacoma Narrows Bridge (1940)", what:"A suspension bridge twisted violently in a steady wind and fell.", why:"Often called resonance, but engineers explain it as aeroelastic flutter: the wind fed energy into a twisting motion. A good test of your sources.", fix:"Bridge decks are now tested in wind tunnels.", chip:["Check the source","alert"]},
+  {i:"radio", n:"Tuning a radio", what:"Turning the dial picks out one station from hundreds.", why:"The tuning circuit has a natural frequency you can change. Only the station broadcasting at that frequency makes it resonate strongly.", fix:"Resonance used on purpose.", chip:["Useful resonance","real"]},
+];
+$("cases").innerHTML = CASES.map((c,k)=>`<div class="panel rc-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${TINTS[k%4]}">${svg(c.i)}</div><h3>${c.n}</h3></div><div class="chips">${chipsHTML([c.chip])}</div><p><b>What happened:</b> ${c.what}</p><p><b>Why:</b> ${c.why}</p><p><b>Outcome:</b> ${c.fix}</p></div>`).join("");
+const SPEEDS = [["Ripples in a ripple tank",0.25],["Ocean swell",12],["Sound in air",343],["Sound in water",1480],["P waves in rock",6000],["Light in glass",2.0e8],["Light in a vacuum",3.0e8]];
+const lg0=-1, lg1=9;
+$("bars").innerHTML = SPEEDS.map(([n,v],k)=>`<div class="barrow"><span><b>${n}</b></span><div class="track"><i style="width:${((Math.log10(v)-lg0)/(lg1-lg0)*100).toFixed(1)}%;background:var(--${k<5?"apricot":"terra"})"></i></div><span class="v">${v>=1e5?sci(v,2):v} m/s</span></div>`).join("") + `<p class="result">Mechanical waves (apricot) need a medium and are far slower than light (terracotta). Speeds are typical rounded values.</p>`;
+const AROUND = [
+  ["people","A Mexican wave","Each fan only stands up and sits down, but the wave races round the stadium: energy (and the pattern) moves, people don't.",[["Energy, not matter","real"],["Transverse","neutral"]],"var(--blush)"],
+  ["sea","Atlantic wave energy","Ireland's west coast gets some of the most powerful waves in Europe. Test sites in Galway Bay and off Belmullet trial wave-energy devices.",[["Energy ∝ A²","real"],["Renewable","neutral"]],"var(--sage)"],
+  ["quake","Earthquake waves","P waves (longitudinal) arrive first, then S waves (transverse). S waves can't pass through the Earth's liquid outer core.",[["Longitudinal and transverse","neutral"],["Mechanical","neutral"]],"var(--apricot)"],
+  ["phone","Wi-Fi and phones","Wi-Fi uses microwaves at 2.4 GHz: λ = 3.0 × 10⁸ ÷ 2.4 × 10⁹ = 12.5 cm. EM waves need no medium.",[["c = fλ","real"],["Electromagnetic","neutral"]],"var(--cream)"],
+  ["scan","Ultrasound scans","Sound above 20 kHz travels into the body as a longitudinal wave and reflects back to build an image.",[["Longitudinal","neutral"],["Mechanical","neutral"]],"var(--blush)"],
+  ["guitar","A plucked string","Waves travel along the string and reflect from the ends. The string's natural frequencies set the notes (see 2.6).",[["Natural frequency","real"],["Transverse","neutral"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"transfer",label:"Energy transfer",col:"var(--blush)",leaves:[["No matter moves","The medium vibrates in place."],["Mechanical","Needs a medium."],["Electromagnetic","Crosses a vacuum."],["Radiation","Energy carried by EM waves."]]},
+  {id:"types",label:"Two types",col:"var(--apricot)",leaves:[["Transverse","Vibration ⊥ travel."],["Longitudinal","Vibration ∥ travel."],["C and R","Compressions, rarefactions."]]},
+  {id:"char",label:"Characteristics",col:"var(--sage)",leaves:[["Amplitude A","Max displacement from rest."],["Wavelength λ","Crest to crest."],["Frequency f","Waves per second, Hz."],["Period T","T = 1/f."]]},
+  {id:"speed",label:"Wave equation",col:"var(--cream)",leaves:[["v = fλ","Speed = frequency × wavelength."],["c = fλ","c = 3.0 × 10⁸ m/s."],["Ripple tank","Verify with f vs 1/λ."]]},
+  {id:"amp",label:"Energy",col:"var(--blush)",leaves:[["E ∝ A²","Double A, ×4 energy."],["Wave power","Bigger waves, more energy."]]},
+  {id:"res",label:"Resonance",col:"var(--sage)",leaves:[["Natural frequency","Free vibration."],["f drive = f natural","Large amplitude."],["Damping","Lowers the peak."],["Real life","Bridges, buildings, radios."]]},
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Travelling</text><text x="${cx}" y="${cy+22}" text-anchor="middle">waves</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["transfer","What is a wave?","A disturbance that transfers energy from one place to another without transferring matter."],
+  ["transfer","A cork floats on a pond as ripples pass. What does it do?","It bobs up and down about the same place. The energy moves on; the water (and cork) does not travel with the wave."],
+  ["transfer","Distinguish between mechanical and electromagnetic waves.","Mechanical waves need a medium (e.g. sound, water waves). Electromagnetic waves need no medium and can travel through a vacuum (e.g. light, radio)."],
+  ["transfer","What is radiation?","The transfer of energy by electromagnetic waves, e.g. heat and light from the Sun crossing empty space."],
+  ["transfer","Why can't sound travel through space?","Sound is a mechanical wave and needs particles to vibrate. Space is a vacuum."],
+  ["types","Define a transverse wave.","A wave in which the particles vibrate perpendicular to the direction the wave travels."],
+  ["types","Define a longitudinal wave.","A wave in which the particles vibrate parallel to the direction the wave travels."],
+  ["types","Give two examples of each type of wave.","Transverse: light (all EM waves), waves on a string, S waves. Longitudinal: sound, ultrasound, P waves."],
+  ["types","What are compressions and rarefactions?","Compression: particles pushed close together (high pressure). Rarefaction: particles spread out (low pressure)."],
+  ["types","What is the wavelength of a longitudinal wave?","The distance from one compression to the next (or one rarefaction to the next)."],
+  ["char","Define amplitude.","The maximum displacement of a point on the wave from its rest position."],
+  ["char","Define wavelength.","The distance between two neighbouring points in phase, e.g. crest to crest."],
+  ["char","Define frequency. Unit?","The number of complete waves passing a point (or produced) per second. Unit: hertz (Hz)."],
+  ["char","Define period. How is it related to frequency?","The time for one complete wave to pass a point. T = 1/f."],
+  ["char","What is a crest and a trough?","Crest: point of maximum positive displacement. Trough: point of maximum negative displacement."],
+  ["char","On a displacement–time graph, what is the distance from crest to crest?","The period T (not the wavelength)."],
+  ["speed","State the wave equation.","v = fλ: wave speed = frequency × wavelength."],
+  ["speed","A wave has f = 20 Hz and λ = 0.5 m. Find v.","v = fλ = 20 × 0.5 = 10 m/s."],
+  ["speed","Find the wavelength of a 100 MHz radio wave.","λ = c/f = 3.0 × 10⁸ / 1.0 × 10⁸ = 3.0 m."],
+  ["speed","How do you measure wavelength in a ripple tank?","Freeze the waves with a stroboscope, measure the distance across several (e.g. 5) wavelengths with a ruler and divide."],
+  ["speed","Why plot f against 1/λ?","v = fλ gives f = v × (1/λ): a straight line through the origin with slope v."],
+  ["amp","How does the energy of a wave depend on its amplitude?","Energy is proportional to amplitude squared: E ∝ A²."],
+  ["amp","A wave's amplitude is tripled. What happens to its energy?","It increases 9 times (3²)."],
+  ["res","What is the natural frequency of an object?","The frequency at which it vibrates when disturbed and left to vibrate freely."],
+  ["res","What is resonance?","The large-amplitude vibration observed when the driving frequency equals the natural frequency of vibration."],
+  ["res","Describe Barton's pendulums.","A heavy driver pendulum and several light pendulums hang from one string. The light pendulum with the same length as the driver swings with the largest amplitude: resonance."],
+  ["res","What is damping and how does it affect resonance?","Loss of energy (e.g. friction, air resistance). It lowers the peak amplitude and widens the resonance curve."],
+  ["res","Give two real-life examples of resonance.","e.g. Millennium Bridge sway (2000), soldiers breaking step on bridges, tuning a radio, pushing a swing, a singer shattering a glass."],
+];
+let fcKnown = store.get("s22-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s22-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s22-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s22-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["transfer","A travelling wave transfers:",["Energy but not matter","Matter but not energy","Both energy and matter","Neither"],0,"The medium vibrates about its rest position; only energy moves along."],
+  ["transfer","A cork floats on a pond as ripples pass. The cork:",["Moves along with the ripples","Bobs up and down about the same place","Sinks","Moves towards the source"],1,"The water vibrates in place, so the cork does too."],
+  ["transfer","Which of these needs a medium to travel?",["Light","Radio waves","Sound","X-rays"],2,"Sound is mechanical. The others are electromagnetic and can cross a vacuum."],
+  ["types","In a transverse wave, the particles vibrate:",["Parallel to the direction of travel","Perpendicular to the direction of travel","In circles only","Not at all"],1,"Transverse: vibration at right angles to the direction of travel."],
+  ["types","Which of these is a longitudinal wave?",["Light","A wave on a guitar string","Sound in air","An S wave"],2,"Sound is longitudinal: air particles vibrate along the direction of travel."],
+  ["types","In a longitudinal wave, a region where the particles are close together is a:",["Rarefaction","Compression","Crest","Trough"],1,"Compression = particles squeezed together, higher pressure."],
+  ["char","The amplitude of a wave is:",["The distance from crest to trough","The maximum displacement from the rest position","The distance between two crests","The number of waves per second"],1,"Crest to trough is 2A."],
+  ["char","Neighbouring crests of a water wave are 12 cm apart. The wavelength is:",["6 cm","12 cm","24 cm","3 cm"],1,"Wavelength = crest to crest = 12 cm."],
+  ["char","A wave has a frequency of 50 Hz. Its period is:",["50 s","0.02 s","0.5 s","2 s"],1,"T = 1/f = 1/50 = 0.02 s."],
+  ["speed","A wave has a frequency of 20 Hz and a wavelength of 0.5 m. Its speed is:",["40 m/s","10 m/s","0.025 m/s","20.5 m/s"],1,"v = fλ = 20 × 0.5 = 10 m/s."],
+  ["speed","A radio station broadcasts at 100 MHz. With c = 3.0 × 10⁸ m/s, the wavelength is:",["3.0 m","0.33 m","30 m","3.0 × 10¹⁶ m"],0,"λ = c/f = 3.0 × 10⁸ / 1.0 × 10⁸ = 3.0 m."],
+  ["speed","In a ripple tank the frequency is doubled and the speed stays the same. The wavelength:",["Doubles","Halves","Stays the same","Is four times bigger"],1,"λ = v/f: double f, half λ."],
+  ["amp","The amplitude of a wave is doubled. The energy it carries is:",["The same","Doubled","Four times bigger","Halved"],2,"E ∝ A², so 2² = 4."],
+  ["amp","Four water waves have the same frequency. Which carries the most energy?",["Amplitude 1 cm","Amplitude 2 cm","Amplitude 3 cm","Amplitude 0.5 cm"],2,"The biggest amplitude carries the most energy."],
+  ["res","Resonance happens when:",["The driving frequency equals the natural frequency","The amplitude is zero","The driving frequency is doubled","Damping is at its maximum"],0,"This is the definition in the specification."],
+  ["res","In Barton's pendulums, the light pendulum that swings most is the one:",["That is shortest","With the same length as the driver","That is longest","That is heaviest"],1,"Same length → same natural frequency as the driver → resonance."],
+  ["res","Increasing the damping of a vibrating system:",["Makes the resonance peak taller","Lowers the peak and makes it wider","Changes the natural frequency a lot","Has no effect"],1,"Damping removes energy, so the maximum amplitude is smaller and the curve flatter."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s22-best",null); if(best==null||pct>best) store.set("s22-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Define","Give the exact meaning in one full, precise sentence.","Define the wavelength of a wave."],
+  ["State","Give a short fact, law or value. No explanation needed.","State the relationship between amplitude and energy."],
+  ["Model","Use a diagram, equation or simulation to represent how something behaves, and use it to predict.","Model a longitudinal wave using a slinky."],
+  ["Investigate","Observe, study or examine in detail to establish facts and reach new conclusions.","Investigate resonance in real life using secondary sources."],
+  ["Distinguish","Make the differences between two or more things clear.","Distinguish between transverse and longitudinal waves."],
+  ["Explain","Say what happens and why, using the physics behind it.","Explain why soldiers break step when crossing a bridge."],
+  ["Describe","Give the steps or features in a clear order.","Describe how to measure the wavelength of water waves in a ripple tank."],
+  ["Calculate","Write the formula, substitute the numbers, give the answer with a unit.","Calculate the wavelength of a 96 MHz radio wave."],
+  ["Evaluate","Judge strengths and weaknesses, then reach a conclusion.","Evaluate a website's claim that the Tacoma Narrows Bridge collapsed because of resonance."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+
+// Calculation trainer
+function parseNum(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,ch=>({"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-"})[ch]);
+  s=s.replace(/[x×*]10\^?/i,"e");
+  return parseFloat(s);
+}
+const PTYPES = {
+  vfl:{ name:"v = fλ", gen(){ const f=pick([2,4,5,8,10,12,20,25,40,50,100,250]), lam=pick([0.02,0.05,0.12,0.25,0.4,0.5,0.8,1.2,1.5,2.5]), v=f*lam;
+    return { q:`A wave has a frequency of <b>${f} Hz</b> and a wavelength of <b>${lam} m</b>. Calculate its speed.`, ans:v, unit:"m/s",
+      steps:["v = fλ", `v = ${f} × ${lam}`, `v = ${s3(v)} m/s`] }; } },
+  findf:{ name:"Find f", gen(){ const [v,lam]=pick([[340,0.68],[340,1.7],[343,0.5],[1500,3],[1500,0.75],[2,0.25],[4,0.5],[0.3,0.02],[6,1.5]]), f=v/lam;
+    return { q:`A wave travels at <b>${v} m/s</b>. Its wavelength is <b>${lam} m</b>. Calculate its frequency.`, ans:f, unit:"Hz",
+      steps:["v = fλ  →  f = v / λ", `f = ${v} / ${lam}`, `f = ${s3(f)} Hz`] }; } },
+  findl:{ name:"Find λ", gen(){ const [v,f]=pick([[340,170],[340,440],[343,256],[1500,500],[1500,50],[6,2],[0.25,10],[0.3,12]]), lam=v/f;
+    return { q:`A wave travels at <b>${v} m/s</b> with a frequency of <b>${f} Hz</b>. Calculate its wavelength.`, ans:lam, unit:"m",
+      steps:["v = fλ  →  λ = v / f", `λ = ${v} / ${f}`, `λ = ${s3(lam)} m`] }; } },
+  per:{ name:"T = 1/f", gen(){ const f=pick([0.5,2,4,5,10,20,25,50,100,250,500]), T=1/f;
+    return { q:`A wave has a frequency of <b>${f} Hz</b>. Calculate its period in seconds.`, ans:T, unit:"s",
+      steps:["T = 1 / f", `T = 1 / ${f}`, `T = ${s3(T)} s`] }; } },
+  freq:{ name:"f from T", gen(){ const Tms=pick([2,4,5,8,10,20,25,40,50,200,500]), f=1000/Tms;
+    return { q:`One complete wave passes a point every <b>${Tms} ms</b>. Calculate the frequency.`, ans:f, unit:"Hz",
+      steps:[`T = ${Tms} ms = ${s3(Tms/1000)} s`, "f = 1 / T", `f = 1 / ${s3(Tms/1000)} = ${s3(f)} Hz`] }; } },
+  radio:{ name:"Radio λ (c = fλ)", gen(){ const MHz=pick([88.2,90.0,96.4,100.0,102.7,105.0,107.5]), lam=3e8/(MHz*1e6);
+    return { q:`A radio station broadcasts at <b>${MHz} MHz</b>. Calculate the wavelength of its radio waves. (c = 3.0 × 10⁸ m/s)`, ans:lam, unit:"m",
+      steps:[`f = ${MHz} MHz = ${sci(MHz*1e6)} Hz`, "λ = c / f", `λ = 3.0 × 10⁸ / ${sci(MHz*1e6)}`, `λ = ${s3(lam)} m`] }; } },
+  light:{ name:"Light f (c = fλ)", gen(){ const nm=pick([400,450,500,550,589,600,633,650,700]), f=3e8/(nm*1e-9);
+    return { q:`Light has a wavelength of <b>${nm} nm</b> in a vacuum. Calculate its frequency. (c = 3.0 × 10⁸ m/s; type e.g. 5.0e14)`, ans:f, unit:"Hz",
+      steps:[`λ = ${nm} nm = ${sci(nm*1e-9)} m`, "f = c / λ", `f = 3.0 × 10⁸ / ${sci(nm*1e-9)}`, `f = ${sci(f)} Hz`] }; } },
+  count:{ name:"Counting waves", gen(){ const n=pick([10,12,15,20,24,30,40]), t=pick([2,4,5,8,10]), d=pick([2,4,5,8,10,20,25]), f=n/t, v=f*d/100;
+    return { q:`<b>${n}</b> waves pass a buoy in <b>${t} s</b>. The crests are <b>${d} cm</b> apart. Calculate the speed of the waves in m/s.`, ans:v, unit:"m/s",
+      steps:[`f = ${n} ÷ ${t} = ${s3(f)} Hz`, `λ = ${d} cm = ${d/100} m`, "v = fλ", `v = ${s3(f)} × ${d/100} = ${s3(v)} m/s`] }; } },
+  crest:{ name:"λ from crests", gen(){ const n=rnd(4,11), lam=pick([1.5,2,2.4,3,4,5,6]), d=+(lam*(n-1)).toFixed(1);
+    return { q:`In a ripple tank photo, the distance from the 1st bright line to the ${n}th bright line is <b>${d} cm</b>. Calculate the wavelength.`, ans:lam, unit:"cm",
+      steps:[`From the 1st to the ${n}th line there are ${n} − 1 = ${n-1} wavelengths`, `λ = ${d} ÷ ${n-1}`, `λ = ${s3(lam)} cm`] }; } },
+  energy:{ name:"Energy ∝ A²", gen(){ const k=pick([2,3,4,0.5,1.5,5]), e=k*k;
+    return { q:`The amplitude of a wave is multiplied by <b>${k}</b> (same frequency). By what factor is the energy it carries multiplied?`, ans:e, unit:"×",
+      steps:["E ∝ A²", `factor = ${k}²`, `= ${s3(e)}`] }; } },
+};
+let pType="vfl", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseNum($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 0.68, 340 or 5.0e14 (that means 5.0 × 10¹⁴).</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.abs(pCur.ans)*0.02;
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: convert cm to m, MHz to Hz (× 10⁶) and nm to m (× 10⁻⁹); rearrange v = fλ before substituting. Give the answer in the unit asked for.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Read the wave drill
+let pd = { q:null, sel:null, shown:false, streak:0 };
+let predC=null;
+function pdGen(){
+  const g=pick(["x","t"]), A=pick([1,1.5,2,2.5,3,4,5]);
+  if(g==="x"){ const lam=pick([10,20,30,40,50,60,80]), ask=pick(["A","lam"]);
+    const ans = ask==="A"? A : lam, opts = ask==="A"? [A,2*A,A/2,A+1] : [lam,lam/2,2*lam,lam*1.5];
+    return { g, A, lam, ask, ans, opts:shuffle([...new Set(opts)]).slice(0,4), unit:"cm", word: ask==="A"?"amplitude":"wavelength" }; }
+  const T=pick([0.1,0.2,0.25,0.4,0.5]), ask=pick(["A","T","f"]);
+  const ans = ask==="A"? A : ask==="T"? T : 1/T;
+  const opts = ask==="A"? [A,2*A,A/2,A+1] : ask==="T"? [T,T/2,2*T,1/T] : [1/T,T,2/T,1/(2*T)];
+  return { g, A, T, ask, ans, opts:shuffle([...new Set(opts.map(v=>+v.toFixed(3)))]).slice(0,4), unit: ask==="A"?"cm":ask==="T"?"s":"Hz", word: ask==="A"?"amplitude":ask==="T"?"period":"frequency" };
+}
+function pdNew(){ pd={...pd,q:pdGen(),sel:null,shown:false}; const q=pd.q;
+  $("predQ").innerHTML=`This is a <b>displacement–${q.g==="x"?"distance":"time"}</b> graph. What is the <b>${q.word}</b> of the wave?`;
+  $("predOpts").querySelector(".btns").innerHTML = q.opts.map(v=>`<button data-a="${v}">${s3(v)} ${q.unit}</button>`).join("");
+  $("predFb").innerHTML=""; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=+b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const q=pd.q, ok=Math.abs(pd.sel-q.ans)<1e-6; pd.streak=ok?pd.streak+1:0; pd.shown=true; predC.redraw();
+  const why = q.ask==="A"? "Read the maximum displacement from the rest position (0), not crest to trough."
+    : q.ask==="lam"? "Read the distance from one crest to the next along the distance axis."
+    : q.ask==="T"? "On a time graph, crest to crest is one period."
+    : `Crest to crest is the period, T = ${q.T} s, so f = 1/T = ${s3(1/q.T)} Hz.`;
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> The ${q.word} is ${s3(q.ans)} ${q.unit}. ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Modelling waves", intro:"A student sends waves along a long spring (a slinky) on a smooth floor, first by moving one end from side to side, then by pushing and pulling it along its length.",
+    parts:[["a","Distinguish between transverse and longitudinal waves, naming which wave the student makes each way.",10,"Transverse: particles vibrate perpendicular to the direction of travel (3); side to side makes a transverse wave (2). Longitudinal: particles vibrate parallel to the direction of travel (3); push–pull makes a longitudinal wave (2)."],
+      ["b","Explain how the slinky shows that a wave transfers energy without transferring matter.",8,"Mark a coil with tape (2); the coil vibrates about its rest position but does not travel along the slinky (3); the disturbance/energy reaches the far end (3)."],
+      ["c","Draw a labelled diagram of a transverse wave showing the rest position, a crest, a trough, the amplitude and the wavelength.",10,"Sine wave with dashed rest line (2); crest and trough labelled (2+2); amplitude from rest line to crest (2); wavelength crest to crest or equivalent (2)."],
+      ["d","The student moves the end 4 times per second and the crests are 0.75 m apart. Calculate the frequency, the period and the wave speed.",12,"f = 4 Hz (3); T = 1/f = 0.25 s (4); v = fλ = 4 × 0.75 = 3.0 m/s (5). Units required."]] },
+  { title:"Ripple tank experiment", intro:"A student uses a ripple tank and a stroboscope to verify v = fλ. She measures the distance across 5 wavelengths for different dipper frequencies. Results (λ already calculated): f = 8, 10, 12, 15, 20 Hz; λ = 2.9, 2.4, 2.0, 1.6, 1.2 cm.",
+    parts:[["a","Describe how the stroboscope and ruler are used to measure the wavelength.",9,"Strobe flashes at (a multiple of) the wave frequency so the waves appear stationary (3); ruler/scale under the tank measures the distance across several bright lines (3); divide by the number of wavelengths, e.g. 5 (3)."],
+      ["b","Calculate 1/λ in m⁻¹ for each result and draw a graph of f against 1/λ.",12,"1/λ = 34.5, 41.7, 50.0, 62.5, 83.3 m⁻¹ (5); axes labelled with units (2); points plotted (3); straight line of best fit through (close to) the origin (2)."],
+      ["c","Use your graph to find the speed of the water waves.",9,"v = slope = Δf / Δ(1/λ) (3); e.g. 20 / 83.3 ≈ 0.24 m/s (4); answer 0.23–0.25 m/s with unit (2)."],
+      ["d","Explain why measuring across 5 wavelengths gives a more accurate result than measuring one.",6,"The ruler's reading error (about ±1 mm) is spread over 5 wavelengths (3), so the percentage error in λ is about five times smaller (3)."]] },
+  { title:"Resonance and energy", intro:"Answer with reference to Barton's pendulums and real-life examples you have investigated.",
+    parts:[["a","Define natural frequency and resonance.",8,"Natural frequency: the frequency an object vibrates at when disturbed and left to vibrate freely (4). Resonance: the large-amplitude vibration when the driving frequency equals the natural frequency (4)."],
+      ["b","Describe Barton's pendulums and explain which pendulum swings with the largest amplitude.",12,"Heavy driver pendulum and light pendulums of different lengths hang from one string (4); driver set swinging drives all the others at its frequency (3); the pendulum with the same length has the same natural frequency (3), so it resonates with the largest amplitude (2)."],
+      ["c","Using a named example from a secondary source, explain how resonance caused a problem and how engineers dealt with it.",12,"Named example, e.g. Millennium Bridge 2000 (2); driving force identified, e.g. footsteps at about 1 Hz (3); matched a natural frequency so amplitude grew (3); solution, e.g. dampers fitted, reopened 2002 / soldiers break step (2); source named and reliability commented on (2)."],
+      ["d","The amplitude of an ocean wave increases from 1.5 m to 3.0 m. By what factor does the energy it carries change? Explain.",6,"E ∝ A² (2); amplitude doubles (2); energy × 4 (2)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist
+const RAG = ["Explain that a wave transfers energy, not matter","Distinguish mechanical and electromagnetic waves","Explain what radiation is","Distinguish transverse and longitudinal waves, with examples","Identify compressions and rarefactions","Define rest position, displacement, crest, trough and amplitude","Define wavelength, frequency, period and velocity","Use T = 1/f","Use v = fλ and c = fλ with unit conversions","Describe the ripple tank experiment and the f against 1/λ graph","State that energy ∝ amplitude²","Define natural frequency and resonance","Describe Barton's pendulums","Explain real-life resonance from secondary sources"];
+const ragState=store.get("s22-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s22-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Plan a fair test","Name the independent (frequency), dependent (wavelength) and controlled (water depth) variables.","Ripple tank lab"],["Collect primary data","Measure across several wavelengths with the waves frozen by a strobe.","Ripple tank lab"],["Reduce uncertainty","Measure 5λ, not λ, and repeat readings.","Ripple tank lab"],["Draw and use graphs","Plot f against 1/λ, draw a line of best fit and use the slope.","Ripple tank lab"],["Use models","Use the bead and particle models to explain transverse and longitudinal waves.","Energy, not matter and Transverse or longitudinal labs"],["Use secondary sources","Find two reliable sources for a resonance case and compare them.","Resonance infographics"],["Evaluate sources","Spot when a source oversimplifies, e.g. the Tacoma Narrows Bridge.","Resonance infographics"],["Communicate clearly","Use correct terms and units, and label diagrams.","Anatomy of a wave lab"]];
+const skState=store.get("s22-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s22-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+function playBtn(id,st){ $(id).addEventListener("click",()=>{ st.play=!st.play; $(id).setAttribute("aria-pressed",st.play); $(id).textContent=st.play?"Pause":"Play"; }); }
+// Energy, not matter
+const tr = { mode:"trans", f:1, A:0.6, t:0, play:true };
+playBtn("trPlay",tr);
+$("trReset").addEventListener("click",()=>{ tr.t=0; trC.redraw(); });
+(()=>{ const bs=[...$("trM").querySelectorAll("button")]; bs.forEach(b=>b.addEventListener("click",()=>{ tr.mode=b.dataset.m; pressGroup(bs,b); trC.redraw(); })); })();
+$("trF").addEventListener("input",e=>{ tr.f=+e.target.value; $("trFo").textContent=tr.f.toFixed(1)+" Hz"; trC.redraw(); });
+$("trA").addEventListener("input",e=>{ tr.A=+e.target.value; $("trAo").textContent=Math.round(tr.A*100)+"%"; trC.redraw(); });
+// Transverse or longitudinal
+const ty = { mode:"trans", t:0, play:true };
+playBtn("tyPlay",ty);
+(()=>{ const bs=[...$("tyM").querySelectorAll("button")]; bs.forEach(b=>b.addEventListener("click",()=>{ ty.mode=b.dataset.m; pressGroup(bs,b); tyC.redraw(); })); })();
+const WAVES = [["Light from the Sun","T","EM"],["Radio waves","T","EM"],["X-rays","T","EM"],["Sound in air","L","M"],["Ultrasound in the body","L","M"],["A wave on a guitar string","T","M"],["Ripples on a pond","T","M"],["Seismic P waves","L","M"],["Seismic S waves","T","M"],["A slinky pushed and pulled along its length","L","M"]];
+const TYN = {T:"Transverse",L:"Longitudinal"}, KN = {EM:"electromagnetic",M:"mechanical"};
+const tyS = { order:[], ans:{} };
+function tyNew(){ tyS.order=shuffle(WAVES.map((_,k)=>k)); tyS.ans={}; tyRender(); }
+function tyRender(){
+  $("tyList").innerHTML = tyS.order.map(k=>{ const [d,c,m]=WAVES[k], a=tyS.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${TYN[c]}, ${KN[m]}</small>`:""}</span><div class="btns">${["T","L"].map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${TYN[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(tyS.ans).length, right=Object.entries(tyS.ans).filter(([k,a])=>a===WAVES[k][1]).length;
+  setReadout($("tySOut"),[["Sorted",`${done} / ${WAVES.length}`],["Correct",String(right)],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+$("tyList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b) return; tyS.ans[+b.dataset.k]=b.dataset.v; tyRender(); });
+$("tyReset").addEventListener("click",tyNew);
+// Anatomy of a wave
+const ch = { g:"x", A:3, lam:40, f:1, t:0, play:false };
+playBtn("chPlay",ch);
+(()=>{ const bs=[...$("chG").querySelectorAll("button")]; bs.forEach(b=>b.addEventListener("click",()=>{ ch.g=b.dataset.g; pressGroup(bs,b); chUpd(); })); })();
+[["chA","A",v=>v.toFixed(1)+" cm"],["chL","lam",v=>v+" cm"],["chF","f",v=>v.toFixed(1)+" Hz"]].forEach(([id,k,fmt])=>$(id).addEventListener("input",e=>{ ch[k]=+e.target.value; $(id+"o").textContent=fmt(ch[k]); chUpd(); }));
+function chUpd(){ const T=1/ch.f, v=ch.f*ch.lam/100;
+  setReadout($("chOut"),[["Amplitude A",ch.A.toFixed(1)+" cm"],["Wavelength λ",ch.lam+" cm = "+(ch.lam/100).toFixed(2)+" m"],["Frequency f",ch.f.toFixed(1)+" Hz"],["Period T = 1/f",s3(T)+" s"],["Speed v = fλ",s3(v)+" m/s"],["Crest to crest on this graph",ch.g==="x"?"λ = "+ch.lam+" cm":"T = "+s3(T)+" s"]]);
+  $("chWork").innerHTML = `<b>v = fλ</b> = ${ch.f.toFixed(1)} Hz × ${(ch.lam/100).toFixed(2)} m = <b>${s3(v)} m/s</b> · <b>T = 1/f</b> = 1 / ${ch.f.toFixed(1)} = <b>${s3(T)} s</b>. ${ch.g==="x"?"A displacement–distance graph is a snapshot of the whole wave.":"A displacement–time graph follows one point; the horizontal axis is time, so crest to crest is the period."}`;
+  chC.redraw(); }
+// Ripple tank experiment
+const tk = { f:6, d:0.10, strobe:true, t:0, data:[], revealed:false, msg:"" };
+function tkNewDepth(){ tk.v=pick([0.18,0.20,0.22,0.24,0.26,0.28]); tk.data=[]; tk.revealed=false; tk.msg=""; }
+tkNewDepth();
+const tkLam = () => tk.v/tk.f;
+function tkLines(){ const m=tk.d/tkLam(); const near=Math.round(m); const tol=Math.max(0.06,0.0008/tkLam()); return { m, near, on:Math.abs(m-near)<tol && near>=1 }; }
+function tkUpd(){ $("tkDo").textContent=(tk.d*100).toFixed(2)+" cm"; $("tkD").value=tk.d; tkC.redraw(); }
+$("tkD").addEventListener("input",e=>{ tk.d=+e.target.value; tk.msg=""; tkUpd(); });
+(()=>{ const bs=[...$("tkF").querySelectorAll("button")]; bs.forEach(b=>b.addEventListener("click",()=>{ tk.f=+b.dataset.v; tk.msg=""; pressGroup(bs,b); tkUpd(); })); })();
+$("tkStrobe").addEventListener("click",()=>{ tk.strobe=!tk.strobe; $("tkStrobe").setAttribute("aria-pressed",tk.strobe); $("tkStrobe").textContent=tk.strobe?"Strobe on":"Strobe off"; tkC.redraw(); });
+$("tkRec").addEventListener("click",()=>{ const L=tkLines();
+  if(!tk.strobe){ tk.msg="Switch the strobe on first: you can't measure moving ripples."; tkC.redraw(); return; }
+  if(!L.on){ tk.msg="The end of the ruler isn't on a bright line yet. Adjust it."; tkC.redraw(); return; }
+  if(L.near!==5){ tk.msg=`The ruler ends on a bright line, but count again: 5 wavelengths runs from the 1st to the 6th bright line.`; tkC.redraw(); return; }
+  tk.data=tk.data.filter(d=>d[0]!==tk.f); tk.data.push([tk.f,tk.d]); tk.data.sort((a,b)=>a[0]-b[0]); tk.msg=`Recorded: ${tk.f} Hz, 5λ = ${(tk.d*100).toFixed(2)} cm.`; tkTable(); tkC.redraw(); });
+$("tkClear").addEventListener("click",()=>{ tk.data=[]; tk.msg=""; tkTable(); tkC.redraw(); });
+$("tkNew").addEventListener("click",()=>{ tkNewDepth(); tkTable(); tkC.redraw(); });
+$("tkReveal").addEventListener("click",()=>{ tk.revealed=!tk.revealed; tkTable(); });
+function tkTable(){
+  $("tkTable").innerHTML = tk.data.map(([f,d],k)=>`<tr><td>${f}</td><td>${(d*100).toFixed(2)}</td><td>${(d*20).toFixed(3)}</td><td>${(5/d).toFixed(1)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("tkEmpty").hidden = tk.data.length>0; if(tkGraph) tkGraph.redraw();
+}
+$("tkTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ tk.data.splice(+k,1); tkTable(); } });
+// Amplitude and energy
+const am = { A:1, t:0 };
+$("amA").addEventListener("input",e=>{ am.A=+e.target.value; amUpd(); });
+function amUpd(){ const E=am.A*am.A; $("amAo").textContent=am.A.toFixed(1)+" m";
+  setReadout($("amOut"),[["Amplitude",am.A.toFixed(1)+" m"],["Energy compared with a 1 m wave",`× ${s3(E)}`],["Bulbs lit",s3(E)+" of 9"],["Double this amplitude",`${(2*am.A).toFixed(1)} m → × ${s3(4*E)}`]]);
+  $("amWork").innerHTML = `E ∝ A², so E₂ / E₁ = (A₂ / A₁)² = (${am.A.toFixed(1)} / 1.0)² = <b>${s3(E)}</b>. Doubling the amplitude always multiplies the energy by 4.`;
+  amC.redraw(); }
+// Barton's pendulums
+const ba = { Ld:0.6, Q:12, t:0, play:true };
+playBtn("baPlay",ba);
+$("baL").addEventListener("input",e=>{ ba.Ld=+e.target.value; baUpd(); });
+(()=>{ const bs=[...$("baQ").querySelectorAll("button")]; bs.forEach(b=>b.addEventListener("click",()=>{ ba.Q=+b.dataset.q; pressGroup(bs,b); baUpd(); })); })();
+function baUpd(){ const fd=fNat(ba.Ld); $("baLo").textContent=ba.Ld.toFixed(2)+" m";
+  const rs=BA_L.map(L=>resp(fd,fNat(L),ba.Q).a), k=rs.indexOf(Math.max(...rs)), match=Math.abs(BA_L[k]-ba.Ld)<0.015;
+  setReadout($("baOut"),[["Driving frequency",s3(fd)+" Hz"],["Largest swing",`${BA_N[k]} (${BA_L[k].toFixed(2)} m)`],["Its natural frequency",s3(fNat(BA_L[k]))+" Hz"],["Resonance?",match?"Yes: same length, same natural frequency":"Not exactly: move the driver length to match"],["Damping",ba.Q===12?"light: tall, sharp peaks":"heavy: low, wide peaks"]]);
+  $("baWork").innerHTML = `Natural frequency of a pendulum: f = (1/2π)√(g/L). A: ${s3(fNat(0.30))} Hz · B: ${s3(fNat(0.45))} Hz · C: ${s3(fNat(0.60))} Hz · D: ${s3(fNat(0.75))} Hz · E: ${s3(fNat(0.90))} Hz. The driver (L = ${ba.Ld.toFixed(2)} m) drives them all at <b>${s3(fd)} Hz</b>; the one whose natural frequency matches resonates.`;
+  baC.redraw(); rcC.redraw(); }
+
+/* ================= CREATE CANVASES ================= */
+let tkGraph=null;
+const hero = makeCanvas($("heroCanvas"), 0.7, 220, s => drawMedium(s.ctx,s.w,s.h,{mode:"trans",t:reduce?0.3:heroT,A:0.7,arrows:true}), 420);
+const trC = makeCanvas($("trC"), 0.45, 250, s => { drawMedium(s.ctx,s.w,s.h,{mode:tr.mode,f:tr.f,A:tr.A,t:tr.t,arrows:true});
+  const lam=ROPE_V/tr.f, disp=tr.mode==="light"? null : tr.A*Math.sin(2*Math.PI*(2.0/lam-tr.f*tr.t));
+  setReadout($("trOut"),[["Wave speed",tr.mode==="light"?"3.0 × 10⁸ m/s (scaled down here)":ROPE_V.toFixed(1)+" m/s"],["Wavelength λ = v/f",s3(lam)+" m"],["Time",tr.t.toFixed(1)+" s"],["Energy has travelled",s3(ROPE_V*tr.t)+" m"],["Marked particle moved along",tr.mode==="light"?"no particles":"0 m (it vibrates about x = 2.0 m)"],["Type",tr.mode==="trans"?"mechanical, transverse":tr.mode==="long"?"mechanical, longitudinal":"electromagnetic, transverse"]]); }, 380);
+const tyC = makeCanvas($("tyC"), 0.42, 240, s => { drawMedium(s.ctx,s.w,s.h,{mode:ty.mode,t:ty.t,arrows:true});
+  setReadout($("tyOut"),[["Particles vibrate",ty.mode==="trans"?"up and down ↕":"left and right ↔"],["Wave travels","to the right →"],["So the wave is",ty.mode==="trans"?"transverse: vibration ⊥ travel":"longitudinal: vibration ∥ travel"],["Look for",ty.mode==="trans"?"crests and troughs":"compressions (C) and rarefactions (R)"]]); }, 380);
+const chC = makeCanvas($("chC"), 0.45, 250, s => drawWave(s.ctx,s.w,s.h,{graph:ch.g,A:ch.A,lam:ch.lam,T:1/ch.f,xmax:ch.g==="x"?100:2,ph:ch.t*2*Math.PI*ch.f,labels:true,ticks:true}), 420);
+const tkC = makeCanvas($("tkC"), 0.42, 240, s => { const L=tkLines(), lam=tkLam();
+  drawTank(s.ctx,s.w,s.h,{lam,d:tk.d,match:L.on&&L.near===5,ph:tk.strobe?0:tk.v*tk.t,blur:!tk.strobe});
+  setReadout($("tkOut"),[["Dipper frequency",tk.f+" Hz"],["Ruler length d",(tk.d*100).toFixed(2)+" cm"],["End of ruler",!tk.strobe?"can't tell: ripples moving":L.on?"on a bright line ✓":"between lines"],["Readings",tk.data.length+(tk.msg?" · "+tk.msg:"")]]); }, 380);
+const amC = makeCanvas($("amC"), 0.42, 240, s => drawEnergy(s.ctx,s.w,s.h,{A:am.A,t:am.t}), 380);
+const baC = makeCanvas($("baC"), 0.5, 280, s => drawBarton(s.ctx,s.w,s.h,{Ld:ba.Ld,Q:ba.Q,t:ba.t}), 440);
+const rcC = makeCanvas($("rcC"), 0.4, 220, s => drawCurves(s.ctx,s.w,s.h,{Q:ba.Q,fd:fNat(ba.Ld)}), 340);
+tkGraph = makeCanvas($("tkGraph"), 0.72, 190, s => {
+  const pts=tk.data.map(([f,d])=>[5/d,f]), spread=pts.length? Math.max(...pts.map(p=>p[0]))-Math.min(...pts.map(p=>p[0])) : 0;
+  const fit = pts.length>=3 && spread>10 ? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,150],yr:[0,28],xl:"1/λ (m⁻¹)",yl:"f (Hz)",fit});
+  const truth = tk.revealed? ` True value: v = <b>${tk.v.toFixed(2)} m/s</b>.` : "";
+  if(!fit){ $("tkResult").innerHTML="Record three or more frequencies to draw the line."+truth; return; }
+  $("tkResult").innerHTML = `f = v × (1/λ), so slope = v = <b>${fit[0].toFixed(3)} m/s</b>. Intercept = ${fit[1].toFixed(2)} Hz (should be close to 0). A straight line through the origin verifies v = fλ.`+truth;
+}, 300);
+tkTable();
+predC = makeCanvas($("predC"), 0.5, 190, s => { const q=pd.q; if(!q) return; drawWave(s.ctx,s.w,s.h,{graph:q.g,A:q.A,lam:q.lam,T:q.T,step:(q.g==="x"?q.lam:q.T)/2,ticks:true,labels:false,bgc:C["surface-2"]}); }, 300);
+pdNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    medium:s=>drawMedium(s.ctx,s.w,s.h,{...o,compact:true}),
+    wave:s=>drawWave(s.ctx,s.w,s.h,{...o,compact:true}),
+    tank:s=>drawTank(s.ctx,s.w,s.h,{...o,compact:true}),
+    energy:s=>drawEnergy(s.ctx,s.w,s.h,{...o,compact:true}),
+    curves:s=>drawCurves(s.ctx,s.w,s.h,{...o,compact:true}),
+  };
+  const ratio = {medium:0.42, wave:0.5, tank:0.5, energy:0.5, curves:0.5}[kind];
+  makeCanvas(el, ratio, 120, draws[kind], 340);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-mini=trans]").forEach(el=>makeCanvas(el,0.5,120,s=>drawMedium(s.ctx,s.w,s.h,{mode:"trans",t:0.3,compact:true,arrows:true,bgc:C["surface-2"]}),220));
+document.querySelectorAll("canvas[data-mini=long]").forEach(el=>makeCanvas(el,0.5,120,s=>drawMedium(s.ctx,s.w,s.h,{mode:"long",t:0.3,compact:true,arrows:true,bgc:C["surface-2"]}),220));
+document.querySelectorAll("canvas[data-mini=wave]").forEach(el=>makeCanvas(el,0.5,120,s=>drawWave(s.ctx,s.w,s.h,{A:3,lam:40,xmax:100,labels:true,compact:true,bgc:C["surface-2"]}),220));
+tyNew(); chUpd(); amUpd(); baUpd(); tkUpd();
+
+/* ================= LOOP / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(view==="labs" && !reduce){
+    if(lab==="transfer" && tr.play){ tr.t+=dt; trC.redraw(); }
+    if(lab==="types" && ty.play){ ty.t+=dt; tyC.redraw(); }
+    if(lab==="char" && ch.play){ ch.t+=dt*(ch.g==="x"?1:0.25); chC.redraw(); }
+    if(lab==="speed" && !tk.strobe){ tk.t+=dt; tkC.redraw(); }
+    if(lab==="amp"){ am.t+=dt; amC.redraw(); }
+    if(lab==="res" && ba.play){ ba.t+=dt; baC.redraw(); }
+  }
+  requestAnimationFrame(loop);
+})(performance.now());
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>

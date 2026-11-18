@@ -1,0 +1,1638 @@
+<title>Enterprise and Innovation</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.sh-card{display:grid;gap:8px;padding:16px}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card p b{color:var(--terra)}
+.fbbox{padding:0 16px 14px}
+.offers{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 14px}
+.predopts .btns button{min-width:110px}
+.qmvb{display:flex;flex-wrap:wrap;gap:5px}
+.qmvb button{font-size:.78rem;padding:5px 9px}
+.qmvb button[aria-pressed="false"]{opacity:.7;text-decoration:line-through}
+.srt .row .ctl{flex:0 1 170px}
+</style>
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0012 3z"/></svg></div>
+        <div style="min-width:0"><b>Enterprise</b><span>Leaving Cert Business · Strand 2 · Topic 1</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html" class="on" aria-current="page">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Cheat sheet</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>U · Investigating Business</summary><ol><li><span class="mono">U</span>Research skills (all year)</li></ol></details>
+      <details><summary>1 · Business Environment</summary><ol><li class="link"><a href="s1-1-stakeholders.html"><span class="mono">1.1</span>Key stakeholders</a></li><li class="link"><a href="s1-2-forms-of-business.html"><span class="mono">1.2</span>Forms of business &amp; governance</a></li><li class="link"><a href="s1-3-economy.html"><span class="mono">1.3</span>Business &amp; the economy</a></li><li class="link"><a href="s1-4-policy.html"><span class="mono">1.4</span>National &amp; EU policy</a></li><li class="link"><a href="s1-5-global.html"><span class="mono">1.5</span>Irish business globally</a></li><li><span class="mono">1.6</span>Applying my learning</li></ol></details>
+      <details open><summary>2 · Understanding Enterprise</summary><ol><li class="here"><span class="mono">2.1</span>Enterprise</li><li class="link"><a href="s2-2-ideas.html"><span class="mono">2.2</span>Idea development</a></li><li class="link"><a href="s2-3-planning.html"><span class="mono">2.3</span>Business planning</a></li><li class="link"><a href="s2-4-target-market.html"><span class="mono">2.4</span>The target market</a></li><li class="link"><a href="s2-5-operations-finance.html"><span class="mono">2.5</span>Operations &amp; finance</a></li><li class="link"><a href="s2-6-growth.html"><span class="mono">2.6</span>Growth &amp; expansion</a></li><li><span class="mono">2.7</span>Managing risk</li><li><span class="mono">2.8</span>Applying my learning</li></ol></details>
+      <details><summary>3 · Leading in Business</summary><ol><li><span class="mono">3.1</span>Leading an organisation</li><li><span class="mono">3.2</span>Leading people</li><li><span class="mono">3.3</span>Communication</li><li><span class="mono">3.4</span>Planning</li><li><span class="mono">3.5</span>Applying my learning</li></ol></details>
+      <details><summary>4 · Informed Decisions</summary><ol><li><span class="mono">4.1</span>Informed consumer</li><li><span class="mono">4.2</span>Informed financial decisions</li><li><span class="mono">4.3</span>Informed employee</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 2 · Understanding enterprise</span>
+          <h1 style="margin-top:12px">Spot it.<br>Start it.<br><em>Make it better.</em></h1>
+          <p class="lede">Enterprise isn't only about starting a company. It happens in schools, hospitals, councils, clubs and your own life. Learn why people start enterprises, what innovators are good at, why innovation matters, and how the Irish government helps new businesses grow.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="An idea light bulb in the centre, with enterprise spreading out to business, government, community, society and your own life"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/3</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">2.1.1</span><span>identify examples of innovation, intrapreneurship, and entrepreneurship in their local community, nationally and internationally, and explain the importance of innovation for business, the economy and society.</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">2.1.2</span><span>identify the competencies* of innovators and outline why these are significant when starting a business.</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">2.1.3</span><span>investigate the role of government in fostering enterprise and supporting business development and growth.</span></label></li>
+        </ul>
+        <div class="result" style="margin-top:10px"><p><b>Students learn about:</b></p>
+          <ul style="margin:6px 0 0 18px;display:grid;gap:4px">
+            <li>the range of different reasons for starting an enterprise; how enterprise and innovation are present in, and important for, government, society, business, the community, and their own lives.</li>
+            <li>the competencies that support innovation and enterprise development.</li>
+            <li>the role of the Irish government in supporting business and enterprise in Ireland both locally and nationally.</li>
+          </ul>
+          <p style="margin-top:8px"><b>*Competencies (of entrepreneurs)</b>, from the specification's glossary: "The integration of knowledge, skills, values and dispositions that support and foster innovation."</p></div>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Sort entrepreneurs from intrapreneurs, read founders' stories, map enterprise in everyday life, build an innovation grid, profile your own competencies and match businesses to the right State support.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="types">
+        <div class="labhead"><span class="pill t">Who's being enterprising?</span><p class="goal">Every example shows enterprise. Decide whether it's entrepreneurship (starting your own venture), intrapreneurship (being enterprising inside someone else's organisation) or a social enterprise (trading to meet a social need).</p></div>
+        <div class="panel sim">
+          <canvas id="tyC" aria-label="Three columns, entrepreneurship, intrapreneurship and social enterprise, filling up with the examples you sort correctly"></canvas>
+          <div class="srt" id="tyList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="tyReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="tyOut"></div>
+        </div>
+        <p class="result">A mix of real and illustrative examples. Real ones are widely reported; check a source before using them in your own work.</p>
+        <div class="tries"><div class="try"><b>1</b>What do the intrapreneurs have in common? Who carries the financial risk?</div><div class="try"><b>2</b>How is a social enterprise different from a charity that only fundraises?</div><div class="try"><b>3</b>Find one example of each type in your own area.</div></div>
+      </div>
+
+      <div class="lab" data-lab="reasons" hidden>
+        <div class="labhead"><span class="pill t">Founders' stories: why start up?</span><p class="goal">Read each founder's story. Pick the reasons that apply, then check. Push reasons pull the rope left (something pushes you out of a job). Pull reasons pull it right (an opportunity draws you in).</p></div>
+        <div class="panel sim">
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Founder</span><div class="btns" id="rsF"></div></div></div>
+          <p class="result" id="rsStory" style="padding:0 16px"></p>
+          <canvas id="rsC" aria-label="A tug of war between push reasons on the left and pull reasons on the right"></canvas>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Reasons (pick all that apply)</span><div class="btns" id="rsR"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="rsCheck">Check</button><button id="rsClear">Clear</button></div></div></div>
+          <div class="readout" id="rsOut"></div>
+          <div class="working wrap" id="rsWork"></div>
+        </div>
+        <p class="result">The founders are illustrative.</p>
+        <div class="tries"><div class="try"><b>1</b>Which founders were pushed and pulled at the same time?</div><div class="try"><b>2</b>Is "earn more money" ever the only reason in these stories?</div><div class="try"><b>3</b>What reasons would push or pull you to start an enterprise?</div></div>
+      </div>
+
+      <div class="lab" data-lab="everywhere" hidden>
+        <div class="labhead"><span class="pill t">Enterprise everywhere</span><p class="goal">Enterprise and innovation happen in government, society, business, the community and your own life. Put each example in the right place on the map.</p></div>
+        <div class="panel sim">
+          <canvas id="evC" aria-label="A map with five zones: government, society, business, community and your own life, with a dot for each example you place correctly"></canvas>
+          <div class="srt" id="evList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="evReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="evOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Why does enterprise matter in government, where nobody is trying to make a profit?</div><div class="try"><b>2</b>Which example shows enterprise skills you could use in school?</div><div class="try"><b>3</b>Add one example from your own life to each zone.</div></div>
+      </div>
+
+      <div class="lab" data-lab="innovation" hidden>
+        <div class="labhead"><span class="pill t">The innovation grid</span><p class="goal">Innovation means putting a new idea to use. Decide what kind it is (product, process, business model or social) and how big a step it is (a small improvement or a radical change). Each correct answer fills a cell.</p></div>
+        <div class="panel sim">
+          <canvas id="inC" aria-label="A grid of four innovation types by two sizes of change, with numbered examples placed in it"></canvas>
+          <p class="result" id="inQ" style="padding:0 16px"></p>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Type</span><div class="btns" id="inT"><button data-t="0">Product</button><button data-t="1">Process</button><button data-t="2">Business model</button><button data-t="3">Social</button></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Size of change</span><div class="btns" id="inD"><button data-d="0">Small step (incremental)</button><button data-d="1">Big leap (radical)</button></div></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="inCheck">Place it</button><button id="inNext">Next example</button><button id="inReset">Start again</button></div></div>
+          </div>
+          <div class="readout" id="inOut"></div>
+          <div class="working wrap" id="inWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Which kind of innovation do customers never see?</div><div class="try"><b>2</b>Why do most firms make small steps more often than big leaps?</div><div class="try"><b>3</b>For one example, say who benefits: the business, the economy or society.</div></div>
+      </div>
+
+      <div class="lab" data-lab="competencies" hidden>
+        <div class="labhead"><span class="pill t">Your innovator profile</span><p class="goal">Rate yourself honestly on eight competencies of innovators (1 = not yet, 5 = very strong). Then pick a business. The chart compares you with what that business needs and suggests what to develop.</p></div>
+        <div class="panel sim">
+          <canvas id="cpC" aria-label="Radar chart of eight competencies: your ratings and the profile the chosen business needs"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Business</span><div class="btns" id="cpB"></div></div>
+            <div class="controls" id="cpS" style="grid-column:1/-1;padding:0;border:0"></div>
+          </div>
+          <div class="readout" id="cpOut"></div>
+          <div class="working wrap" id="cpWork"></div>
+        </div>
+        <p class="result">A self-reflection tool, not a test. The "needed" profiles are illustrative judgements. Saved on this device only.</p>
+        <div class="tries"><div class="try"><b>1</b>Which competency matters most for every business? Why?</div><div class="try"><b>2</b>Why does the tech start-up need so much risk-taking and self-confidence?</div><div class="try"><b>3</b>Pick your lowest score. How could school activities help you develop it?</div></div>
+      </div>
+
+      <div class="lab" data-lab="government" hidden>
+        <div class="labhead"><span class="pill t">Find the right support</span><p class="goal">The Irish government supports enterprise through State agencies, grants, loans and tax reliefs. Read each case and pick the best place to go first.</p></div>
+        <div class="panel sim">
+          <canvas id="gvC" aria-label="A ladder of State supports from an idea up to foreign investment, with the chosen agency highlighted"></canvas>
+          <p class="result" id="gvQ" style="padding:0 16px"></p>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Best first stop</span><div class="btns" id="gvA"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="gvCheck">Check</button><button id="gvNext">Next case</button></div></div>
+          </div>
+          <div class="readout" id="gvOut"></div>
+          <div class="working wrap" id="gvWork"></div>
+        </div>
+        <p class="result">Simplified: agencies work together and refer firms to each other. Schemes, limits and rates change, so check localenterprise.ie, enterprise-ireland.com, idaireland.com, udaras.ie, microfinanceireland.ie and revenue.ie for current details.</p>
+        <div class="tries"><div class="try"><b>1</b>What's the main difference between Enterprise Ireland and IDA Ireland?</div><div class="try"><b>2</b>Which support could you use as a student?</div><div class="try"><b>3</b>Name two ways the government helps enterprise without giving grants.</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of enterprise"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it · LO 2.1.1</p><h2>Enterprise and innovation: Irish examples</h2></div><p>Local, national and international examples of entrepreneurship, intrapreneurship and innovation.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>Reasons, innovation and competencies</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="tug"></canvas><h3>Push and pull</h3><p>Most founders have a mix: something pushes them out and an opportunity pulls them in.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="grid"></canvas><h3>Four kinds of innovation</h3><p>Product, process, business model and social. Small steps or big leaps.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="radar"></canvas><h3>Competencies</h3><p>Knowledge, skills, values and dispositions that support innovation. All can be developed.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">LO 2.1.3 · Investigate</p><h2>The ladder of State support</h2></div><p>Where a business usually goes for help as it grows. Tax, infrastructure and education help every business on every step.</p></div>
+        <canvas class="mini" data-mini="ladder" aria-label="Ladder of State supports: Local Enterprise Office and Microfinance Ireland at the bottom, Enterprise Ireland in the middle, IDA Ireland at the top, with Údarás na Gaeltachta and Revenue alongside"></canvas>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">LO 2.1.1 · Explain</p><h2>Why innovation matters</h2></div><p>Use all three columns in an answer, with an example in each.</p></div>
+      <div class="cases" id="impacts"></div>
+
+      <div class="head"><div><p class="eyebrow">In the news</p><h2>Enterprise in Ireland</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% Business Alive Investigative Study">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>Higher or Ordinary level, set by the SEC. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Business Alive Investigative Study · 40%</b><p>An investigation based on a common brief from the SEC. The same brief for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Keep <b>entrepreneur</b> (own venture, own risk) and <b>intrapreneur</b> (enterprising employee, the firm carries the risk) apart, with an example of each.</li>
+            <li>"Identify examples" means real or local ones: give <b>local, national and international</b> examples if asked.</li>
+            <li>Reasons for starting up: give a mix of <b>push</b> and <b>pull</b> reasons, applied to the case.</li>
+            <li>Importance of innovation: cover <b>business, the economy and society</b>, one developed point each.</li>
+            <li>For each competency: <b>name it, explain it, say why it matters when starting a business</b>.</li>
+            <li>Learn the spec's definition of <b>competencies</b>: knowledge, skills, values and dispositions that support and foster innovation.</li>
+            <li>Name the right agency: <b>LEO</b> (small, local, start-ups), <b>Enterprise Ireland</b> (Irish firms that export), <b>IDA Ireland</b> (foreign investment), <b>Údarás na Gaeltachta</b> (Gaeltacht).</li>
+            <li>Government also helps without grants: <b>low corporation tax, infrastructure, education and training, less red tape</b>.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Action verbs</h2></div><p>Meanings summarised from the specification's glossary of action verbs, which will be aligned with the exam's command words.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Business and financial literacy</p><h2>Numbers trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which competency?</h2></div></div>
+          <canvas id="predC" aria-label="The competency, shown after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns" data-g="0"><button data-a="cr">Creativity</button><button data-a="op">Opportunity spotting</button><button data-a="rk">Risk-taking</button><button data-a="rs">Resilience</button><button data-a="sc">Self-confidence</button><button data-a="ld">Leadership</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Skills the Business Alive Investigative Study rewards (from the Investigating Business strand). Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term in this chapter. Learn the definitions: "define" and "outline" questions reward precise wording.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: intrapreneur, innovation, LEO…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= CHEAT SHEET ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Cheat sheet</h2></div><p>The whole chapter on one page, plus the numbers you might meet in an enterprise question.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Enterprise</span><span class="big">Taking the initiative to turn an idea into action, accepting the risk</span><dl><dt>Happens in</dt><dd>business, government, society, the community, your own life</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Entrepreneur</span><span class="big">Starts and runs their own venture and takes the risk</span><dl><dt>e.g.</dt><dd>the Collison brothers (Stripe)</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Intrapreneur</span><span class="big">An employee who acts like an entrepreneur inside the organisation</span><dl><dt>Risk</dt><dd>carried by the employer</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Social enterprise</span><span class="big">Trades to meet a social or environmental need; profits go back into the mission</span></div>
+        <div class="panel fcell"><span class="pill">Reasons</span><span class="big">Push: redundancy, no work, unhappy in a job · Pull: gap in the market, passion, independence, new idea, community need, money</span></div>
+        <div class="panel fcell"><span class="pill">Innovation</span><span class="big">Putting a new or improved idea into use</span><dl><dt>Types</dt><dd>product · process · business model · social</dd><dt>Size</dt><dd>incremental · radical</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Why innovation matters</span><span class="big">Business: sales, efficiency, edge · Economy: jobs, exports, tax · Society: better lives, solutions to problems</span></div>
+        <div class="panel fcell"><span class="pill">Competencies (spec)</span><span class="big">The integration of knowledge, skills, values and dispositions that support and foster innovation</span><dl><dt>e.g.</dt><dd>creativity, opportunity spotting, risk-taking, resilience, self-confidence, decision-making, leadership, networking</dd></dl></div>
+        <div class="panel fcell"><span class="pill">State supports</span><span class="big">LEO · Enterprise Ireland · IDA Ireland · Údarás na Gaeltachta · Microfinance Ireland · Revenue reliefs</span></div>
+        <div class="panel fcell"><span class="pill">Government's role</span><span class="big">Low corporation tax (12.5%) · grants and loans · training and mentoring · infrastructure · education · less red tape · attract FDI</span></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Grant = rate × eligible costs (up to the maximum)</span><div class="ex">50% of €12 000 = €6 000</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Own funds = total cost − grants − loans</span><div class="ex">€40 000 − €6 000 − €15 000 = €19 000</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">% change = (new − old) ÷ old × 100</span><div class="ex">€80 000 → €92 000: +15%</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Payback period = investment ÷ yearly gain</span><div class="ex">€30 000 ÷ €12 000 = 2.5 years</div></div>
+      </div>
+      <footer>
+        <p>Built on Strand 2, topic 1 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/business/" target="_blank" rel="noopener">Leaving Certificate Business Specification</a> (NCCA, for introduction September 2025). Learning outcomes and the definition of competencies are quoted from the specification. Founders, profiles and euro figures are illustrative. State schemes change: check the agencies' websites for current details.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("bs-theme","auto"), font = store.get("bs-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("bs-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("bs-font",font); applyFont(); });
+
+
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  types:'<circle cx="8" cy="8" r="3"/><path d="M3 20c0-3 2-6 5-6s5 3 5 6"/><path d="M15 9h6M18 6v6M14 16h7"/>',
+  reasons:'<path d="M3 12h18"/><path d="M7 8l-4 4 4 4M17 8l4 4-4 4"/><circle cx="12" cy="12" r="2"/>',
+  everywhere:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="3"/>',
+  innovation:'<path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0012 3z"/>',
+  competencies:'<path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.5-.8z"/>',
+  government:'<path d="M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 21h18"/>',
+  rocket:'<path d="M12 2c3 3 4 7 4 11l-4 3-4-3c0-4 1-8 4-11z"/><path d="M10 18l-1 4M14 18l1 4"/>',
+  people:'<circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20c0-3 3-6 6-6s6 3 6 6M14 20c0-2 1.5-4.5 3.5-4.5S21 18 21 20"/>',
+  leaf:'<path d="M5 19c0-9 6-14 15-14 0 9-5 15-14 15"/><path d="M5 19l8-8"/>',
+  chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  school:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>',
+  wifi:'<path d="M2 9a15 15 0 0120 0M5 12.5a10 10 0 0114 0M8.5 16a5 5 0 017 0"/><circle cx="12" cy="19" r="1"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"types", name:"Entrepreneurs and intrapreneurs", short:"Enterprise, entrepreneurship, intrapreneurship and social enterprise, with examples.", tint:"var(--blush)"},
+  {id:"reasons", name:"Why start an enterprise?", short:"Push and pull reasons, from redundancy to a gap in the market.", tint:"var(--apricot)"},
+  {id:"everywhere", name:"Enterprise everywhere", short:"Enterprise in government, society, business, the community and your own life.", tint:"var(--sage)"},
+  {id:"innovation", name:"Innovation and why it matters", short:"Four kinds of innovation, small steps and big leaps, and who benefits.", tint:"var(--cream)"},
+  {id:"competencies", name:"Competencies of innovators", short:"Creativity, risk-taking, resilience and more: why they matter at start-up.", tint:"var(--blush)"},
+  {id:"government", name:"Government and enterprise", short:"LEOs, Enterprise Ireland, IDA Ireland, Údarás, loans, tax and infrastructure.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Enterprise","","Taking the initiative to turn an idea into action, and accepting the risk involved. It can happen in any organisation or in your own life.","types"],
+  ["Entrepreneur","","A person who sets up and runs their own business or venture, taking the financial risk in return for the potential rewards.","types"],
+  ["Entrepreneurship","","The process of spotting an opportunity and creating a new venture to exploit it.","types"],
+  ["Intrapreneur","","An employee who behaves like an entrepreneur inside an organisation, developing new ideas, products or processes. The employer carries the risk.","types"],
+  ["Intrapreneurship","","Enterprise by employees within an existing organisation.","types"],
+  ["Social enterprise","","A business that trades to meet a social, community or environmental need, reinvesting its surplus in that mission.","types"],
+  ["Co-operative","co-op","A business owned and run by its members, who share the benefits, e.g. a credit union or a community energy co-op.","types"],
+  ["Risk","","The chance of losing money, time or reputation when starting or changing something.","types"],
+  ["Reward","","What an entrepreneur hopes to gain: profit, independence, satisfaction or helping others.","types"],
+  ["Push factor","","A negative reason that pushes someone into enterprise, e.g. redundancy, no suitable jobs, or being unhappy at work.","reasons"],
+  ["Pull factor","","A positive reason that draws someone into enterprise, e.g. a gap in the market, a passion, or wanting to be their own boss.","reasons"],
+  ["Gap in the market","","A need or want that no business is meeting yet.","reasons"],
+  ["Redundancy","","Losing your job because the employer no longer needs the role, e.g. when a factory closes.","reasons"],
+  ["Independence","be your own boss","Making your own decisions about what to do, when and how: a common pull reason.","reasons"],
+  ["Community enterprise","","An enterprise set up by local people to meet a local need, e.g. a community shop, hub or energy project.","everywhere"],
+  ["Public sector","","Organisations owned and run by the State, e.g. government departments, councils, the HSE and schools.","everywhere"],
+  ["Personal enterprise","","Using enterprise skills in your own life, e.g. organising an event, budgeting, or starting a part-time job.","everywhere"],
+  ["Innovation","","Putting a new or improved idea, product, process or way of working into use.","innovation"],
+  ["Invention","","Creating something completely new. It becomes an innovation only when it's put into use.","innovation"],
+  ["Product innovation","","A new or improved good or service.","innovation"],
+  ["Process innovation","","A new or improved way of making or delivering something.","innovation"],
+  ["Business model innovation","","A new way of making money or reaching customers, e.g. subscriptions instead of one-off sales.","innovation"],
+  ["Social innovation","","A new idea that meets a social need better than before.","innovation"],
+  ["Incremental innovation","","A small improvement to something that already exists.","innovation"],
+  ["Radical innovation","disruptive innovation","A big leap that changes a market or creates a new one.","innovation"],
+  ["Research and development","R&D","Work done to create new products and processes or improve existing ones.","innovation"],
+  ["Prototype","","An early model of a product, built to test the idea.","innovation"],
+  ["Patent","","A legal right that stops others copying an invention for a set number of years.","innovation"],
+  ["Competencies","competencies of entrepreneurs","The integration of knowledge, skills, values and dispositions that support and foster innovation. (Specification glossary)","competencies"],
+  ["Creativity","","Coming up with new ideas or new ways of doing things.","competencies"],
+  ["Opportunity spotting","vision","Seeing a gap in the market or a need that others miss.","competencies"],
+  ["Risk-taking","","Being willing to take calculated risks with money, time or reputation.","competencies"],
+  ["Resilience","determination","Bouncing back from setbacks and keeping going.","competencies"],
+  ["Self-confidence","","Believing in yourself and your idea, even when others doubt it.","competencies"],
+  ["Decision-making","","Weighing up options and making a choice, often quickly and with limited information.","competencies"],
+  ["Leadership","","Setting a direction and motivating others to follow it.","competencies"],
+  ["Networking","","Building contacts who can help with advice, finance, suppliers or customers.","competencies"],
+  ["Local Enterprise Office","LEO","One of 31 offices, one in each local authority area, that support start-ups and small businesses with advice, training, mentoring and grants.","government"],
+  ["Enterprise Ireland","EI","The State agency that helps Irish-owned businesses start, grow, innovate and win export sales.","government"],
+  ["IDA Ireland","","The State agency that attracts foreign direct investment: persuades overseas companies to set up in Ireland.","government"],
+  ["Údarás na Gaeltachta","","The State agency for economic, social and cultural development of the Gaeltacht, including support for local enterprise.","government"],
+  ["Microfinance Ireland","","Gives small loans to micro-enterprises that have been refused credit by a bank.","government"],
+  ["Foreign direct investment","FDI","Investment by a company from abroad in a business in Ireland, e.g. building a factory or office.","government"],
+  ["Corporation tax","","A tax on company profits. Ireland's standard rate on trading profits is 12.5% (15% for very large groups since 2024).","government"],
+  ["Grant","","Money given to a business that doesn't have to be repaid if the conditions are met.","government"],
+  ["Feasibility study","","Research to find out whether a business idea is likely to work before you invest heavily.","government"],
+  ["Mentoring","","Advice and guidance from an experienced businessperson.","government"],
+  ["Student Enterprise Programme","","Run by the Local Enterprise Offices for second-level students, who set up and run their own mini-companies.","government"],
+  ["Infrastructure","","The basic services a business needs: roads, broadband, energy, water and transport.","government"],
+  ["Red tape","","Paperwork and rules that slow a business down. Governments try to reduce it.","government"],
+  ["Micro-enterprise","","A business with fewer than 10 employees.","government"],
+  ["Start-up","","A new business in its first years.","government"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["intrapreneur","Intrapreneur"],["entrepreneur","Entrepreneur"],["social enterprise","Social enterprise"],["push","Push factor"],["pull","Pull factor"],["gap in the market","Gap in the market"],["innovation","Innovation"],["incremental","Incremental innovation"],["radical","Radical innovation"],["competencies","Competencies"],["resilience","Resilience"],["creativity","Creativity"],["risk-taking","Risk-taking"],["Local Enterprise Office","Local Enterprise Office"],["Enterprise Ireland","Enterprise Ireland"],["IDA Ireland","IDA Ireland"],["Údarás","Údarás na Gaeltachta"],["corporation tax","Corporation tax"],["infrastructure","Infrastructure"],["co-operative","Co-operative"]];
+
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function arrow(ctx,x1,y1,x2,y2,col,w=3,dash){ line(ctx,x1,y1,x2,y2,col,w,dash); const a=Math.atan2(y2-y1,x2-x1), s=8+w; ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-s*Math.cos(a-0.45),y2-s*Math.sin(a-0.45)); ctx.lineTo(x2-s*Math.cos(a+0.45),y2-s*Math.sin(a+0.45)); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const n0 = x => Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const eur = x => "€"+n0(x);
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+function wrapText(ctx,str,maxW){ const words=str.split(" "), out=[]; let cur=""; words.forEach(wd=>{ const t=cur?cur+" "+wd:wd; if(ctx.measureText(t).width>maxW && cur){ out.push(cur); cur=wd; } else cur=t; }); if(cur) out.push(cur); return out; }
+const f2 = x => x.toFixed(2);
+// box with centred (wrapped) label
+function box(ctx,cx,cy,bw,bh,label,fill,stroke,col,fs){ rrect(ctx,cx-bw/2,cy-bh/2,bw,bh,12,fill,stroke,2); ctx.save(); ctx.font=F(fs); const ls=wrapText(ctx,label,bw-10); ctx.restore(); ls.forEach((s,i)=>text(ctx,s,cx,cy+(i-(ls.length-1)/2)*(fs+3)+fs*0.35,col,F(fs),"center")); }
+const fm = x => f2(x).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const sgn = v => (v>0?"+€":v<0?"−€":"€")+Math.abs(Math.round(v*100)/100);
+
+
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+/* ================= MODELS + DRAWINGS ================= */
+// Hero: an idea spreading to five places
+const ZONES = [["gov","Government","var(--sage)"],["soc","Society","var(--apricot)"],["biz","Business","var(--terra)"],["com","Community","var(--olive)"],["me","Your own life","var(--blush)"]];
+const zcol = k => C[{gov:"sage",soc:"apricot",biz:"terra",com:"olive",me:"blush"}[k]];
+function bulb(ctx,cx,cy,r,glow){
+  if(glow>0){ ctx.save(); ctx.globalAlpha=0.18+0.12*glow; circle(ctx,cx,cy-r*0.1,r*1.6,C.apricot); ctx.restore(); }
+  circle(ctx,cx,cy-r*0.1,r,C.cream,C.ink,2); rrect(ctx,cx-r*0.45,cy+r*0.8,r*0.9,r*0.55,3,C.muted);
+  line(ctx,cx-r*0.3,cy+r*0.05,cx,cy+r*0.45,C.terra,2); line(ctx,cx+r*0.3,cy+r*0.05,cx,cy+r*0.45,C.terra,2);
+}
+function drawHero(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cx=w/2, cy=h/2, R=Math.min(w,h)*0.36, t=o.t||0, fs=w<380?11:13;
+  ZONES.forEach(([k,n],i)=>{ const a=-Math.PI/2+i*2*Math.PI/5, x=cx+Math.cos(a)*R, y=cy+Math.sin(a)*R*0.86;
+    line(ctx,cx,cy,x,y,C.line,2,[5,5]);
+    const p=((t*0.35+i*0.2)%1); circle(ctx,cx+(x-cx)*p,cy+(y-cy)*p,4,zcol(k));
+    ctx.save(); ctx.font=F(fs); const tw=ctx.measureText(n).width; ctx.restore();
+    rrect(ctx,x-tw/2-10,y-14,tw+20,28,14,zcol(k),C.ink,1.2); text(ctx,n,x,y+5,"#3b2b21",F(fs),"center"); });
+  bulb(ctx,cx,cy,Math.min(w,h)*0.09,0.5+0.5*Math.sin(t*2));
+}
+// Entrepreneur / intrapreneur / social enterprise columns
+const TYN = {E:"Entrepreneurship",I:"Intrapreneurship",S:"Social enterprise"};
+function drawTypes(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, keys=["E","I","S"], cols=[C.terra,C.olive,C.apricot], cw=(w-24)/3, top=cp?30:44, fs=cp?10:13;
+  const sub={E:"own venture, own risk",I:"enterprising employee",S:"trading for a social need"};
+  keys.forEach((k,i)=>{ const x=12+i*cw, n=o.counts[i]||0;
+    rrect(ctx,x+4,top,cw-8,h-top-10,12,C["surface-2"]);
+    text(ctx,cp?TYN[k].split(" ")[0]:TYN[k],x+cw/2,cp?18:22,C.ink,F(fs),"center"); if(!cp) text(ctx,sub[k],x+cw/2,38,C.muted,F(11,600),"center");
+    const r=cp?7:10; for(let j=0;j<n;j++){ const cx=x+cw/2+((j%3)-1)*(r*2.6), cy=h-18-r-Math.floor(j/3)*(r*2.6); circle(ctx,cx,cy,r,cols[i],C.ink,1.2); } });
+}
+// Push / pull tug of war
+function drawTug(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, cy=h*(cp?0.55:0.58), net=(o.pull||0)-(o.push||0), shift=Math.max(-1,Math.min(1,net/4))*w*0.18, mx=w/2+shift;
+  line(ctx,w/2,cy-(cp?30:46),w/2,cy+(cp?30:46),C.muted,1.5,[4,4]);
+  line(ctx,16,cy,w-16,cy,C.apricot,cp?4:6);
+  ctx.save(); ctx.fillStyle=C.bad; ctx.fillRect(mx-4,cy-(cp?12:18),8,cp?24:36); ctx.restore();
+  const fig=(x,col,dir)=>{ circle(ctx,x,cy-(cp?20:30),cp?5:8,col,C.ink,1.2); line(ctx,x,cy-(cp?15:22),x+dir*(cp?6:9),cy+(cp?10:16),C.ink,2.5); line(ctx,x+dir*(cp?6:9),cy+(cp?10:16),x+dir*(cp?12:18),cy+(cp?24:36),C.ink,2.5); line(ctx,x+dir*(cp?6:9),cy+(cp?10:16),x,cy+(cp?24:36),C.ink,2.5); };
+  for(let i=0;i<(o.push||0);i++) fig(30+i*(cp?18:30),C.olive,-1);
+  for(let i=0;i<(o.pull||0);i++) fig(w-30-i*(cp?18:30),C.terra,1);
+  text(ctx,"PUSH",16,cp?16:24,C["olive-ink"],F(cp?11:15)); text(ctx,"PULL",w-16,cp?16:24,C["terra-ink"],F(cp?11:15),"right");
+  if(!cp){ text(ctx,"something pushes you out",16,42,C.muted,F(11,600)); text(ctx,"an opportunity pulls you in",w-16,42,C.muted,F(11,600),"right"); }
+}
+// Enterprise map: five zones
+function drawMap(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, cx=w/2, cy=h/2+(cp?0:6), R=Math.min(w*0.34,h*0.36), zr=Math.min(w,h)*(cp?0.16:0.15);
+  ZONES.forEach(([k,n],i)=>{ const a=-Math.PI/2+i*2*Math.PI/5, x=cx+Math.cos(a)*R, y=cy+Math.sin(a)*R*0.9, cnt=(o.placed&&o.placed[k])||0;
+    ctx.save(); ctx.globalAlpha=.35; circle(ctx,x,y,zr,zcol(k)); ctx.restore(); circle(ctx,x,y,zr,null,zcol(k),2);
+    text(ctx,n,x,y-zr*0.35,C.ink,F(cp?10:13),"center");
+    for(let j=0;j<cnt;j++) circle(ctx,x+(j-(cnt-1)/2)*(cp?11:16),y+zr*0.25,cp?4:6,zcol(k),C.ink,1.2); });
+  bulb(ctx,cx,cy,Math.min(w,h)*0.06,0.6);
+}
+// Innovation grid
+const ITYPES = ["Product","Process","Business model","Social"], IDEG = ["Small step","Big leap"];
+function drawGrid(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, l=cp?62:Math.min(140,w*0.26), t=cp?20:34, cw=(w-l-10)/2, ch=(h-t-8)/4, fs=cp?10:13;
+  IDEG.forEach((d,j)=>text(ctx,d,l+cw*j+cw/2,t-(cp?6:10),C.ink,F(fs),"center"));
+  ITYPES.forEach((ty,i)=>{ text(ctx,cp&&ty==="Business model"?"Model":ty,l-8,t+ch*i+ch/2+4,C.ink,F(fs),"right");
+    IDEG.forEach((d,j)=>{ const x=l+cw*j, y=t+ch*i, hit=o.hl&&o.hl[0]===i&&o.hl[1]===j;
+      rrect(ctx,x+3,y+3,cw-6,ch-6,8,hit?(o.ok?C.good:C.bad):C["surface-2"],C.line,1);
+      const here=(o.placed||[]).filter(p=>p[1]===i&&p[2]===j);
+      here.forEach((p,k)=>{ const px=x+cw/2+(k-(here.length-1)/2)*(cp?18:28); circle(ctx,px,y+ch/2,cp?8:12,[C.terra,C.olive,C.apricot,C.blush][i],C.ink,1.2); text(ctx,String(p[0]+1),px,y+ch/2+4,"#3b2b21",F(cp?9:12),"center"); }); }); });
+}
+// Radar of competencies
+const COMPS = ["Creativity","Opportunity spotting","Risk-taking","Resilience","Self-confidence","Decision-making","Leadership","Networking"];
+const CSHORT = ["Creative","Opportunity","Risk","Resilience","Confidence","Decisions","Leadership","Networking"];
+function drawRadar(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, cx=w/2, cy=h/2+(cp?2:6), R=Math.min(w*0.32,h*0.38), n=COMPS.length, P=(i,v)=>{ const a=-Math.PI/2+i*2*Math.PI/n; return [cx+Math.cos(a)*R*v/5, cy+Math.sin(a)*R*v/5]; };
+  for(let r=1;r<=5;r++){ ctx.beginPath(); for(let i=0;i<=n;i++){ const [x,y]=P(i%n,r); i?ctx.lineTo(x,y):ctx.moveTo(x,y); } ctx.strokeStyle=C.grid; ctx.lineWidth=1; ctx.stroke(); }
+  for(let i=0;i<n;i++){ const [x,y]=P(i,5); line(ctx,cx,cy,x,y,C.grid,1); const [lx,ly]=P(i,5.9); text(ctx,cp?"":(w<520?CSHORT[i]:COMPS[i]),lx,ly+4,C.ink,F(11),Math.abs(lx-cx)<8?"center":lx<cx?"right":"left"); }
+  const poly=(vals,col,alpha,dash)=>{ ctx.save(); ctx.beginPath(); vals.forEach((v,i)=>{ const [x,y]=P(i,v); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.closePath(); ctx.globalAlpha=alpha; ctx.fillStyle=col; ctx.fill(); ctx.globalAlpha=1; ctx.strokeStyle=col; ctx.lineWidth=cp?2:3; if(dash) ctx.setLineDash(dash); ctx.stroke(); ctx.restore(); };
+  if(o.need) poly(o.need,C.olive,0.12,[6,4]);
+  poly(o.you,C.terra,0.25);
+  if(!cp && o.need){ rrect(ctx,10,10,14,4,2,C.terra); text(ctx,"you",30,15,C.ink,F(11)); line(ctx,10,30,24,30,C.olive,3,[6,4]); text(ctx,"business needs",30,34,C.ink,F(11)); }
+}
+// Ladder of State support
+const AGENCIES = {
+  leo:{n:"Local Enterprise Office",s:"LEO",step:0,d:"Start-ups and businesses with up to 10 staff: advice, training, mentoring, feasibility and priming grants, Trading Online Vouchers, Student Enterprise Programme."},
+  mfi:{n:"Microfinance Ireland",s:"MFI",step:0,d:"Small loans for micro-enterprises that a bank has turned down."},
+  ei:{n:"Enterprise Ireland",s:"EI",step:1,d:"Irish-owned firms that export or plan to: funding for high-potential start-ups, R&D support, overseas offices and trade missions."},
+  ug:{n:"Údarás na Gaeltachta",s:"Údarás",step:1,d:"Enterprise and jobs in Gaeltacht areas: grants, premises and advice."},
+  ida:{n:"IDA Ireland",s:"IDA",step:2,d:"Attracts foreign direct investment: persuades overseas companies to set up or expand in Ireland."},
+  rev:{n:"Revenue",s:"Revenue",step:3,d:"Collects tax and runs reliefs for new businesses, e.g. corporation tax relief for start-up companies in their first years."},
+};
+function drawLadder(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, pad=cp?8:14, steps=[["Idea and micro start-up",["leo","mfi"]],["Growing and exporting",["ei","ug"]],["Foreign investment",["ida"]]], sh=(h-pad*2-(cp?22:34))/3, sw=(w-pad*2)/3;
+  steps.forEach(([lab,ks],i)=>{ const x=pad+sw*i, y=h-pad-(cp?22:34)-sh*(i+1)+(cp?22:34)-(cp?0:0), hh=sh*(i+1);
+    rrect(ctx,x+3,h-pad-hh,sw-6,hh,10,[C.blush,C.apricot,C.sage][i]);
+    text(ctx,lab,x+sw/2,h-pad-hh+(cp?13:20),"#3b2b21",F(cp?9:12),"center");
+    ks.forEach((k,j)=>{ const A=AGENCIES[k], bx=x+sw/2, by=h-pad-hh+(cp?30:46)+j*(cp?22:34), bw=Math.min(sw-14,cp?70:150), sel=o.hi===k, right=o.ans===k;
+      rrect(ctx,bx-bw/2,by-(cp?9:13),bw,cp?18:26,9,sel?(o.shown?(right?C.good:C.bad):C.terra):C.surface,right&&o.shown?C.good:C.ink,right&&o.shown?3:1.2);
+      text(ctx,cp||sw<190?A.s:A.n,bx,by+(cp?3:5),sel?"#fff":C.ink,F(cp?9:12),"center"); }); });
+  const rk="rev", sel=o.hi===rk, right=o.ans===rk, bw=Math.min(w-2*pad,cp?150:330);
+  rrect(ctx,w/2-bw/2,pad,bw,cp?18:26,9,sel?(o.shown?(right?C.good:C.bad):C.terra):C.surface,right&&o.shown?C.good:C.ink,right&&o.shown?3:1.2);
+  text(ctx,cp?"Revenue: tax reliefs (all steps)":"Revenue: tax system and reliefs, on every step",w/2,pad+(cp?13:18),sel?"#fff":C.ink,F(cp?9:12),"center");
+}
+// Drill picture
+const WHICH = {cr:["Creativity","New ideas","terra"],op:["Opportunity spotting","Sees the gap","apricot"],rk:["Risk-taking","Takes a calculated chance","bad"],rs:["Resilience","Bounces back","olive"],sc:["Self-confidence","Believes in it","sage"],ld:["Leadership","Brings people along","blush"]};
+function drawWhich(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const [n,d,c]=WHICH[o.ans]; const bw=Math.min(w-40,300);
+  rrect(ctx,w/2-bw/2,h/2-40,bw,80,18,C[c],C.ink,1.5); text(ctx,n,w/2,h/2-4,"#3b2b21",F(22),"center"); text(ctx,d,w/2,h/2+22,"#3b2b21",F(13,600),"center"); }
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "types", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3"]; const loState=store.get("b21-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("b21-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("b21-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  types:{ vis:[["types",{counts:[3,2,2]}]], cap:"Three ways to be enterprising: start your own venture, innovate inside an organisation, or trade for a social need.",
+    keys:[["E","An entrepreneur sets up their own venture and takes the risk, e.g. Patrick and John Collison from Limerick founded Stripe."],["I","An intrapreneur is an employee who acts like an entrepreneur inside an organisation. The employer carries the risk and usually owns the idea."],["S","A social enterprise trades like a business but puts its surplus back into a social, community or environmental mission."]],
+    f:"Enterprise = initiative + action + risk", mistake:"Saying only business owners can be enterprising. Employees, civil servants, volunteers and students can all show enterprise." },
+  reasons:{ vis:[["tug",{push:1,pull:2}]], cap:"A typical founder: pushed by redundancy, pulled by a gap in the market and a passion.",
+    keys:[["←","Push reasons: redundancy, no suitable jobs nearby, unhappy with a job or its hours, needing flexible work."],["→","Pull reasons: a gap in the market, a hobby or skill, being your own boss, a new invention, helping the community, more money."],["⚖","Most founders have several reasons at once. In an answer, apply each reason to the person in the case."]],
+    f:"Push (out of a job) + pull (towards an opportunity)", mistake:"Giving 'money' as the only reason. Independence, passion and solving a problem are often stronger motives." },
+  everywhere:{ vis:[["map",{placed:{gov:1,soc:1,biz:2,com:1,me:1}}]], cap:"Enterprise and innovation happen in all five places, not only in business.",
+    keys:[["🏛","Government: new ways to deliver public services, e.g. Revenue's online myAccount, or councils trialling smart bins."],["🤝","Community and society: Tidy Towns groups, men's sheds, community energy co-ops and campaigns that change behaviour."],["🙋","Your own life: organising an event, budgeting, a part-time job or a Transition Year mini-company all use enterprise skills."]],
+    f:"Government · society · business · community · own life", mistake:"Thinking enterprise in the public sector doesn't count because there's no profit. Saving money and serving people better are rewards too." },
+  innovation:{ vis:[["grid",{placed:[[0,0,0],[1,0,1],[2,1,0],[5,2,1],[7,3,1]]}]], cap:"Four kinds of innovation, each a small step or a big leap.",
+    keys:[["?","Innovation means putting a new or improved idea into use. An invention only becomes an innovation when people use it."],["4","Product (what you sell), process (how you make or deliver it), business model (how you earn money) and social (meeting a social need)."],["!","Why it matters: business (sales, lower costs, an edge over rivals), the economy (jobs, exports, tax) and society (better health, environment and quality of life)."]],
+    f:"Product · process · business model · social", mistake:"Mixing up invention and innovation. Innovation is about use: a new idea that reaches customers or changes how work is done." },
+  competencies:{ vis:[["radar",{you:[4,3,2,4,3,3,4,3],need:[4,4,4,5,4,4,3,4]}]], cap:"A student's self-rating (solid) against what a new food truck needs (dashed).",
+    keys:[["💡","Creativity and opportunity spotting: seeing a need and a new way to meet it."],["🎯","Risk-taking, self-confidence and decision-making: committing time and money with no guarantee."],["🔁","Resilience, leadership and networking: keeping going after setbacks and getting others (staff, investors, mentors) on board."]],
+    f:"Competencies = knowledge + skills + values + dispositions", mistake:"Listing qualities without saying why they matter when starting a business. Name it, explain it, link it to start-up." },
+  government:{ vis:[["ladder",{}]], cap:"Different State agencies help at different stages, from an idea to a multinational.",
+    keys:[["L","Local Enterprise Offices (31, one per local authority area) help start-ups and firms with up to 10 staff: training, mentoring and grants."],["E","Enterprise Ireland helps Irish-owned firms grow and export. IDA Ireland attracts foreign companies (FDI). Údarás na Gaeltachta supports Gaeltacht enterprise."],["€","Government also fosters enterprise through low corporation tax (12.5%), tax reliefs, loans, infrastructure such as broadband, education and less red tape."]],
+    f:"LEO → Enterprise Ireland → IDA Ireland (FDI)", mistake:"Mixing up Enterprise Ireland and IDA Ireland. EI helps Irish-owned firms; IDA brings foreign firms in." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const TINTS = ["var(--blush)","var(--apricot)","var(--sage)","var(--cream)"];
+const BIZ = [
+  {n:"Stripe", ic:"rocket", chip:["Entrepreneurship · international","real"], who:"Founded in 2010 by brothers Patrick and John Collison from Co. Limerick.", job:"Online payment software used by businesses around the world.", ie:"Spotted that taking payments online was too hard for small firms: a gap in the market."},
+  {n:"Tayto cheese & onion", ic:"innovation", chip:["Innovation · national","real"], who:"Joe 'Spud' Murphy's company, Tayto, Dublin, 1954.", job:"Developed a way to add flavour to crisps during production: cheese and onion.", ie:"A product and process innovation copied by crisp makers worldwide."},
+  {n:"Gmail", ic:"types", chip:["Intrapreneurship · international","real"], who:"Developed inside Google by engineer Paul Buchheit, launched in 2004.", job:"Widely reported as an example of Google letting staff spend time on their own projects.", ie:"The employer funded the work and carried the risk: classic intrapreneurship."},
+  {n:"Rediscovery Centre", ic:"leaf", chip:["Social enterprise · local","real"], who:"A social enterprise and national centre for the circular economy in Ballymun, Dublin.", job:"Repairs and resells furniture, bikes and clothes, and runs education programmes.", ie:"Trades to meet environmental and community needs, not to maximise profit."},
+  {n:"Local Enterprise Offices", ic:"government", chip:["Government · local","neutral"], who:"31 offices, one in each local authority area.", job:"Start Your Own Business courses, mentoring, grants and the Student Enterprise Programme.", ie:"Usually the first stop for a new small business."},
+  {n:"Young Scientist Exhibition", ic:"school", chip:["Innovation · students","neutral"], who:"An annual science and technology exhibition for second-level students, running since 1965.", job:"Students research and present their own ideas; some projects have gone on to become businesses.", ie:"Enterprise and innovation in your own life, before you ever start a company."},
+];
+$("cases").innerHTML = BIZ.map((c,k)=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${TINTS[k%4]}">${svg(c.ic)}</div><h3>${c.n}</h3></div><div class="chips">${chipsHTML([c.chip])}</div><p><b>Who:</b> ${c.who}</p><p><b>What:</b> ${c.job}</p><p><b>Lesson:</b> ${c.ie}</p></div>`).join("");
+const IMPACTS = [
+  ["chart","Business",[["+","New products win customers; better processes cut costs; an edge over competitors; survival in a changing market"],["−","R&D costs money and many new ideas fail"]],"var(--apricot)"],
+  ["government","The economy",[["+","New firms and jobs; more exports; more tax for public services; attracts investment"],["−","Some older jobs disappear as technology replaces them"]],"var(--blush)"],
+  ["people","Society",[["+","Better healthcare, education and communication; solutions to problems such as climate change; more choice"],["−","Not everyone gains: digital divides, and some innovations raise new ethical questions"]],"var(--sage)"],
+];
+$("impacts").innerHTML = IMPACTS.map(([i,t,pts,tn])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${t}</h3></div>${pts.map(([s,p])=>`<p><b style="color:var(--${s==="+"?"good":"bad"})">${s==="+"?"Benefits":"Costs"}:</b> ${p}</p>`).join("")}</div>`).join("");
+const AROUND = [
+  ["school","Student Enterprise Programme","Every year second-level students set up mini-companies with help from their Local Enterprise Office, and the best compete in national finals.",[["Enterprise in your life","real"],["LEO","neutral"]],"var(--blush)"],
+  ["rocket","Web Summit","Started in Dublin in 2009 as a small tech conference, it grew into one of the world's largest. It moved to Lisbon in 2016.",[["Entrepreneurship","real"]],"var(--apricot)"],
+  ["wifi","National Broadband Plan","A State-backed plan to bring high-speed broadband to rural homes and businesses: infrastructure that lets enterprises start anywhere.",[["Government","neutral"],["Infrastructure","real"]],"var(--sage)"],
+  ["government","Local Enterprise Week","LEOs run a week of free events for small businesses each year: workshops, mentoring and networking.",[["Government support","neutral"]],"var(--cream)"],
+  ["chart","12.5% corporation tax","Ireland's low tax on trading profits helps attract foreign investment and new firms. Very large groups have paid a 15% minimum rate since 2024, under an international agreement.",[["Tax","neutral"],["FDI","real"]],"var(--blush)"],
+  ["leaf","Community energy","Community groups are setting up energy co-ops to share the income from local solar and wind projects: social and community enterprise.",[["Community enterprise","real"],["Sustainability","neutral"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"types",label:"Who's enterprising",col:"var(--blush)",leaves:[["Entrepreneur","Own venture, own risk."],["Intrapreneur","Enterprising employee."],["Social enterprise","Trades for a social need."]]},
+  {id:"reasons",label:"Why start up",col:"var(--apricot)",leaves:[["Push","Redundancy, no jobs, unhappy at work."],["Pull","Gap, passion, independence, new idea."],["Mix","Most founders have both."]]},
+  {id:"everywhere",label:"Where",col:"var(--sage)",leaves:[["Government","Better public services."],["Society","Campaigns, charities, social change."],["Community","Local groups and co-ops."],["Own life","Events, budgeting, mini-company."]]},
+  {id:"innovation",label:"Innovation",col:"var(--cream)",leaves:[["Four types","Product, process, model, social."],["Small or big","Incremental or radical."],["Why it matters","Business, economy, society."]]},
+  {id:"competencies",label:"Competencies",col:"var(--blush)",leaves:[["Creativity","New ideas."],["Risk-taking","Calculated chances."],["Resilience","Bounce back."],["Leadership","Bring people along."]]},
+  {id:"government",label:"Government",col:"var(--sage)",leaves:[["LEO","Local start-ups, under 10 staff."],["EI and IDA","Irish exporters; foreign investment."],["Tax and infrastructure","12.5%, broadband, education."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["types","What is enterprise?","Taking the initiative to turn an idea into action and accepting the risk involved. It can happen anywhere: in business, government, the community or your own life."],
+  ["types","Define an entrepreneur.","A person who sets up and runs their own business or venture, taking the financial risk in return for the potential rewards."],
+  ["types","Define an intrapreneur.","An employee who acts like an entrepreneur inside an organisation, developing new ideas, products or processes. The employer carries the risk."],
+  ["types","Give one difference between an entrepreneur and an intrapreneur.","The entrepreneur owns the venture and carries the risk (and keeps the profit). The intrapreneur is employed: the organisation carries the risk and owns the idea."],
+  ["types","What is a social enterprise?","A business that trades to meet a social, community or environmental need and reinvests its surplus in that mission."],
+  ["reasons","What is a push factor? Give two examples.","A negative reason that pushes someone into enterprise: redundancy, no suitable jobs nearby, being unhappy in a job."],
+  ["reasons","What is a pull factor? Give two examples.","A positive reason that draws someone into enterprise: a gap in the market, a passion or skill, being your own boss, a new idea."],
+  ["reasons","Why might a community group start an enterprise?","To meet a local need (jobs, a shop, a hub, energy) and keep people and money in the area."],
+  ["everywhere","Give an example of enterprise in government.","e.g. Revenue's online myAccount service; a council trialling smart bins; a hospital team redesigning how patients are booked in."],
+  ["everywhere","How can you show enterprise in your own life?","Organising an event, running a mini-company, managing a budget, starting a part-time job, volunteering to lead a club project."],
+  ["everywhere","Why does enterprise matter in the community?","It meets local needs, creates jobs, builds skills and keeps towns and villages alive."],
+  ["innovation","Define innovation.","Putting a new or improved idea, product, process or way of working into use."],
+  ["innovation","Distinguish invention and innovation.","An invention is a new creation. It becomes an innovation when it's put into use, e.g. sold to customers or used at work."],
+  ["innovation","Name four types of innovation.","Product, process, business model and social innovation."],
+  ["innovation","Incremental or radical: the first smartphone?","Radical: a big leap that changed the market. A better camera in next year's model is incremental."],
+  ["innovation","Why is innovation important for business?","New products win customers, better processes cut costs, and it keeps the firm ahead of competitors."],
+  ["innovation","Why is innovation important for the economy and society?","Economy: new firms, jobs, exports and tax. Society: better health, communication and solutions to problems like climate change."],
+  ["competencies","What are competencies (spec definition)?","The integration of knowledge, skills, values and dispositions that support and foster innovation."],
+  ["competencies","Why is resilience significant when starting a business?","Most start-ups face setbacks (rejections, losses, failed products). Resilience lets the founder learn and keep going."],
+  ["competencies","Why is risk-taking significant when starting a business?","The founder must commit savings, time and reputation with no guarantee. Calculated risks are needed to seize an opportunity."],
+  ["competencies","Why is opportunity spotting significant?","A business needs a real gap in the market. Spotting needs others miss is where viable ideas come from."],
+  ["competencies","Why is networking significant at start-up?","Contacts bring advice, finance, suppliers and first customers."],
+  ["government","What does a Local Enterprise Office do?","Supports start-ups and small firms (up to 10 staff): advice, Start Your Own Business training, mentoring, grants, Trading Online Vouchers, Student Enterprise Programme."],
+  ["government","Distinguish Enterprise Ireland and IDA Ireland.","Enterprise Ireland helps Irish-owned firms grow and export. IDA Ireland attracts foreign companies to invest in Ireland (FDI)."],
+  ["government","What does Údarás na Gaeltachta do?","Promotes economic, social and cultural development in the Gaeltacht, including grants and premises for enterprise."],
+  ["government","Who can Microfinance Ireland help?","Micro-enterprises that have been refused a loan by a bank."],
+  ["government","Name four ways the government fosters enterprise.","Low corporation tax (12.5%) and reliefs; grants, loans and mentoring; infrastructure such as broadband; education and training; reducing red tape."],
+  ["government","Why does the government support enterprise?","Enterprise creates jobs, exports and tax revenue, and keeps regions alive."],
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Enterprise</text><text x="${cx}" y="${cy+22}" text-anchor="middle">&amp; innovation</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("b21-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("b21-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("b21-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("b21-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["types","A hospital nurse designs a faster patient check-in system, and the hospital adopts it. This is an example of:",["Entrepreneurship","Intrapreneurship","A social enterprise","A franchise"],1,"She is an employee being enterprising inside the organisation, which carries the risk."],
+  ["types","Who carries the financial risk in intrapreneurship?",["The employee","The organisation (employer)","The government","The customer"],1,"The employer funds the project and owns the idea, so it carries the risk."],
+  ["types","A café that trains people with disabilities and reinvests its profits in that work is a:",["Public limited company","Social enterprise","Sole trader","Multinational"],1,"It trades to meet a social need and puts its surplus back into the mission."],
+  ["reasons","Which of these is a push factor for starting a business?",["Spotting a gap in the market","Being made redundant","Wanting to be your own boss","A passion for baking"],1,"Redundancy pushes people out of employment. The others are pull factors."],
+  ["reasons","Which of these is a pull factor?",["No jobs in the local area","Unhappy with long working hours","An idea for a new product","The factory closing"],2,"A new idea is an opportunity that draws someone in."],
+  ["everywhere","Revenue introduces an online system so people can file tax returns from home. This is enterprise in:",["Business","Government (the public sector)","The community","Your own life"],1,"A State body is finding a new, better way to deliver a public service."],
+  ["everywhere","A Transition Year student organises a fundraising concert: plans the budget, venue and publicity. This shows enterprise in:",["Their own life","Government","A multinational","The EU"],0,"Using enterprise skills in your own life, with no business involved."],
+  ["innovation","Innovation is best described as:",["Any new idea","Putting a new or improved idea into use","A patent","Research only"],1,"An idea only becomes an innovation when it's put into use."],
+  ["innovation","A factory installs robots to pack products faster. This is a:",["Product innovation","Process innovation","Social innovation","Business model innovation"],1,"It changes how the product is made, not the product itself."],
+  ["innovation","Moving from selling DVDs to a monthly streaming subscription is a:",["Process innovation","Business model innovation","Social innovation","Incremental product change"],1,"It changes how the firm earns money from customers."],
+  ["innovation","Which is a benefit of innovation for the economy?",["Higher costs for firms","More jobs, exports and tax revenue","Less competition","Fewer new businesses"],1,"New and growing firms create jobs and pay tax."],
+  ["competencies","The specification defines competencies as the integration of knowledge, skills, values and:",["profits","dispositions","patents","grants"],1,"\"The integration of knowledge, skills, values and dispositions that support and foster innovation.\""],
+  ["competencies","After three failed prototypes, an inventor keeps going and the fourth works. This shows:",["Resilience","Networking","Leadership","Decision-making"],0,"Bouncing back from setbacks is resilience."],
+  ["competencies","Why is networking significant when starting a business?",["It avoids paying tax","Contacts bring advice, finance, suppliers and customers","It guarantees profit","It removes all risk"],1,"A new business needs people: mentors, investors, suppliers and first customers."],
+  ["government","A small start-up with four employees wants a mentor and a feasibility grant. Its first stop should be:",["IDA Ireland","Its Local Enterprise Office","The European Central Bank","Revenue"],1,"LEOs support start-ups and firms with up to 10 staff."],
+  ["government","Which agency attracts foreign companies to set up in Ireland?",["Enterprise Ireland","IDA Ireland","Local Enterprise Office","Microfinance Ireland"],1,"IDA Ireland is responsible for foreign direct investment."],
+  ["government","Which is a way the government fosters enterprise WITHOUT giving grants?",["A feasibility grant","Investing in broadband infrastructure","A priming grant","A Trading Online Voucher"],1,"Infrastructure helps every business. The others are direct financial supports."],
+  ["government","Ireland's standard corporation tax rate on trading profits is:",["9%","12.5%","23%","40%"],1,"12.5% (very large groups pay a 15% minimum since 2024). A low rate encourages investment."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("b21-best",null); if(best==null||pct>best) store.set("b21-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Identify","Recognise patterns, facts or details; name them.","Identify examples of intrapreneurship in your local community."],
+  ["Explain","Give a detailed account including reasons or causes.","Explain the importance of innovation for the economy."],
+  ["Outline","Give the main points; keep to the essential information.","Outline why resilience is significant when starting a business."],
+  ["Investigate","Observe, study or examine in detail to establish facts and reach new conclusions.","Investigate the role of government in fostering enterprise."],
+  ["Discuss","Give a balanced review with a range of arguments supported by evidence.","Discuss the reasons people start an enterprise."],
+  ["Evaluate","Make a judgement based on evidence, noting its limits.","Evaluate the supports available to a new business in your area."],
+  ["Distinguish","Make the differences between two or more things clear.","Distinguish between an entrepreneur and an intrapreneur."],
+  ["Compare","Give the similarities and differences between two or more things.","Compare the work of Enterprise Ireland and IDA Ireland."],
+  ["Calculate","Work out a numerical answer, showing your workings.","Calculate how much of the start-up cost the owner must fund."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">Summarised from Appendix 1 of the specification. Always read the full question and the marks available.</p>`;
+
+// Numbers trainer
+const r1 = x => Math.round(x*10)/10, r2 = x => Math.round(x*100)/100;
+const PTYPES = {
+  grant:{ name:"Grant amount", gen(){ const c=rnd(4,40)*1000, p=pick([50,60,80]), cap=pick([10000,15000,20000]), g=Math.min(c*p/100,cap);
+    return { q:`A grant pays <b>${p}%</b> of eligible costs, up to a maximum of <b>€${n0(cap)}</b>. A start-up's eligible costs are <b>€${n0(c)}</b>. How much grant does it get?`, ans:g, unit:"€",
+      steps:["Grant = rate × eligible costs, but no more than the maximum", `${p}% × €${n0(c)} = €${n0(c*p/100)}`, c*p/100>cap? `That's above the €${n0(cap)} limit, so the grant is €${n0(g)}` : `Below the limit, so the grant is €${n0(g)}`] }; } },
+  own:{ name:"Own funds needed", gen(){ const T=rnd(20,80)*1000, G=rnd(2,8)*1000, L=rnd(5,15)*1000, x=T-G-L;
+    return { q:`Setting up a business costs <b>€${n0(T)}</b>. The owner gets a grant of <b>€${n0(G)}</b> and a loan of <b>€${n0(L)}</b>. How much must the owner put in from their own savings?`, ans:x, unit:"€",
+      steps:["Own funds = total cost − grants − loans", `= ${n0(T)} − ${n0(G)} − ${n0(L)}`, `= €${n0(x)}`] }; } },
+  ownpct:{ name:"Own funds as a %", gen(){ const T=pick([20000,25000,40000,50000,80000]), O=Math.round(T*rnd(15,70)/100/500)*500, x=r1(O/T*100);
+    return { q:`A start-up costs <b>€${n0(T)}</b> in total. The founder invests <b>€${n0(O)}</b> of her own money. What percentage of the cost is that? (1 decimal place)`, ans:x, unit:"%",
+      steps:["% = own funds ÷ total cost × 100", `= ${n0(O)} ÷ ${n0(T)} × 100`, `= ${x.toFixed(1)}%`] }; } },
+  profit:{ name:"Profit", gen(){ const R=rnd(30,200)*1000, Cst=Math.round(R*rnd(55,95)/100/1000)*1000, x=R-Cst;
+    return { q:`In its first year a new business has sales of <b>€${n0(R)}</b> and total costs of <b>€${n0(Cst)}</b>. Calculate its profit.`, ans:x, unit:"€",
+      steps:["Profit = sales revenue − total costs", `= ${n0(R)} − ${n0(Cst)}`, `= €${n0(x)}`] }; } },
+  pct:{ name:"% increase in sales", gen(){ const a=rnd(40,200)*1000; let b; do{ b=a+rnd(2,60)*1000; }while(b===a); const x=r1((b-a)/a*100);
+    return { q:`After launching an innovative new product, a firm's sales rise from <b>€${n0(a)}</b> to <b>€${n0(b)}</b>. Calculate the percentage increase. (1 decimal place)`, ans:x, unit:"%",
+      steps:["% change = (new − old) ÷ old × 100", `= (${n0(b)} − ${n0(a)}) ÷ ${n0(a)} × 100`, `= ${x.toFixed(1)}%`] }; } },
+  ctax:{ name:"Corporation tax (12.5%)", gen(){ const P=rnd(20,400)*1000, x=r2(P*0.125);
+    return { q:`A company makes trading profits of <b>€${n0(P)}</b>. Corporation tax is <b>12.5%</b>. How much tax does it pay?`, ans:x, unit:"€",
+      steps:["Tax = profit × 12.5 ÷ 100", `= ${n0(P)} × 0.125`, `= €${fm(x)}`] }; } },
+  payback:{ name:"Payback period", gen(){ const I=rnd(4,30)*5000, S=pick([5000,8000,10000,12000,15000,20000]), x=r1(I/S);
+    return { q:`A firm spends <b>€${n0(I)}</b> on a new machine (a process innovation). It saves <b>€${n0(S)}</b> a year. How many years until it has paid for itself? (1 decimal place)`, ans:x, unit:"years",
+      steps:["Payback period = investment ÷ yearly saving", `= ${n0(I)} ÷ ${n0(S)}`, `= ${x.toFixed(1)} years`] }; } },
+  interest:{ name:"Loan interest (1 year)", gen(){ const L=rnd(2,25)*1000, r=pick([4.5,6,7.5,8,9.5]), x=r2(L*r/100);
+    return { q:`A micro-enterprise borrows <b>€${n0(L)}</b> at <b>${r}%</b> a year. How much interest is due for the first year (ignoring repayments)?`, ans:x, unit:"€",
+      steps:["Interest = loan × rate ÷ 100", `= ${n0(L)} × ${r} ÷ 100`, `= €${fm(x)}`] }; } },
+  units:{ name:"Profit from units sold", gen(){ const p=pick([4,6,8,12,15,25]), c=Math.max(1,p-pick([1.5,2,3,4,5])), q=rnd(5,60)*100, x=r2((p-c)*q);
+    return { q:`A student mini-company sells keyrings at <b>€${f2(p)}</b> each. Each costs <b>€${f2(c)}</b> to make. It sells <b>${n0(q)}</b>. What is the total profit (ignoring other costs)?`, ans:x, unit:"€",
+      steps:["Profit per unit = price − cost per unit", `= ${f2(p)} − ${f2(c)} = €${f2(p-c)}`, `Total = ${f2(p-c)} × ${n0(q)} = €${fm(x)}`] }; } },
+};
+let pType="grant", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const raw=$("paIn").value.replace(/[€%£$\sm]/g,"").replace(/years?/i,"").replace(/[−–]/g,"-").replace(/,(?=\d{3}(\D|$))/g,"").replace(",",".");
+  const x=parseFloat(raw);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 1500 or 59.3.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(0.05, Math.abs(pCur.ans)*0.005);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: write the formula first; a percentage is part ÷ whole × 100; take grants and loans away from the total; watch any maximum on a grant. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Which competency? [statement, key, why]
+const PRED = [
+  ["After three failed prototypes, she kept going and the fourth one worked.","rs","Bouncing back from setbacks."],
+  ["He noticed tourists kept asking where to rent bikes, so he started a bike-hire service.","op","Seeing a need that nobody was meeting."],
+  ["She put her savings into the business and left a secure job to run it full-time.","rk","Committing money and security with no guarantee."],
+  ["He turned old fishing nets into sunglasses frames.","cr","A new use for something: a new idea."],
+  ["She pitched her idea calmly to a room full of investors.","sc","Believing in yourself and your idea."],
+  ["He kept his small team motivated through a tough first winter.","ld","Bringing people along and keeping them going."],
+  ["She saw that remote workers in her town had nowhere to work and opened a co-working hub.","op","Spotting a gap in the local market."],
+  ["He designed a board game that teaches Irish to young children.","cr","An original product idea."],
+  ["She believed in her product even when friends told her it would never sell.","sc","Confidence in the idea despite doubters."],
+  ["He borrowed to buy a second food truck before the first had made a profit.","rk","A calculated risk to grow faster."],
+  ["Her shop flooded, but she reopened in a pop-up unit within a week.","rs","Recovering quickly from a setback."],
+  ["He gave each team member a clear role and trusted them to deliver.","ld","Organising and leading people."],
+];
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k && PRED.length>1); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>${PRED[k][0]}</b> Which competency does this show most clearly?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick one of the six answers first.</div>`; return; }
+  const [,ans,why]=PRED[pd.k], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> It's ${WHICH[ans][0].toLowerCase()}. ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Sláinte Bites", intro:"Ciara worked as a chef in a hotel chain, where she redesigned the breakfast menu to cut food waste. When the hotel cut her hours, she left to set up Sláinte Bites, which delivers healthy lunches to schools in Co. Mayo. (Illustrative case.)",
+    parts:[["a","Distinguish between entrepreneurship and intrapreneurship, using examples from the case.",12,"Entrepreneurship: setting up and running your own venture, taking the risk (3); Ciara setting up Sláinte Bites (3). Intrapreneurship: an employee being enterprising inside an organisation, which carries the risk (3); Ciara redesigning the hotel's menu to cut waste (3)."],
+      ["b","Outline three reasons why Ciara may have started her own enterprise. Refer to push and pull reasons.",12,"3 × 4 (reason 2 + applied 2): push: her hours were cut / unhappy with job; pull: gap in the market for healthy school lunches; pull: passion and skill as a chef; pull: be her own boss; pull: help children eat well (social)."],
+      ["c","Identify one example each of innovation in your local community, nationally and internationally, and explain the importance of innovation for business, the economy and society.",18,"Three examples × 2 (local, national, international) (6). Importance: business: new products win sales, better processes cut costs, competitive edge (4); economy: jobs, exports, tax revenue, FDI (4); society: better health, environment, communication, solutions to social problems (4)."]] },
+  { title:"Competencies of innovators", intro:"Before applying to the Local Enterprise Office, Ciara rated her own competencies with a mentor.",
+    parts:[["a","Identify four competencies of innovators and outline why each is significant when starting a business.",20,"4 × 5 (name 1 + explain 2 + why it matters at start-up 2): creativity, opportunity spotting, risk-taking, resilience, self-confidence, decision-making, leadership, networking. Must link each to starting a business."],
+      ["b","Explain what the specification means by 'competencies' and how a second-level student could develop them.",8,"Integration of knowledge, skills, values and dispositions that support and foster innovation (3). Developed by e.g. Student Enterprise Programme, Young Scientist, Transition Year mini-company, part-time work, leading a club project (5)."],
+      ["c","Ciara's start-up costs are €40 000. She gets a grant of 50% on eligible costs of €12 000 and a microfinance loan of €15 000. Calculate how much she must fund herself, and what percentage of the total that is.",10,"Grant = 50% × 12 000 = €6 000 (3). Own funds = 40 000 − 6 000 − 15 000 = €19 000 (4). 19 000 ÷ 40 000 × 100 = 47.5% (3)."]] },
+  { title:"Government and enterprise", intro:"The government wants more new businesses in every county, not only in Dublin.",
+    parts:[["a","Investigate the role of the government in fostering enterprise. Outline four ways it supports business development and growth.",16,"4 × 4: low corporation tax (12.5%) and start-up reliefs; State agencies with grants, loans and mentoring (LEO, EI, Údarás, Microfinance Ireland); infrastructure (National Broadband Plan, roads, energy); education and training (e.g. Start Your Own Business courses); reducing red tape; attracting FDI through IDA Ireland; Local Enterprise Week."],
+      ["b","Distinguish between Enterprise Ireland and IDA Ireland.",8,"Enterprise Ireland: helps Irish-owned firms start, grow, innovate and export (4). IDA Ireland: attracts foreign companies to invest and set up in Ireland (FDI) (4)."],
+      ["c","Explain three supports a Local Enterprise Office offers a new business.",12,"3 × 4: advice and information; Start Your Own Business training; mentoring; feasibility, priming or business expansion grants; Trading Online Voucher; networking events; Student Enterprise Programme for schools."],
+      ["d","Evaluate whether the government should spend public money supporting start-ups.",8,"For: jobs, tax revenue, regional development, innovation (3). Against: some start-ups fail so money is lost; could fund schools or hospitals instead (3). Justified judgement (2)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist
+const RAG = ["Define enterprise, entrepreneur and intrapreneur","Distinguish entrepreneurship and intrapreneurship with examples","Explain what a social enterprise is","Give push and pull reasons for starting an enterprise","Identify enterprise in government, society, business, the community and my own life","Define innovation and distinguish it from invention","Name four types of innovation; incremental v radical","Explain the importance of innovation for business, the economy and society","Quote the spec's definition of competencies","Outline four competencies of innovators and why they matter at start-up","Explain what LEOs, Enterprise Ireland, IDA Ireland and Údarás do","Outline ways the government fosters enterprise beyond grants","Calculate grants, own funds, profit and % change"];
+const ragState=store.get("b21-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("b21-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Ask good questions","Turn a topic into a clear research question, e.g. \"What supports helped three local start-ups in my town?\"","Find the right support"],["Find relevant sources","Use localenterprise.ie, enterprise-ireland.com and local news; judge how reliable and current each is.","Find the right support"],["Acknowledge sources","Record and credit every source, with dates for every scheme or figure.","Any lab"],["Collect primary data","Interview a local entrepreneur about why they started and what helped.","Founders' stories"],["Analyse data","Group interview answers into push and pull reasons; count and compare.","Founders' stories"],["Weigh up perspectives","Compare how innovation affects the business, the economy and society.","Innovation grid"],["Reach a conclusion","Make a justified judgement, e.g. which competency matters most for a food start-up?","Innovator profile"],["Reflect and present","Say what you'd do differently and present your findings clearly to your audience.","Any lab"]];
+const skState=store.get("b21-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("b21-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+// Who's being enterprising?
+const TY = [["Two students set up a business printing hoodies from home.","E","Their own venture, their own risk."],["Patrick and John Collison founded Stripe, an online payments company.","E","Founders of their own business."],["A supermarket worker suggests self-scan tills and leads the trial in her store.","I","Enterprising inside her employer's business."],["A hospital nurse designs a faster patient check-in system that the hospital adopts.","I","An employee innovating; the hospital carries the risk."],["An airline's IT team builds a new app feature to rebook cancelled flights.","I","Staff innovating inside the company."],["A community group opens a café that trains people with disabilities.","S","Trading to meet a social need."],["A community energy co-op builds a wind turbine and shares the income locally.","S","Trading for community and environmental benefit."],["A farmer starts selling her own ice cream to local shops.","E","A new venture of her own."],["A charity shop chain sells donated goods and reinvests all its surplus in its cause.","S","Trading, with the surplus going to the mission."],["A bank employee develops a savings app feature for young customers.","I","Intrapreneurship: an employee's idea, the bank's risk."]];
+const TYK = {E:"Entrepreneurship",I:"Intrapreneurship",S:"Social enterprise"}, tyS = { order:[], ans:{} };
+const tyCounts = () => ["E","I","S"].map(k=>Object.entries(tyS.ans).filter(([i,a])=>a===k && TY[i][1]===k).length);
+const tyRender=()=>{ sorter("tyList","tyOut",TY,TYK,tyS); tyC.redraw(); };
+function tyNew(){ tyS.order=shuffle(TY.map((s,k)=>k)); tyS.ans={}; tyRender(); }
+$("tyList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b) return; tyS.ans[+b.dataset.k]=b.dataset.v; tyRender(); });
+$("tyReset").addEventListener("click",tyNew);
+// Founders' stories
+const REASONS = [["redund","Lost their job (redundancy)","push"],["nojob","Couldn't find suitable work nearby","push"],["unhappy","Unhappy with their job or hours","push"],["gap","Spotted a gap in the market","pull"],["passion","Turn a hobby, skill or passion into a living","pull"],["boss","Be their own boss","pull"],["idea","Develop a new invention or idea","pull"],["community","Solve a problem for the community","pull"],["money","Earn more money","pull"]];
+const FOUNDERS = [
+  {n:"Aoife, 34",s:"Aoife was made redundant when the call centre in her town closed. She had always baked for friends, and there was no bakery in town, so she used her redundancy money to open one.",r:["redund","passion","gap"]},
+  {n:"Tomás, 19",s:"Tomás couldn't find part-time work near home. He was good at fixing phones and lots of classmates had cracked screens, so he started a repair service from his bedroom.",r:["nojob","passion","gap"]},
+  {n:"Lena, 41",s:"Lena earned a good salary as an engineer but hated the long commute and rigid hours. She wanted to make her own decisions and to develop her idea for a smart beehive sensor.",r:["unhappy","boss","idea"]},
+  {n:"A village group",s:"Young people were leaving the village because there were no jobs. Residents set up a community co-operative to run a remote-working hub and café, so people could work locally.",r:["nojob","community"]},
+];
+const rs = { f:0, sel:{}, checked:false };
+const RSK = Object.fromEntries(REASONS.map(r=>[r[0],r]));
+$("rsF").innerHTML = FOUNDERS.map((f,k)=>`<button data-k="${k}" aria-pressed="${k===0}">${f.n}</button>`).join("");
+$("rsR").innerHTML = REASONS.map(([k,n,t])=>`<button data-r="${k}" aria-pressed="false">${n}</button>`).join("");
+function rsUpd(){ const F=FOUNDERS[rs.f], sel=Object.keys(rs.sel).filter(k=>rs.sel[k]);
+  $("rsStory").innerHTML = `<b>${F.n}:</b> ${F.s}`;
+  document.querySelectorAll("#rsR button").forEach(b=>{ b.setAttribute("aria-pressed",!!rs.sel[b.dataset.r]); b.classList.toggle("right",rs.checked&&F.r.includes(b.dataset.r)); b.classList.toggle("wrong",rs.checked&&!!rs.sel[b.dataset.r]&&!F.r.includes(b.dataset.r)); });
+  const push=sel.filter(k=>RSK[k][2]==="push").length, pull=sel.filter(k=>RSK[k][2]==="pull").length;
+  const hits=sel.filter(k=>F.r.includes(k)).length, wrong=sel.length-hits;
+  setReadout($("rsOut"),[["Push reasons picked",String(push)],["Pull reasons picked",String(pull)],["Matches the story",rs.checked?`${hits} of ${F.r.length}`:"check to see"],["Not in the story",rs.checked?String(wrong):"–"]]);
+  $("rsWork").innerHTML = rs.checked? `Model answer: ${F.r.map(k=>`<b>${RSK[k][1]}</b> (${RSK[k][2]})`).join(", ")}. ${wrong?"Some of your picks aren't supported by the story: use only evidence from the case.":hits===F.r.length?"Spot on: every reason is backed by the story.":"You missed some: reread the story for clues."}` : "Pick the reasons the story gives evidence for, then press Check.";
+  rsC.redraw(); }
+$("rsF").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; rs.f=+b.dataset.k; rs.sel={}; rs.checked=false; pressGroup([...$("rsF").querySelectorAll("button")],b); rsUpd(); });
+$("rsR").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; rs.sel[b.dataset.r]=!rs.sel[b.dataset.r]; rs.checked=false; rsUpd(); });
+$("rsCheck").addEventListener("click",()=>{ rs.checked=true; rsUpd(); });
+$("rsClear").addEventListener("click",()=>{ rs.sel={}; rs.checked=false; rsUpd(); });
+// Enterprise everywhere
+const EV = [["Revenue launches an online service so people can file tax returns from home.","gov","A State body delivering a public service in a new way."],["A county council trials smart bins that send a message when they're full.","gov","Public-sector innovation that saves money."],["A national campaign makes reusable coffee cups the normal choice.","soc","Changing behaviour across society."],["Darkness Into Light grew from one charity walk into a worldwide event.","soc","Enterprise for a social cause."],["A food company launches a plant-based version of its best-selling burger.","biz","A business innovating to win customers."],["A bank adds an app feature that rounds up purchases into savings.","biz","Product innovation in business."],["A Tidy Towns group raises funds with a local fun run.","com","Local people organising for their own area."],["Volunteers set up a men's shed where older men can meet and make things.","com","A community enterprise meeting a local need."],["A student plans the budget, venue and publicity for a school fundraising concert.","me","Enterprise skills in your own life."],["You set a budget for your part-time wages and save for a car.","me","Personal enterprise: planning and managing money."]];
+const EVK = {gov:"Government",soc:"Society",biz:"Business",com:"Community",me:"Own life"}, evS = { order:[], ans:{} };
+const evPlaced = () => { const o={}; Object.entries(evS.ans).forEach(([i,a])=>{ if(EV[i][1]===a) o[a]=(o[a]||0)+1; }); return o; };
+const evRender=()=>{ sorter("evList","evOut",EV,EVK,evS); evC.redraw(); };
+function evNew(){ evS.order=shuffle(EV.map((s,k)=>k)); evS.ans={}; evRender(); }
+$("evList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b) return; evS.ans[+b.dataset.k]=b.dataset.v; evRender(); });
+$("evReset").addEventListener("click",evNew);
+// Innovation grid
+const INNO = [
+  ["A crisp maker launches a new flavour.",0,0,"A new version of an existing product: a small step."],
+  ["The first smartphone (2007) combined a phone, music player and the internet in one device.",0,1,"A new kind of product that changed whole markets."],
+  ["A restaurant switches to tablets for taking orders, saving a few minutes per table.",1,0,"A better way of delivering the service: a small improvement."],
+  ["Henry Ford's moving assembly line (1913) cut the time to build a car from about 12 hours to about 1.5 hours.",1,1,"A radical change in how cars were made."],
+  ["A gym adds a cheaper off-peak membership.",2,0,"A tweak to how it charges customers."],
+  ["Streaming services replaced buying DVDs with a monthly subscription.",2,1,"A new way of earning money that disrupted an industry."],
+  ["A library starts lending tools as well as books.",3,0,"A small change that meets a community need."],
+  ["Grameen Bank's tiny loans to people with no access to banks (microfinance).",3,1,"A big new idea that tackled poverty."],
+];
+const inn = { order:[], i:0, t:null, d:null, placed:[], shown:false, ok:false, tries:0, right:0 };
+function inNew(){ inn.order=shuffle(INNO.map((x,k)=>k)); inn.i=0; inn.placed=[]; inn.tries=0; inn.right=0; inNext(); }
+function inNext(){ inn.t=null; inn.d=null; inn.shown=false; document.querySelectorAll("#inT button,#inD button").forEach(b=>b.setAttribute("aria-pressed","false")); inUpd(); }
+function inUpd(){ const done=inn.i>=inn.order.length, k=done?null:inn.order[inn.i];
+  $("inQ").innerHTML = done? "<b>All eight placed.</b> Press Start again to shuffle." : `<b>Example ${k+1}:</b> ${INNO[k][0]}`;
+  setReadout($("inOut"),[["Placed",`${inn.placed.length} / ${INNO.length}`],["First-try correct",`${inn.right} / ${inn.tries}`]]);
+  $("inWork").innerHTML = inn.shown&&k!=null? `${inn.ok?"✓ Correct.":"✗ Not quite."} It's <b>${ITYPES[INNO[k][1]].toLowerCase()} innovation</b>, a <b>${IDEG[INNO[k][2]].toLowerCase()}</b>. ${INNO[k][3]}` : "Choose a type and a size of change, then press Place it.";
+  inC.redraw(); }
+$("inT").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||inn.shown) return; inn.t=+b.dataset.t; pressGroup([...$("inT").querySelectorAll("button")],b); });
+$("inD").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||inn.shown) return; inn.d=+b.dataset.d; pressGroup([...$("inD").querySelectorAll("button")],b); });
+$("inCheck").addEventListener("click",()=>{ if(inn.i>=inn.order.length||inn.shown) return; if(inn.t==null||inn.d==null){ $("inWork").innerHTML="Choose both a type and a size of change first."; return; }
+  const k=inn.order[inn.i]; inn.ok = inn.t===INNO[k][1] && inn.d===INNO[k][2]; inn.tries++; if(inn.ok) inn.right++; inn.shown=true; inn.placed.push([k,INNO[k][1],INNO[k][2]]); inUpd(); });
+$("inNext").addEventListener("click",()=>{ if(inn.shown) inn.i++; inNext(); });
+$("inReset").addEventListener("click",inNew);
+// Innovator profile
+const BIZNEED = [
+  {n:"Festival food truck",need:[3,3,4,5,4,4,3,4]},
+  {n:"Tech app seeking investors",need:[5,5,5,4,5,4,4,5]},
+  {n:"Community social-enterprise café",need:[3,3,3,4,3,3,5,5]},
+];
+const CTIPS = ["Try a design challenge or the Young Scientist","Keep an 'ideas notebook' of problems you notice","Take a small, planned risk: run a stall or event","Reflect on a setback: what did you learn?","Present in class or pitch a mini-company","Lead a decision in a group project and review it","Captain a team or lead a club project","Talk to local businesspeople; join a business event"];
+const cp = { b:0, you:store.get("b21-you",[3,3,3,3,3,3,3,3]) };
+$("cpB").innerHTML = BIZNEED.map((b,k)=>`<button data-k="${k}" aria-pressed="${k===0}">${b.n}</button>`).join("");
+$("cpS").innerHTML = COMPS.map((c,i)=>`<div class="ctl"><label for="cp${i}">${c} <output id="cp${i}o">${cp.you[i]}</output></label><input type="range" id="cp${i}" min="1" max="5" step="1" value="${cp.you[i]}"></div>`).join("");
+function cpUpd(){ const need=BIZNEED[cp.b].need, match=Math.round(need.reduce((a,v,i)=>a+Math.min(cp.you[i],v)/v,0)/need.length*100);
+  const gaps=COMPS.map((c,i)=>[c,need[i]-cp.you[i],i]).filter(g=>g[1]>0).sort((a,b)=>b[1]-a[1]);
+  const top=COMPS.map((c,i)=>[c,cp.you[i]]).sort((a,b)=>b[1]-a[1])[0];
+  COMPS.forEach((c,i)=>$("cp"+i+"o").textContent=cp.you[i]);
+  setReadout($("cpOut"),[["Business",BIZNEED[cp.b].n],["Match",match+"%"],["Your strongest",`${top[0]} (${top[1]})`],["Biggest gap",gaps.length?`${gaps[0][0]} (−${gaps[0][1]})`:"none"]]);
+  $("cpWork").innerHTML = gaps.length? `To develop: ${gaps.slice(0,3).map(g=>`<b>${g[0]}</b>: ${CTIPS[g[2]]}`).join(" · ")}. Competencies are learned, so a gap now is something to work on, not a reason to give up.` : "You meet or beat every competency this business needs. A partner or mentor still helps: nobody starts a business alone.";
+  cpC.redraw(); }
+$("cpB").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; cp.b=+b.dataset.k; pressGroup([...$("cpB").querySelectorAll("button")],b); cpUpd(); });
+COMPS.forEach((c,i)=>$("cp"+i).addEventListener("input",e=>{ cp.you[i]=+e.target.value; store.set("b21-you",cp.you); cpUpd(); }));
+// Find the right support
+const GV = [
+  ["Seán wants to find out whether his idea for a dog-walking app could work, and to do a short course on starting a business.","leo","His Local Enterprise Office runs Start Your Own Business courses and can fund a feasibility study."],
+  ["A Cork medtech company with 25 staff wants to break into the US market.","ei","An Irish-owned firm growing exports: Enterprise Ireland, which has offices abroad."],
+  ["A US software company is deciding whether to open its European headquarters in Ireland.","ida","Foreign direct investment is IDA Ireland's job."],
+  ["A knitwear maker in the Connemara Gaeltacht wants to expand into a bigger unit.","ug","Údarás na Gaeltachta supports enterprise in Gaeltacht areas, including premises."],
+  ["A sole trader was refused a €20 000 bank loan for a delivery van.","mfi","Microfinance Ireland lends to micro-enterprises turned down by banks."],
+  ["A new company wants to know about reliefs on corporation tax in its first years.","rev","Revenue runs the tax system, including start-up company reliefs."],
+  ["Five students want to set up a mini-company and enter a national competition.","leo","LEOs run the Student Enterprise Programme for second-level students."],
+  ["A Limerick food firm with 15 staff wants help with trade missions to Germany.","ei","Enterprise Ireland runs trade missions and helps Irish firms export."],
+];
+const gv = { k:0, sel:null, shown:false, order:[], i:0 };
+$("gvA").innerHTML = Object.entries(AGENCIES).map(([k,a])=>`<button data-a="${k}">${a.n}</button>`).join("");
+function gvNext(){ if(!gv.order.length||gv.i>=gv.order.length){ gv.order=shuffle(GV.map((x,k)=>k)); gv.i=0; } gv.k=gv.order[gv.i++]; gv.sel=null; gv.shown=false; document.querySelectorAll("#gvA button").forEach(b=>b.setAttribute("aria-pressed","false")); gvUpd(); }
+function gvUpd(){ const [q,ans,why]=GV[gv.k];
+  $("gvQ").innerHTML=`<b>Case:</b> ${q}`;
+  setReadout($("gvOut"),[["Your choice",gv.sel?AGENCIES[gv.sel].n:"–"],["Best first stop",gv.shown?AGENCIES[ans].n:"check to see"]]);
+  $("gvWork").innerHTML = gv.shown? `${gv.sel===ans?"✓ Correct.":"✗ Not the best first stop."} ${why} <br><b>${AGENCIES[ans].n}:</b> ${AGENCIES[ans].d}` : (gv.sel? `<b>${AGENCIES[gv.sel].n}:</b> ${AGENCIES[gv.sel].d}` : "Pick an agency, then press Check.");
+  gvC.redraw(); }
+$("gvA").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||gv.shown) return; gv.sel=b.dataset.a; pressGroup([...$("gvA").querySelectorAll("button")],b); gvUpd(); });
+$("gvCheck").addEventListener("click",()=>{ if(!gv.sel){ $("gvWork").innerHTML="Pick an agency first."; return; } gv.shown=true; gvUpd(); });
+$("gvNext").addEventListener("click",gvNext);
+
+/* ================= CREATE CANVASES ================= */
+const hero = makeCanvas($("heroCanvas"), 0.75, 260, s => drawHero(s.ctx,s.w,s.h,{t:reduce?0.4:heroT}), 440);
+const tyC = makeCanvas($("tyC"), 0.34, 200, s => drawTypes(s.ctx,s.w,s.h,{counts:tyCounts()}), 280);
+const rsC = makeCanvas($("rsC"), 0.32, 190, s => { const F=Object.keys(rs.sel).filter(k=>rs.sel[k]); drawTug(s.ctx,s.w,s.h,{push:F.filter(k=>RSK[k][2]==="push").length,pull:F.filter(k=>RSK[k][2]==="pull").length}); }, 260);
+const evC = makeCanvas($("evC"), 0.5, 280, s => drawMap(s.ctx,s.w,s.h,{placed:evPlaced()}), 400);
+const inC = makeCanvas($("inC"), 0.5, 280, s => { const k=inn.order[inn.i]; drawGrid(s.ctx,s.w,s.h,{placed:inn.placed,hl:inn.shown&&k!=null?[INNO[k][1],INNO[k][2]]:null,ok:inn.ok}); }, 400);
+const cpC = makeCanvas($("cpC"), 0.6, 300, s => drawRadar(s.ctx,s.w,s.h,{you:cp.you,need:BIZNEED[cp.b].need}), 440);
+const gvC = makeCanvas($("gvC"), 0.48, 360, s => drawLadder(s.ctx,s.w,s.h,{hi:gv.sel,ans:GV[gv.k][1],shown:gv.shown}), 440);
+predC = makeCanvas($("predC"), 0.5, 180, s => { const ans=PRED[pd.k<0?0:pd.k][1];
+  if(pd.shown) drawWhich(s.ctx,s.w,s.h,{ans,bgc:C["surface-2"]});
+  else { bg(s.ctx,s.w,s.h,C["surface-2"]); text(s.ctx,"?",s.w/2,s.h/2+18,C.muted,F(56),"center"); text(s.ctx,"The answer appears here",s.w/2,s.h-14,C.muted,F(11,600),"center"); } }, 300);
+pdNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    types:s=>drawTypes(s.ctx,s.w,s.h,{...o,compact:true}),
+    tug:s=>drawTug(s.ctx,s.w,s.h,{...o,compact:true}),
+    map:s=>drawMap(s.ctx,s.w,s.h,{...o,compact:true}),
+    grid:s=>drawGrid(s.ctx,s.w,s.h,{...o,compact:true}),
+    radar:s=>drawRadar(s.ctx,s.w,s.h,{...o,compact:true}),
+    ladder:s=>drawLadder(s.ctx,s.w,s.h,{...o,compact:true}),
+  };
+  makeCanvas(el, 0.62, 230, draws[kind], 380);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-mini=tug]").forEach(el=>makeCanvas(el,0.7,160,s=>drawTug(s.ctx,s.w,s.h,{compact:true,push:1,pull:3,bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=grid]").forEach(el=>makeCanvas(el,0.7,180,s=>drawGrid(s.ctx,s.w,s.h,{compact:true,placed:INNO.map((x,k)=>[k,x[1],x[2]]),bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=radar]").forEach(el=>makeCanvas(el,0.7,160,s=>drawRadar(s.ctx,s.w,s.h,{compact:true,you:[4,3,2,4,3,3,4,3],need:[4,4,4,5,4,4,3,4],bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=ladder]").forEach(el=>makeCanvas(el,0.4,360,s=>drawLadder(s.ctx,s.w,s.h,{bgc:C["surface-2"]}),440));
+tyNew(); rsUpd(); evNew(); inNew(); cpUpd(); gvNext();
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>

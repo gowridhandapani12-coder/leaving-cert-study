@@ -1,0 +1,1803 @@
+<title>Electric Circuits</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<style>
+:root{--band-ink:#3b2b21}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--surface)}
+.xlink:hover{border-color:var(--terra)}
+.working.wrap{white-space:normal;font-family:var(--f-body);font-size:.9rem}
+.spec-bullets{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+</style>
+<style>
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.rc-card{display:grid;gap:8px;padding:16px}
+.rc-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.rc-card .ico svg{width:24px;height:24px}
+.rc-card p{font-size:.9rem;margin:0}
+.rc-card p b{color:var(--terra)}
+</style>
+<style>
+.cases .rc-card canvas{width:100%;display:block;border-radius:12px}
+.sec td,.sec th{padding:4px 8px;text-align:right;font-family:var(--f-mono);font-size:.85rem;white-space:nowrap}
+.sec{border-collapse:collapse;width:100%}
+.sec tr+tr td{border-top:1px solid var(--line)}
+.secwrap{overflow-x:auto}
+.srt .row .btns button{padding:6px 10px;font-size:.85rem}
+.predopts .btns button{min-width:84px}
+</style>
+
+
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg></div>
+        <div style="min-width:0"><b>Electric Circuits</b><span>Leaving Cert Physics · Strand 3 · Section 3.3</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details open><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="here"><span class="mono">3.3</span>Electric circuits</li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 3 · Section 3.3 · Electric circuits</span>
+          <h1 style="margin-top:12px">Push the charge.<br>Measure the flow.<br><em>Spend the energy safely.</em></h1>
+          <p class="lede">A cell pushes charge round a circuit; every coulomb carries energy from the cell to the components. Current is the rate of flow of charge, potential difference is the energy per coulomb, and resistance decides how much current flows. Measure I–V graphs for a wire, a bulb and a diode, heat a wire and a thermistor, build series and parallel circuits, keep mains electricity safe and look inside the semiconductors in every phone.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="A cell, a bulb and an ammeter in a loop, with charges flowing round the circuit"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/8</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">3.3.1</span><span>model • the relationship between current and charge • the relationship between work, charge and potential difference • the relationship between electric current, conventional current, power and resistance • series and parallel circuits • the rate of conversion of electrical energy in components of electric circuits • fuses and circuit breakers</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">3.3.2</span><span>investigate the use of semi-conductors in real-world applications using secondary sources</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">3.3.3</span><span>model the relationship between current flowing through and the voltage across a diode in forward and reverse bias using primary and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo4"><span class="mono">3.3.4</span><span>verify the relationship between current flowing through and the voltage across an ohmic conductor using primary and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo5"><span class="mono">3.3.5</span><span>investigate the relationship between current flowing through and the voltage across non-ohmic conductors using primary and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo6"><span class="mono">3.3.6</span><span>investigate the effect of varying temperature on the resistance of a conductor using primary and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo7"><span class="mono">3.3.7</span><span>model resistances in series and parallel in electrical circuits using primary and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo8"><span class="mono">3.3.8</span><span>derive and use the formulae for resistors in series and parallel</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">Students learn about:</p>
+        <ul class="spec-bullets"><li>electric potential and current, work, power, potential difference, voltage and emf</li><li>series and parallel circuits</li><li>safety in mains electricity: earthing, MCBs and RCDs</li><li>doping; n type, p type and p-n junction, depletion layer</li><li>transistors as switches</li><li>circuit components: voltage source, switch, light bulb, resistor, variable resister, ammeter, voltmeter, ohm meter, diode, LDR, LED, thermistor, transistor</li><li>resistance and resistivity</li><li>Ohm’s law</li><li>non-ohmic conductors: filament bulb, diode</li><li>heating effect of an electric current and its implications for electrical supply</li><li>conservation of charge and energy in a circuit</li></ul>
+        <p class="result" style="margin-top:10px">Equations in the specification for 3.3: I = Q/t, V = W/Q, W = I²Rt, P = I²R, P = VI, V = IR, R = ρL/A, R = R₁ + R₂ + R₃ … and 1/R = 1/R₁ + 1/R₂ + 1/R₃ …. Builds on 3.2 (potential as work per unit charge) and 1.4 (work, energy and power); links ahead to 3.4 and 3.5 (magnetic effect of a current, motors).</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Watch charge carry energy round a circuit, measure I–V graphs for a wire, a filament bulb and a diode, find resistivity and heat a wire and a thermistor, build series and parallel circuits, keep mains appliances safe and switch a transistor with light. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="charge">
+        <div class="labhead"><span class="pill t">Charge, current and energy</span><p class="goal">A cell drives charge round a loop through a resistor. Change the emf and the resistance and watch the charges speed up or slow down. Every coulomb that passes collects energy in the cell and gives it to the resistor.</p></div>
+        <div class="panel sim">
+          <canvas id="chC" aria-label="A cell, resistor and ammeter in a loop with moving charges"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="chV">emf of the cell <output id="chVo"></output></label><input type="range" id="chV" min="1.5" max="12" step="0.5" value="6"></div>
+            <div class="ctl"><label for="chR">Resistance R <output id="chRo"></output></label><input type="range" id="chR" min="2" max="60" step="1" value="12"></div>
+            <div class="ctl"><label for="chT">Time t <output id="chTo"></output></label><input type="range" id="chT" min="1" max="120" step="1" value="10"></div>
+            <div class="ctl"><span class="lbl">Show</span><div class="btns" id="chShow"><button data-m="conv" aria-pressed="true">Conventional current</button><button data-m="el" aria-pressed="false">Electron flow</button></div></div>
+          </div>
+          <div class="readout" id="chOut"></div>
+          <div class="working wrap" id="chWork"></div>
+        </div>
+        <p class="result">The cell is treated as ideal (no internal resistance), so the pd across the resistor equals the emf. Electron charge e = 1.6 × 10⁻¹⁹ C.</p>
+        <div class="tries"><div class="try"><b>1</b>Double the emf. What happens to the current and to the energy delivered in 10 s?</div><div class="try"><b>2</b>How many electrons pass a point each second when I = 0.5 A?</div><div class="try"><b>3</b>Switch to electron flow. Why do the two arrows point opposite ways?</div></div>
+      </div>
+
+      <div class="lab" data-lab="ohm" hidden>
+        <div class="labhead"><span class="pill t">Experiment: I–V characteristics</span><p class="goal">Connect a component in the circuit, set the voltage with the variable supply, and read the ammeter and voltmeter. Take readings across the whole range (reverse the supply for negative values), then look at the shape of the I–V graph. A straight line through the origin means the component obeys Ohm's law.</p></div>
+        <div class="panel sim">
+          <canvas id="ivC" aria-label="Circuit with a variable supply, ammeter in series and voltmeter across the component, showing meter readings"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Component</span><div class="btns" id="ivComp"></div></div>
+            <div class="ctl"><label for="ivV">Voltage across the component <output id="ivVo"></output></label><input type="range" id="ivV" min="-6" max="6" step="0.25" value="2"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="ivGo">Take a reading</button><button id="ivSweep">Take 13 readings</button><button id="ivClear">Clear table</button></div></div>
+          </div>
+          <div class="readout" id="ivOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>V (V)</th><th id="ivIh">I (A)</th><th>V/I (Ω)</th></tr></thead><tbody id="ivTable"></tbody></table><div class="empty" id="ivEmpty">No readings yet. Take readings at ten or more voltages.</div></div>
+            <div class="graphbox"><canvas id="ivGraph" aria-label="Graph of current against voltage for the chosen component"></canvas><p class="result" id="ivResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Simulated meter readings with about ±2% scatter. Wire: 10 Ω at constant temperature. Bulb: 6 V, 0.3 A filament. Diode: silicon, with a protective resistor in the real circuit; its readings are in mA.</p>
+        <div class="tries"><div class="try"><b>1</b>For the wire, does V/I stay the same? What does the slope of the I–V graph tell you?</div><div class="try"><b>2</b>For the bulb, why does V/I rise as the voltage rises?</div><div class="try"><b>3</b>For the diode, at about what voltage does current start to flow? What happens in reverse bias?</div></div>
+      </div>
+
+      <div class="lab" data-lab="resist" hidden>
+        <div class="labhead"><span class="pill t">Resistivity and temperature</span><p class="goal">Part 1: change the material, length and diameter of a wire and see how its resistance changes (R = ρL/A). Part 2: heat a copper coil or a thermistor in a water bath, record its resistance at different temperatures, and plot R against θ.</p></div>
+        <div class="panel sim">
+          <canvas id="rwC" aria-label="A wire of the chosen length and thickness connected to an ohmmeter"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Material</span><div class="btns" id="rwMat"></div></div>
+            <div class="ctl"><label for="rwL">Length L <output id="rwLo"></output></label><input type="range" id="rwL" min="0.1" max="2" step="0.05" value="1"></div>
+            <div class="ctl"><label for="rwD">Diameter d <output id="rwDo"></output></label><input type="range" id="rwD" min="0.1" max="1" step="0.05" value="0.3"></div>
+          </div>
+          <div class="readout" id="rwOut"></div>
+          <div class="working wrap" id="rwWork"></div>
+        </div>
+        <div class="panel sim">
+          <canvas id="thC" aria-label="A water bath with a thermometer and the chosen component connected to an ohmmeter"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Component in the bath</span><div class="btns" id="thComp"></div></div>
+            <div class="ctl"><label for="thT">Water temperature θ <output id="thTo"></output></label><input type="range" id="thT" min="0" max="100" step="5" value="20"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="thGo">Take a reading</button><button id="thSweep">Readings every 10 °C</button><button id="thClear">Clear table</button></div></div>
+          </div>
+          <div class="readout" id="thOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>θ (°C)</th><th>R (Ω)</th></tr></thead><tbody id="thTable"></tbody></table><div class="empty" id="thEmpty">No readings yet. Record R at six or more temperatures.</div></div>
+            <div class="graphbox"><canvas id="thGraph" aria-label="Graph of resistance against temperature"></canvas><p class="result" id="thResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Resistivities at 20 °C: copper 1.7 × 10⁻⁸ Ω m, constantan 4.9 × 10⁻⁷ Ω m, nichrome 1.1 × 10⁻⁶ Ω m. Simulated ohmmeter readings with about ±1% scatter. Stir the water and wait for the reading to settle before recording.</p>
+        <div class="tries"><div class="try"><b>1</b>Double the length, then double the diameter. Which change has the bigger effect? Why?</div><div class="try"><b>2</b>Is the copper coil's R–θ graph a straight line? Does it pass through the origin?</div><div class="try"><b>3</b>How does the thermistor behave differently? Where could that be useful?</div></div>
+      </div>
+
+      <div class="lab" data-lab="combo" hidden>
+        <div class="labhead"><span class="pill t">Series and parallel</span><p class="goal">Connect three resistors in series, in parallel, or as R₁ in series with R₂ and R₃ in parallel. Read the current through each resistor and the pd across it. Check the two conservation laws: currents into a junction equal currents out (charge), and the pds round a loop add up to the emf (energy).</p></div>
+        <div class="panel sim">
+          <canvas id="cbC" aria-label="Circuit diagram of the chosen arrangement with the current and pd of each resistor"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Arrangement</span><div class="btns" id="cbArr"></div></div>
+            <div class="ctl"><label for="cbE">emf <output id="cbEo"></output></label><input type="range" id="cbE" min="3" max="12" step="1" value="12"></div>
+            <div class="ctl"><label for="cbR1">R₁ <output id="cbR1o"></output></label><input type="range" id="cbR1" min="2" max="60" step="1" value="10"></div>
+            <div class="ctl"><label for="cbR2">R₂ <output id="cbR2o"></output></label><input type="range" id="cbR2" min="2" max="60" step="1" value="20"></div>
+            <div class="ctl"><label for="cbR3">R₃ <output id="cbR3o"></output></label><input type="range" id="cbR3" min="2" max="60" step="1" value="30"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="cbGo">Measure total resistance</button><button id="cbClear">Clear table</button></div></div>
+          </div>
+          <div class="readout" id="cbOut"></div>
+          <div class="working wrap" id="cbWork"></div>
+          <div style="overflow-x:auto;padding:0 16px 12px"><table id="cbTbl" style="min-width:420px"></table></div>
+        </div>
+        <p class="result">Ideal cell and meters. "Measure total resistance" simulates an ohmmeter reading (±1%) so you can compare your primary data with the formula.</p>
+        <div class="tries"><div class="try"><b>1</b>In parallel, is the total resistance bigger or smaller than the smallest resistor? Always?</div><div class="try"><b>2</b>In series, which resistor has the biggest pd across it? Why?</div><div class="try"><b>3</b>In the mixed circuit, add the currents in R₂ and R₃. What do you get?</div></div>
+      </div>
+
+      <div class="lab" data-lab="power" hidden>
+        <div class="labhead"><span class="pill t">Power, cost and mains safety</span><p class="goal">Pick an appliance on the 230 V mains. Find its current, the right fuse and the cost of running it. Then cause a fault, a live wire touching the metal case, and see what the earth wire, the fuse, the MCB and the RCD do.</p></div>
+        <div class="panel sim">
+          <canvas id="pwC" aria-label="A mains appliance with live, neutral and earth wires, a fuse and an RCD, showing the path of the current"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Appliance</span><div class="btns" id="pwApp"></div></div>
+            <div class="ctl"><label for="pwH">Hours of use <output id="pwHo"></output></label><input type="range" id="pwH" min="0.25" max="10" step="0.25" value="1"></div>
+            <div class="ctl"><label for="pwP">Price per kWh <output id="pwPo"></output></label><input type="range" id="pwP" min="0.20" max="0.50" step="0.01" value="0.35"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Safety (tap to switch)</span><div class="btns" id="pwSafe"><button data-k="fault" aria-pressed="false">⚡ Fault: live touches the metal case</button><button data-k="earth" aria-pressed="true">Earth wire connected</button><button data-k="rcd" aria-pressed="true">RCD fitted</button><button data-k="touch" aria-pressed="false">Someone touches the case</button></div></div>
+          </div>
+          <div class="readout" id="pwOut"></div>
+          <div class="working wrap" id="pwWork"></div>
+        </div>
+        <p class="result">Typical power ratings. Plug fuses come in 3 A, 5 A and 13 A; choose the smallest that is above the normal current. An RCD trips when live and neutral currents differ by about 30 mA, in about 30 ms.</p>
+        <div class="tries"><div class="try"><b>1</b>Which appliances need a 13 A fuse? Why would a 3 A fuse blow?</div><div class="try"><b>2</b>Cause the fault with the earth connected, then disconnect it. What changes for the person?</div><div class="try"><b>3</b>Why does an RCD protect a person even when the fuse doesn't blow?</div></div>
+      </div>
+
+      <div class="lab" data-lab="semi" hidden>
+        <div class="labhead"><span class="pill t">Semiconductors: junction and switch</span><p class="goal">Part 1: bias a p-n junction and watch the depletion layer. Forward bias above about 0.6 V shrinks it and current flows; reverse bias widens it. Part 2: use an LDR and a transistor as a switch to build a night light that turns on when it gets dark.</p></div>
+        <div class="panel sim">
+          <canvas id="pnC" aria-label="A p-n junction with holes in the p-type region, electrons in the n-type region and the depletion layer between them"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="pnV">Bias voltage <output id="pnVo"></output></label><input type="range" id="pnV" min="-3" max="0.8" step="0.05" value="0"></div>
+          </div>
+          <div class="readout" id="pnOut"></div>
+        </div>
+        <div class="panel sim">
+          <canvas id="tsC" aria-label="Night-light circuit: a potential divider made of a resistor and an LDR controls a transistor that switches an LED"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="tsL">Light level <output id="tsLo"></output></label><input type="range" id="tsL" min="0" max="3" step="0.05" value="2.5"></div>
+            <div class="ctl"><label for="tsR">Fixed resistor (sets the switching point) <output id="tsRo"></output></label><input type="range" id="tsR" min="2" max="50" step="1" value="10"></div>
+          </div>
+          <div class="readout" id="tsOut"></div>
+          <div class="working wrap" id="tsWork"></div>
+        </div>
+        <p class="result">Simplified models. LDR resistance falls as light rises (here about 500 kΩ in the dark to about 100 Ω in bright sun). A silicon transistor switches on when its base-emitter voltage reaches about 0.7 V.</p>
+        <div class="tries"><div class="try"><b>1</b>Slowly dim the light. At what light level does the LED switch on?</div><div class="try"><b>2</b>Increase the fixed resistor. Does the light come on earlier or later in the evening?</div><div class="try"><b>3</b>Swap the idea round: how could a thermistor switch on a fan when it gets hot?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of electric circuits"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Three big pictures · LO 3.3.1, 3.3.3 to 3.3.5</p><h2>Circuits at a glance</h2></div><p>The three I–V graphs, the two ways to connect, and the safety chain in every plug.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Power and fuses · LO 3.3.1</p><h2>Appliances on the 230 V mains</h2></div><p>Typical power ratings; current from I = P/V.</p></div>
+        <div class="secwrap"><table class="sec" id="secT"></table></div>
+        <p class="result" id="secRes" style="margin-top:10px"></p>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Semiconductors in the real world · LO 3.3.2</p><h2>Where you meet them</h2></div><p>Starting points for your own research with secondary sources.</p></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Current is the <b>rate of flow of charge</b>: I = Q/t. Potential difference is the <b>work done per unit charge</b>: V = W/Q.</li>
+            <li>State Ohm's law fully: current is proportional to pd <b>provided the temperature stays constant</b>.</li>
+            <li>For an I–V experiment, draw the circuit: <b>ammeter in series</b>, <b>voltmeter in parallel</b> with the component, and a way to vary the voltage.</li>
+            <li>Series: <b>same current</b>, pds add, R = R₁ + R₂. Parallel: <b>same pd</b>, currents add, 1/R = 1/R₁ + 1/R₂. Don't forget to flip 1/R at the end.</li>
+            <li>R = ρL/A: use <b>A = πd²/4</b> and convert mm to m (1 mm² = 10⁻⁶ m²).</li>
+            <li>Power: <b>P = VI = I²R</b>. Energy: W = Pt = I²Rt. For cost, use kW × hours = kWh.</li>
+            <li>Safety: the <b>fuse</b> and <b>MCB</b> protect the wiring from too much current; the <b>RCD</b> protects people; the <b>earth wire</b> gives fault current a safe path.</li>
+            <li>Diode: conducts in <b>forward bias</b> above about 0.6 V; almost no current in <b>reverse bias</b> (the depletion layer widens).</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The learning outcomes for this section use model, investigate, verify, derive and use.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="text" placeholder="e.g. 0.25 or 4.5e-3" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Name that symbol</h2></div></div>
+          <canvas id="predC" aria-label="A circuit symbol to identify"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" data-g="0"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: current, resistivity, diode, RCD…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>The 3.3 equations from the specification, with units and a worked number for each.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Current</span><span class="big">I = Q / t</span><dl><dt>I</dt><dd>current, A</dd><dt>Q</dt><dd>charge, C</dd><dt>t</dt><dd>time, s</dd></dl><div class="ex">12 C in 4 s: I = 3 A</div></div>
+        <div class="panel fcell"><span class="pill">Potential difference</span><span class="big">V = W / Q</span><dl><dt>V</dt><dd>pd, V = J C⁻¹</dd><dt>W</dt><dd>work done (energy converted), J</dd></dl><div class="ex">36 J for 3 C: V = 12 V</div></div>
+        <div class="panel fcell"><span class="pill">Ohm's law</span><span class="big">V = IR</span><dl><dt>R</dt><dd>resistance, Ω = V A⁻¹</dd><dt>condition</dt><dd>constant temperature</dd></dl><div class="ex">0.5 A through 24 Ω: V = 12 V</div></div>
+        <div class="panel fcell"><span class="pill">Resistivity</span><span class="big">R = ρL / A</span><dl><dt>ρ</dt><dd>resistivity, Ω m</dd><dt>L</dt><dd>length, m</dd><dt>A</dt><dd>cross-sectional area, m² (πd²/4)</dd></dl><div class="ex">1 m of 0.3 mm constantan: R = 6.9 Ω</div></div>
+        <div class="panel fcell"><span class="pill">Series</span><span class="big">R = R₁ + R₂ + R₃ …</span><dl><dt>current</dt><dd>the same everywhere</dd><dt>pd</dt><dd>shared: V = V₁ + V₂ + V₃</dd></dl><div class="ex">10 Ω + 20 Ω + 30 Ω = 60 Ω</div></div>
+        <div class="panel fcell"><span class="pill">Parallel</span><span class="big">1/R = 1/R₁ + 1/R₂ + 1/R₃ …</span><dl><dt>pd</dt><dd>the same across each branch</dd><dt>current</dt><dd>shared: I = I₁ + I₂ + I₃</dd></dl><div class="ex">20 Ω ∥ 30 Ω = 12 Ω</div></div>
+        <div class="panel fcell"><span class="pill">Power</span><span class="big">P = VI = I²R</span><dl><dt>P</dt><dd>power, W = J s⁻¹</dd><dt>also</dt><dd>P = V²/R</dd></dl><div class="ex">Kettle 2200 W on 230 V: I = 9.6 A</div></div>
+        <div class="panel fcell"><span class="pill">Heating effect</span><span class="big">W = I²Rt</span><dl><dt>W</dt><dd>heat produced, J</dd><dt>t</dt><dd>time, s</dd></dl><div class="ex">2 A, 5 Ω, 60 s: W = 1200 J</div></div>
+        <div class="panel fcell"><span class="pill a">Cost</span><span class="big">kWh = kW × hours</span><dl><dt>cost</dt><dd>kWh × price per kWh</dd><dt>1 kWh</dt><dd>3.6 × 10⁶ J</dd></dl><div class="ex">2 kW for 3 h at €0.35: €2.10</div></div>
+        <div class="panel fcell"><span class="pill a">Charge carriers</span><span class="big">n = Q / e</span><dl><dt>e</dt><dd>1.6 × 10⁻¹⁹ C</dd></dl><div class="ex">1 A for 1 s: 6.25 × 10¹⁸ electrons</div></div>
+        <div class="panel fcell"><span class="pill a">Conservation</span><span class="big">Σ I in = Σ I out · Σ pd = emf</span><dl><dt>charge</dt><dd>at every junction</dd><dt>energy</dt><dd>round every loop</dd></dl><div class="ex">0.4 A in → 0.24 A + 0.16 A out</div></div>
+        <div class="panel fcell"><span class="pill a">Semiconductors</span><span class="big">p-n junction · forward ≈ 0.6 V · transistor on at V_be ≈ 0.7 V</span><dl><dt>LDR</dt><dd>R falls as light rises</dd><dt>NTC thermistor</dt><dd>R falls as temperature rises</dd></dl><div class="ex">LED: a diode that gives out light</div></div>
+      </div>
+      <footer>
+        <p>Built on section 3.3 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes, content and equations are quoted from the specification. Experiment readings are simulated; power ratings and resistivities are typical values.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent","--band-ink"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+/* ---------- icons + topics ---------- */
+const ICON = {
+  charge:'<circle cx="6" cy="12" r="2.5"/><circle cx="13" cy="12" r="2.5"/><path d="M17 12h5M19.5 9.5L22 12l-2.5 2.5"/>',
+  ohm:'<path d="M4 20V4M4 20h16"/><path d="M4 20L18 6"/><circle cx="9" cy="15" r="1"/><circle cx="13" cy="11" r="1"/>',
+  resist:'<path d="M2 12h4l2-4 3 8 3-8 3 8 2-4h3"/>',
+  combo:'<path d="M3 6h5M16 6h5M3 18h18M8 3h8v6H8zM3 6v12M21 6v12"/>',
+  power:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+  semi:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16"/><circle cx="8" cy="9" r="1"/><circle cx="8" cy="15" r="1"/><path d="M15 9h2M15 15h2"/>',
+  led:'<path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5V16h8v-2.5A6 6 0 0012 3z"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>',
+  therm:'<path d="M14 14.8V5a2 2 0 00-4 0v9.8a4 4 0 104 0z"/>',
+  chip:'<rect x="6" y="6" width="12" height="12" rx="1.5"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>',
+  plug:'<path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 01-12 0zM12 18v4"/>',
+  phone:'<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"charge", name:"Current, charge and pd", short:"I = Q/t and V = W/Q: charge flows, and every coulomb carries energy from the cell to the components.", tint:"var(--blush)"},
+  {id:"ohm", name:"Ohm's law and I–V graphs", short:"Measure I against V for a wire, a filament bulb and a diode: ohmic and non-ohmic conductors.", tint:"var(--apricot)"},
+  {id:"resist", name:"Resistivity and temperature", short:"R = ρL/A, and how heating changes the resistance of a metal and of a thermistor.", tint:"var(--sage)"},
+  {id:"combo", name:"Series and parallel", short:"Derive and use the formulae for resistors in series and parallel; conservation of charge and energy.", tint:"var(--cream)"},
+  {id:"power", name:"Power and mains safety", short:"P = VI = I²R, the heating effect, kilowatt-hours, fuses, MCBs, RCDs and earthing.", tint:"var(--blush)"},
+  {id:"semi", name:"Semiconductors", short:"Doping, p-n junctions and the depletion layer, diodes, LEDs, LDRs, thermistors and transistors as switches.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, formula] ---------- */
+const GLOSS = [
+  ["Electric current","I","The rate of flow of electric charge. Unit: the ampere (A).","charge","I = Q / t"],
+  ["Ampere","A","The SI unit of current. 1 A is a flow of 1 coulomb per second.","charge"],
+  ["Coulomb","C","The unit of charge. 1 C = 1 A s, the charge of about 6.25 × 10¹⁸ electrons.","charge"],
+  ["Conventional current","","Current drawn as flowing from the positive terminal round the circuit to the negative terminal: the direction positive charge would move.","charge"],
+  ["Electron flow","","The actual movement of electrons in a metal wire, from the negative terminal to the positive: opposite to conventional current.","charge"],
+  ["Potential difference","pd, voltage","The work done per unit charge in moving charge between two points. Unit: the volt (V).","charge","V = W / Q"],
+  ["Volt","V","The unit of potential difference: 1 joule per coulomb.","charge"],
+  ["Electromotive force","emf","The energy given to each coulomb of charge by a source such as a cell; the pd across the source when no current flows. Unit: volt.","charge"],
+  ["Electric potential","","The work done per unit charge in bringing a positive charge from a zero point (earth) to that point.","charge"],
+  ["Voltage source","","A cell, battery or power supply that provides an emf to drive current.","charge"],
+  ["Resistance","R","The ratio of the pd across a conductor to the current through it. Unit: the ohm (Ω).","ohm","R = V / I"],
+  ["Ohm","Ω","The unit of resistance: 1 volt per ampere.","ohm"],
+  ["Ohm's law","","The current through a conductor is proportional to the pd across it, provided the temperature (and other physical conditions) stay constant.","ohm","V = IR"],
+  ["Ohmic conductor","","A conductor that obeys Ohm's law: its I–V graph is a straight line through the origin.","ohm"],
+  ["Non-ohmic conductor","","A conductor that does not obey Ohm's law, e.g. a filament bulb or a diode: its I–V graph is curved.","ohm"],
+  ["I–V characteristic","","A graph of current against voltage for a component.","ohm"],
+  ["Filament bulb","","A lamp with a thin metal filament that glows when hot. Its resistance rises as it heats up.","ohm"],
+  ["Ammeter","","A meter connected in series to measure current. An ideal ammeter has zero resistance.","ohm"],
+  ["Voltmeter","","A meter connected in parallel across a component to measure pd. An ideal voltmeter has very high resistance.","ohm"],
+  ["Ohmmeter","","A meter that measures resistance directly, with the component disconnected from any supply.","resist"],
+  ["Resistivity","ρ","The resistance of a sample of a material 1 m long with a cross-sectional area of 1 m². Unit: Ω m.","resist","ρ = RA / L"],
+  ["Cross-sectional area","A","The area of the end face of a wire: A = πd²/4 for diameter d.","resist","A = πd² / 4"],
+  ["Variable resistor","rheostat","A resistor whose resistance can be changed, used to control the current or voltage.","resist"],
+  ["Thermistor","NTC thermistor","A semiconductor resistor whose resistance falls sharply as its temperature rises.","resist"],
+  ["Temperature coefficient","","How much the resistance changes per degree. Positive for metals (R rises), negative for NTC thermistors (R falls).","resist"],
+  ["Series","","Components connected one after another, so the same current flows through each.","combo","R = R₁ + R₂ + R₃ …"],
+  ["Parallel","","Components connected side by side between the same two points, so each has the same pd.","combo","1/R = 1/R₁ + 1/R₂ + 1/R₃ …"],
+  ["Junction","","A point where three or more wires meet. Current into a junction equals current out.","combo"],
+  ["Conservation of charge","","Charge is not created or destroyed in a circuit: the total current into a junction equals the total current out.","combo"],
+  ["Conservation of energy","","Round any closed loop, the emf equals the sum of the pds across the components.","combo"],
+  ["Equivalent resistance","total resistance","The single resistance that would draw the same current from the supply as the combination.","combo"],
+  ["Electrical power","P","The rate at which electrical energy is converted to other forms. Unit: the watt (W).","power","P = VI = I²R"],
+  ["Heating effect of a current","Joule heating","A current in a resistor produces heat at a rate I²R. Thick cables keep the heating low.","power","W = I²Rt"],
+  ["Kilowatt-hour","kWh","The energy used by a 1 kW appliance in 1 hour: 3.6 × 10⁶ J. Used for electricity bills.","power","kWh = kW × h"],
+  ["Mains electricity","","The 230 V, 50 Hz alternating supply to homes in Ireland.","power"],
+  ["Live wire","L","The wire at high voltage in a mains cable (brown insulation). The fuse and switch go in the live wire.","power"],
+  ["Neutral wire","N","The return wire in a mains cable, close to 0 V (blue insulation).","power"],
+  ["Earth wire","E","A safety wire (green and yellow) connecting metal cases to the ground, giving fault current a safe low-resistance path.","power"],
+  ["Fuse","","A thin wire that melts and breaks the circuit when the current is too high, protecting the wiring and appliance.","power"],
+  ["Miniature circuit breaker","MCB","A switch in the consumer unit that trips automatically when the current is too high, and can be reset.","power"],
+  ["Residual current device","RCD","A device that switches off the supply very quickly when the live and neutral currents differ (current leaking to earth, e.g. through a person).","power"],
+  ["Consumer unit","fuse board","The box where mains electricity enters a house, holding the main switch, MCBs and RCDs.","power"],
+  ["Semiconductor","","A material such as silicon whose conductivity is between a conductor and an insulator and can be controlled by doping, light or temperature.","semi"],
+  ["Doping","","Adding a tiny amount of another element to a pure semiconductor to increase its conductivity.","semi"],
+  ["n-type","","A semiconductor doped so that the majority charge carriers are free electrons (negative).","semi"],
+  ["p-type","","A semiconductor doped so that the majority charge carriers are holes (positive).","semi"],
+  ["Hole","","A missing electron in a semiconductor, which behaves like a positive charge carrier.","semi"],
+  ["p-n junction","","The boundary where p-type and n-type material meet; the basis of a diode.","semi"],
+  ["Depletion layer","","The thin region at a p-n junction with no free charge carriers, so it acts as an insulator.","semi"],
+  ["Diode","","A component that lets current flow easily in one direction only (forward bias) and blocks it in reverse.","semi"],
+  ["Forward bias","","A diode connected with p to + and n to −. Above about 0.6 V (silicon) the depletion layer disappears and current flows.","semi"],
+  ["Reverse bias","","A diode connected with p to − and n to +. The depletion layer widens and almost no current flows.","semi"],
+  ["Light-emitting diode","LED","A diode that gives out light when current flows through it in forward bias.","semi"],
+  ["Light-dependent resistor","LDR","A resistor whose resistance falls as the light falling on it gets brighter.","semi"],
+  ["Transistor","","A three-terminal semiconductor device (base, collector, emitter). A small base current switches on a larger collector current.","semi"],
+  ["Potential divider","","Two resistors in series across a supply; the pd is shared in proportion to their resistances.","semi","V_out = V_in × R₂ / (R₁ + R₂)"],
+];
+GLOSS.forEach((g,i)=>{ GLOSS[i]={t:g[0],aka:g[1],d:g[2],topic:g[3],f:g[4],id:"g-"+g[0].toLowerCase().replace(/[^a-z0-9]+/g,"-")}; });
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["conventional current","Conventional current"],["potential difference","Potential difference"],["emf","Electromotive force",true],["Ohm's law","Ohm's law"],["non-ohmic","Non-ohmic conductor"],["ohmic","Ohmic conductor"],["filament","Filament bulb"],["resistivity","Resistivity"],["thermistor","Thermistor"],["series","Series"],["parallel","Parallel"],["junction","Junction"],["kilowatt-hour","Kilowatt-hour"],["fuse","Fuse"],["MCB","Miniature circuit breaker",true],["RCD","Residual current device",true],["earth","Earth wire"],["doping","Doping"],["n-type","n-type"],["p-type","p-type"],["depletion layer","Depletion layer"],["forward bias","Forward bias"],["reverse bias","Reverse bias"],["transistor","Transistor"],["hole","Hole"]];
+
+
+/* ---------- glossary links + canvas helpers ---------- */
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function dbl(ctx,x1,y1,x2,y2,color,w=2){ line(ctx,x1,y1,x2,y2,color,w); const a=Math.atan2(y2-y1,x2-x1); arrowHead(ctx,x2,y2,a,color,8); arrowHead(ctx,x1,y1,a+Math.PI,color,8); }
+function dimArrow(ctx,xa,xb,y,label,col){ line(ctx,xa,y,xb,y,col,1.4); arrowHead(ctx,xa,y,Math.PI,col,7); arrowHead(ctx,xb,y,0,col,7); line(ctx,xa,y-5,xa,y+5,col,1.2); line(ctx,xb,y-5,xb,y+5,col,1.2); if(label) text(ctx,label,(xa+xb)/2,y-5,col,F(12),"center"); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const s3 = x => (+x.toPrecision(3)).toString();
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
+const sup = n => String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(x,d=3){ if(x===0) return "0"; let e=Math.floor(Math.log10(Math.abs(x))), ms=(x/Math.pow(10,e)).toFixed(d-1);
+  if(Math.abs(+ms)>=10){ e++; ms=(x/Math.pow(10,e)).toFixed(d-1); } return e===0? ms : `${ms} × 10${sup(e)}`; }
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+function coilV(ctx,x,y1,y2,n,wd,col,lw=2){ const lead=Math.min(8,(y2-y1)*0.12), a=y1+lead, b=y2-lead, seg=(b-a)/(2*n);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x,a);
+  for(let i=0;i<2*n;i++) ctx.lineTo(x+(i%2?-1:1)*wd/2, a+seg*(i+0.5)); ctx.lineTo(x,b); ctx.lineTo(x,y2); ctx.stroke(); ctx.restore(); }
+function coilH(ctx,x1,x2,y,n,ht,col,lw=2){ const lead=Math.min(8,(x2-x1)*0.12), a=x1+lead, b=x2-lead, seg=(b-a)/(2*n);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(a,y);
+  for(let i=0;i<2*n;i++) ctx.lineTo(a+seg*(i+0.5), y+(i%2?-1:1)*ht/2); ctx.lineTo(b,y); ctx.lineTo(x2,y); ctx.stroke(); ctx.restore(); }
+function massBlock(ctx,x,y,wd,ht,label){ rrect(ctx,x-wd/2,y,wd,ht,5,C.apricot,C.ink,1.4); text(ctx,label,x,y+ht/2+4,"#3b2b21",F(11),"center"); }
+function vdim(ctx,x,ya,yb,label,col){ line(ctx,x,ya,x,yb,col,1.4); line(ctx,x-5,ya,x+5,ya,col,1.2); line(ctx,x-5,yb,x+5,yb,col,1.2);
+  if(Math.abs(yb-ya)>16){ const d=yb>ya?1:-1; arrowHead(ctx,x,ya,-d*Math.PI/2,col,7); arrowHead(ctx,x,yb,d*Math.PI/2,col,7); }
+  if(label) text(ctx,label,x+8,(ya+yb)/2+4,col,F(12)); }
+/* ================= MODELS + DRAWINGS ================= */
+const EC = 1.6e-19, MEL = 9.11e-31, TAU = 2*Math.PI;
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function linfit0(pts){ let sxx=0,sxy=0; pts.forEach(([x,y])=>{sxx+=x*x;sxy+=x*y;}); return [sxy/sxx,0]; }
+function plus(ctx,x,y,s,col,lw=2){ line(ctx,x-s,y,x+s,y,col,lw); line(ctx,x,y-s,x,y+s,col,lw); }
+function minus(ctx,x,y,s,col,lw=2.2){ line(ctx,x-s,y,x+s,y,col,lw); }
+function qsym(ctx,x,y,sg,s=4.5){ if(sg>0) plus(ctx,x,y,s,C.terra,2.2); else if(sg<0) minus(ctx,x,y,s,C.ray2,2.6); }
+function earthSym(ctx,x,y,col){ line(ctx,x-12,y,x+12,y,col,2); line(ctx,x-8,y+5,x+8,y+5,col,2); line(ctx,x-4,y+10,x+4,y+10,col,2); }
+const fq = q => (q>0?"+":q<0?"−":"")+s3(Math.abs(q));
+
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h,o.bgc);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ if(p[2]) circle(ctx,X(p[0]),Y(p[1]),4.5,null,C.olive,2); else { ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); } });
+}
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "coulomb", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+const loIds=["lo1","lo2","lo3","lo4","lo5","lo6","lo7","lo8"]; const loState=store.get("s33-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s33-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s33-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+/* ================= LEARN ================= */
+const LEARN = {
+  charge:{ vis:[["loop",{V:6,R:12}]], cap:"A 6 V cell and a 12 Ω resistor: I = 0.5 A. In 10 s, Q = It = 5 C passes, carrying W = QV = 30 J from the cell to the resistor.",
+    keys:[["I","Current is the rate of flow of charge: I = Q/t. 1 ampere is 1 coulomb per second. In metals the charge carriers are free electrons."],["V","Potential difference is the work done per unit charge: V = W/Q. 1 volt = 1 joule per coulomb. The emf of a cell is the energy it gives each coulomb."],["→","Conventional current flows from + to − round the circuit; electrons actually drift the other way. Both describe the same current."]],
+    f:"I = Q / t · V = W / Q", mistake:"Saying current is \"used up\" in a bulb. The current is the same before and after; it is energy that is transferred." },
+  ohm:{ vis:[["ivcurves",{}]], cap:"I–V graphs: a metal wire at constant temperature (straight line through the origin), a filament bulb (curves over as it heats up) and a diode (almost no current until about 0.6 V forward).",
+    keys:[["⟋","Ohm's law: the current through a conductor is proportional to the pd across it, provided the temperature stays constant. V = IR."],["⌒","A filament bulb is non-ohmic: as the current rises it gets hot, its resistance rises and the I–V graph curves towards the V axis."],["▷","A diode is non-ohmic: in forward bias it conducts above about 0.6 V; in reverse bias almost no current flows."]],
+    f:"V = IR (constant temperature)", mistake:"Calling any component with V = IR \"ohmic\". V = IR defines resistance for every component; only a straight line through the origin shows Ohm's law is obeyed." },
+  resist:{ vis:[["wire",{m:1,L:1,d:0.3}]], cap:"1.00 m of constantan wire, 0.30 mm in diameter: A = πd²/4 = 7.07 × 10⁻⁸ m², so R = ρL/A = 6.9 Ω.",
+    keys:[["L","Resistance is proportional to length and inversely proportional to cross-sectional area: R = ρL/A. Double the diameter and the area is four times bigger."],["ρ","Resistivity ρ is a property of the material (Ω m): copper is low, nichrome is high. Measure L, d and R to find it."],["🌡","Heating a metal raises its resistance (the ions vibrate more). Heating an NTC thermistor lowers its resistance (more charge carriers are freed)."]],
+    f:"R = ρL / A, A = πd² / 4", mistake:"Using the diameter (or the radius in mm) instead of the area in m². Convert mm to m first: 0.30 mm = 3.0 × 10⁻⁴ m." },
+  combo:{ vis:[["combo",{arr:2,E:12,R:[10,20,30]}]], cap:"R₁ = 10 Ω in series with 20 Ω ∥ 30 Ω (= 12 Ω): total 22 Ω, so 12 V drives 0.55 A. At the junction it splits into 0.33 A and 0.22 A.",
+    keys:[["—","Series: the same current flows through each resistor and the pds add up to the emf, so R = R₁ + R₂ + R₃."],["‖","Parallel: each branch has the same pd and the currents add, so 1/R = 1/R₁ + 1/R₂ + 1/R₃. The total is less than the smallest branch."],["⚖","These rules come from conservation of charge (current in = current out at a junction) and conservation of energy (pds round a loop add to the emf)."]],
+    f:"R = R₁ + R₂ · 1/R = 1/R₁ + 1/R₂", mistake:"Forgetting the last step in parallel: 1/R = 1/20 + 1/30 = 1/12 gives R = 12 Ω, not 0.083 Ω." },
+  power:{ vis:[["mains",{fault:true,earth:true,rcd:false,touch:false,app:1}]], cap:"A fault connects the live wire to the metal case. The earth wire carries a large current to the ground, the fuse melts and the case is safe to touch.",
+    keys:[["P","Power is the rate of energy conversion: P = VI = I²R. Energy W = Pt = I²Rt. Electricity bills count kilowatt-hours."],["🔥","The heating effect: every current heats the wires (I²R). Thick cables, fuses and MCBs keep the heating safe; overloaded sockets can start fires."],["⏚","Earthing gives fault current a safe path. Fuses and MCBs cut the supply when the current is too big; an RCD cuts it in milliseconds when current leaks to earth, protecting people."]],
+    f:"P = VI = I²R · W = I²Rt", mistake:"Thinking the fuse protects people from shock. A shock current (about 30 mA) is far too small to blow a 13 A fuse; that is the RCD's job." },
+  semi:{ vis:[["pn",{V:0.7}]], cap:"A forward-biased p-n junction at 0.7 V: the depletion layer has almost disappeared, so holes and electrons cross the junction and current flows.",
+    keys:[["+","Doping a pure semiconductor adds charge carriers: n-type has extra free electrons, p-type has holes (missing electrons that act as positive carriers)."],["▮","Where p and n meet, electrons and holes combine, leaving a depletion layer with no free carriers. Forward bias shrinks it; reverse bias widens it."],["🔀","Diodes, LEDs, LDRs, thermistors and transistors are all semiconductors. A transistor switches on when its base-emitter voltage reaches about 0.7 V."]],
+    f:"Forward bias ≈ 0.6 V · transistor on at V_be ≈ 0.7 V", mistake:"Saying holes are positive particles. A hole is a missing electron; it behaves like a positive carrier as neighbouring electrons move into it." },
+};
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  ["iv","Three I–V graphs","A metal at constant temperature gives a straight line through the origin (ohmic). A filament bulb curves as it heats. A diode stays near zero until about 0.6 V in forward bias.","ohm","var(--blush)"],
+  ["sp","Series or parallel?","The same three resistors: 60 Ω in series, 5.5 Ω in parallel. In parallel each one gets the full emf, which is why house circuits are wired in parallel.","combo","var(--apricot)"],
+  ["safe","The safety chain","Live through the fuse, neutral back, earth to the case. Fuse and MCB: too much current. RCD: current leaking to earth. Earth wire: a safe path for fault current.","power","var(--sage)"],
+];
+$("cases").innerHTML = CASES.map(([k,t,p,topic,tint])=>`<div class="panel rc-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tint}">${svg(topic)}</div><h3>${t}</h3></div><canvas data-case="${k}" aria-label="${t}"></canvas><p>${p}</p><div class="btns"><button data-go="labs" data-lab="${topic}">Open the lab</button></div></div>`).join("");
+const SEC = [["LED bulb",8],["Laptop charger",65],["Television",100],["Toaster",900],["Hair dryer",1800],["Kettle",2200],["Electric shower",9500]];
+const fuseFor = I => I<=3? "3 A" : I<=5? "5 A" : I<=13? "13 A" : "own circuit (MCB)";
+$("secT").innerHTML = `<tr><th style="text-align:left">Appliance</th><th>Power (W)</th><th>Current (A)</th><th>Fuse</th></tr>` + SEC.map(([n,p])=>`<tr><td style="text-align:left;white-space:normal">${n}</td><td>${p}</td><td>${s3(p/230)}</td><td>${fuseFor(p/230*1.1)}</td></tr>`).join("");
+$("secRes").innerHTML = `Current I = P/V with V = 230 V. Choose the smallest standard fuse (3 A, 5 A or 13 A) that is a little above the normal current. An electric shower draws about 41 A, far more than a plug can carry, so it is wired on its own circuit with its own MCB and thick cable to limit the heating effect (I²R).`;
+const AROUND = [
+  ["led","LED lighting","LEDs turn far more of their electrical energy into light than filament bulbs, so they waste less as heat and last much longer. Research: the efficiency of LED v filament bulbs.",[["Diode","real"]],"var(--blush)"],
+  ["sun","Solar cells","A large p-n junction: light frees electrons and holes, and the junction's field pushes them apart to drive a current. Research: how much of Ireland's electricity is solar.",[["p-n junction","real"]],"var(--apricot)"],
+  ["chip","Computer chips","A modern processor holds billions of tiny transistors switching on and off. Research: how transistor size has changed since the 1970s.",[["Transistor","real"]],"var(--sage)"],
+  ["therm","Thermostats and thermometers","NTC thermistors sense temperature in digital thermometers, car engines, fridges and central heating. Research: the R–θ graph of a real thermistor.",[["Thermistor","real"]],"var(--cream)"],
+  ["sun","Street lights and night lights","An LDR in a potential divider switches a transistor so lights come on at dusk. Research: other light sensors in phones and cameras.",[["LDR","real"]],"var(--blush)"],
+  ["phone","Phone chargers","Diodes convert the alternating mains supply to direct current (rectification) to charge a battery. Research: what a bridge rectifier does.",[["Diode","real"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"charge",label:"Charge and pd",col:"var(--blush)",leaves:[["I = Q/t","Rate of flow of charge."],["V = W/Q","Energy per coulomb."],["emf","Energy given per coulomb by the source."],["Conventional","+ to − round the circuit."]]},
+  {id:"ohm",label:"Ohm's law",col:"var(--apricot)",leaves:[["V = IR","Constant temperature."],["Ohmic","Straight line through 0."],["Bulb","Curves as it heats."],["Diode","Conducts one way."]]},
+  {id:"resist",label:"Resistivity",col:"var(--sage)",leaves:[["R = ρL/A","Length, area, material."],["Metals","R rises with θ."],["Thermistor","R falls with θ."]]},
+  {id:"combo",label:"Series/parallel",col:"var(--cream)",leaves:[["Series","R = R₁ + R₂."],["Parallel","1/R = 1/R₁ + 1/R₂."],["Charge","Junction rule."],["Energy","Loop rule."]]},
+  {id:"power",label:"Power and safety",col:"var(--blush)",leaves:[["P = VI = I²R","Rate of energy use."],["kWh","Units on the bill."],["Fuse/MCB","Too much current."],["RCD","Leak to earth."],["Earth","Safe path."]]},
+  {id:"semi",label:"Semiconductors",col:"var(--sage)",leaves:[["Doping","n-type and p-type."],["Junction","Depletion layer."],["LDR/LED","Light in, light out."],["Transistor","A switch."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["charge","Define electric current and give its unit.","The rate of flow of charge, I = Q/t. Unit: the ampere (A)."],
+  ["charge","Define potential difference.","The work done per unit charge in moving charge between two points: V = W/Q. Unit: the volt."],
+  ["charge","What is a volt?","One joule per coulomb."],
+  ["charge","What is the emf of a cell?","The energy the cell gives to each coulomb of charge that passes through it (the pd across it when no current flows)."],
+  ["charge","How many electrons pass a point per second when I = 1 A?","1 C ÷ 1.6 × 10⁻¹⁹ C = 6.25 × 10¹⁸ electrons."],
+  ["charge","What is conventional current?","Current shown flowing from + to − round the external circuit: the way positive charge would move. Electrons move the opposite way."],
+  ["ohm","State Ohm's law.","The current through a conductor is proportional to the pd across it, provided the temperature stays constant."],
+  ["ohm","Sketch-describe the I–V graph of an ohmic conductor.","A straight line through the origin; its slope is 1/R."],
+  ["ohm","Why is the I–V graph of a filament bulb curved?","As the current increases the filament gets hotter, its resistance rises, so the current rises less for each extra volt."],
+  ["ohm","Describe the I–V graph of a silicon diode.","Almost zero current in reverse bias and up to about 0.6 V forward; then the current rises steeply."],
+  ["ohm","How are an ammeter and a voltmeter connected?","Ammeter in series with the component; voltmeter in parallel across it."],
+  ["resist","Define resistivity and give its unit.","The resistance of a 1 m length of the material with a cross-sectional area of 1 m²: ρ = RA/L. Unit Ω m."],
+  ["resist","How does doubling the diameter of a wire change its resistance?","The area becomes 4 times bigger, so the resistance falls to a quarter."],
+  ["resist","How does the resistance of a metal change with temperature? Why?","It rises: the metal ions vibrate more and get in the way of the moving electrons."],
+  ["resist","How does an NTC thermistor's resistance change with temperature?","It falls sharply as the temperature rises, because more charge carriers are freed."],
+  ["combo","Give the formula for resistors in series and say why it works.","R = R₁ + R₂ + R₃. Same current through each; the pds add (energy is conserved): IR = IR₁ + IR₂ + IR₃."],
+  ["combo","Give the formula for resistors in parallel and say why it works.","1/R = 1/R₁ + 1/R₂ + 1/R₃. Same pd across each; the currents add (charge is conserved): V/R = V/R₁ + V/R₂ + V/R₃."],
+  ["combo","What is the total resistance of 20 Ω and 30 Ω in parallel?","1/R = 1/20 + 1/30 = 5/60, so R = 12 Ω."],
+  ["combo","Why are household circuits wired in parallel?","Each appliance gets the full 230 V, and each can be switched on or off without affecting the others."],
+  ["power","Give three equations for electrical power.","P = VI, P = I²R, P = V²/R."],
+  ["power","What is a kilowatt-hour?","The energy used by a 1 kW appliance in 1 hour: 3.6 × 10⁶ J."],
+  ["power","What does a fuse do?","It melts and breaks the live wire when the current is too large, protecting the wiring and the appliance."],
+  ["power","How is an MCB different from a fuse?","It trips (switches off) automatically when the current is too high and can be reset instead of replaced."],
+  ["power","What does an RCD do?","It compares the live and neutral currents and cuts the supply within milliseconds if they differ (current leaking through a person or to earth)."],
+  ["power","Why are metal-cased appliances earthed?","If the live wire touches the case, a large current flows to earth, blowing the fuse, so the case never stays live."],
+  ["semi","What is doping?","Adding small amounts of impurity atoms to a pure semiconductor to increase its conductivity."],
+  ["semi","Distinguish n-type and p-type semiconductors.","n-type: majority carriers are free electrons. p-type: majority carriers are holes."],
+  ["semi","What is the depletion layer?","The region at a p-n junction with no free charge carriers, so it does not conduct."],
+  ["semi","What happens to the depletion layer in forward and reverse bias?","Forward: it narrows and disappears above about 0.6 V, so current flows. Reverse: it widens, so almost no current flows."],
+  ["semi","How can a transistor act as a switch?","When the base-emitter voltage is below about 0.7 V it is off; above it, a small base current switches on a large collector current."],
+];
+
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Electric</text><text x="${cx}" y="${cy+22}" text-anchor="middle">circuits</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("s33-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s33-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s33-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s33-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["charge","A charge of 12 C passes a point in 4 s. The current is:",["48 A","3 A","0.33 A","16 A"],1,"I = Q/t = 12 ÷ 4 = 3 A."],
+  ["charge","A potential difference of 1 volt means:",["1 coulomb per second","1 joule per coulomb","1 ampere per ohm","1 watt per second"],1,"V = W/Q, so 1 V = 1 J C⁻¹."],
+  ["charge","How much energy does 5 C of charge transfer when it passes through a pd of 6 V?",["30 J","1.2 J","11 J","0.83 J"],0,"W = QV = 5 × 6 = 30 J."],
+  ["charge","In a metal wire, conventional current flows from + to −. The electrons move:",["From + to −","From − to +","Back and forth with no drift","Only on the surface"],1,"Electrons are negative, so they drift the opposite way to conventional current."],
+  ["ohm","Ohm's law only holds if:",["The current is small","The temperature stays constant","The voltage is below 12 V","The wire is copper"],1,"Ohm's law: I ∝ V provided the temperature (and other physical conditions) stay constant."],
+  ["ohm","As the current through a filament bulb increases, its resistance:",["Falls","Stays the same","Rises","Becomes zero"],2,"The filament gets hotter, so its resistance rises and the I–V graph curves."],
+  ["ohm","A silicon diode in reverse bias with 3 V across it carries:",["A large current","Almost no current","Exactly 3 A","The same current as in forward bias"],1,"In reverse bias the depletion layer widens and almost no current flows."],
+  ["ohm","In an I–V experiment the voltmeter must be connected:",["In series with the component","In parallel with the component","In series with the ammeter only","Across the supply only"],1,"A voltmeter measures the pd across a component, so it goes in parallel with it."],
+  ["resist","A wire's length is doubled and its diameter is doubled. Its resistance:",["Doubles","Halves","Is unchanged","Is four times bigger"],1,"R = ρL/A: L × 2 gives R × 2; d × 2 gives A × 4, so R ÷ 4. Overall R × 2 ÷ 4 = R ÷ 2."],
+  ["resist","The unit of resistivity is:",["Ω","Ω m","Ω m⁻¹","Ω m²"],1,"ρ = RA/L: Ω × m² ÷ m = Ω m."],
+  ["resist","As the temperature of an NTC thermistor rises, its resistance:",["Rises","Falls","Stays the same","Rises then falls"],1,"More charge carriers are freed, so the resistance falls."],
+  ["combo","Resistors of 6 Ω and 3 Ω are connected in parallel. The total resistance is:",["9 Ω","4.5 Ω","2 Ω","0.5 Ω"],2,"1/R = 1/6 + 1/3 = 1/6 + 2/6 = 3/6, so R = 2 Ω."],
+  ["combo","Which is the same for every resistor in a series circuit?",["The pd","The current","The power","The resistance"],1,"In series there is only one path, so the same current flows through each resistor."],
+  ["combo","A current of 0.6 A enters a junction. One branch carries 0.25 A. The other branch carries:",["0.85 A","0.35 A","0.6 A","0.25 A"],1,"Conservation of charge: 0.6 − 0.25 = 0.35 A."],
+  ["power","A 2.3 kW kettle runs on 230 V mains. The current is:",["0.1 A","1 A","10 A","100 A"],2,"I = P/V = 2300 ÷ 230 = 10 A."],
+  ["power","A current of 2 A flows through a 5 Ω resistor for 60 s. The heat produced is:",["600 J","1200 J","20 J","120 J"],1,"W = I²Rt = 2² × 5 × 60 = 1200 J."],
+  ["power","Which device protects a person from an electric shock by detecting current leaking to earth?",["A fuse","An MCB","An RCD","A switch"],2,"An RCD compares live and neutral currents and cuts the supply in milliseconds if they differ."],
+  ["power","The fuse in a plug is always placed in the:",["Neutral wire","Earth wire","Live wire","Any wire"],2,"In the live wire, so when it melts the appliance is disconnected from the high voltage."],
+  ["semi","In an n-type semiconductor the majority charge carriers are:",["Holes","Free electrons","Protons","Positive ions"],1,"n-type is doped to have extra free electrons (negative carriers)."],
+  ["semi","When a p-n junction is reverse biased, the depletion layer:",["Disappears","Gets narrower","Gets wider","Is unchanged"],2,"Reverse bias pulls carriers away from the junction, so the depletion layer widens and blocks the current."],
+];
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Model","Represent a physical situation with a relationship, equation, diagram or simulation that can be used to make predictions.","Model the relationship between current and charge."],
+  ["Investigate","Observe, study or make a detailed and systematic examination to establish facts and reach new conclusions.","Investigate the effect of temperature on the resistance of a conductor."],
+  ["Verify","Confirm a relationship or law by experiment, comparing results with what is predicted.","Verify Ohm's law for a metal conductor."],
+  ["Derive","Arrive at an equation from other relationships, showing each step.","Derive the formula for resistors in parallel."],
+  ["Use","Apply knowledge or a method to a situation.","Use the formula for resistors in series to find the total resistance."],
+  ["Calculate","Obtain a numerical answer, showing the relevant stages in the working.","Calculate the current drawn by a 2 kW heater on 230 V."],
+  ["Describe","Give a detailed account of the main points, using words, diagrams and examples.","Describe an experiment to show how the resistance of a thermistor varies with temperature."],
+  ["Explain","Give a detailed account including reasons or causes.","Explain why the resistance of a filament bulb increases as the current increases."],
+  ["Draw","Produce a diagram with the key features clearly shown and labelled.","Draw a circuit to measure the I–V characteristic of a diode."],
+];
+
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s33-best",null); if(best==null||pct>best) store.set("s33-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+function parseNum(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,ch=>({"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-"})[ch]);
+  s=s.replace(/[x×*]10\^?/i,"e");
+  return parseFloat(s);
+}
+// Calculation trainer
+const an = n => /^(8|11|18)/.test(String(n))? "an" : "a";
+const r1 = x => Math.round(x*10)/10;
+const MATS = [["copper",1.7e-8],["constantan",4.9e-7],["nichrome",1.1e-6]];
+const areaOf = dmm => Math.PI*(dmm*1e-3)**2/4;
+const PTYPES = {
+  iqt:{ name:"I = Q/t", gen(){ const [Q,t]=pick([[12,4],[30,6],[90,60],[240,120],[1800,600],[45,15]]), I=Q/t;
+    return { q:`A charge of <b>${Q} C</b> flows past a point in a circuit in <b>${t} s</b>. Calculate the current.`, ans:I, unit:"A", steps:["I = Q / t",`I = ${Q} ÷ ${t}`,`I = ${s3(I)} A`] }; } },
+  elec:{ name:"Number of electrons", gen(){ const I=pick([0.2,0.5,1.5,2]), t=pick([10,30,60]), Q=I*t, n=Q/1.6e-19;
+    return { q:`A current of <b>${I} A</b> flows for <b>${t} s</b>. How many electrons pass a point? (e = 1.6 × 10⁻¹⁹ C)`, ans:n, unit:"electrons", steps:["Q = It",`Q = ${I} × ${t} = ${s3(Q)} C`,`n = Q / e = ${s3(Q)} ÷ 1.6 × 10⁻¹⁹ = ${sci(n)}`] }; } },
+  vwq:{ name:"V = W/Q", gen(){ const [W,Q]=pick([[36,3],[54,4.5],[690,3],[18,1.5],[1200,100]]), V=W/Q;
+    return { q:`<b>${W} J</b> of energy is converted when <b>${Q} C</b> of charge passes through a component. Calculate the pd across it.`, ans:V, unit:"V", steps:["V = W / Q",`V = ${W} ÷ ${Q}`,`V = ${s3(V)} V`] }; } },
+  ohm:{ name:"V = IR", gen(){ const mode=pick(["I","R","V"]), [V,R]=pick([[12,24],[6,4],[9,18],[230,46],[1.5,5]]), I=V/R;
+    if(mode==="I") return { q:`A pd of <b>${V} V</b> is applied across ${an(R)} <b>${R} Ω</b> resistor. Calculate the current.`, ans:I, unit:"A", steps:["V = IR, so I = V / R",`I = ${V} ÷ ${R}`,`I = ${s3(I)} A`] };
+    if(mode==="R") return { q:`A current of <b>${s3(I)} A</b> flows when the pd across a component is <b>${V} V</b>. Calculate its resistance.`, ans:R, unit:"Ω", steps:["R = V / I",`R = ${V} ÷ ${s3(I)}`,`R = ${s3(R)} Ω`] };
+    return { q:`A current of <b>${s3(I)} A</b> flows through ${an(R)} <b>${R} Ω</b> resistor. Calculate the pd across it.`, ans:V, unit:"V", steps:["V = IR",`V = ${s3(I)} × ${R}`,`V = ${s3(V)} V`] }; } },
+  rho:{ name:"R = ρL/A", gen(){ const [m,rho]=pick(MATS.slice(1)), L=pick([0.5,1,1.5,2]), d=pick([0.2,0.3,0.4,0.5]), A=areaOf(d), R=rho*L/A;
+    return { q:`Calculate the resistance of <b>${L} m</b> of ${m} wire of diameter <b>${d} mm</b>. (ρ of ${m} = ${sci(rho,2)} Ω m)`, ans:R, unit:"Ω", steps:[`A = πd²/4 = π × (${d} × 10⁻³)² ÷ 4 = ${sci(A)} m²`,"R = ρL / A",`R = ${sci(rho,2)} × ${L} ÷ ${sci(A)} = ${s3(R)} Ω`] }; } },
+  rhof:{ name:"Find the resistivity", gen(){ const [m,rho]=pick(MATS.slice(1)), L=pick([0.5,0.8,1]), d=pick([0.25,0.3,0.4]), A=areaOf(d), R=+(rho*L/A).toPrecision(3), x=R*A/L;
+    return { q:`A wire <b>${L} m</b> long with a diameter of <b>${d} mm</b> has a resistance of <b>${R} Ω</b>. Calculate the resistivity of its material.`, ans:x, unit:"Ω m", steps:[`A = πd²/4 = π × (${d} × 10⁻³)² ÷ 4 = ${sci(A)} m²`,"ρ = RA / L",`ρ = ${R} × ${sci(A)} ÷ ${L} = ${sci(x)} Ω m (${m})`] }; } },
+  ser:{ name:"Series total", gen(){ const R=[pick([4,10,22,47]),pick([6,15,33]),pick([5,12,20,100])], T=R[0]+R[1]+R[2];
+    return { q:`Resistors of <b>${R[0]} Ω</b>, <b>${R[1]} Ω</b> and <b>${R[2]} Ω</b> are connected in series. Calculate the total resistance.`, ans:T, unit:"Ω", steps:["R = R₁ + R₂ + R₃",`R = ${R.join(" + ")}`,`R = ${T} Ω`] }; } },
+  par:{ name:"Parallel total", gen(){ const R=pick([[20,30],[6,3],[12,4],[10,40],[10,20,20],[6,6,6],[30,60,20]]), inv=R.reduce((a,r)=>a+1/r,0), T=1/inv;
+    return { q:`Resistors of ${R.map(r=>`<b>${r} Ω</b>`).join(", ").replace(/, ([^,]*)$/," and $1")} are connected in parallel. Calculate the total resistance.`, ans:T, unit:"Ω", steps:[`1/R = ${R.map(r=>"1/"+r).join(" + ")}`,`1/R = ${s3(inv)} Ω⁻¹`,`R = 1 ÷ ${s3(inv)} = ${s3(T)} Ω`] }; } },
+  mix:{ name:"Mixed circuit current", gen(){ const E=pick([6,9,12]), R1=pick([4,8,10]), [R2,R3]=pick([[20,30],[6,3],[12,4],[10,40]]), P=R2*R3/(R2+R3), T=R1+P, I=E/T;
+    return { q:`A <b>${E} V</b> supply is connected to ${an(R1)} <b>${R1} Ω</b> resistor in series with a parallel pair of <b>${R2} Ω</b> and <b>${R3} Ω</b>. Calculate the current drawn from the supply.`, ans:I, unit:"A", steps:[`Parallel pair: 1/R = 1/${R2} + 1/${R3}, so R = ${s3(P)} Ω`,`Total R = ${R1} + ${s3(P)} = ${s3(T)} Ω`,`I = V / R = ${E} ÷ ${s3(T)} = ${s3(I)} A`] }; } },
+  pvi:{ name:"P = VI", gen(){ const [n,P]=pick([["kettle",2200],["toaster",920],["hair dryer",1840],["heater",2500],["television",115]]), I=P/230;
+    return { q:`A <b>${P} W</b> ${n} runs on the <b>230 V</b> mains. Calculate the current it draws.`, ans:I, unit:"A", steps:["P = VI, so I = P / V",`I = ${P} ÷ 230`,`I = ${s3(I)} A, so use a ${I<=3?"3 A":I<=5?"5 A":"13 A"} fuse`] }; } },
+  heat:{ name:"W = I²Rt", gen(){ const I=pick([0.5,2,3,4]), R=pick([5,10,25]), t=pick([30,60,300]), W=I*I*R*t;
+    return { q:`A current of <b>${I} A</b> flows through a <b>${R} Ω</b> heating element for <b>${t} s</b>. Calculate the heat produced.`, ans:W, unit:"J", steps:["W = I²Rt",`W = ${I}² × ${R} × ${t}`,`W = ${s3(W)} J`] }; } },
+  cost:{ name:"Cost in kWh", gen(){ const P=pick([2,1.5,3,0.1]), h=pick([2,3,5,8]), c=pick([0.3,0.35,0.4]), kwh=P*h, x=kwh*c;
+    return { q:`A <b>${P*1000} W</b> appliance runs for <b>${h} hours</b>. Electricity costs <b>€${c.toFixed(2)}</b> per kWh. Calculate the cost.`, ans:x, unit:"€", steps:[`Energy = ${P} kW × ${h} h = ${s3(kwh)} kWh`,`Cost = ${s3(kwh)} × €${c.toFixed(2)}`,`Cost = €${x.toFixed(2)}`] }; } },
+};
+
+let pType="iqt", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseNum($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 12.5 or 0.68.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.abs(pCur.ans)*0.02;
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: convert mA to A, mm to m and kW to W first; in parallel, flip 1/R at the end; type powers of ten as e.g. 4.5e5. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+// Drill: name that symbol
+const SYMS = [["cell","Cell","A single source of emf. The long line is the positive terminal."],["battery","Battery","Two or more cells joined in series."],["lamp","Bulb","A filament lamp: a circle with a cross."],["switch","Switch","Breaks or completes the circuit."],["res","Resistor","A fixed resistance: a plain rectangle."],["var","Variable resistor","A resistor with an arrow through it: its resistance can be changed."],["ldr","LDR","A resistor with arrows pointing in: light lowers its resistance."],["therm","Thermistor","A resistor with a bent line through it: its resistance changes with temperature."],["diode","Diode","A triangle and bar: current flows in the direction of the arrow only."],["led","LED","A diode with arrows pointing out: it gives out light."],["amm","Ammeter","A circle with A: measures current, in series."],["volt","Voltmeter","A circle with V: measures pd, in parallel."],["ohmm","Ohmmeter","A circle with Ω: measures resistance."],["fuse","Fuse","A rectangle with a line running through it: melts if the current is too high."],["trans","Transistor","Base, collector and emitter in a circle: an electronic switch."]];
+let pd = { k:-1, sel:null, shown:false, streak:0, opts:[] };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*SYMS.length); } while(k===pd.k); const others=shuffle(SYMS.map((s,i)=>i).filter(i=>i!==k)).slice(0,5);
+  pd={...pd,k,sel:null,shown:false,opts:shuffle([k,...others])};
+  $("predQ").innerHTML=`<b>Which component does this symbol show?</b>`;
+  $("predOpts").querySelector(".btns").innerHTML=pd.opts.map(i=>`<button data-a="${i}">${SYMS[i][1]}</button>`).join("");
+  $("predFb").innerHTML=""; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=+b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const ok=pd.sel===pd.k; pd.streak=ok?pd.streak+1:0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> It's a <b>${SYMS[pd.k][1].toLowerCase()}</b>. ${SYMS[pd.k][2]}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Verifying Ohm's law and a filament bulb", intro:"A student investigates how the current through a component depends on the pd across it.",
+    parts:[["a","Draw a circuit the student could use, including a means of varying the pd.",9,"Supply with rheostat or potential divider (3); ammeter in series with the component (3); voltmeter in parallel across the component (3)."],
+      ["b","State Ohm's law.",6,"The current through a conductor is proportional to the pd across it (3) provided the temperature stays constant (3)."],
+      ["c","For a metal wire the results were V = 1.0, 2.0, 3.0, 4.0, 5.0 V and I = 0.10, 0.20, 0.30, 0.40, 0.50 A. Explain how a graph of these results verifies Ohm's law and find the resistance.",9,"Plot I against V (3); a straight line through the origin shows I ∝ V (3); R = V/I = 1/slope = 10 Ω (3)."],
+      ["d","Sketch the I–V graph of a filament bulb and explain its shape.",9,"Curve through the origin bending towards the V axis, symmetric for negative V (3); as I rises the filament gets hotter (3); its resistance rises so I increases less for each extra volt (3)."],
+      ["e","Sketch the I–V graph of a silicon diode in forward and reverse bias.",6,"Near zero current in reverse bias and up to about 0.6 V (3); steep rise in current above about 0.6 V forward (3)."]] },
+  { title:"Resistivity and resistors in circuits", intro:"A length of constantan wire is 1.2 m long with a diameter of 0.40 mm. (ρ of constantan = 4.9 × 10⁻⁷ Ω m)",
+    parts:[["a","Define resistivity.",6,"The resistance of a sample of the material (2) 1 m long (2) with a cross-sectional area of 1 m² (2). Accept ρ = RA/L with symbols defined."],
+      ["b","Calculate the resistance of the wire.",9,"A = πd²/4 = π(4.0 × 10⁻⁴)²/4 = 1.26 × 10⁻⁷ m² (3); R = ρL/A (3) = 4.9 × 10⁻⁷ × 1.2 ÷ 1.26 × 10⁻⁷ = 4.7 Ω (3)."],
+      ["c","Derive the formula for the total resistance of two resistors in parallel.",9,"Same pd V across each (3); total current I = I₁ + I₂ (conservation of charge) (3); V/R = V/R₁ + V/R₂ so 1/R = 1/R₁ + 1/R₂ (3)."],
+      ["d","A 12 V supply is connected to a 10 Ω resistor in series with 20 Ω and 30 Ω in parallel. Calculate the current from the supply and the current in the 20 Ω resistor.",12,"Parallel: 1/R = 1/20 + 1/30, R = 12 Ω (3); total 22 Ω (2); I = 12/22 = 0.55 A (3); pd across the pair = 0.545 × 12 = 6.5 V (2); I₂₀ = 6.55/20 = 0.33 A (2)."],
+      ["e","Describe how the resistance of a metal and of a thermistor change as their temperature rises.",6,"Metal: resistance rises (roughly linearly) (3). NTC thermistor: resistance falls sharply (3)."]] },
+  { title:"Power, safety and semiconductors", intro:"A 2.4 kW electric heater is used on the 230 V mains for 3 hours a day. Electricity costs €0.35 per kWh.",
+    parts:[["a","Calculate the current the heater draws and suggest a fuse for its plug.",9,"I = P/V (3) = 2400 ÷ 230 = 10.4 A (3); 13 A fuse (3)."],
+      ["b","Calculate the resistance of the heater and the cost of using it for one week.",9,"R = V²/P = 230² ÷ 2400 = 22 Ω (3). Energy = 2.4 kW × 3 h × 7 = 50.4 kWh (3); cost = 50.4 × 0.35 = €17.64 (3)."],
+      ["c","Explain the purpose of (i) the earth wire, (ii) an MCB, (iii) an RCD.",9,"(i) Connects the metal case to ground so fault current flows safely to earth and blows the fuse (3). (ii) Trips and cuts the circuit when the current is too high, protecting wiring; can be reset (3). (iii) Detects a difference between live and neutral currents (leakage) and cuts the supply in milliseconds, protecting people (3)."],
+      ["d","Explain what is meant by doping and describe the depletion layer at a p-n junction.",9,"Adding small amounts of impurity to a pure semiconductor to increase conductivity (3); n-type has extra electrons, p-type has holes (2); at the junction electrons and holes combine, leaving a region with no free carriers (2) that acts as an insulator and widens in reverse bias (2)."],
+      ["e","Describe how a transistor and an LDR can be used to switch on a light when it gets dark.",6,"LDR and resistor form a potential divider feeding the transistor's base (2); in the dark the LDR's resistance rises so the base voltage rises above about 0.7 V (2); the transistor switches on and current flows through the lamp or LED in its collector circuit (2)."]] },
+];
+const RAG = ["Define current and use I = Q/t","Define potential difference and emf; use V = W/Q","Distinguish conventional current and electron flow","State Ohm's law with its condition","Draw the circuit for an I–V experiment (ammeter in series, voltmeter in parallel)","Describe the I–V graphs of a wire, a filament bulb and a diode","Define resistivity and use R = ρL/A with A = πd²/4","Describe how the resistance of a metal and a thermistor change with temperature","Derive the formulae for resistors in series and parallel","Calculate currents and pds in series, parallel and mixed circuits","Use conservation of charge and energy in circuits","Use P = VI = I²R and W = I²Rt; calculate costs in kWh","Explain the heating effect and its implications for cables and fuses","Explain the roles of the earth wire, fuse, MCB and RCD","Explain doping, n-type, p-type and the depletion layer","Describe forward and reverse bias, and transistors as switches"];
+const SKILLS = [["Draw a circuit","Ammeter in series, voltmeter in parallel, and a rheostat or potential divider to vary the pd.","I–V lab"],["Collect a full data set","Take at least ten readings across the full range, including reversed voltages.","I–V lab"],["Use a graph to test a law","A straight line through the origin of I against V verifies Ohm's law; its slope is 1/R.","I–V lab"],["Measure carefully","Measure wire diameter with a micrometer at several points and average; measure length with a metre stick.","Resistivity lab"],["Control variables","Change only the temperature; stir the water and wait for the reading to settle.","Temperature lab"],["Compare with theory","Compare measured total resistance with the series and parallel formulae.","Series and parallel lab"],["Use secondary sources","Research where semiconductors are used and cite your sources with dates.","Infographics"],["Work safely","Low-voltage supplies only; never work on mains circuits; switch off between readings so wires don't overheat.","Power lab"]];
+
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+const ragState=store.get("s33-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s33-rag",ragState); ragRender(); });
+ragRender();
+const skState=store.get("s33-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s33-skills",skState); });
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+/* ================= DRAWINGS ================= */
+const noise = f => 1+(Math.random()*2-1)*f;
+// Circuit symbol centred at (x,y), drawn along local x, rotated by ang; half-length s (leads included)
+function sym(ctx,k,x,y,ang,s,o={}){ const col=o.col||C.ink, lw=o.lw||2, b=Math.min(s*0.6,22);
+  ctx.save(); ctx.translate(x,y); ctx.rotate(ang||0);
+  const L=(a,c,d,e,w,dash)=>line(ctx,a,c,d,e,col,w||lw,dash), lead=g=>{ L(-s,0,-g,0); L(g,0,s,0); };
+  const box=()=>{ lead(b); rrect(ctx,-b,-7,2*b,14,1.5,o.fill||C.surface,col,lw); };
+  const letter=t=>{ ctx.save(); ctx.rotate(-(ang||0)); text(ctx,t,0,5,col,F(13),"center"); ctx.restore(); };
+  if(k==="cell"){ lead(4); L(-4,-13,-4,13); L(4,-7,4,7,lw*2.2); }
+  else if(k==="battery"){ lead(13); L(-13,-13,-13,13); L(-5,-7,-5,7,lw*2.2); L(-5,0,5,0,1.2,[2,2]); L(5,-13,5,13); L(13,-7,13,7,lw*2.2); }
+  else if(k==="lamp"){ lead(11); circle(ctx,0,0,11,o.glow||C.surface,col,lw); const q=7.6; L(-q,-q,q,q); L(-q,q,q,-q); }
+  else if(k==="switch"){ lead(b); circle(ctx,-b,0,2.6,col); circle(ctx,b,0,2.6,col); if(o.closed) L(-b,0,b,0); else L(-b,0,b*0.85,-b*0.7); }
+  else if(k==="res") box();
+  else if(k==="var"){ box(); arrow(ctx,-b-4,11,b+5,-13,col,1.6); }
+  else if(k==="ldr"){ box(); arrow(ctx,-12,-27,-4,-11,col,1.4); arrow(ctx,0,-27,8,-11,col,1.4); }
+  else if(k==="therm"){ box(); L(-b-4,12,b-3,-12,1.6); L(b-3,-12,b+6,-12,1.6); }
+  else if(k==="diode"||k==="led"){ lead(8); ctx.beginPath(); ctx.moveTo(-8,-9); ctx.lineTo(-8,9); ctx.lineTo(8,0); ctx.closePath(); ctx.fillStyle=o.fill||C.surface; ctx.fill(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.stroke(); L(8,-10,8,10);
+    if(k==="led"){ arrow(ctx,0,-11,8,-24,col,1.4); arrow(ctx,7,-9,15,-22,col,1.4); } }
+  else if(k==="amm"||k==="volt"||k==="ohmm"){ lead(11); circle(ctx,0,0,11,o.fill||C.surface,col,lw); letter(k==="amm"?"A":k==="volt"?"V":"Ω"); }
+  else if(k==="fuse"){ lead(b); rrect(ctx,-b,-6,2*b,12,1.5,o.fill||C.surface,col,lw); if(!o.blown) L(-b,0,b,0,1.4); else { L(-b,0,-4,3,1.4); L(4,-3,b,0,1.4); } }
+  ctx.restore(); }
+// Transistor: base on the left, collector up, emitter down (arrow out)
+function drawTrans(ctx,x,y,r,o={}){ const col=o.col||C.ink, bx=x-r*0.3;
+  circle(ctx,x,y,r,o.fill||C.surface,col,1.6); line(ctx,bx,y-r*0.55,bx,y+r*0.55,col,2.4); line(ctx,x-r*1.6,y,bx,y,col,2);
+  line(ctx,bx,y-r*0.25,x+r*0.4,y-r*0.75,col,2); line(ctx,x+r*0.4,y-r*0.75,x+r*0.4,y-r*1.6,col,2);
+  line(ctx,bx,y+r*0.25,x+r*0.4,y+r*0.75,col,2); arrowHead(ctx,x+r*0.4,y+r*0.75,Math.atan2(r*0.5,r*0.7),col,8); line(ctx,x+r*0.4,y+r*0.75,x+r*0.4,y+r*1.6,col,2); }
+const dot = (ctx,x,y) => circle(ctx,x,y,3.2,C.ink);
+const lbl = (ctx,t,x,y,col,fs,al) => text(ctx,t,x,y,col||C.ink,F(fs||12),al||"center");
+
+// 1. Charge loop
+function drawLoop(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, pad=cp?26:40, x0=pad, x1=w-pad, y0=cp?28:40, y1=h-(cp?26:34), W=x1-x0, H=y1-y0, I=o.V/o.R;
+  ctx.save(); ctx.strokeStyle=C.ink; ctx.lineWidth=2; ctx.strokeRect(x0,y0,W,H); ctx.restore();
+  const P=2*(W+H), at=s=>{ let d=((s%1)+1)%1*P; if(d<W) return [x0+d,y0]; d-=W; if(d<H) return [x1,y0+d]; d-=H; if(d<W) return [x1-d,y1]; d-=W; return [x0,y1-d]; };
+  const el=o.mode==="el", N=Math.max(14,Math.round(P/26)), ph=(o.ph||0)*(el?-1:1);
+  for(let i=0;i<N;i++){ const [x,y]=at(i/N+ph); circle(ctx,x,y,cp?3.2:4,el?C.ray2:C.terra); }
+  const sc=cp?0.85:1;
+  sym(ctx,"cell",x0,(y0+y1)/2,Math.PI/2,28*sc,{});
+  if(o.lamp) sym(ctx,"lamp",(x0+x1)/2,y0,0,30*sc,{glow:C.apricot}); else sym(ctx,"res",(x0+x1)/2,y0,0,34*sc,{});
+  sym(ctx,"amm",x1,(y0+y1)/2,Math.PI/2,24*sc,{});
+  const fs=cp?10.5:12.5;
+  lbl(ctx,"+",x0-14,(y0+y1)/2-10,C.terra,fs+2); lbl(ctx,"−",x0-14,(y0+y1)/2+18,C.ray2,fs+4);
+  if(!o.lamp) lbl(ctx,`R = ${s3(o.R)} Ω`,(x0+x1)/2,y0-14,C.ink,fs);
+  lbl(ctx,`${s3(o.V)} V`,x0+30,(y0+y1)/2+5,C.ink,fs,"left");
+  text(ctx,`${s3(I)} A`,x1-18,(y0+y1)/2+5,C.ink,F(fs),"right");
+  const ax=(x0+x1)/2, ay=y1, dir=el?-1:1; arrow(ctx,ax-dir*30,ay-12,ax+dir*30,ay-12,el?C.ray2:C.terra,2.4);
+  lbl(ctx,el?"electrons":"conventional current I",ax,ay-20,el?C.ray2:C.terra,cp?9.5:11.5); }
+
+// 2. I–V circuit
+const IVC = [{n:"Metal wire",unit:"A",min:-6,max:6,step:0.25,f:V=>V/10},{n:"Filament bulb",unit:"A",min:-6,max:6,step:0.25,f:V=>Math.sign(V)*0.3*Math.pow(Math.abs(V)/6,0.6)},{n:"Diode",unit:"mA",min:-5,max:0.85,step:0.05,f:V=>1e-6*(Math.exp(V/0.05)-1)}];
+function drawIV(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const pad=34, x0=pad, x1=w-pad, yV=h*0.17, yT=h*0.44, yB=h*0.84, cx=(x0+x1)/2, s=Math.min(46,w*0.11), nL=cx-s-16, nR=cx+s+16, C0=IVC[o.comp];
+  line(ctx,x0,yT,x0,yB,C.ink,2); line(ctx,x1,yT,x1,yB,C.ink,2);
+  line(ctx,x0,yT,cx-s,yT,C.ink,2); line(ctx,cx+s,yT,x1,yT,C.ink,2);
+  line(ctx,x0,yB,x1,yB,C.ink,2);
+  line(ctx,nL,yT,nL,yV,C.ink,2); line(ctx,nR,yT,nR,yV,C.ink,2); sym(ctx,"volt",cx,yV,0,(nR-nL)/2,{}); dot(ctx,nL,yT); dot(ctx,nR,yT);
+  const rev=o.V<0;
+  if(o.comp===0) sym(ctx,"res",cx,yT,0,s,{fill:C.cream}); else if(o.comp===1){ const g=Math.min(1,Math.abs(o.I)/0.3); ctx.save(); ctx.globalAlpha=0.25+0.75*g; circle(ctx,cx,yT,13+10*g,C.apricot); ctx.restore(); sym(ctx,"lamp",cx,yT,0,s,{glow:g>0.05?C.apricot:C.surface}); } else sym(ctx,"diode",cx,yT,0,s,{fill:o.V>0.55?C.apricot:C.surface});
+  sym(ctx,"amm",x1,(yT+yB)/2,Math.PI/2,Math.min(40,(yB-yT)/2),{});
+  sym(ctx,"battery",cx-w*0.16,yB,rev?Math.PI:0,30,{}); sym(ctx,"var",cx+w*0.16,yB,0,30,{});
+  const fs=Math.min(13,w/34);
+  lbl(ctx,`${f2(o.V)} V`,cx,yV-17,C.ink,fs); lbl(ctx,C0.n,cx,yT+28,C.muted,fs-1);
+  text(ctx,`${C0.unit==="mA"?f3(o.I):f3(o.I)} ${C0.unit}`,x1-16,(yT+yB)/2+4,C.ink,F(fs),"right");
+  lbl(ctx,rev?"supply reversed":"variable supply",cx,yB+20,C.muted,fs-1);
+  if(o.comp===2) lbl(ctx,o.V>0?"forward bias":o.V<0?"reverse bias":"",cx,yT-14,o.V>0?C.terra:C.ray2,fs-1); }
+const f2 = x => x.toFixed(2), f3 = x => Math.abs(x)<5e-4? "0.000" : x.toFixed(3);
+
+// 3a. Wire for R = ρL/A
+const WMAT = [["Copper",1.7e-8,"terra"],["Constantan",4.9e-7,"olive"],["Nichrome",1.1e-6,"ray3"]];
+function drawWire(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, xa=cp?24:40, maxL=w-2*xa, len=Math.max(30,o.L/2*maxL), th=3+o.d*(cp?14:20), y=h*0.32, xb=xa+len, R=WMAT[o.m][1]*o.L/areaOf(o.d);
+  rrect(ctx,xa,y-th/2,len,th,th/2,C[WMAT[o.m][2]],C.ink,1);
+  [xa,xb].forEach(x=>{ rrect(ctx,x-6,y-th/2-6,12,th+12,3,C["surface-2"],C.ink,1.4); });
+  const mx=w/2, my=h*0.74, mw=Math.min(cp?150:190,w*0.6), mh=cp?44:56;
+  line(ctx,xa,y+th/2+6,xa,my,C.ink,1.8); line(ctx,xa,my,mx-mw/2,my,C.ink,1.8); line(ctx,xb,y+th/2+6,xb,my-mh/2-8,C.ink,1.8); line(ctx,xb,my-mh/2-8,mx+mw/2-14,my-mh/2-8,C.ink,1.8); line(ctx,mx+mw/2-14,my-mh/2-8,mx+mw/2-14,my-mh/2,C.ink,1.8);
+  rrect(ctx,mx-mw/2,my-mh/2,mw,mh,10,C["surface-2"],C.ink,1.6); rrect(ctx,mx-mw/2+8,my-mh/2+8,mw-16,mh-16,6,C.surface,C.line,1);
+  text(ctx,`${R>=100?s3(R):R.toFixed(R<1?3:2)} Ω`,mx,my+(cp?5:7),C.ink,M(cp?15:19),"center");
+  if(!cp){ dimArrow(ctx,xa,xb,y-th/2-18,`L = ${o.L.toFixed(2)} m`,C.ink); text(ctx,`d = ${o.d.toFixed(2)} mm · ${WMAT[o.m][0].toLowerCase()}`,xa,y+th/2+24,C.muted,F(12)); text(ctx,"ohmmeter",mx,my+mh/2+16,C.muted,F(11),"center"); }
+  else text(ctx,`${WMAT[o.m][0]} · ${o.L} m · ${o.d} mm`,xa,y-th/2-10,C.muted,F(10)); }
+
+// 3b. Water bath
+const THC = [{n:"Copper coil",R:T=>5*(1+0.0043*T)},{n:"Thermistor",R:T=>10000*Math.exp(3950*(1/(T+273.15)-1/298.15))}];
+function drawBath(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const bw=Math.min(220,w*0.46), bh=h*0.62, bx=w*0.08, by=h*0.26, wl=by+bh*0.18;
+  ctx.save(); ctx.fillStyle=C.sage; ctx.fillRect(bx,wl,bw,by+bh-wl); ctx.globalAlpha=Math.min(0.85,o.T/110); ctx.fillStyle=C.apricot; ctx.fillRect(bx,wl,bw,by+bh-wl); ctx.restore();
+  ctx.save(); ctx.strokeStyle=C.ink; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(bx,by); ctx.lineTo(bx,by+bh); ctx.lineTo(bx+bw,by+bh); ctx.lineTo(bx+bw,by); ctx.stroke(); ctx.restore();
+  const tx=bx+bw*0.8, tt=by-24, tb=by+bh-14; rrect(ctx,tx-5,tt,10,tb-tt,5,C.surface,C.ink,1.4); circle(ctx,tx,tb,8,C.terra,C.ink,1.4); const lv=tb-(tb-tt-10)*(o.T/100); rrect(ctx,tx-2.5,lv,5,tb-lv,2,C.terra);
+  text(ctx,`θ = ${o.T} °C`,tx+12,tt+12,C.ink,F(12));
+  const cx=bx+bw*0.38, cy=by+bh*0.62; if(o.comp===0) coilH(ctx,cx-34,cx+34,cy,6,18,C.terra,2.2); else sym(ctx,"therm",cx,cy,0,32,{fill:C.cream});
+  const lx1=cx-34, lx2=cx+34, mx=Math.min(w-80,bx+bw+(w-bx-bw)/2), my=h*0.5, mw=Math.min(150,w-bx-bw-24), mh=54;
+  line(ctx,lx1,cy,lx1,by-10,C.ink,1.8); line(ctx,lx2,cy,lx2,by-4,C.ink,1.8); line(ctx,lx1,by-10,mx-mw/2+12,by-10,C.ink,1.8); line(ctx,lx2,by-4,mx+mw/2-12,by-4,C.ink,1.8);
+  line(ctx,mx-mw/2+12,by-10,mx-mw/2+12,my-mh/2,C.ink,1.8); line(ctx,mx+mw/2-12,by-4,mx+mw/2-12,my-mh/2,C.ink,1.8);
+  rrect(ctx,mx-mw/2,my-mh/2,mw,mh,10,C["surface-2"],C.ink,1.6); rrect(ctx,mx-mw/2+7,my-mh/2+8,mw-14,mh-16,6,C.surface,C.line,1);
+  const R=THC[o.comp].R(o.T); text(ctx,`${R>=1000? s3(R/1000)+" kΩ" : s3(R)+" Ω"}`,mx,my+6,C.ink,M(Math.min(17,mw/8)),"center");
+  text(ctx,THC[o.comp].n,mx,my+mh/2+16,C.muted,F(11),"center"); }
+
+// 4. Series and parallel
+function comboCalc(arr,E,R){ const [R1,R2,R3]=R; let Rt,I,Ir,Vr;
+  if(arr===0){ Rt=R1+R2+R3; I=E/Rt; Ir=[I,I,I]; Vr=R.map(r=>I*r); }
+  else if(arr===1){ Rt=1/(1/R1+1/R2+1/R3); Ir=R.map(r=>E/r); I=Ir[0]+Ir[1]+Ir[2]; Vr=[E,E,E]; }
+  else { const Rp=R2*R3/(R2+R3); Rt=R1+Rp; I=E/Rt; const Vp=I*Rp; Vr=[I*R1,Vp,Vp]; Ir=[I,Vp/R2,Vp/R3]; }
+  return {Rt,I,Ir,Vr}; }
+const SUBN=["₁","₂","₃"];
+function drawCombo(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, r=comboCalc(o.arr,o.E,o.R), xb=cp?22:34, xr=w-(cp?14:22), yT=h*(cp?0.2:0.18), yB=h*(cp?0.86:0.88), fs=cp?9.5:Math.min(12,w/42);
+  const tag=(i,x,y)=>{ if(o.notags) return; lbl(ctx,`R${SUBN[i]} = ${o.R[i]} Ω`,x,y-13,C.ink,fs); if(!cp) lbl(ctx,`${f2(r.Ir[i])} A · ${f2(r.Vr[i])} V`,x,y+23,C.terra,fs); };
+  line(ctx,xb,yT,xb,yB,C.ink,2); sym(ctx,"battery",xb,(yT+yB)/2,Math.PI/2,26,{}); if(!cp) lbl(ctx,`${o.E} V`,xb+26,(yT+yB)/2+4,C.ink,fs,"left");
+  line(ctx,xb,yB,xr,yB,C.ink,2); sym(ctx,"amm",(xb+xr)/2,yB,0,22,{}); if(!cp) lbl(ctx,`${f2(r.I)} A`,(xb+xr)/2,yB-16,C.ink,fs);
+  if(o.arr===0){ line(ctx,xb,yT,xr,yT,C.ink,2); line(ctx,xr,yT,xr,yB,C.ink,2); const gap=(xr-xb)/3, s=Math.min(42,gap/2-6); [0,1,2].forEach(i=>{ const x=xb+gap*(i+0.5); sym(ctx,"res",x,yT,0,s,{fill:C.cream}); tag(i,x,yT); }); return; }
+  const xL=o.arr===1? xb+(xr-xb)*0.22 : xb+(xr-xb)*0.42, xR=xr, ys=o.arr===1? [yT, yT+(yB-yT)*0.31, yT+(yB-yT)*0.62] : [yT, yT+(yB-yT)*0.42];
+  line(ctx,xb,yT,xL,yT,C.ink,2);
+  if(o.arr===2){ const x=(xb+xL)/2, s=Math.min(40,(xL-xb)/2-6); sym(ctx,"res",x,yT,0,s,{fill:C.cream}); tag(0,x,yT); }
+  line(ctx,xL,yT,xL,ys[ys.length-1],C.ink,2); line(ctx,xR,yT,xR,yB,C.ink,2);
+  const idx=o.arr===1?[0,1,2]:[1,2], s=Math.min(44,(xR-xL)/2-8);
+  ys.forEach((y,j)=>{ line(ctx,xL,y,xR,y,C.ink,2); sym(ctx,"res",(xL+xR)/2,y,0,s,{fill:C.cream}); tag(idx[j],(xL+xR)/2,y); if(j>0){ dot(ctx,xL,y); dot(ctx,xR,y); } });
+  dot(ctx,xL,yT); dot(ctx,xR,yT); }
+
+// 5. Mains safety
+const APPS = [["LED bulb",8],["Laptop charger",65],["Television",100],["Toaster",900],["Hair dryer",1800],["Kettle",2200],["Heater",2500]];
+function mainsState(o){ const I=APPS[o.app][1]/230, fuse=I<=3?3:I<=5?5:13;
+  if(!o.fault) return {k:"ok",I,fuse,msg:"Normal: current flows out along the live wire, through the element and back along the neutral."};
+  if(o.earth) return {k:o.rcd?"rcd":"fuse",I,fuse,msg:o.rcd?"The live wire touches the case, but the earth wire carries the fault current to ground. Live and neutral currents no longer match, so the RCD trips in about 30 ms; the huge fault current would also blow the fuse. The case is safe.":"The earth wire carries a huge fault current (hundreds of amps) to ground. The fuse melts (or the MCB trips) and cuts off the live wire. The case is safe."};
+  if(!o.touch) return {k:"live",I,fuse,msg:"DANGER: with no earth wire the metal case is now at 230 V. Nothing has blown: the next person to touch it gets a shock."};
+  if(o.rcd) return {k:"rcd",I,fuse,msg:"About 0.1 A flows through the person to earth. That is far too small to blow the fuse, but the RCD sees live and neutral currents differ by more than 30 mA and cuts the supply in about 30 ms. A nasty jolt, but usually survivable."};
+  return {k:"shock",I,fuse,msg:"ELECTRIC SHOCK: about 0.1 A flows through the person's body to earth. The fuse does not blow (0.1 A is far below its rating). This can stop the heart. An earth wire or an RCD would have prevented it."}; }
+function drawMains(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, st=mainsState(o), fs=cp?9.5:Math.min(12,w/40), xs=cp?10:16, xp=w*0.42, xa=w*0.64, xe=w-(cp?10:58), yL=h*0.32, yN=h*0.5, yE=h*0.68, gy=h*0.9;
+  const dead=st.k==="rcd"||st.k==="fuse", pathCol=C.bad;
+  rrect(ctx,xs,yL-26,w*0.2,yE-yL+52,10,C["surface-2"],C.ink,1.4); lbl(ctx,"230 V",xs+w*0.1,yL-32,C.ink,fs);
+  if(o.rcd){ rrect(ctx,xs+8,yL-12,w*0.2-16,yN-yL+24,6,st.k==="rcd"?C.bad:C.cream,C.ink,1.2); lbl(ctx,st.k==="rcd"?"RCD tripped":"RCD",xs+w*0.1,(yL+yN)/2+4,st.k==="rcd"?C["on-accent"]:"#3b2b21",fs-0.5); }
+  const xw=xs+w*0.2;
+  line(ctx,xw,yL,xa,yL,dead?C.muted:C.terra,3); line(ctx,xw,yN,xa,yN,C.ray2,3); if(o.earth||cp) line(ctx,xw,yE,xa,yE,C.olive,3,[8,4]); else { line(ctx,xw,yE,xp+30,yE,C.olive,3,[8,4]); lbl(ctx,"✕",xp+44,yE+5,C.bad,fs+4); }
+  line(ctx,xs+w*0.1,yE+26,xs+w*0.1,gy-6,C.olive,2); earthSym(ctx,xs+w*0.1,gy-6,C.olive);
+  sym(ctx,"fuse",xp,yL,0,24,{blown:st.k==="fuse"||(st.k==="rcd"&&o.earth&&!o.rcd)});
+  if(!cp){ lbl(ctx,`${st.fuse} A fuse`,xp,yL-14,C.ink,fs); [["L",yL,C.terra],["N",yN,C.ray2],["E",yE,C.olive]].forEach(([t,y,c])=>lbl(ctx,t,xw+12,y-6,c,fs,"left")); }
+  rrect(ctx,xa,yL-30,xe-xa,yE-yL+60,10,C.cream,C.ink,2); lbl(ctx,cp?"metal case":`${APPS[o.app][0]} (metal case)`,(xa+xe)/2,yE+44,C.ink,fs-0.5);
+  const ex=(xa+xe)/2; coilV(ctx,ex,yL,yN,4,12,C.terra,2); line(ctx,xa,yL,ex,yL,dead?C.muted:C.terra,2.4); line(ctx,xa,yN,ex,yN,C.ray2,2.4);
+  if(o.fault){ ctx.save(); ctx.strokeStyle=C.bad; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(ex+6,yL); ctx.lineTo(ex+16,yL+8); ctx.lineTo(ex+10,yL+12); ctx.lineTo(xe-4,yL+20); ctx.stroke(); ctx.restore(); if(!cp) lbl(ctx,"fault",ex+20,yL-8,C.bad,fs); }
+  if(o.earth&&o.fault&&!cp) arrow(ctx,xa+20,yE,xp,yE+0.01,pathCol,2.6);
+  if(o.touch){ const px=xe+34; circle(ctx,px-12,yE-30,7,null,C.ink,2); line(ctx,px-12,yE-23,px-12,gy-22,C.ink,2); line(ctx,px-12,yE-12,xe-2,yN+4,st.k==="shock"?C.bad:C.ink,2.4); line(ctx,px-12,gy-22,px-20,gy-8,C.ink,2); line(ctx,px-12,gy-22,px-4,gy-8,C.ink,2); }
+  const col=st.k==="shock"||st.k==="live"?C.bad:st.k==="ok"?C.good:C.olive;
+  if(!cp) text(ctx,st.k==="ok"?"Working normally":st.k==="live"?"Case is LIVE":st.k==="shock"?"Electric shock!":st.k==="rcd"?"RCD trips: safe":"Fuse blows: safe",w/2,18,col,F(14),"center"); }
+
+// 6a. p-n junction
+const PNPTS = Array.from({length:44},(_,i)=>[((i*0.6180339)%1),((i*0.4142136+0.17)%1)]);
+const diodeI = V => 1e-6*(Math.exp(V/0.05)-1); // mA
+function drawPN(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, x0=cp?14:24, x1=w-(cp?14:24), yt=cp?26:34, yb=h*(cp?0.62:0.6), mid=(x0+x1)/2, W=x1-x0, V=o.V;
+  const dw=W*0.11*Math.sqrt(Math.max(0.0004,(0.7-V)/0.7)), dl=mid-dw/2, dr=mid+dw/2, fs=cp?10:12;
+  rrect(ctx,x0,yt,mid-x0,yb-yt,8,C.blush,C.ink,1.4); rrect(ctx,mid,yt,x1-mid,yb-yt,8,C.sage,C.ink,1.4);
+  ctx.save(); ctx.fillStyle=C.cream; ctx.fillRect(dl,yt+1,dw,yb-yt-2); ctx.restore(); line(ctx,mid,yt,mid,yb,C.ink,1,[3,3]);
+  const ph=(o.ph||0), on=V>0.55;
+  PNPTS.forEach(([fx,fy],i)=>{ const y=yt+10+fy*(yb-yt-20);
+    let xh=x0+8+((fx+(on?ph:0))%1)*(mid-x0-16); if(xh<dl-5) circle(ctx,xh,y,cp?3.2:4.2,null,C.terra,2);
+    let xe=mid+8+(((fx*0.83+0.11)-(on?ph:0)+1)%1)*(x1-mid-16); if(xe>dr+5) circle(ctx,xe,y,cp?3:3.8,C.ray2); });
+  for(let k=0;k<4;k++){ const y=yt+14+k*(yb-yt-28)/3; if(dw>16){ lbl(ctx,"−",dl+dw*0.25,y+4,C.ink,fs); lbl(ctx,"+",dr-dw*0.25,y+4,C.ink,fs); } }
+  lbl(ctx,"p-type",x0+(mid-x0)/2,yt-8,C.ink,fs+1); lbl(ctx,"n-type",mid+(x1-mid)/2,yt-8,C.ink,fs+1);
+  if(!cp) lbl(ctx,"depletion layer",mid,yb+16,C.muted,11);
+  const yw=h*0.86; line(ctx,x0+10,yb,x0+10,yw,C.ink,2); line(ctx,x1-10,yb,x1-10,yw,C.ink,2); line(ctx,x0+10,yw,mid-30,yw,C.ink,2); line(ctx,mid+30,yw,x1-10,yw,C.ink,2);
+  if(Math.abs(V)>0.001) sym(ctx,"cell",mid,yw,V>0?0:Math.PI,30,{}); else line(ctx,mid-30,yw,mid+30,yw,C.ink,2);
+  lbl(ctx,V>0?"+":V<0?"−":"",mid-22,yw-12,C.ink,fs+2); lbl(ctx,V>0?"−":V<0?"+":"",mid+22,yw-12,C.ink,fs+2);
+  if(!cp) lbl(ctx,V>0.01?`forward bias ${f2(V)} V`:V<-0.01?`reverse bias ${f2(V)} V`:"no bias",mid,yw+20,C.ink,12);
+  if(on){ const I=diodeI(V); arrow(ctx,x0+30,yb+14,x0+80,yb+14,C.terra,2); if(!cp) text(ctx,`I = ${s3(I)} mA`,x0+86,yb+18,C.terra,F(12)); } }
+
+// 6b. Transistor night light
+const ldrR = L => 500000*Math.pow(10,-1.2*L);
+function nightCalc(L,Rf){ const Rl=ldrR(L), Vd=6*Rl/(Rl+Rf*1000), on=Vd>=0.7; return {Rl,Vd,Vbe:Math.min(Vd,0.7),on}; }
+function drawNight(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const r=nightCalc(o.L,o.Rf), cp=o.compact, yT=h*0.14, yB=h*0.88, yM=(yT+yB)/2, xa=w*0.24, xt=w*0.62, rr=Math.min(22,h*0.08), xc=xt+rr*0.4, fs=cp?10:Math.min(12,w/40);
+  line(ctx,w*0.08,yT,w*0.9,yT,C.terra,2.4); line(ctx,w*0.08,yB,w*0.9,yB,C.ray2,2.4); lbl(ctx,"+6 V",w*0.08,yT-8,C.terra,fs,"left"); lbl(ctx,"0 V",w*0.08,yB+16,C.ray2,fs,"left");
+  const s1=(yM-yT)/2; sym(ctx,"res",xa,yT+s1,Math.PI/2,s1,{fill:C.cream}); sym(ctx,"ldr",xa,yM+s1,Math.PI/2,s1,{fill:C.cream}); dot(ctx,xa,yT); dot(ctx,xa,yB); dot(ctx,xa,yM);
+  lbl(ctx,`${o.Rf} kΩ`,xa+16,yT+s1+4,C.ink,fs,"left"); lbl(ctx,`LDR ${r.Rl>=1000?s3(r.Rl/1000)+" kΩ":s3(r.Rl)+" Ω"}`,xa+16,yM+s1+4,C.ink,fs,"left");
+  const xbase=xt-rr*1.6; line(ctx,xa,yM,xbase-36,yM,C.ink,2); sym(ctx,"res",(xa+xbase)/2+8,yM,0,Math.min(30,(xbase-xa)/2-4),{fill:C.surface}); line(ctx,(xa+xbase)/2+8+Math.min(30,(xbase-xa)/2-4),yM,xbase,yM,C.ink,2);
+  drawTrans(ctx,xt,yM,rr,{fill:r.on?C.cream:C.surface});
+  const yc=yM-rr*1.6, ye=yM+rr*1.6; line(ctx,xc,ye,xc,yB,C.ink,2); dot(ctx,xc,yB);
+  const ledY=yT+(yc-yT)*0.62, rY=yT+(yc-yT)*0.22, sL=Math.min(18,(yc-yT)*0.2);
+  if(r.on){ ctx.save(); ctx.globalAlpha=0.45; circle(ctx,xc,ledY,24,C.apricot); ctx.restore(); }
+  sym(ctx,"led",xc,ledY,Math.PI/2,sL,{fill:r.on?C.apricot:C.surface}); sym(ctx,"res",xc,rY,Math.PI/2,Math.min(sL,(ledY-sL-yT)/1.6),{fill:C.surface});
+  line(ctx,xc,ledY+sL,xc,yc,C.ink,2); line(ctx,xc,rY+Math.min(sL,(ledY-sL-yT)/1.6),xc,ledY-sL,C.ink,2); line(ctx,xc,yT,xc,rY-Math.min(sL,(ledY-sL-yT)/1.6),C.ink,2); dot(ctx,xc,yT);
+  lbl(ctx,`V_be = ${f2(r.Vbe)} V`,xt,yM+rr*2.4+6,r.on?C.terra:C.muted,fs);
+  lbl(ctx,r.on?"LED ON":"LED off",xc+28,ledY+4,r.on?C.terra:C.muted,fs+1,"left");
+  const sx=w*0.9, sy=h*0.32, lev=o.L/3; circle(ctx,sx,sy,10+6*lev,lev>0.33?C.apricot:C["surface-2"],C.ink,1.2); if(!cp) lbl(ctx,`${s3(Math.pow(10,o.L))} lux`,sx,sy+30,C.muted,fs); }
+
+// IV curves (cases and learn)
+function drawIVCurves(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact!==false, L=cp?22:30, R=10, T=14, B=cp?20:26, W=w-L-R, H=h-T-B, X=v=>L+(v+6)/12*W, Y=f=>T+H/2-f*H/2*0.9;
+  line(ctx,L,T+H/2,L+W,T+H/2,C.ink,1.3); line(ctx,X(0),T,X(0),T+H,C.ink,1.3); text(ctx,"V",L+W-2,T+H/2-6,C.ink,F(11),"right"); text(ctx,"I",X(0)+6,T+10,C.ink,F(11));
+  const curve=(fn,col,dash)=>{ ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=2.6; if(dash) ctx.setLineDash(dash); ctx.beginPath(); for(let i=0;i<=120;i++){ const v=-6+i/10, y=Math.max(-1.05,Math.min(1.05,fn(v))); i?ctx.lineTo(X(v),Y(y)):ctx.moveTo(X(v),Y(y)); } ctx.stroke(); ctx.restore(); };
+  curve(v=>v/6,C.olive); curve(v=>Math.sign(v)*Math.pow(Math.abs(v)/6,0.6),C.terra,[7,4]); curve(v=>v<0?0:Math.min(1.05,(Math.exp(v/0.05)-1)/Math.exp(0.9/0.05)),C.ray2);
+  const fs=cp?9.5:11; text(ctx,"wire",X(4.6),Y(4.6/6)+16,C.olive,F(fs)); text(ctx,"bulb",X(1.6),Y(Math.pow(1.6/6,0.6))-6,C.terra,F(fs),"right"); text(ctx,"diode",X(0.9)+4,T+12,C.ray2,F(fs)); }
+
+// Symbol card for the drill
+function drawSymCard(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const k=SYMS[o.k<0?0:o.k][0]; ctx.save(); ctx.translate(w/2,h/2-(o.shown?10:0)); ctx.scale(1.8,1.8);
+  if(k==="trans") drawTrans(ctx,0,0,16,{}); else sym(ctx,k,0,0,0,38,{}); ctx.restore();
+  if(o.shown) text(ctx,SYMS[o.k][1],w/2,h-14,C.terra,F(15),"center"); }
+/* ================= LABS ================= */
+// 1. Charge, current and energy
+const ch = { V:6, R:12, t:10, mode:"conv", ph:0 };
+function chUpd(){ const I=ch.V/ch.R, Q=I*ch.t, W=Q*ch.V;
+  $("chVo").textContent=`${ch.V} V`; $("chRo").textContent=`${ch.R} Ω`; $("chTo").textContent=`${ch.t} s`;
+  setReadout($("chOut"),[["Current I = V/R",`${s3(I)} A`],["Charge Q = It",`${s3(Q)} C`],["Energy W = QV",`${s3(W)} J`],["Electrons passing",sci(Q/1.6e-19)],["Power P = VI",`${s3(ch.V*I)} W`]]);
+  $("chWork").innerHTML=`I = V/R = ${ch.V} ÷ ${ch.R} = <b>${s3(I)} A</b>: ${s3(I)} coulombs pass every second.<br>In ${ch.t} s: Q = It = ${s3(I)} × ${ch.t} = <b>${s3(Q)} C</b>, about ${sci(Q/1.6e-19)} electrons.<br>Each coulomb carries ${ch.V} J (V = W/Q), so W = QV = ${s3(Q)} × ${ch.V} = <b>${s3(W)} J</b> is converted to heat in the resistor.`;
+  chC.redraw(); }
+$("chV").addEventListener("input",e=>{ ch.V=+e.target.value; chUpd(); });
+$("chR").addEventListener("input",e=>{ ch.R=+e.target.value; chUpd(); });
+$("chT").addEventListener("input",e=>{ ch.t=+e.target.value; chUpd(); });
+$("chShow").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ch.mode=b.dataset.m; pressGroup([...$("chShow").querySelectorAll("button")],b); chC.redraw(); });
+
+// 2. I–V characteristics
+const iv = { comp:0, V:2, rows:[] };
+$("ivComp").innerHTML = IVC.map((c,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${c.n}</button>`).join("");
+$("ivComp").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pressGroup([...$("ivComp").querySelectorAll("button")],b); ivSet(+b.dataset.i); });
+function ivI(V){ return IVC[iv.comp].f(V); }
+function ivSet(i){ iv.comp=i; iv.rows=[]; const c=IVC[i], s=$("ivV"); s.min=c.min; s.max=c.max; s.step=c.step; iv.V=i===2?0.6:2; s.value=iv.V; $("ivIh").textContent=`I (${c.unit})`; ivTable(); ivUpd(); }
+function ivUpd(){ const c=IVC[iv.comp], I=ivI(iv.V); $("ivVo").textContent=`${f2(iv.V)} V`;
+  const Rs = Math.abs(I)<1e-6? "very large" : `${s3(iv.V/(c.unit==="mA"?I/1000:I))} Ω`;
+  setReadout($("ivOut"),[["Voltmeter",`${f2(iv.V)} V`],["Ammeter",`${f3(I)} ${c.unit}`],["V/I",Rs],["Readings",String(iv.rows.length)]]); ivC.redraw(); }
+function ivRead(V){ const c=IVC[iv.comp], I=ivI(V)*noise(0.02); iv.rows=iv.rows.filter(r=>Math.abs(r[0]-V)>1e-9); iv.rows.push([V,I]); iv.rows.sort((a,b)=>a[0]-b[0]); }
+function ivTable(){ const c=IVC[iv.comp];
+  $("ivTable").innerHTML = iv.rows.map(([V,I])=>{ const Ia=c.unit==="mA"?I/1000:I, R=Math.abs(Ia)<1e-7? "—" : s3(V/Ia); return `<tr><td>${f2(V)}</td><td>${f3(I)}</td><td>${R}</td></tr>`; }).join(""); $("ivEmpty").hidden=iv.rows.length>0;
+  let txt="";
+  if(iv.rows.length<3) txt="Take readings at three or more voltages to see the shape of the graph.";
+  else if(iv.comp===0){ const [m]=linfit0(iv.rows); txt=`Straight line through the origin: I ∝ V, so the wire obeys Ohm's law. Slope = ${s3(m)} A V⁻¹, so R = 1/slope = <b>${s3(1/m)} Ω</b>.`; }
+  else if(iv.comp===1){ const pos=iv.rows.filter(r=>r[0]>0.4); if(pos.length>=2){ const a=pos[0], z=pos[pos.length-1]; txt=`Curved: V/I rises from ${s3(a[0]/a[1])} Ω at ${f2(a[0])} V to ${s3(z[0]/z[1])} Ω at ${f2(z[0])} V. The filament heats up, so its resistance rises: non-ohmic.`; } else txt="Take more readings at higher voltages."; }
+  else { const on=iv.rows.find(r=>r[1]>0.5); txt=`Reverse bias: almost no current. Forward bias: the current is tiny until about ${on?f2(on[0]):"0.6"} V, then rises steeply. A diode is non-ohmic and conducts in one direction only.`; }
+  $("ivResult").innerHTML=txt; ivG.redraw(); ivUpd(); }
+$("ivV").addEventListener("input",e=>{ iv.V=+e.target.value; ivUpd(); });
+$("ivGo").addEventListener("click",()=>{ ivRead(iv.V); ivTable(); });
+$("ivSweep").addEventListener("click",()=>{ const c=IVC[iv.comp]; const pts=c.unit==="mA"? [-5,-3,-1,0,0.3,0.5,0.6,0.65,0.7,0.75,0.8,0.83,0.85] : [-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6]; pts.forEach(ivRead); ivTable(); });
+$("ivClear").addEventListener("click",()=>{ iv.rows=[]; ivTable(); });
+
+// 3. Resistivity and temperature
+const rw = { m:1, L:1, d:0.3 };
+$("rwMat").innerHTML = WMAT.map((m,i)=>`<button data-i="${i}" aria-pressed="${i===1}">${m[0]}</button>`).join("");
+$("rwMat").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pressGroup([...$("rwMat").querySelectorAll("button")],b); rw.m=+b.dataset.i; rwUpd(); });
+function rwUpd(){ const A=areaOf(rw.d), rho=WMAT[rw.m][1], R=rho*rw.L/A; $("rwLo").textContent=`${rw.L.toFixed(2)} m`; $("rwDo").textContent=`${rw.d.toFixed(2)} mm`;
+  setReadout($("rwOut"),[["Resistivity ρ",`${sci(rho,2)} Ω m`],["Area A",`${sci(A)} m²`],["Resistance R",`${R>=100?s3(R):R.toFixed(R<1?3:2)} Ω`]]);
+  $("rwWork").innerHTML=`A = πd²/4 = π × (${rw.d.toFixed(2)} × 10⁻³ m)² ÷ 4 = ${sci(A)} m²<br>R = ρL/A = ${sci(rho,2)} × ${rw.L.toFixed(2)} ÷ ${sci(A)} = <b>${s3(R)} Ω</b>`; rwC.redraw(); }
+$("rwL").addEventListener("input",e=>{ rw.L=+e.target.value; rwUpd(); });
+$("rwD").addEventListener("input",e=>{ rw.d=+e.target.value; rwUpd(); });
+const th = { comp:0, T:20, rows:[] };
+$("thComp").innerHTML = THC.map((c,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${c.n}</button>`).join("");
+$("thComp").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pressGroup([...$("thComp").querySelectorAll("button")],b); th.comp=+b.dataset.i; th.rows=[]; thTable(); thUpd(); });
+function thUpd(){ const R=THC[th.comp].R(th.T); $("thTo").textContent=`${th.T} °C`; setReadout($("thOut"),[["Temperature",`${th.T} °C`],["Ohmmeter",`${s3(R)} Ω`],["Readings",String(th.rows.length)]]); thC.redraw(); }
+function thRead(T){ const R=THC[th.comp].R(T)*noise(0.01); th.rows=th.rows.filter(r=>r[0]!==T); th.rows.push([T,R]); th.rows.sort((a,b)=>a[0]-b[0]); }
+function thTable(){ $("thTable").innerHTML = th.rows.map(([T,R])=>`<tr><td>${T}</td><td>${s3(R)}</td></tr>`).join(""); $("thEmpty").hidden=th.rows.length>0;
+  let txt="";
+  if(th.rows.length<3) txt="Record at least three temperatures to see the trend.";
+  else if(th.comp===0){ const [m,c]=linfit(th.rows); txt=`Straight line, not through the origin: R rises steadily with θ. Fit: R = ${s3(c)} + ${s3(m)}θ, so R at 0 °C ≈ <b>${s3(c)} Ω</b> and the resistance rises by ${s3(m/c*100)}% of R₀ per °C (α ≈ ${sci(m/c,2)} °C⁻¹; copper 4.3 × 10⁻³).`; }
+  else { const a=th.rows[0], z=th.rows[th.rows.length-1]; txt=`Curved: R falls from ${s3(a[1])} Ω at ${a[0]} °C to ${s3(z[1])} Ω at ${z[0]} °C. An NTC thermistor's resistance falls steeply as it heats, because more charge carriers are freed.`; }
+  $("thResult").innerHTML=txt; thG.redraw(); thUpd(); }
+$("thT").addEventListener("input",e=>{ th.T=+e.target.value; thUpd(); });
+$("thGo").addEventListener("click",()=>{ thRead(th.T); thTable(); });
+$("thSweep").addEventListener("click",()=>{ for(let T=0;T<=100;T+=10) thRead(T); thTable(); });
+$("thClear").addEventListener("click",()=>{ th.rows=[]; thTable(); });
+
+// 4. Series and parallel
+const cb = { arr:0, E:12, R:[10,20,30], rows:[] };
+const ARRN = ["All in series","All in parallel","R₁ + (R₂ ∥ R₃)"];
+$("cbArr").innerHTML = ARRN.map((n,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${n}</button>`).join("");
+$("cbArr").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pressGroup([...$("cbArr").querySelectorAll("button")],b); cb.arr=+b.dataset.i; cbUpd(); });
+function cbUpd(){ const r=comboCalc(cb.arr,cb.E,cb.R), [R1,R2,R3]=cb.R;
+  $("cbEo").textContent=`${cb.E} V`; ["cbR1o","cbR2o","cbR3o"].forEach((id,i)=>$(id).textContent=`${cb.R[i]} Ω`);
+  const chk = cb.arr===0? `${f2(r.Vr[0])} + ${f2(r.Vr[1])} + ${f2(r.Vr[2])} = ${f2(r.Vr[0]+r.Vr[1]+r.Vr[2])} V` : cb.arr===1? `${f2(r.Ir[0])} + ${f2(r.Ir[1])} + ${f2(r.Ir[2])} = ${f2(r.I)} A` : `${f2(r.Ir[1])} + ${f2(r.Ir[2])} = ${f2(r.Ir[1]+r.Ir[2])} A`;
+  setReadout($("cbOut"),[["Total resistance",`${s3(r.Rt)} Ω`],["Supply current",`${s3(r.I)} A`],[cb.arr===0?"Energy: Σ pd":"Charge: currents add",chk],["Power from supply",`${s3(cb.E*r.I)} W`]]);
+  let wk;
+  if(cb.arr===0) wk=`Series: R = R₁ + R₂ + R₃ = ${R1} + ${R2} + ${R3} = <b>${r.Rt} Ω</b>. I = V/R = ${cb.E} ÷ ${r.Rt} = ${s3(r.I)} A through every resistor.<br>The pds add up to the emf (conservation of energy): ${chk}. The biggest resistor gets the biggest share.`;
+  else if(cb.arr===1) wk=`Parallel: 1/R = 1/${R1} + 1/${R2} + 1/${R3} = ${s3(1/r.Rt)} Ω⁻¹, so R = <b>${s3(r.Rt)} Ω</b>, less than the smallest resistor.<br>Each branch has the full ${cb.E} V; the branch currents add up to the supply current (conservation of charge): ${chk}.`;
+  else { const Rp=R2*R3/(R2+R3); wk=`R₂ ∥ R₃: 1/R = 1/${R2} + 1/${R3}, so R = ${s3(Rp)} Ω. Total R = ${R1} + ${s3(Rp)} = <b>${s3(r.Rt)} Ω</b>.<br>I = ${cb.E} ÷ ${s3(r.Rt)} = ${s3(r.I)} A. pd across R₁ = ${f2(r.Vr[0])} V; across the pair = ${f2(r.Vr[1])} V (together ${f2(r.Vr[0]+r.Vr[1])} V = emf).<br>At the junction the current splits: ${chk} = supply current.`; }
+  $("cbWork").innerHTML=wk; cbC.redraw(); }
+function cbTbl(){ $("cbTbl").innerHTML = cb.rows.length? `<tr><th style="text-align:left">Arrangement</th><th>R₁, R₂, R₃ (Ω)</th><th>Measured (Ω)</th><th>Formula (Ω)</th><th>Difference</th></tr>` + cb.rows.map(r=>`<tr><td style="text-align:left">${r[0]}</td><td>${r[1]}</td><td>${s3(r[2])}</td><td>${s3(r[3])}</td><td>${(Math.abs(r[2]-r[3])/r[3]*100).toFixed(1)}%</td></tr>`).join("") : ""; }
+["cbE","cbR1","cbR2","cbR3"].forEach((id,i)=>$(id).addEventListener("input",e=>{ if(i===0) cb.E=+e.target.value; else cb.R[i-1]=+e.target.value; cbUpd(); }));
+$("cbGo").addEventListener("click",()=>{ const r=comboCalc(cb.arr,cb.E,cb.R); cb.rows.push([ARRN[cb.arr],cb.R.join(", "),r.Rt*noise(0.01),r.Rt]); if(cb.rows.length>8) cb.rows.shift(); cbTbl(); });
+$("cbClear").addEventListener("click",()=>{ cb.rows=[]; cbTbl(); });
+
+// 5. Power and mains safety
+const pw = { app:5, h:1, price:0.35, fault:false, earth:true, rcd:true, touch:false };
+$("pwApp").innerHTML = APPS.map((a,i)=>`<button data-i="${i}" aria-pressed="${i===5}">${a[0]} ${a[1]} W</button>`).join("");
+$("pwApp").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pressGroup([...$("pwApp").querySelectorAll("button")],b); pw.app=+b.dataset.i; pwUpd(); });
+$("pwSafe").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const k=b.dataset.k; pw[k]=!pw[k]; b.setAttribute("aria-pressed",pw[k]); pwUpd(); });
+function pwUpd(){ const [n,P]=APPS[pw.app], I=P/230, R=230*230/P, kwh=P/1000*pw.h, st=mainsState(pw);
+  $("pwHo").textContent=`${pw.h} h`; $("pwPo").textContent=`€${pw.price.toFixed(2)}`;
+  setReadout($("pwOut"),[["Current I = P/V",`${s3(I)} A`],["Fuse",`${st.fuse} A`],["Resistance V²/P",`${s3(R)} Ω`],["Energy",`${s3(kwh)} kWh`],["Cost",`€${(kwh*pw.price).toFixed(2)}`]]);
+  $("pwWork").innerHTML=`I = P/V = ${P} ÷ 230 = <b>${s3(I)} A</b>, so a <b>${st.fuse} A</b> fuse (the smallest standard fuse above the normal current).<br>Energy = ${P/1000} kW × ${pw.h} h = ${s3(kwh)} kWh; cost = ${s3(kwh)} × €${pw.price.toFixed(2)} = <b>€${(kwh*pw.price).toFixed(2)}</b>. In joules: ${sci(P*pw.h*3600)} J.<br><b>Safety:</b> ${st.msg}`;
+  pwC.redraw(); }
+$("pwH").addEventListener("input",e=>{ pw.h=+e.target.value; pwUpd(); });
+$("pwP").addEventListener("input",e=>{ pw.price=+e.target.value; pwUpd(); });
+
+// 6. Semiconductors
+const pn = { V:0, ph:0 };
+function pnUpd(){ const I=diodeI(pn.V); $("pnVo").textContent=`${f2(pn.V)} V`;
+  setReadout($("pnOut"),[["Bias",pn.V>0.01?"forward":pn.V<-0.01?"reverse":"none"],["Depletion layer",pn.V>0.6?"almost gone":pn.V<-0.5?"wide":"narrow"],["Current",`${I>0.001?s3(I):"≈ 0"} mA`],["Diode is",pn.V>0.55?"conducting":"blocking"]]); pnC.redraw(); }
+$("pnV").addEventListener("input",e=>{ pn.V=+e.target.value; pnUpd(); });
+const ts = { L:2.5, Rf:10 };
+function tsUpd(){ const r=nightCalc(ts.L,ts.Rf), sw=Math.log10(500000/(0.7*ts.Rf*1000/5.3))/1.2;
+  $("tsLo").textContent=`${s3(Math.pow(10,ts.L))} lux`; $("tsRo").textContent=`${ts.Rf} kΩ`;
+  setReadout($("tsOut"),[["LDR resistance",r.Rl>=1000?`${s3(r.Rl/1000)} kΩ`:`${s3(r.Rl)} Ω`],["Divider output",`${f2(r.Vd)} V`],["Transistor",r.on?"ON":"off"],["LED",r.on?"lit":"off"],["Switches on below",`${s3(Math.pow(10,sw))} lux`]]);
+  $("tsWork").innerHTML=`The LDR and the ${ts.Rf} kΩ resistor share the 6 V: V = 6 × R<sub>LDR</sub> ÷ (R<sub>LDR</sub> + ${ts.Rf} kΩ) = <b>${f2(r.Vd)} V</b>${r.on?" (the base-emitter junction holds it at about 0.7 V)":""}.<br>${r.on?"Dark: the LDR's resistance is high, so it takes most of the voltage. The base reaches 0.7 V, the transistor switches on and current flows through the LED.":"Bright: the LDR's resistance is low, so it gets less than 0.7 V. The transistor stays off and the LED is dark."}`;
+  tsC.redraw(); }
+$("tsL").addEventListener("input",e=>{ ts.L=+e.target.value; tsUpd(); });
+$("tsR").addEventListener("input",e=>{ ts.Rf=+e.target.value; tsUpd(); });
+
+/* ================= CREATE CANVASES ================= */
+const hero = makeCanvas($("heroCanvas"), 0.8, 260, s => drawLoop(s.ctx,s.w,s.h,{V:6,R:12,lamp:true,mode:"conv",ph:reduce?0:(heroT*0.07)%1}), 420);
+const chC = makeCanvas($("chC"), 0.5, 240, s => drawLoop(s.ctx,s.w,s.h,ch), 360);
+const ivC = makeCanvas($("ivC"), 0.5, 250, s => drawIV(s.ctx,s.w,s.h,{comp:iv.comp,V:iv.V,I:ivI(iv.V)}), 360);
+const ivG = makeCanvas($("ivGraph"), 0.62, 200, s => { const c=IVC[iv.comp]; scatter(s, iv.rows, {xr:[c.min,c.max],yr:[0],xl:"V (V)",yl:`I (${c.unit})`,fit:iv.comp===0&&iv.rows.length>=3? linfit0(iv.rows) : null}); }, 340);
+const rwC = makeCanvas($("rwC"), 0.42, 220, s => drawWire(s.ctx,s.w,s.h,rw), 320);
+const thC = makeCanvas($("thC"), 0.5, 250, s => drawBath(s.ctx,s.w,s.h,th), 360);
+const thG = makeCanvas($("thGraph"), 0.62, 200, s => scatter(s, th.rows, {xr:[0,100],yr:th.comp===0?[0]:[0],xl:"θ (°C)",yl:"R (Ω)",fit:th.comp===0&&th.rows.length>=3? linfit(th.rows) : null}), 340);
+const cbC = makeCanvas($("cbC"), 0.55, 280, s => drawCombo(s.ctx,s.w,s.h,cb), 420);
+const pwC = makeCanvas($("pwC"), 0.55, 270, s => drawMains(s.ctx,s.w,s.h,pw), 400);
+const pnC = makeCanvas($("pnC"), 0.45, 240, s => drawPN(s.ctx,s.w,s.h,pn), 340);
+const tsC = makeCanvas($("tsC"), 0.55, 280, s => drawNight(s.ctx,s.w,s.h,ts), 400);
+predC = makeCanvas($("predC"), 0.5, 180, s => drawSymCard(s.ctx,s.w,s.h,{k:pd.k,shown:pd.shown,bgc:C["surface-2"]}), 300);
+pdNew();
+const MINI = {
+  loop:o=>s=>drawLoop(s.ctx,s.w,s.h,{mode:"conv",ph:0.3,...o,compact:true}),
+  ivcurves:o=>s=>drawIVCurves(s.ctx,s.w,s.h,{...o}),
+  wire:o=>s=>drawWire(s.ctx,s.w,s.h,{...o,compact:true}),
+  combo:o=>s=>drawCombo(s.ctx,s.w,s.h,{...o,compact:true}),
+  mains:o=>s=>drawMains(s.ctx,s.w,s.h,{...o,compact:true}),
+  pn:o=>s=>drawPN(s.ctx,s.w,s.h,{ph:0,...o,compact:true}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, 0.72, 220, MINI[kind](o), 400); });
+document.querySelectorAll("canvas[data-case]").forEach(el=>{ const k=el.dataset.case, bgc=()=>C["surface-2"];
+  const d = k==="iv"? s=>drawIVCurves(s.ctx,s.w,s.h,{bgc:bgc()}) : k==="sp"? s=>{ const hh=s.h/2; s.ctx.save(); drawCombo(s.ctx,s.w,hh,{arr:0,E:12,R:[10,20,30],compact:true,notags:true,bgc:bgc()}); s.ctx.translate(0,hh); drawCombo(s.ctx,s.w,hh,{arr:1,E:12,R:[10,20,30],compact:true,notags:true,bgc:bgc()}); s.ctx.restore(); text(s.ctx,"series: 60 Ω",s.w-8,14,C.terra,F(11),"right"); text(s.ctx,"parallel: 5.5 Ω",s.w-8,hh+14,C.terra,F(11),"right"); } : s=>drawMains(s.ctx,s.w,s.h,{app:5,fault:true,earth:true,rcd:false,touch:false,compact:true,bgc:bgc()});
+  makeCanvas(el, 0.75, 220, d, 420); });
+chUpd(); ivSet(0); rwUpd(); thTable(); cbUpd(); cbTbl(); pwUpd(); pnUpd(); tsUpd();
+
+/* ================= LOOP / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(!reduce && view==="labs"){
+    if(lab==="charge"){ ch.ph=(ch.ph+dt*(0.03+0.06*Math.min(ch.V/ch.R,3)))%1; chC.redraw(); }
+    if(lab==="semi" && pn.V>0.55){ pn.ph=(pn.ph+dt*0.12)%1; pnC.redraw(); }
+  }
+  requestAnimationFrame(loop);
+})(performance.now());
+
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+
+</script>

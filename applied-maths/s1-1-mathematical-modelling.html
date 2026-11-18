@@ -1,0 +1,1673 @@
+<title>Mathematical Modelling Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.sh-card{display:grid;gap:8px;padding:16px;align-content:start}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card ul{margin:0;padding-left:18px;font-size:.88rem;color:var(--muted);display:grid;gap:3px}
+.fbbox{padding:0 16px 14px}
+.predopts .btns button{min-width:100px}
+.ctl button[disabled]{opacity:.5}
+</style>
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 01-14.3 4.9M4 12a8 8 0 0114.3-4.9"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg></div>
+        <div style="min-width:0"><b>Mathematical Modelling</b><span>Leaving Cert Applied Maths · Strand 1</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html" class="on" aria-current="page">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <details open><summary>1 · Mathematical modelling</summary><ol><li class="here"><span class="mono">1.1</span>The modelling cycle</li></ol></details>
+      <details><summary>2 · Networks &amp; graphs</summary><ol><li class="link"><a href="s2-1-networks.html"><span class="mono">2.1</span>Networks &amp; terminology</a></li><li><span class="mono">2.2</span>Matrices &amp; adjacency</li><li><span class="mono">2.3</span>Minimum spanning trees</li><li><span class="mono">2.4</span>Shortest paths &amp; dynamic programming</li><li><span class="mono">2.5</span>Comparing algorithms</li><li><span class="mono">2.6</span>Project scheduling</li></ol></details>
+      <details><summary>3 · The physical world</summary><ol><li><span class="mono">3.1</span>Motion in a straight line</li><li class="link"><a href="s3-2-vectors-projectiles.html"><span class="mono">3.2</span>Vectors &amp; projectiles</a></li><li><span class="mono">3.3</span>Forces &amp; Newton's laws</li><li><span class="mono">3.4</span>Momentum &amp; collisions</li><li><span class="mono">3.5</span>Friction, connected masses &amp; drag</li><li><span class="mono">3.6</span>Work &amp; energy</li><li><span class="mono">3.7</span>Circular motion</li><li><span class="mono">3.8</span>Dimensional analysis</li></ol></details>
+      <details><summary>4 · A changing world</summary><ol><li><span class="mono">4.1</span>Recurrence relations</li><li><span class="mono">4.2</span>Difference equations</li><li><span class="mono">4.3</span>Differential equations</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon. Section numbers are this course's, grouped from the spec's headings.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 1 · The unifying strand</span>
+          <h1 style="margin-top:12px">Real problem in.<br>Maths in the middle.<br><em>Better answer out.</em></h1>
+          <p class="lede">Mathematical modelling is how you use maths on messy, real questions: how long a queue will take, what a ticket should cost, how fast something falls. Learn the cycle that every other strand, and your modelling project, is built on.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated modelling cycle: formulate, translate, compute, evaluate, then iterate or report"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/16</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Students should be able to… Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list" id="loList"></ul>
+        <p class="result" style="margin-top:10px">Students learn about: the problem-solving cycle · formulating problems · translating problems into mathematics · computing solutions · evaluating solutions. This strand "permeates all the strands of the specification": you will use the cycle in networks, mechanics and difference equations too.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Six models to build, test, break and fix. Every result updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="cycle">
+        <div class="labhead"><span class="pill t">Walk the cycle</span><p class="goal">Pick a real problem. Step through each stage of the modelling cycle and see what a modeller actually does there.</p></div>
+        <div class="panel sim">
+          <canvas id="cycC" aria-label="Modelling cycle diagram with the current stage highlighted"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Problem</span><div class="btns" id="cyP"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Stage</span><div class="btns" id="cyS"></div></div>
+            <div class="ctl"><span class="lbl">Step</span><div class="btns"><button class="primary" id="cyNext">Next stage →</button></div></div>
+          </div>
+          <div class="readout" id="cyOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Walk all five stages for the pool. Which stage made the biggest difference to the answer?</div><div class="try"><b>2</b>In which stage do the assumptions appear? Where are they checked?</div><div class="try"><b>3</b>Write the five stages for "How many buses does the school tour need?"</div></div>
+      </div>
+
+      <div class="lab" data-lab="formulate" hidden>
+        <div class="labhead"><span class="pill t">Fermi estimate</span><p class="goal">How many litres of water does your school use in a day? Break the problem into parts, estimate each one, and see which estimate matters most.</p></div>
+        <div class="panel sim">
+          <canvas id="fmC" aria-label="Tree breaking total water use into toilets, hand-washing and canteen, and a tornado chart of which estimate matters most"></canvas>
+          <div class="controls" id="fmCtl"></div>
+          <div class="readout" id="fmOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Use your own school's numbers. Is the answer closer to 10³, 10⁴ or 10⁵ litres?</div><div class="try"><b>2</b>Which estimate tops the tornado chart? That's the one worth researching properly.</div><div class="try"><b>3</b>Halve the canteen estimate. Does the order of magnitude change?</div></div>
+      </div>
+
+      <div class="lab" data-lab="assume" hidden>
+        <div class="labhead"><span class="pill t">Test the assumption</span><p class="goal">An object is dropped from a 10 m balcony and filmed. Choose an assumption about air resistance, tune the model, and see how well it matches the measurements.</p></div>
+        <div class="panel sim">
+          <canvas id="faC" aria-label="Graph of distance fallen against time: measured points and the model curve"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Object</span><div class="btns" id="faObj"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Assumption</span><div class="btns" id="faMod"><button data-m="A" aria-pressed="true">No air resistance</button><button data-m="B" aria-pressed="false">Drag ∝ v</button><button data-m="C" aria-pressed="false">Drag ∝ v²</button></div></div>
+            <div class="ctl"><label for="faVt">Terminal speed v<sub>t</sub> <output id="faVto">10 m/s</output></label><input type="range" id="faVt" min="2" max="30" step="0.2" value="10"></div>
+          </div>
+          <div class="readout" id="faOut"></div>
+          <div class="simchips chips" id="faChips"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Shuttlecock, no air resistance: how far out is the model after 1.5 s?</div><div class="try"><b>2</b>Pick drag ∝ v² and tune v<sub>t</sub> until the error is smallest. What's your v<sub>t</sub>?</div><div class="try"><b>3</b>Switch to the tennis ball. Is "no air resistance" good enough now? Why?</div></div>
+      </div>
+
+      <div class="lab" data-lab="translate" hidden>
+        <div class="labhead"><span class="pill t">Collect &amp; fit</span><p class="goal">Drop a ball and record the height of each bounce. Then choose the type of model that best describes your data.</p></div>
+        <div class="panel sim">
+          <canvas id="bnC" aria-label="A ball bouncing, each bounce lower than the last, beside a height scale"></canvas>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Experiment</span><div class="btns"><button class="primary" id="bnRec">Record next bounce</button><button id="bnNew">New ball</button></div></div>
+            <div class="ctl"><span class="lbl">Model type</span><div class="btns" id="bnMod"><button data-m="lin" aria-pressed="true">Linear</button><button data-m="quad" aria-pressed="false">Quadratic</button><button data-m="exp" aria-pressed="false">Exponential</button></div></div>
+          </div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>Bounce n</th><th>Height h (cm)</th><th>h<sub>n</sub> ÷ h<sub>n−1</sub></th></tr></thead><tbody id="bnTable"></tbody></table></div>
+            <div class="graphbox"><canvas id="bnG" aria-label="Graph of bounce height against bounce number with the fitted model"></canvas><p class="result" id="bnResult"></p></div>
+          </div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Record five or more bounces. Look at the ratio column: what do you notice?</div><div class="try"><b>2</b>Compare R² for all three models. Which is best? Which predicts silly values at bounce 10?</div><div class="try"><b>3</b>A high R² isn't everything: does your model make physical sense?</div></div>
+      </div>
+
+      <div class="lab" data-lab="compute" hidden>
+        <div class="labhead"><span class="pill t">Spreadsheet model</span><p class="goal">Will everyone get lunch? Model the canteen queue minute by minute, the way a spreadsheet would, then test it against a real count.</p></div>
+        <div class="panel sim">
+          <canvas id="quC" aria-label="Bar chart of queue length each minute of lunch"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="quS">Students <output id="quSo">300</output></label><input type="range" id="quS" min="100" max="600" step="10" value="300"></div>
+            <div class="ctl"><label for="quW">Arrive over (min) <output id="quWo">10</output></label><input type="range" id="quW" min="4" max="20" step="1" value="10"></div>
+            <div class="ctl"><label for="quT">Tills open <output id="quTo">2</output></label><input type="range" id="quT" min="1" max="6" step="1" value="2"></div>
+            <div class="ctl"><label for="quR">Served per till per min <output id="quRo">4</output></label><input type="range" id="quR" min="2" max="6" step="0.5" value="4"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Arrivals assumption</span><div class="btns" id="quArr"><button data-a="0" aria-pressed="true">Steady stream</button><button data-a="1" aria-pressed="false">Rush at the start</button></div></div>
+            <div class="ctl"><span class="lbl">Check</span><div class="btns"><button id="quMeas" aria-pressed="false">Show Tuesday's count</button></div></div>
+          </div>
+          <div class="readout" id="quOut"></div>
+          <div class="working" id="quWork"></div>
+          <div class="datapanel" style="grid-template-columns:minmax(0,1fr)">
+            <div class="tablewrap" style="border-right:0"><table><thead><tr><th>Minute n</th><th>Arrive A<sub>n</sub></th><th>Served</th><th>Queue Q<sub>n</sub></th></tr></thead><tbody id="quTable"></tbody></table></div>
+          </div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Lunch is 40 minutes. With the default settings, when does the queue clear?</div><div class="try"><b>2</b>Show Tuesday's count. Which arrivals assumption matches it better?</div><div class="try"><b>3</b>What's the fewest tills that clears the queue within 25 minutes?</div></div>
+      </div>
+
+      <div class="lab" data-lab="evaluate" hidden>
+        <div class="labhead"><span class="pill t">Refine &amp; iterate</span><p class="goal">What should a ticket for the school musical cost? Start simple, then refine the model twice and test how sensitive the answer is.</p></div>
+        <div class="panel sim">
+          <canvas id="tkC" aria-label="Graph of money raised against ticket price, with the best price marked"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Model version</span><div class="btns" id="tkVer"><button data-v="1" aria-pressed="true">1 · Revenue</button><button data-v="2" aria-pressed="false">2 · + seat limit</button><button data-v="3" aria-pressed="false">3 · + costs = profit</button></div></div>
+            <div class="ctl"><label for="tkA">Would come if free (a) <output id="tkAo">600</output></label><input type="range" id="tkA" min="300" max="1200" step="20" value="600"></div>
+            <div class="ctl"><label for="tkB">Lost per €1 rise (b) <output id="tkBo">40</output></label><input type="range" id="tkB" min="20" max="80" step="5" value="40"></div>
+            <div class="ctl"><label for="tkCst">Cost per person (c) <output id="tkCo">€2</output></label><input type="range" id="tkCst" min="0" max="6" step="0.5" value="2"></div>
+            <div class="ctl"><label for="tkF">Fixed costs (F) <output id="tkFo">€500</output></label><input type="range" id="tkF" min="0" max="2000" step="100" value="500"></div>
+            <div class="ctl"><span class="lbl">Sensitivity</span><div class="btns"><button id="tkSens" aria-pressed="false">Test demand ±10%</button></div></div>
+          </div>
+          <div class="readout" id="tkOut"></div>
+          <div class="working" id="tkWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Version 1: why is the best price exactly a ÷ 2b?</div><div class="try"><b>2</b>Set a = 1000, then switch to version 2. Why does the answer change?</div><div class="try"><b>3</b>Turn on the ±10% test. Is the best price sensitive to the survey being a bit wrong?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of mathematical modelling"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>The cycle at a glance</h2></div><p>What happens at each stage, and the questions to ask yourself there.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three pictures of modelling</p><h2>Cycle, estimate, test</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="cycle"></canvas><h3>The cycle never really ends</h3><p>Evaluate, then refine and go round again, until the model is good enough to report.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="fermi"></canvas><h3>Break it down</h3><p>A big unknown becomes small estimates. The tornado shows which one to research first.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="fall"></canvas><h3>Assumptions have limits</h3><p>"No air resistance" (dashed) fails for a shuttlecock. A drag model (solid) fits the data.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">A Fermi estimate, in numbers</p><h2>Where does a school's water go?</h2></div><p>Illustrative estimate for 600 people (the Fermi lab's starting values). Your school will differ.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Models make decisions about your life</p><h2>Modelling in the real world</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How Applied Maths is assessed, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 80% written exam, 20% modelling project">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="291.5 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">80 / 20</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 80%</b><p>Higher or Ordinary level, 2½ hours, set by the SEC. Covers the three contextual strands (networks, the physical world, a changing world), with modelling throughout.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Modelling project · 20%</b><p>A written report solving a real problem from a brief the SEC issues each year. Done in 6th year; the same brief for both levels, with a differentiated marking scheme. Sent to the SEC for marking.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this strand</h3>
+          <ol class="tips">
+            <li><b>Define every variable</b> with its unit: "let t = time in minutes after lunch starts".</li>
+            <li><b>State your assumptions</b> and say why each one is needed (it simplifies, or data is missing).</li>
+            <li><b>Show the model</b> as an equation before you put numbers in.</li>
+            <li><b>Interpret</b> every answer in context: "the queue clears 38 minutes into lunch", not just "37.5".</li>
+            <li>Check the answer is <b>reasonable</b>: size, sign, units, and does it fit the situation?</li>
+            <li>To <b>evaluate</b>, compare with real data, test sensitivity, and name a limitation.</li>
+            <li>To <b>refine</b>, change one assumption, re-solve, and say whether the model improved.</li>
+            <li>Past papers for this specification are on examinations.ie. The questions here are practice questions only.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Action verbs</h2></div><p>Verbs used in this strand's learning outcomes. The meanings are plain-English summaries, not official definitions.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Modelling calculations</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which stage is this?</h2></div></div>
+          <canvas id="predC" aria-label="Modelling cycle. The correct stage lights up after you check."></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns"><button data-a="0">Formulate</button><button data-a="1">Translate</button><button data-a="2">Compute</button><button data-a="3">Evaluate</button><button data-a="4">Report</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">20% of your grade</p><h2>Modelling project skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">What the spec's assessment criteria reward at a high level. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Precise words earn marks in "define" and "explain" questions.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: assumption, residual, iterate…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>The modelling cycle and the maths that turns up most in this strand, on one page.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Cycle</span><span class="big">Formulate → Translate → Compute → Evaluate</span><dl><dt>then</dt><dd>refine and iterate, or report</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Formulate</span><span class="big">Variables · Parameters · Assumptions</span><dl><dt>Ask</dt><dd>What affects it? What can I ignore? What do I need to know?</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Fermi</span><span class="big">Total = product of estimates</span><div class="ex">600 × 2 × 6 L = 7 200 L ≈ 10⁴ L</div></div>
+        <div class="panel fcell"><span class="pill a">Linear</span><span class="big">m = (y₂ − y₁) ÷ (x₂ − x₁)</span><dl><dt>Model</dt><dd>y = mx + c, with c = y₁ − m·x₁</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Exponential</span><span class="big">hₙ = h₀ · rⁿ</span><dl><dt>Spot it</dt><dd>constant ratio hₙ ÷ hₙ₋₁ = r</dd></dl><div class="ex">150 × 0.7³ = 51.45 cm</div></div>
+        <div class="panel fcell"><span class="pill a">Optimise</span><span class="big">R = p(a − bp) → max at p = a ÷ 2b</span><dl><dt>Why</dt><dd>dR/dp = a − 2bp = 0</dd></dl><div class="ex">a = 600, b = 40 → p = €7.50</div></div>
+        <div class="panel fcell"><span class="pill a">Difference eq.</span><span class="big">Qₙ₊₁ = Qₙ + Aₙ − served</span><dl><dt>Queue</dt><dd>can't go below 0: max(0, …)</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Error</span><span class="big">% error = |model − measured| ÷ measured × 100</span><dl><dt>Residual</dt><dd>measured − model</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Fit</span><span class="big">R² = 1 − SS<sub>res</sub> ÷ SS<sub>tot</sub></span><dl><dt>Near 1</dt><dd>good fit (but check it makes sense)</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Units</span><span class="big">1 m³ = 1 000 L · 1 h = 3 600 s</span><div class="ex">375 000 L ÷ 10 L/s = 37 500 s ≈ 10.4 h</div></div>
+        <div class="panel fcell"><span class="pill a">Falling</span><span class="big">No drag: d = ½gt²</span><dl><dt>g</dt><dd>9.8 m/s² · drag gives a terminal speed v<sub>t</sub></dd></dl></div>
+        <div class="panel fcell"><span class="pill">Report</span><span class="big">Problem · Assumptions · Model · Solution · Evaluation · Sources</span><dl><dt>Always</dt><dd>units, graphs, limitations</dd></dl></div>
+      </div>
+      <footer>
+        <p>Built on Strand 1 (Mathematical modelling) of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/applied-mathematics/" target="_blank" rel="noopener">Leaving Certificate Applied Mathematics Specification</a> (NCCA, 2019; first examined 2023). Learning outcomes are quoted from the specification. Scenarios, data and figures are illustrative.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("am-theme","auto"), font = store.get("am-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("am-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("am-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  cycle:'<path d="M20 12a8 8 0 01-14.3 4.9M4 12a8 8 0 0114.3-4.9"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/>',
+  formulate:'<rect x="9" y="2" width="6" height="5" rx="1"/><rect x="2" y="16" width="6" height="5" rx="1"/><rect x="9" y="16" width="6" height="5" rx="1"/><rect x="16" y="16" width="6" height="5" rx="1"/><path d="M12 7v9M5 16v-4h14v4"/>',
+  assume:'<path d="M3 4h18l-7 8v6l-4 2v-8z"/>',
+  translate:'<path d="M3 6h7M6.5 6v12M14 8l6 8M20 8l-6 8"/>',
+  compute:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
+  evaluate:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21M7.5 10.5l2 2 4-4"/>',
+  report:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/>',
+  cloud:'<path d="M7 18a4 4 0 01-.5-8A6 6 0 0118 9a4.5 4.5 0 01-.5 9z"/>',
+  virus:'<circle cx="12" cy="12" r="5"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5M5 5l3.5 3.5M15.5 15.5L19 19M19 5l-3.5 3.5M8.5 15.5L5 19"/>',
+  map:'<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  ball:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/>',
+  euro:'<path d="M18 6a7 7 0 100 12M4 10h9M4 14h9"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"cycle", name:"The modelling cycle", short:"A systematic process for solving real problems: formulate, translate, compute, evaluate, iterate.", tint:"var(--blush)"},
+  {id:"formulate", name:"Formulate: break it down", short:"Research the problem, find what's relevant, and split it into manageable parts.", tint:"var(--apricot)"},
+  {id:"assume", name:"Assumptions & variables", short:"Decide what affects the situation and what you can safely ignore.", tint:"var(--sage)"},
+  {id:"translate", name:"Translate into maths", short:"Turn words, data and assumptions into a model you can solve.", tint:"var(--cream)"},
+  {id:"compute", name:"Compute with technology", short:"Solve the model by hand or by computer, then interpret the answer.", tint:"var(--blush)"},
+  {id:"evaluate", name:"Evaluate, refine, report", short:"Test the model, improve it, go round again, and write it up.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+const LO = [
+  ["cycle","describe a systematic process for solving problems and making decisions"],
+  ["formulate","research the background to a problem to analyse factors or variables that affect the situation"],
+  ["formulate","determine information relevant to the problem"],
+  ["formulate","decompose problems into manageable parts"],
+  ["assume","determine what assumptions are necessary to simplify the problem situation"],
+  ["translate","use abstraction to describe systems and to explain the relationship between wholes and parts"],
+  ["translate","abstract the knowledge needed to build a mathematical model"],
+  ["translate","translate the information given in the problem together with the assumptions into a mathematical model that can be solved"],
+  ["compute","compute a solution using appropriate mathematics"],
+  ["compute","create a mathematical model that can be interpreted by a computer"],
+  ["compute","use computational technology to solve problems"],
+  ["compute","solve the mathematical problem stated in the model"],
+  ["compute","analyse and perform operations in the model"],
+  ["compute","interpret the mathematical solution in terms of the original situation"],
+  ["evaluate","refine a model and use it to predict a better solution to the problem; iterate the process"],
+  ["evaluate","communicate solution processes in a written report"],
+];
+const LO_HEAD = {cycle:"The problem-solving cycle",formulate:"Formulating problems",assume:"Formulating problems",translate:"Translating problems into mathematics",compute:"Computing solutions",evaluate:"Evaluating solutions"};
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Mathematical model","","A description of a real situation using mathematics (equations, graphs, networks, a spreadsheet) so you can analyse it and make predictions.","cycle"],
+  ["Mathematical modelling","","The process of using mathematics to represent, analyse, make predictions or otherwise provide insight into real-world phenomena (spec, Strand 1).","cycle"],
+  ["Modelling cycle","problem-solving cycle","The stages of modelling: formulate the problem, translate it into maths, compute a solution, evaluate it, then refine and repeat or report.","cycle","Formulate → Translate → Compute → Evaluate → (iterate) → Report"],
+  ["Word problem","","A problem that includes all the information needed: you only choose the model and compute the one correct answer (spec footnote).","cycle"],
+  ["Modelling problem","","A problem where you research the situation, make reasonable assumptions, decide which variables matter and build your own model (spec footnote).","cycle"],
+  ["Real-world problem","authentic problem","A question that comes from a real context such as engineering, business or medicine, rather than from a textbook.","cycle"],
+  ["Iterate","iteration","Go round the cycle again with an improved model.","cycle"],
+  ["Interdisciplinary","","Drawing on more than one subject, e.g. maths plus biology for disease spread.","cycle"],
+  ["Formulate","","Turn a vague real situation into a clear problem: research it, find the variables, decide what's relevant, make assumptions.","formulate"],
+  ["Problem statement","","One or two clear sentences saying exactly what the model will find, for whom.","formulate"],
+  ["Decompose","decomposition","Break a problem into smaller parts that are easier to estimate or solve.","formulate"],
+  ["Fermi estimate","Fermi problem","A quick estimate of a hard-to-measure quantity, made by multiplying sensible estimates of its parts.","formulate","Total ≈ estimate₁ × estimate₂ × …"],
+  ["Order of magnitude","","The power of ten closest to a number. 10 500 is about 10⁴.","formulate"],
+  ["Relevant information","","Facts that actually affect the answer. Part of formulating is ignoring what doesn't matter.","formulate"],
+  ["Background research","","Finding out about the context: data, facts and expert knowledge. Sources must be acknowledged.","formulate"],
+  ["Sensitivity analysis","","Changing one input a little (e.g. by 10%) to see how much the output changes. Shows which inputs matter most.","evaluate"],
+  ["Tornado chart","","A bar chart of sensitivity results, biggest effect at the top, so it looks like a tornado.","formulate"],
+  ["Assumption","","Something you accept as true to simplify the problem, e.g. \"students arrive at a steady rate\".","assume"],
+  ["Approximation","","A value or method that is close enough to be useful, but not exact.","assume"],
+  ["Idealisation","","A simplified picture of a real object, e.g. treating a car as a particle or a string as light and inextensible.","assume"],
+  ["Variable","","A quantity that can change in the problem, e.g. time, speed, queue length.","assume"],
+  ["Independent variable","","The variable you choose or control (input), usually on the x-axis.","assume"],
+  ["Dependent variable","","The variable that changes as a result (output), usually on the y-axis.","assume"],
+  ["Parameter","","A quantity that is fixed for one use of the model but can be changed, e.g. the number of tills.","assume"],
+  ["Limitation","","A way the model fails to match reality, usually because of an assumption.","assume"],
+  ["Air resistance","drag","A force opposing motion through air. Often modelled as proportional to v or to v².","assume"],
+  ["Terminal speed","terminal velocity","The steady speed a falling object reaches when drag balances its weight.","assume","Symbol vₜ"],
+  ["∝","proportional to","\"Drag ∝ v²\" means drag = k·v² for some constant k.","assume"],
+  ["g","","Acceleration due to gravity, 9.8 m/s² near the Earth's surface.","assume","No drag: d = ½gt²"],
+  ["Abstraction","","Keeping only the features of a situation that matter for the problem and describing them with maths.","translate"],
+  ["Translate","","Write the problem and assumptions as mathematics: define variables, write equations or draw a network.","translate"],
+  ["Linear model","","A model with a constant rate of change: y = mx + c.","translate","m = (y₂ − y₁) ÷ (x₂ − x₁)"],
+  ["Exponential model","","A model where each value is a constant multiple of the one before: y = a·rⁿ.","translate","hₙ = h₀·rⁿ"],
+  ["Quadratic model","","A model of the form y = ax² + bx + c. Its graph is a parabola with one turning point.","translate"],
+  ["Residual","","Measured value minus the model's value, for one data point.","translate","residual = measured − model"],
+  ["Line of best fit","least squares","The line (or curve) that makes the sum of the squared residuals as small as possible.","translate"],
+  ["R²","coefficient of determination","A measure of fit: 1 is perfect, near 0 means the model explains little of the variation.","translate","R² = 1 − SSres ÷ SStot"],
+  ["Primary data","","Data you collect yourself, e.g. by measuring or surveying.","translate"],
+  ["Secondary data","","Data collected by someone else, e.g. from the CSO or Met Éireann.","translate"],
+  ["Extrapolation","","Using a model outside the range of your data. Risky: the pattern may not continue.","translate"],
+  ["Interpolation","","Using a model inside the range of your data.","translate"],
+  ["Compute","","Solve the model, by hand or with technology, to get a mathematical solution.","compute"],
+  ["Difference equation","recurrence relation","An equation giving the next value from the current one, e.g. Qₙ₊₁ = Qₙ + 22. Suits change in steps.","compute"],
+  ["Qₙ","","Notation for the value (here, queue length) after n steps. Qₙ₊₁ is the next one.","compute"],
+  ["Spreadsheet model","","A model a computer can run: each row is one step, formulas calculate each cell from the row above.","compute"],
+  ["Simulation","","Running a model, often many times or many steps, to see what happens.","compute"],
+  ["Optimisation","","Finding the input that gives the best output, e.g. the price that gives the most revenue.","compute","Max/min where the derivative = 0"],
+  ["Interpret","","Say what a mathematical answer means in the real situation, with units.","compute"],
+  ["Evaluate","","Judge how good a model is: compare with data, check it is reasonable, test sensitivity, name limitations.","evaluate"],
+  ["Refine","","Improve a model, usually by changing or removing an assumption.","evaluate"],
+  ["Validate","validation","Check a model against real data that was not used to build it.","evaluate"],
+  ["Percentage error","","How far a prediction is from the measured value, as a percentage of the measured value.","evaluate","|model − measured| ÷ measured × 100"],
+  ["Reasonable answer","","An answer with a sensible size, sign and unit for the situation. Checking dimensions helps.","evaluate"],
+  ["Viability","","Whether the solution would actually work in practice.","evaluate"],
+  ["Written report","","How a modelling solution is communicated: problem, assumptions, model, solution, evaluation and sources.","evaluate"],
+  ["Modelling project","","The 20% coursework component: a written report on a real problem from an SEC brief, done in 6th year.","evaluate"],
+  ["SEC","State Examinations Commission","The body that sets and marks the Leaving Certificate exams and modelling project.","evaluate"],
+  ["Cite","acknowledge sources","Say where every piece of information came from, e.g. in a reference list.","evaluate"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+t.length}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["assumptions","Assumption"],["variables","Variable"],["parameter","Parameter"],["decompose","Decompose"],["Fermi estimate","Fermi estimate"],["order of magnitude","Order of magnitude"],["abstraction","Abstraction"],["residual","Residual"],["exponential","Exponential model"],["difference equation","Difference equation"],["sensitivity","Sensitivity analysis"],["refine","Refine"],["iterate","Iterate"],["terminal speed","Terminal speed"],["spreadsheet","Spreadsheet model"],["word problem","Word problem"],["R²","R²",1],["validate","Validate"],["interpret","Interpret"]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rr(ctx,x,y,w,h,r){ r=Math.min(r,h/2,w/2); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function arrowHead(ctx,x,y,dx,dy,col,s=8){ ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x+dx*s,y+dy*s); ctx.lineTo(x-dx*s*0.6-dy*s*0.7,y-dy*s*0.6+dx*s*0.7); ctx.lineTo(x-dx*s*0.6+dy*s*0.7,y-dy*s*0.6-dx*s*0.7); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const nf = (x,d=0) => { const s=(Math.round(x*10**d)/10**d).toFixed(d); const [i,f]=s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f?"."+f:""); };
+const eur = x => "€"+nf(x, Math.abs(x-Math.round(x))>0.004?2:0);
+const niceStep = (range,n) => { const r=range/Math.max(1,n), p=10**Math.floor(Math.log10(r)), m=r/p; return (m<=1?1:m<=2?2:m<=5?5:10)*p; };
+const tick = v => String(+v.toFixed(6));
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+// Axes: returns mapping functions. o: x0,x1,y0,y1,xl,yl,compact
+function frame(ctx,w,h,o){
+  const cp=o.compact, L=cp?36:50, R=12, T=cp?12:16, B=cp?24:34, fs=cp?9:11;
+  const X=v=>L+(v-o.x0)/(o.x1-o.x0)*(w-L-R), Y=v=>h-B-(v-o.y0)/(o.y1-o.y0)*(h-B-T);
+  const xs=o.xt||niceStep(o.x1-o.x0, Math.max(3,Math.floor((w-L)/70))), ys=o.yt||niceStep(o.y1-o.y0, Math.max(3,Math.floor((h-B)/45)));
+  for(let v=Math.ceil(o.x0/xs)*xs; v<=o.x1+1e-9; v+=xs){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,tick(v),X(v),h-B+(cp?11:14),C.muted,M(fs),"center"); }
+  for(let v=Math.ceil(o.y0/ys)*ys; v<=o.y1+1e-9; v+=ys){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,tick(v),L-5,Y(v)+3,C.muted,M(fs),"right"); }
+  const y0=Y(Math.max(o.y0,Math.min(o.y1,0)));
+  line(ctx,L,y0,w-R,y0,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(o.xl) text(ctx,o.xl,w-R,h-B+(cp?22:30),C.muted,F(cp?10:12),"right");
+  if(o.yl) text(ctx,o.yl,L+6,T+(cp?10:12),C.muted,F(cp?10:12),"left");
+  return {X,Y,L,R,T,B};
+}
+function curve(ctx,f,x0,x1,X,Y,col,lw=2.5,dash,clip){ ctx.save(); if(clip){ ctx.beginPath(); ctx.rect(clip[0],clip[1],clip[2],clip[3]); ctx.clip(); } ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); const n=120; for(let i=0;i<=n;i++){ const x=x0+(x1-x0)*i/n, y=f(x); if(i) ctx.lineTo(X(x),Y(y)); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore(); }
+
+/* ================= MODELS + DRAWINGS ================= */
+// 1. The modelling cycle
+const STAGES = ["Formulate","Translate","Compute","Evaluate","Report"];
+const STAGE_TINT = ["blush","apricot","sage","cream","olive"];
+function drawCycle(ctx,w,h,o={}){
+  bg(ctx,w,h,o.bgc);
+  const cp=o.compact||w<440, fs=cp?12:15, ph=cp?26:34;
+  const cx=w/2, cy=h*0.44, rx=Math.max(40,Math.min(w*0.34, h*0.75, w/2-(cp?48:62))), ry=h*0.31;
+  ctx.save(); ctx.strokeStyle=C.line; ctx.lineWidth=cp?3:4; ctx.beginPath(); ctx.ellipse(cx,cy,rx,ry,0,0,7); ctx.stroke(); ctx.restore();
+  // iterate arc (Evaluate -> Formulate) in terracotta
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=cp?3:4; ctx.setLineDash([7,6]); ctx.beginPath(); ctx.ellipse(cx,cy,rx,ry,0,Math.PI*1.08,Math.PI*1.42); ctx.stroke(); ctx.restore();
+  [-45,45,135,-135].forEach((deg,i)=>{ const a=deg*Math.PI/180, x=cx+Math.cos(a)*rx, y=cy+Math.sin(a)*ry, tx=-Math.sin(a)*rx, ty=Math.cos(a)*ry, L=Math.hypot(tx,ty); arrowHead(ctx,x,y,tx/L,ty/L, i===3?C.terra:C.muted, cp?7:9); });
+  const ia=-135*Math.PI/180; text(ctx,"↺ refine & iterate",cx+Math.cos(ia)*rx+10,cy+Math.sin(ia)*ry+(cp?20:26),C.terra,F(cp?10:12),"left");
+  text(ctx,"Real world",cx,cy-(cp?8:12),C.muted,F(cp?11:14),"center"); text(ctx,"⇅",cx,cy+(cp?7:9),C.muted,F(cp?12:15),"center"); text(ctx,"maths world",cx,cy+(cp?22:30),C.muted,F(cp?11:14),"center");
+  if(o.t!=null){ const a=-Math.PI/2+o.t*0.9; circle(ctx,cx+Math.cos(a)*rx,cy+Math.sin(a)*ry,cp?5:7,C.terra); }
+  const pos=[[cx,cy-ry],[cx+rx,cy],[cx,cy+ry],[cx-rx,cy]];
+  ctx.font=F(fs); const repW=ctx.measureText("Report").width+24;
+  const rp=[Math.max(repW/2+6,cx-rx), h-ph/2-6];
+  line(ctx,cx-rx,cy+ph/2,rp[0],rp[1]-ph/2-2,C.muted,2);
+  arrowHead(ctx,rp[0],rp[1]-ph/2-4,0,1,C.muted,cp?6:8);
+  text(ctx,"good enough?",rp[0]+8,(cy+ph/2+rp[1]-ph/2)/2+4,C.muted,F(cp?10:12),"left");
+  pos.push(rp);
+  STAGES.forEach((s,k)=>{ const [x,y]=pos[k], sel=o.stage===k; ctx.font=F(sel?fs+1:fs); const bw=ctx.measureText(s).width+(cp?20:28), bh=sel?ph+4:ph;
+    rr(ctx,x-bw/2,y-bh/2,bw,bh,bh/2); ctx.fillStyle=C[STAGE_TINT[k]]; ctx.fill(); ctx.lineWidth=sel?3:1.5; ctx.strokeStyle=sel?C.terra:C.line; ctx.stroke();
+    text(ctx,s,x,y+1,"#3b2b21",F(sel?fs+1:fs),"center","middle"); });
+}
+// 2. Fermi estimate: water use in a school day
+const FERMI_F = [["N","People in the school",200,1500,50,""],["f","Flushes each per day",1,5,0.5,""],["lf","Litres per flush",3,9,0.5," L"],["hw","Hand-washes each per day",1,6,1,""],["lh","Litres per hand-wash",0.5,3,0.5," L"],["C","Canteen & cleaning",0,5000,250," L"]];
+const FERMI_DEF = {N:600,f:2,lf:6,hw:3,lh:1,C:1500};
+function fermiParts(v){ const toil=v.N*v.f*v.lf, hand=v.N*v.hw*v.lh; return {toil,hand,fix:v.C,total:toil+hand+v.C}; }
+function fermiSens(v){ const base=fermiParts(v).total; return FERMI_F.map(([k,n])=>({k,n,lo:fermiParts({...v,[k]:v[k]*0.8}).total-base, hi:fermiParts({...v,[k]:v[k]*1.2}).total-base})).sort((a,b)=>Math.abs(b.hi)-Math.abs(a.hi)); }
+function drawFermi(ctx,w,h,o={}){
+  bg(ctx,w,h,o.bgc); const v=o.v||FERMI_DEF, p=fermiParts(v), cp=o.compact||w<460;
+  const treeH = o.compact? h : Math.min(h*0.44, 190);
+  const box=(x,y,bw,bh,t1,t2,fill,big)=>{ rr(ctx,x-bw/2,y-bh/2,bw,bh,10); ctx.fillStyle=fill; ctx.fill(); ctx.strokeStyle=C.line; ctx.lineWidth=1.5; ctx.stroke();
+    text(ctx,t1,x,y-(cp?3:4),"#3b2b21",F(cp?10:12),"center"); text(ctx,t2,x,y+(cp?11:14),"#3b2b21",big?F(cp?12:15,800):M(cp?10:12),"center"); };
+  const rY=treeH*0.24, cY=treeH*0.68, bh=cp?34:42;
+  const kids=[["Toilets",p.toil,C.apricot,cp?"N×f×L":"N × flushes × L"],["Hands",p.hand,C.sage,cp?"N×w×L":"N × washes × L"],[cp?"Canteen":"Canteen etc.",p.fix,C.cream,"estimate"]];
+  const cw=w/3;
+  kids.forEach((k,i)=>line(ctx,w/2,rY+bh/2,cw*(i+0.5),cY-bh/2,C.muted,1.5));
+  box(w/2,rY,Math.min(w*0.62,230),bh,"Water per day",`≈ ${nf(p.total)} L`,C.blush,true);
+  kids.forEach(([n,val,col,fm],i)=>{ box(cw*(i+0.5),cY,cw-10,bh,n,`${nf(val)} L`,col); if(!cp || treeH>140) text(ctx,fm,cw*(i+0.5),cY+bh/2+13,C.muted,M(cp?9:11),"center"); });
+  if(o.compact) return;
+  // tornado chart
+  const s=fermiSens(v), top=treeH+28, rowH=(h-top-8)/s.length, lw=cp?112:170, mid=lw+(w-lw-14)/2, half=(w-lw-14)/2-(cp?6:46);
+  const mx=Math.max(...s.map(r=>Math.max(Math.abs(r.lo),Math.abs(r.hi))))||1;
+  text(ctx,"Change each estimate by ±20%: which matters most?",12,top-10,C.muted,F(cp?10:12),"left");
+  line(ctx,mid,top,mid,h-8,C.ink,1.5);
+  s.forEach((r,i)=>{ const y=top+i*rowH, bh2=Math.min(22,rowH-6);
+    text(ctx,cp?r.n.replace("Hand-washes","Washes").replace(" each per day","/day").replace("People in the school","People").replace("Litres per ","L per ").replace("Canteen & cleaning","Canteen"):r.n,lw-8,y+rowH/2+4,C.ink,F(cp?10:12),"right");
+    const wl=Math.abs(r.lo)/mx*half, wh=Math.abs(r.hi)/mx*half;
+    rr(ctx,mid-wl,y+(rowH-bh2)/2,Math.max(1,wl),bh2,4); ctx.fillStyle=C.sage; ctx.fill();
+    rr(ctx,mid,y+(rowH-bh2)/2,Math.max(1,wh),bh2,4); ctx.fillStyle=C.terra; ctx.fill();
+    if(!cp) text(ctx,"+"+nf(r.hi),mid+wh+4,y+rowH/2+4,C.muted,M(10),"left"); });
+}
+// 3. Falling object: which assumption about air resistance?
+const G = 9.8;
+const dA = t => 0.5*G*t*t;
+const dB = (t,vt) => vt*t-(vt*vt/G)*(1-Math.exp(-G*t/vt));
+const dC = (t,vt) => (vt*vt/G)*Math.log(Math.cosh(G*t/vt));
+const fallF = (m,vt) => m==="A"? dA : m==="B"? (t=>dB(t,vt)) : (t=>dC(t,vt));
+function tFall(f,H=10){ let lo=0,hi=10; for(let i=0;i<60;i++){ const m=(lo+hi)/2; if(f(m)<H) lo=m; else hi=m; } return (lo+hi)/2; }
+const FALL_OBJ = [{n:"Shuttlecock",vt:6.8,seed:7},{n:"Tennis ball",vt:22,seed:11}];
+FALL_OBJ.forEach(o=>{ const r=rng(o.seed); o.data=[]; for(let k=1;k<40;k++){ const t=+(0.15*k).toFixed(2), d=dC(t,o.vt); if(d>10) break; o.data.push([t, Math.max(0,+(d+(r()-0.5)*0.16).toFixed(2))]); } o.tTrue=tFall(t=>dC(t,o.vt)); });
+const rmsErr = (f,data) => Math.sqrt(data.reduce((a,[t,d])=>a+(f(t)-d)**2,0)/data.length);
+function drawFall(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const ob=FALL_OBJ[o.obj||0], tmax=Math.ceil(ob.tTrue*5)/5+0.2;
+  const fr=frame(ctx,w,h,{x0:0,x1:tmax,y0:0,y1:12,xl:"time t (s)",yl:"distance fallen d (m)",compact:o.compact});
+  line(ctx,fr.L,fr.Y(10),w-fr.R,fr.Y(10),C.olive,2,[6,5]); text(ctx,"ground (10 m)",w-fr.R-4,fr.Y(10)-6,C.olive,F(o.compact?9:11),"right");
+  const clip=[fr.L,fr.T,w-fr.L-fr.R,h-fr.T-fr.B];
+  if(o.model!=="A") curve(ctx,dA,0,tmax,fr.X,fr.Y,C.muted,1.8,[5,5],clip);
+  curve(ctx,fallF(o.model,o.vt),0,tmax,fr.X,fr.Y,C.terra,2.8,null,clip);
+  ob.data.forEach(([t,d])=>circle(ctx,fr.X(t),fr.Y(d),o.compact?3:4.5,C.surface,C.ink,2));
+  if(!o.compact){ text(ctx,"● measured   — model"+(o.model!=="A"?"   - - no drag":""),fr.L+10,fr.T+30,C.muted,F(11),"left"); }
+}
+// 4. Bouncing ball + model fitting
+function fitModel(type,pts){
+  const n=pts.length, xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]);
+  const lin=(X,Y)=>{ const mx=X.reduce((a,b)=>a+b,0)/X.length, my=Y.reduce((a,b)=>a+b,0)/Y.length; let sxy=0,sxx=0; X.forEach((x,i)=>{ sxy+=(x-mx)*(Y[i]-my); sxx+=(x-mx)**2; }); const b=sxx?sxy/sxx:0; return [my-b*mx,b]; };
+  let f, eq;
+  if(type==="lin"){ const [a,b]=lin(xs,ys); f=x=>a+b*x; eq=`h = ${nf(a,1)} ${b<0?"−":"+"} ${nf(Math.abs(b),2)}n`; }
+  else if(type==="exp"){ const [la,lr]=lin(xs,ys.map(y=>Math.log(Math.max(y,0.01)))); const a=Math.exp(la), r=Math.exp(lr); f=x=>a*r**x; eq=`h = ${nf(a,1)} × ${nf(r,3)}ⁿ`; }
+  else { // quadratic least squares via normal equations
+    const S=k=>xs.reduce((a,x)=>a+x**k,0), T=k=>xs.reduce((a,x,i)=>a+ys[i]*x**k,0);
+    const A=[[n,S(1),S(2)],[S(1),S(2),S(3)],[S(2),S(3),S(4)]], bb=[T(0),T(1),T(2)];
+    const c=gauss(A,bb); f=x=>c[0]+c[1]*x+c[2]*x*x; eq=`h = ${nf(c[0],1)} ${c[1]<0?"−":"+"} ${nf(Math.abs(c[1]),2)}n ${c[2]<0?"−":"+"} ${nf(Math.abs(c[2]),2)}n²`; }
+  const my=ys.reduce((a,b)=>a+b,0)/n, sst=ys.reduce((a,y)=>a+(y-my)**2,0), ssr=pts.reduce((a,[x,y])=>a+(y-f(x))**2,0);
+  return {f,eq,r2: sst? 1-ssr/sst : 1};
+}
+function gauss(A,b){ const n=b.length, M2=A.map((r,i)=>[...r,b[i]]);
+  for(let i=0;i<n;i++){ let p=i; for(let r=i+1;r<n;r++) if(Math.abs(M2[r][i])>Math.abs(M2[p][i])) p=r; [M2[i],M2[p]]=[M2[p],M2[i]];
+    for(let r=i+1;r<n;r++){ const k=M2[r][i]/(M2[i][i]||1e-12); for(let c=i;c<=n;c++) M2[r][c]-=k*M2[i][c]; } }
+  const x=Array(n).fill(0); for(let i=n-1;i>=0;i--){ let s=M2[i][n]; for(let c=i+1;c<n;c++) s-=M2[i][c]*x[c]; x[i]=s/(M2[i][i]||1e-12); } return x; }
+function drawBounce(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const H0=o.H0, hs=o.hs, cp=o.compact||w<440, L=cp?40:56, floorY=h-(cp?18:26), topY=cp?16:24;
+  const Y=v=>floorY-v/H0*(floorY-topY);
+  // ruler
+  line(ctx,L-10,Y(0),L-10,Y(H0),C.ink,1.5);
+  for(let v=0; v<=H0; v+=(H0>=150?25:20)){ line(ctx,L-16,Y(v),L-10,Y(v),C.ink,1.2); text(ctx,v,L-19,Y(v)+4,C.muted,M(cp?9:10),"right"); }
+  text(ctx,"cm",L-10,topY-6,C.muted,M(cp?9:10),"center");
+  line(ctx,L-4,floorY,w-8,floorY,C.olive,3);
+  // arcs: half drop, then one arc per recorded bounce
+  const ws=[Math.sqrt(H0)*0.5, ...hs.slice(1).map(v=>Math.sqrt(v))], tot=ws.reduce((a,b)=>a+b,0)+Math.sqrt(H0)*0.25, sc=(w-L-16)/tot;
+  let x=L+6;
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2; ctx.setLineDash([4,4]);
+  ctx.beginPath(); for(let i=0;i<=20;i++){ const u=i/20; const px=x+u*ws[0]*sc, py=Y(H0*(1-u*u)); if(i) ctx.lineTo(px,py); else ctx.moveTo(px,py); } ctx.stroke();
+  let cx=x+ws[0]*sc;
+  hs.slice(1).forEach((hv,k)=>{ const wd=ws[k+1]*sc; ctx.beginPath(); for(let i=0;i<=24;i++){ const u=i/24; const px=cx+u*wd, py=Y(hv*4*u*(1-u)); if(i) ctx.lineTo(px,py); else ctx.moveTo(px,py); } ctx.stroke();
+    if(!cp || k<5) text(ctx,nf(hv,1),cx+wd/2,Y(hv)-7,C.ink,M(cp?9:11),"center"); cx+=wd; });
+  ctx.restore();
+  text(ctx,`drop ${H0} cm`,x+4,Y(H0)-6,C.ink,M(cp?9:11),"left");
+  circle(ctx,cx,floorY-(cp?7:9),cp?7:9,C.apricot,C.terra,2);
+}
+function drawFitGraph(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const pts=o.pts, xmax=10, ymax=Math.ceil((o.H0||150)*1.1/20)*20;
+  const fr=frame(ctx,w,h,{x0:0,x1:xmax,y0:0,y1:ymax,xl:"bounce n",yl:"h (cm)",compact:o.compact,xt:2});
+  const clip=[fr.L,fr.T,w-fr.L-fr.R,h-fr.T-fr.B];
+  if(o.fit){ const last=pts[pts.length-1][0]; curve(ctx,o.fit.f,0,last,fr.X,fr.Y,C.terra,2.6,null,clip); curve(ctx,o.fit.f,last,xmax,fr.X,fr.Y,C.terra,2,[5,5],clip); }
+  pts.forEach(([x,y])=>circle(ctx,fr.X(x),fr.Y(y),o.compact?3.5:4.5,C.surface,C.ink,2));
+}
+// 5. Canteen queue: a difference equation, run like a spreadsheet
+function simQueue(p){ const rows=[]; let Q=0; for(let n=0;n<60;n++){ const A = n<p.W ? (p.rush? p.S*(2/p.W)*(1-(n+0.5)/p.W) : p.S/p.W) : 0; const cap=p.T*p.s, served=Math.min(Q+A,cap); Q=Q+A-served; if(Q<1e-9) Q=0; rows.push({n:n+1,A,served,Q}); } return rows; }
+function queueStats(rows,p){ const after=rows.filter(r=>r.n>=p.W); const clr=after.find(r=>r.Q===0); const qmax=Math.max(...rows.map(r=>r.Q)); return {clear: clr? clr.n : null, qmax, wait: qmax/(p.T*p.s)}; }
+const QMEAS = (()=>{ const r=rng(5), rows=simQueue({S:300,W:10,T:2,s:4,rush:true}), out=[]; for(let n=2;n<=40;n+=2){ const q=rows[n-1].Q; out.push([n, Math.max(0,Math.round(q*(1+(r()-0.5)*0.12)))]); } return out; })();
+function drawQueue(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const rows=o.rows, Lend=40, ymax=Math.max(20, ...rows.slice(0,45).map(r=>r.Q), ...(o.meas?QMEAS.map(m=>m[1]):[0]))*1.12;
+  const fr=frame(ctx,w,h,{x0:0,x1:45,y0:0,y1:ymax,xl:"minute n",yl:"queue Qₙ",compact:o.compact,xt:o.compact?10:5});
+  const bw=(fr.X(1)-fr.X(0))*0.78;
+  rows.slice(0,45).forEach(r=>{ if(r.Q<=0) return; rr(ctx,fr.X(r.n)-bw/2,fr.Y(r.Q),bw,fr.Y(0)-fr.Y(r.Q),2); ctx.fillStyle= r.n>Lend? C.bad : C.apricot; ctx.fill(); });
+  line(ctx,fr.X(Lend),fr.T,fr.X(Lend),h-fr.B,C.terra,2,[6,5]); text(ctx,"lunch ends",fr.X(Lend)-4,fr.T+(o.compact?22:28),C.terra,F(o.compact?9:11),"right");
+  if(o.meas) QMEAS.forEach(([n,q])=>circle(ctx,fr.X(n),fr.Y(q),o.compact?3:4.5,C.surface,C.ink,2));
+}
+// 6. Ticket price: revenue -> seat limit -> profit
+function tkVal(p,o){ const N0=Math.max(0,o.a-o.b*p), N=o.ver>=2? Math.min(o.cap,N0) : N0; return {N, y: o.ver>=3? (p-o.c)*N-o.F : p*N}; }
+function tkOpt(o){ let best={p:0,N:0,y:-1e9}; const pm=o.a/o.b; for(let i=0;i<=Math.round(pm*100);i++){ const p=i/100, v=tkVal(p,o); if(v.y>best.y+1e-9) best={p,N:v.N,y:v.y}; } return best; }
+function drawProfit(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const pm=Math.max(o.a,o.a*(o.sens?1.1:1))/o.b, opt=tkOpt(o);
+  const variants=o.sens? [{...o,a:o.a*0.9},{...o,a:o.a*1.1}] : [];
+  const ymaxRaw=Math.max(opt.y, ...variants.map(v=>tkOpt(v).y),10), ymin=o.ver>=3? -o.F : 0;
+  const fr=frame(ctx,w,h,{x0:0,x1:Math.ceil(pm),y0:ymin,y1:ymaxRaw*1.18,xl:"ticket price p (€)",yl:o.ver>=3?"profit (€)":"revenue (€)",compact:o.compact});
+  const clip=[fr.L,fr.T,w-fr.L-fr.R,h-fr.T-fr.B];
+  variants.forEach(v=>{ curve(ctx,p=>tkVal(p,v).y,0,v.a/v.b,fr.X,fr.Y,C.sage,2,[5,5],clip); const ov=tkOpt(v); circle(ctx,fr.X(ov.p),fr.Y(ov.y),4,C.sage); });
+  curve(ctx,p=>tkVal(p,o).y,0,o.a/o.b,fr.X,fr.Y,C.terra,2.8,null,clip);
+  line(ctx,fr.X(opt.p),fr.Y(opt.y),fr.X(opt.p),fr.Y(Math.max(0,ymin)),C.terra,1.5,[4,4]);
+  circle(ctx,fr.X(opt.p),fr.Y(opt.y),o.compact?5:7,C.terra,C.surface,2);
+  text(ctx,`best ≈ ${eur(opt.p)}`,Math.min(w-80,fr.X(opt.p)+8),fr.Y(opt.y)-8,C.ink,F(o.compact?10:12),"left");
+}
+
+/* ================= ROUTER ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "cycle", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+$("loList").innerHTML = LO.map(([t,s],i)=>`<li><label><input type="checkbox" id="lo${i}"><span class="mono">${i+1}</span><span>${s} <small style="color:var(--muted)">· ${LO_HEAD[t]}</small></span></label></li>`).join("");
+const loState=store.get("am11-lo",{});
+LO.forEach((x,i)=>{ const id="lo"+i; $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("am11-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=LO.filter((x,i)=>$("lo"+i).checked).length; $("stLO").textContent=`${lo}/${LO.length}`; $("stLOb").style.width=(lo/LO.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("am11-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const DEMO_BOUNCE = [[0,150],[1,104],[2,74],[3,51],[4,36]];
+const LEARN = {
+  cycle:{ vis:[["cycle",{stage:3}]], cap:"Evaluate is the turning point: either the model is good enough to report, or you refine it and go round again.",
+    keys:[["↻","Modelling is a cycle: formulate the problem, translate it into maths, compute a solution, evaluate it."],["?","A word problem gives you everything. A modelling problem makes you research, choose variables and make assumptions."],["✎","The cycle is iterative: you refine and repeat until the model is good enough, then communicate it in a report."]],
+    f:"Formulate → Translate → Compute → Evaluate → refine & iterate, or report", mistake:"Thinking the first answer is the final answer. A model is only finished once you've tested it against reality." },
+  formulate:{ vis:[["fermi",{}]], cap:"A Fermi estimate: one hard question becomes three easy ones. Total ≈ 10 500 L, about 10⁴ litres.",
+    keys:[["🔎","Research the background: what's going on, what data exists, what affects the outcome."],["✂","Decompose the problem into manageable parts you can estimate or solve one at a time."],["≈","Keep only relevant information. An answer to the right order of magnitude is often good enough."]],
+    f:"Big unknown = part₁ × part₂ × … (Fermi estimate)", mistake:"Diving into calculations before writing a clear problem statement. If you can't say what you're finding, you can't model it." },
+  assume:{ vis:[["fall",{obj:0,model:"C",vt:6.8}]], cap:"Shuttlecock: the \"no air resistance\" model (dashed) runs far ahead of the data. Including drag fixes it.",
+    keys:[["⚑","Assumptions simplify reality so you can model it: \"students arrive at a steady rate\", \"ignore air resistance\"."],["x","Name your variables (they change) and parameters (fixed for this case, e.g. number of tills), with units."],["⚖","An assumption is good if it barely changes the answer. Whether it's reasonable depends on the situation."]],
+    f:"State it · Justify it · Note its limitation", mistake:"Listing assumptions without saying why each is needed or how it might affect the answer." },
+  translate:{ vis:[["fit",{pts:DEMO_BOUNCE}]], cap:"Bounce heights fall by the same ratio each time (about 0.7), so an exponential model fits: h = 150 × 0.7ⁿ.",
+    keys:[["→","Abstraction: keep only what matters and describe it with maths: equations, graphs, networks, tables."],["ƒ","Choose a model type that matches the pattern: constant difference → linear; constant ratio → exponential."],["±","Use data to fix the parameters, and check the fit with residuals or R²."]],
+    f:"Words + assumptions → variables → equation", mistake:"Picking the model with the highest R² even when it makes no sense, like bounce heights going negative." },
+  compute:{ vis:[["queue",{rows:simQueue({S:300,W:10,T:2,s:4,rush:false})}]], cap:"300 students, 2 tills: the queue grows for 10 minutes, then clears after about 38 minutes.",
+    keys:[["∑","Solve the model with appropriate maths: algebra, calculus, an algorithm, or step-by-step iteration."],["▦","A spreadsheet or program can run a model for you: each row is one step of a difference equation."],["💬","Interpret: turn the number back into words. \"37.5\" means \"the queue clears 38 minutes into lunch\"."]],
+    f:"Qₙ₊₁ = max(0, Qₙ + Aₙ − tills × rate)", mistake:"Stopping at the number. Every answer needs units and a sentence saying what it means in the real situation." },
+  evaluate:{ vis:[["profit",{ver:3,a:600,b:40,c:2,F:500,cap:400,sens:true}]], cap:"Profit model with a ±10% demand test (dashed): the best price moves by only about 75c either way, so a rough survey is good enough.",
+    keys:[["✓","Evaluate: compare with real data, check the answer is reasonable, and test how sensitive it is to the inputs."],["↺","Refine: change an assumption, re-solve, and see if the model improves. Then iterate."],["📄","Report: problem, assumptions, model, solution, evaluation, limitations and sources, with graphs and units."]],
+    f:"% error = |model − measured| ÷ measured × 100", mistake:"Only saying \"the model is good\". Back it up: compare with data, give an error, and name a limitation." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  ["formulate","Formulate","var(--blush)","Turn a messy situation into a clear question.",["What exactly am I trying to find?","What affects it? (variables)","What can I ignore? (assumptions)","What data do I need?"]],
+  ["translate","Translate","var(--apricot)","Write the problem in the language of maths.",["What do I call each variable, with units?","Linear, exponential, quadratic, network…?","What equation links them?"]],
+  ["compute","Compute","var(--sage)","Solve it, by hand or by computer.",["Can I solve it exactly?","Should I iterate in a spreadsheet?","What does the answer mean?"]],
+  ["evaluate","Evaluate","var(--cream)","Is the answer any good?",["Does it match real data?","Is it a reasonable size, with units?","How sensitive is it?","Which assumption should I change?"]],
+  ["report","Report","var(--blush)","Tell someone else what you found.",["Problem statement first","Assumptions with reasons","Graphs, units, limitations","Sources acknowledged"]],
+];
+$("cases").innerHTML = CASES.map(([i,n,tn,d,qs])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${n}</h3></div><p>${d}</p><ul>${qs.map(q=>`<li>${q}</li>`).join("")}</ul></div>`).join("");
+(()=>{ const p=fermiParts(FERMI_DEF), B=[["Toilets: 600 × 2 flushes × 6 L",p.toil,"var(--apricot)"],["Hand-washing: 600 × 3 × 1 L",p.hand,"var(--sage)"],["Canteen and cleaning (guess)",p.fix,"var(--blush)"]];
+  $("bars").innerHTML = B.map(([n,v,c])=>`<div class="barrow"><span><b>${n}</b></span><div class="track"><i style="width:${(v/p.toil*100).toFixed(1)}%;background:${c}"></i></div><span class="v">${nf(v)} L</span></div>`).join("") + `<p class="result">Total ≈ ${nf(p.total)} L, about 10⁴ litres. Toilets dominate, so "litres per flush" is the estimate worth checking first.</p>`; })();
+const AROUND = [
+  ["cloud","Weather forecasts","Met Éireann runs computer models of the atmosphere many times with slightly different starting data, then reports the chance of rain.",[["Compute","neutral"],["Sensitivity","alert"]],"var(--blush)"],
+  ["virus","Disease spread","Splitting people into Susceptible, Infectious and Recovered groups helped plan hospital beds during COVID-19. You'll model this in strand 4.",[["Assumptions","neutral"],["Difference equations","real"]],"var(--apricot)"],
+  ["map","Sat-nav arrival times","Roads become a network; a shortest-path algorithm plus live traffic data predicts when you'll arrive, and refines it as you drive.",[["Networks","real"],["Iterate","neutral"]],"var(--sage)"],
+  ["euro","Loan repayments","A bank models a loan month by month: balance plus interest minus repayment. That's a difference equation.",[["Translate","neutral"],["Spreadsheet","real"]],"var(--cream)"],
+  ["ball","Sports analytics","Teams model the chance of scoring from each spot on the pitch to decide who shoots and from where.",[["Data","neutral"],["Evaluate","neutral"]],"var(--blush)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"cycle",label:"The cycle",col:"var(--blush)",leaves:[["Systematic","Formulate, translate, compute, evaluate."],["Iterative","Refine and go round again."],["Word vs modelling","Modelling problems need research and assumptions."],["Everywhere","Used in every strand."]]},
+  {id:"formulate",label:"Formulate",col:"var(--apricot)",leaves:[["Research","Background, data, sources."],["Relevant info","Keep what matters."],["Decompose","Split into manageable parts."],["Fermi","Estimate parts, multiply."]]},
+  {id:"assume",label:"Assumptions",col:"var(--sage)",leaves:[["Simplify","Make the problem solvable."],["Variables","Quantities that change."],["Parameters","Fixed for one case."],["Limitations","Where the model may fail."]]},
+  {id:"translate",label:"Translate",col:"var(--cream)",leaves:[["Abstraction","Keep only what matters."],["Model type","Linear, exponential, quadratic…"],["Fit to data","Residuals, R²."]]},
+  {id:"compute",label:"Compute",col:"var(--blush)",leaves:[["Solve","Algebra, calculus, algorithms."],["Technology","Spreadsheets, code, apps."],["Interpret","Answer in context, with units."]]},
+  {id:"evaluate",label:"Evaluate",col:"var(--sage)",leaves:[["Compare","With real data: % error."],["Sensitivity","Which inputs matter?"],["Refine","Change an assumption."],["Report","Clear, honest write-up."]]},
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Mathematical</text><text x="${cx}" y="${cy+22}" text-anchor="middle">modelling</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["cycle","What is a mathematical model?","A description of a real situation using mathematics, so you can analyse it and make predictions."],
+  ["cycle","Name the four main stages of the modelling cycle.","Formulate the problem, translate it into maths, compute a solution, evaluate it. Then refine and iterate, or report."],
+  ["cycle","Word problem vs modelling problem?","A word problem gives all the information and has one right answer. A modelling problem needs research, assumptions and your own choice of variables and model."],
+  ["cycle","Why is modelling called iterative?","You go round the cycle again and again, refining the model each time, until it is good enough."],
+  ["cycle","Can a model be perfect?","No. Models are not perfect predictors, but they can give important insights into a problem."],
+  ["formulate","What does formulating a problem involve?","Researching the background, finding the variables that matter, deciding what's relevant, decomposing it and making assumptions."],
+  ["formulate","What is a Fermi estimate?","A quick estimate of a hard-to-measure quantity, made by multiplying sensible estimates of its parts."],
+  ["formulate","What does decompose mean?","Break a problem into smaller, manageable parts."],
+  ["formulate","Order of magnitude of 10 500?","10⁴ (10 500 ≈ 1.05 × 10⁴)."],
+  ["formulate","What makes a good problem statement?","One or two clear sentences saying exactly what the model will find, stated early in the report."],
+  ["assume","Why make assumptions?","To simplify the situation enough that it can be modelled and solved."],
+  ["assume","Variable vs parameter?","A variable changes within the problem (e.g. time). A parameter is fixed for one case but can be changed (e.g. number of tills)."],
+  ["assume","When is \"ignore air resistance\" a reasonable assumption?","When drag barely changes the answer: heavy, compact objects over short distances, like a tennis ball over 10 m. Not a shuttlecock."],
+  ["assume","What is a limitation of a model?","A way it fails to match reality, usually caused by an assumption."],
+  ["assume","Give an idealisation used in mechanics.","Treating an object as a particle; light inextensible strings; smooth surfaces."],
+  ["translate","What is abstraction?","Keeping only the features that matter for the problem and describing them with mathematics."],
+  ["translate","Data has a constant ratio between terms. Which model?","Exponential: y = a·rⁿ."],
+  ["translate","Data has a constant difference between terms. Which model?","Linear: y = mx + c."],
+  ["translate","What is a residual?","Measured value minus model value for a data point."],
+  ["translate","What does R² close to 1 mean?","The model fits the data closely. Still check it makes sense, especially when extrapolating."],
+  ["compute","What is a difference equation?","An equation that gives the next value from the current one, e.g. Qₙ₊₁ = Qₙ + 22. Good for change in steps."],
+  ["compute","Why use a spreadsheet or computer?","To run models with many steps, try many parameter values quickly, and draw graphs."],
+  ["compute","R = 600p − 40p². Best price?","dR/dp = 600 − 80p = 0, so p = €7.50."],
+  ["compute","What does interpret the solution mean?","Say what the maths answer means in the real situation, with units."],
+  ["evaluate","Name three ways to evaluate a model.","Compare with real data (% error); check it is reasonable (size, units); test sensitivity to the inputs."],
+  ["evaluate","What is sensitivity analysis?","Changing one input a little to see how much the output changes."],
+  ["evaluate","Formula for percentage error?","|model − measured| ÷ measured × 100."],
+  ["evaluate","What goes in a modelling report?","Problem statement, research and sources, variables and assumptions, the model, the solution with graphs and units, evaluation, refinements and limitations."],
+  ["evaluate","How is Applied Maths assessed?","Written exam 80% (Higher or Ordinary) + modelling project 20% (common SEC brief, done in 6th year)."],
+];
+let fcKnown = store.get("am11-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter(c=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("am11-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("am11-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("am11-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["cycle","Which list puts the main stages of the modelling cycle in order?",["Compute → Formulate → Evaluate → Translate","Formulate → Translate → Compute → Evaluate","Translate → Formulate → Evaluate → Compute","Evaluate → Compute → Translate → Formulate"],1,"First make the problem clear (formulate), then write it as maths (translate), solve it (compute) and test it (evaluate)."],
+  ["cycle","What makes a modelling problem different from a word problem?",["It has no numbers in it","It can only be solved by a computer","You must research, make assumptions and choose the variables yourself","It always has exactly one correct answer"],2,"The spec says word problems include all the information needed; modelling problems need research, assumptions and your own model."],
+  ["cycle","Why is the modelling cycle described as iterative?",["You repeat it, refining the model each time round","It only uses iteration formulas","It is done once, at the end of a project","It always has exactly four steps"],0,"Evaluate, refine, and go round again until the model is good enough."],
+  ["formulate","A Fermi estimate for a school's daily water use gives 10 500 litres. Its order of magnitude is:",["10²","10³","10⁵","10⁴"],3,"10 500 ≈ 1.05 × 10⁴, so the order of magnitude is 10⁴ litres."],
+  ["formulate","Decomposing a problem means:",["Breaking it into smaller parts you can estimate or solve","Ignoring the hard parts","Writing up the final report","Typing it into a computer"],0,"Decomposition turns one hard problem into several manageable ones."],
+  ["assume","Why do modellers make assumptions?",["To make the answer exact","So that no data is needed","To avoid checking the answer","To simplify the situation so it can be modelled"],3,"Assumptions simplify reality enough to build and solve a model. Their limitations must be noted."],
+  ["assume","Ignoring air resistance works well for a tennis ball dropped 10 m, but badly for a shuttlecock. This shows that:",["Assumptions are always wrong","Whether an assumption is reasonable depends on the situation","Shuttlecocks fall faster than tennis balls","Models can never include air resistance"],1,"The same assumption can be fine in one context and poor in another. Always justify it for your situation."],
+  ["assume","In a model of a canteen queue, which is best described as a parameter?",["The number of tills open","The time since lunch started","The length of the queue","The number served in each minute"],0,"The number of tills is fixed for one run of the model but can be changed to test scenarios. The others change as the model runs."],
+  ["translate","Bounce heights are 150 cm, 105 cm, 73.5 cm. Which model fits exactly?",["h = 150 − 45n","h = 110","h = 150 × 0.7ⁿ","h = 150 − 4n²"],2,"105 ÷ 150 = 0.7 and 73.5 ÷ 105 = 0.7: a constant ratio, so exponential. The linear model gives 60 cm, not 73.5 cm, at n = 2."],
+  ["translate","A residual is:",["The model's gradient","The measured value minus the model's value","The largest value in the data","An error on your calculator"],1,"Residual = measured − model. Small residuals with no pattern mean a good fit."],
+  ["translate","N = 600 − 40p models the tickets sold at a price of €p. What does the 40 mean?",["40 tickets are sold when tickets are free","The best price is €40","Each €1 rise in price loses 40 sales","The hall has 40 seats"],2,"40 is the rate of change: for every €1 added to the price, 40 fewer people buy tickets."],
+  ["compute","Qₙ₊₁ = Qₙ + 30 − 8, with Q₀ = 0. What is Q₃?",["24","66","38","90"],1,"Each minute the queue grows by 30 − 8 = 22, so Q₃ = 3 × 22 = 66."],
+  ["compute","Revenue R = 600p − 40p². Which price maximises R?",["€7.50","€15","€2 250","€600"],0,"dR/dp = 600 − 80p = 0 gives p = 7.5. (€2 250 is the maximum revenue, not the price.)"],
+  ["evaluate","A model predicts 12.5 hours to fill a pool. It actually took 14 hours. The percentage error is about:",["1.5%","12%","10.7%","89%"],2,"|12.5 − 14| ÷ 14 × 100 = 1.5 ÷ 14 × 100 ≈ 10.7%."],
+  ["evaluate","Changing one input by 10% to see how much the answer changes is called:",["Iteration","Abstraction","Decomposition","Sensitivity analysis"],3,"Sensitivity analysis shows which inputs matter most, and how much to trust the answer."],
+  ["evaluate","Which best describes what a modelling report should contain?",["Only the final number","The problem statement, assumptions, model, solution, evaluation and sources","Only the graphs","Every calculation you tried, with no explanation"],1,"The spec's criteria reward a clear problem statement, justified assumptions, a clear method, an accurate solution with graphs and units, and evaluation and iteration."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("am11-best",null); if(best==null||pct>best) store.set("am11-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[A-Za-z]/.test(g.t[0]) ? g.t[0].toUpperCase() : "#";
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/</g,"&lt;")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Describe","Give the main features or steps in words, clearly and in order.","Describe a systematic process for solving problems."],
+  ["Research","Find out about a topic from reliable sources and record where the information came from.","Research the background to a problem."],
+  ["Determine","Work out or decide, based on reasoning or evidence.","Determine what assumptions are necessary."],
+  ["Decompose","Break into smaller parts.","Decompose the problem into manageable parts."],
+  ["Abstract","Pick out the essential features and represent them mathematically.","Abstract the knowledge needed to build a model."],
+  ["Translate","Rewrite in another form, here from words into mathematics.","Translate the information into a mathematical model."],
+  ["Compute","Calculate an answer using appropriate mathematics or technology.","Compute a solution using appropriate mathematics."],
+  ["Create","Build something new, e.g. a model a computer can run.","Create a model that can be interpreted by a computer."],
+  ["Solve","Work out the answer to a mathematical problem, showing your method.","Solve the problem stated in the model."],
+  ["Analyse","Examine the parts and how they relate; look for patterns.","Analyse and perform operations in the model."],
+  ["Interpret","Explain what a result means in the real context.","Interpret the solution in terms of the original situation."],
+  ["Refine","Improve by making changes, then test again.","Refine a model and use it to predict a better solution."],
+  ["Communicate","Present clearly to someone else, in writing, graphs and tables.","Communicate solution processes in a written report."],
+  ["Evaluate","Judge quality or value, using evidence, and reach a conclusion.","Evaluate how well the model fits the data."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("");
+
+// Calculation trainer
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+const PTYPES = {
+  line:{ name:"Linear model", gen(){ const up=Math.random()<0.5, x1=rnd(1,4), x2=x1+rnd(2,5), x3=x2+rnd(2,5), m=up? pick([1.5,2,2.5,3,4]) : -pick([0.5,1,1.5,2]), c=up? rnd(4,20) : rnd(25,40);
+      const y=x=>+(c+m*x).toFixed(2), ans=y(x3), what=up? ["A plant's height","cm","weeks"] : ["A candle's height","cm","hours"];
+      return { q:`${what[0]} is modelled as a linear function of time. After <b>${x1} ${x1===1?what[2].slice(0,-1):what[2]}</b> it is <b>${y(x1)} ${what[1]}</b>; after <b>${x2} ${what[2]}</b> it is <b>${y(x2)} ${what[1]}</b>. Use the model to predict the height after <b>${x3} ${what[2]}</b>.`, ans, unit:what[1],
+        steps:[`Gradient m = (${y(x2)} − ${y(x1)}) ÷ (${x2} − ${x1}) = ${m}`,`c = y₁ − m·x₁ = ${y(x1)} − (${m})(${x1}) = ${c}`,`Model: h = ${m}t + ${c}`,`h(${x3}) = ${m}(${x3}) + ${c} = ${ans} ${what[1]}`].concat(ans<=0?["A height ≤ 0 means the model has broken down here: a limitation of extrapolating."]:[]) }; } },
+  price:{ name:"Best price", gen(){ const b=pick([10,20,25,40,50]), a=rnd(15,60)*20, p=a/(2*b);
+      return { q:`A survey suggests the number of tickets sold at a price of €p is <b>N = ${a} − ${b}p</b>. Find the price that gives the <b>maximum revenue</b>.`, ans:p, unit:"€",
+        steps:[`Revenue R = p × N = p(${a} − ${b}p) = ${a}p − ${b}p²`,`dR/dp = ${a} − ${2*b}p`,`Set dR/dp = 0: p = ${a} ÷ ${2*b} = ${+p.toFixed(2)}`,`Best price €${p.toFixed(2)}; N = ${a-b*p} tickets, R = €${nf(p*(a-b*p),2)}`] }; } },
+  perr:{ name:"% error", gen(){ const A=rnd(40,400), sgn=Math.random()<0.5?-1:1, M=+(A*(1+sgn*rnd(2,25)/100)).toFixed(1), ans=Math.abs(M-A)/A*100;
+      const ctx=pick([["time to fill a pool","h"],["queue length at 12:15","students"],["distance a ball falls","cm"]]);
+      return { q:`A model predicts the ${ctx[0]} as <b>${M} ${ctx[1]}</b>. The measured value is <b>${A} ${ctx[1]}</b>. Find the percentage error, to one decimal place.`, ans, unit:"%",
+        steps:[`% error = |model − measured| ÷ measured × 100`,`= |${M} − ${A}| ÷ ${A} × 100`,`= ${nf(Math.abs(M-A),1)} ÷ ${A} × 100 = ${ans.toFixed(1)}%`] }; } },
+  fermi:{ name:"Fermi: pizzas", gen(){ const N=rnd(4,15)*10, s=pick([2,2.5,3,3.5,4]), per=pick([8,8,10,12]), sl=N*s, ans=Math.ceil(sl/per-1e-9);
+      return { q:`You're ordering pizza for the 6th-year party. Assume <b>${N}</b> people each eat <b>${s}</b> slices and each pizza is cut into <b>${per}</b> slices. How many pizzas should you order?`, ans, unit:"pizzas",
+        steps:[`Slices needed = ${N} × ${s} = ${sl}`,`Pizzas = ${sl} ÷ ${per} = ${+(sl/per).toFixed(3)}`,`You can't order part of a pizza, so round up: ${ans} pizzas`,`Interpret: rounding up is a modelling decision, not just arithmetic.`] }; } },
+  bounce:{ name:"Exponential model", gen(){ const H=pick([100,120,150,200]), r=pick([0.6,0.65,0.7,0.75,0.8]), n=rnd(2,5), ans=H*r**n;
+      return { q:`A ball dropped from <b>${H} cm</b> rises to <b>${r*100}%</b> of its previous height after each bounce. Model: hₙ = ${H} × ${r}ⁿ. Find the height after bounce <b>${n}</b>, to one decimal place.`, ans, unit:"cm",
+        steps:[`hₙ = h₀ × rⁿ`,`h${"₀₁₂₃₄₅"[n]} = ${H} × ${r}^${n}`,`${r}^${n} = ${+(r**n).toFixed(5)}`,`h = ${ans.toFixed(1)} cm`] }; } },
+  pool:{ name:"Units: fill time", gen(){ const L=rnd(10,25), W=rnd(5,12), D=pick([1.2,1.5,1.8,2]), q=pick([5,8,10,12,15,20]), V=L*W*D, s=V*1000/q, ans=s/3600;
+      return { q:`A pool is modelled as a cuboid <b>${L} m × ${W} m × ${D} m</b>. Water flows in at <b>${q} L/s</b>. How many hours will it take to fill? Give your answer to two decimal places.`, ans, unit:"h",
+        steps:[`V = ${L} × ${W} × ${D} = ${+V.toFixed(2)} m³`,`= ${nf(V*1000)} L (1 m³ = 1 000 L)`,`t = ${nf(V*1000)} ÷ ${q} = ${nf(s,1)} s`,`÷ 3 600 = ${ans.toFixed(2)} h`] }; } },
+  queue:{ name:"Difference equation", gen(){ const A=rnd(20,40), S=pick([6,8,10,12]), W=pick([5,8,10]), m=W+rnd(2,12), QW=W*(A-S), ans=Math.max(0,QW-(m-W)*S);
+      return { q:`Students join a queue at <b>${A} per minute</b> for the first <b>${W} minutes</b>, then nobody else arrives. The tills serve <b>${S} per minute</b>. So Qₙ₊₁ = Qₙ + ${A} − ${S} while students arrive, and Qₙ₊₁ = max(0, Qₙ − ${S}) after that, with Q₀ = 0. Find the queue length after <b>${m} minutes</b>.`, ans, unit:"students",
+        steps:[`For the first ${W} minutes the queue grows by ${A} − ${S} = ${A-S} per minute`,`Q${W>9?"₁₀":"₅₈"[W===5?0:1]} = ${W} × ${A-S} = ${QW}`,`Then it falls by ${S} per minute for ${m-W} minutes: ${QW} − ${m-W} × ${S} = ${QW-(m-W)*S}`].concat(ans===0?["It can't go below zero, so Q = 0 (the queue has cleared)."]:[`Q${String(m).split("").map(d=>"₀₁₂₃₄₅₆₇₈₉"[d]).join("")} = ${ans} students`]) }; } },
+};
+let pType="line", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const raw=$("paIn").value.replace(/[^\d.,\-]/g,"").replace(/,(?=\d{3}(\D|$))/g,"").replace(",",".");
+  const x=parseFloat(raw);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 12.5 or 66.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(0.051, Math.abs(pCur.ans)*0.005);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Write the model first, check your units (m³ → L, s → h), and round only at the end. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Which stage is this? [statement, stage index, why]
+const PRED = [
+  ["You list the things that affect how long the canteen queue takes to clear.",0,"Finding the factors and variables is part of formulating the problem."],
+  ["You write Qₙ₊₁ = Qₙ + 30 − 8.",1,"Turning the situation into an equation is translating it into maths."],
+  ["You run the queue model in a spreadsheet for 40 minutes.",2,"Solving the model, here with technology, is computing."],
+  ["You compare the model's queue with a count you made at lunch on Tuesday.",3,"Checking the model against real data is evaluating."],
+  ["You write a one-page summary with a graph for the principal.",4,"Communicating the solution is the report stage."],
+  ["You assume every student takes the same time at the till.",0,"Deciding the assumptions that simplify the problem happens when you formulate it."],
+  ["The model missed the early rush, so you change the arrivals and run it again.",3,"Refining the model and iterating comes out of evaluating it."],
+  ["You let p be the ticket price in euro and N the number of tickets sold.",1,"Defining variables in symbols is part of translating into maths."],
+  ["You find the maximum of R = 600p − 40p² by differentiating.",2,"Using calculus to solve the model is computing."],
+  ["You check that 300 people fits in the 400-seat hall.",3,"Checking the answer is reasonable in the real situation is evaluating."],
+  ["You find out how fast a fire hydrant delivers water.",0,"Researching the background and data is formulating."],
+  ["You list the model's limitations in the conclusion of your write-up.",4,"Stating limitations clearly is part of the report."],
+  ["You test what happens to the best price if demand is 10% lower.",3,"Sensitivity analysis is part of evaluating a model."],
+  ["You decide the problem is: \"How many tills are needed so the queue clears within 25 minutes?\"",0,"Writing a precise problem statement is the first step of formulating."],
+];
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k && PRED.length>1); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>${PRED[k][0]}</b> Which stage of the modelling cycle is this?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=+b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick a stage first.</div>`; return; }
+  const [,ans,why]=PRED[pd.k], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${STAGES[ans]}. ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Filling the town pool", intro:"The council is refilling the town's outdoor pool before summer and wants to know how long it will take. The pool is 25 m long and 10 m wide. Its depth increases steadily from 1 m at the shallow end to 2 m at the deep end.",
+    parts:[["a","State two assumptions you would make to model the time needed to fill the pool, and explain why each is needed.",10,"Any two × 5 (assumption 2 + why 3): water flows in at a constant rate (so time = volume ÷ rate); the pool is empty at the start; no water is lost to leaks, splashing or evaporation; the floor slopes uniformly (so the shape is a prism with a trapezium cross-section); pipes and filters hold a negligible volume."],
+      ["b","Water flows in at 12 litres per second. Find the time needed to fill the pool, in hours, correct to one decimal place.",15,"Average depth = (1 + 2) ÷ 2 = 1.5 m, or trapezium area = ½(1 + 2) × 25 = 37.5 m² (4). V = 25 × 10 × 1.5 = 375 m³ (3). = 375 000 L (3). t = 375 000 ÷ 12 = 31 250 s (3). ÷ 3 600 = 8.7 h (2)."],
+      ["c","The pool actually took 9.5 hours to fill. Calculate the percentage error in your model and suggest one reason for it.",10,"% error = |8.68 − 9.5| ÷ 9.5 × 100 ≈ 8.6% (6; accept 8.4–8.7% from rounding). Reason (4): the flow rate falls as pressure changes; leaks or evaporation; pipes and filters also fill; the measured flow rate was inaccurate."],
+      ["d","Explain how you would refine the model, and how you would test the refined model.",10,"Refine (5): measure the flow rate at several times and use an average, or model the rate falling over time; add the volume of pipes and filters. Test (5): compare the new prediction with the next real fill or a timed partial fill; calculate the new % error and check it is smaller."]] },
+  { title:"Pricing the school musical", intro:"The musical society surveys students. At a price of €5, 400 people say they would come. At €10, 200 would come. The hall holds 400 people.",
+    parts:[["a","Assuming the number of tickets sold, N, is a linear function of the price, €p, show that N = 600 − 40p.",10,"Gradient = (200 − 400) ÷ (10 − 5) = −40 (4). N − 400 = −40(p − 5) (3). N = 600 − 40p (3)."],
+      ["b","Write the revenue R in terms of p. Find the price that maximises revenue and the maximum revenue.",15,"R = p(600 − 40p) = 600p − 40p² (4). dR/dp = 600 − 80p = 0 (4). p = €7.50 (3). N = 300, R = €2 250 (4). Check: 300 ≤ 400 seats, so the seat limit doesn't bind."],
+      ["c","Each audience member costs €2 (programme and refreshments) and fixed costs are €500. Show that the profit is P = −40p² + 680p − 1 700 and find the price that maximises profit.",15,"P = (p − 2)(600 − 40p) − 500 (4) = 600p − 40p² − 1 200 + 80p − 500 = −40p² + 680p − 1 700 (4). dP/dp = −80p + 680 = 0 → p = €8.50 (4). N = 260, maximum profit €1 190 (3)."],
+      ["d","Evaluate this model. Give two limitations and one way to check it before the tickets go on sale.",10,"Two limitations × 3: based on only two survey points; people may not do what they say in a survey; demand may not be linear; ignores adults/family tickets; a round price like €8 or €9 is more practical. Check (4): a larger survey at more prices, or sell early-bird tickets and compare with the model."]] },
+  { title:"The canteen queue", intro:"300 students arrive at the canteen at a steady rate over the first 10 minutes of a 40-minute lunch. There are two tills, and each serves 4 students per minute. Let Qₙ be the number queuing after n minutes, with Q₀ = 0.",
+    parts:[["a","Explain why a difference equation is a suitable type of model for this situation.",6,"The queue changes in steps (minute by minute) (3); each value depends on the previous value plus arrivals minus those served, which is exactly a recurrence (3)."],
+      ["b","Show that Qₙ₊₁ = Qₙ + 22 for the first 10 minutes, and find Q₁₀.",10,"Arrivals = 300 ÷ 10 = 30 per minute (3). Served = 2 × 4 = 8 per minute (2). Change = 30 − 8 = 22 (2). Q₁₀ = 10 × 22 = 220 (3)."],
+      ["c","Find how long after the start of lunch the queue clears. Interpret your answer.",10,"After 10 min the queue falls by 8 per minute (3). 220 ÷ 8 = 27.5 min (3). Clears 37.5 min after lunch starts (2). Interpretation: just 2.5 minutes before lunch ends, so the last students have very little time to eat (2)."],
+      ["d","The principal wants the queue cleared within 25 minutes. Find the least number of tills needed.",12,"With T tills, served 4T per minute (2). Q₁₀ = 10(30 − 4T) (3). Clear time = 10 + 10(30 − 4T) ÷ 4T ≤ 25 (3). 300 − 40T ≤ 60T → T ≥ 3 (2). Check T = 3: Q₁₀ = 180, 180 ÷ 12 = 15, cleared at 25 minutes (2)."],
+      ["e","State two assumptions in this model and evaluate one of them.",12,"Two assumptions × 3: arrivals are steady; every till serves at the same constant rate; everyone who arrives joins the queue; no one leaves the queue. Evaluate one (6): e.g. arrivals are usually heavier at the start (a rush), so the queue would peak higher and earlier; compare with a real count, then refine the arrivals and rerun."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist (red / amber / green)
+const RAG = ["Describe the stages of the modelling cycle","Explain the difference between a word problem and a modelling problem","Write a clear problem statement","Research a problem and acknowledge sources","Decompose a problem and make a Fermi estimate","Identify variables and parameters, with units","State and justify assumptions and their limitations","Translate a situation into an equation or other model","Choose a model type (linear, exponential, quadratic) from data","Solve a model by hand and with a spreadsheet","Interpret a solution in context","Evaluate a model: % error, reasonableness, sensitivity","Refine a model and iterate","Write a modelling report"];
+const ragState=store.get("am11-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("am11-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["State the problem","A concise problem statement, early in the report.","Walk the cycle lab"],["Research and reference","Background research with every source acknowledged.","Fermi lab"],["Identify variables","Several variables, with the main factor identified and justified.","Fermi lab"],["Justify assumptions","Clear assumptions, why they're needed, and their limitations.","Assumption lab"],["Say what the output is","Exactly what the model will produce, and for whom.","Ticket price lab"],["Explain the method","Logical mathematical reasoning that links the variables.","Collect & fit lab"],["Present the solution","Accurate results with units, graphs and visual aids.","Spreadsheet lab"],["Test and iterate","Sensitivity, comparison with data, refinement, repeat.","Ticket price lab"]];
+const skState=store.get("am11-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("am11-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+// Walk the cycle
+const CY_PROB = [
+  {n:"Canteen queue", q:"Will everyone be served in a 40-minute lunch?", st:[
+    "Research: how many students, how many tills, when do they arrive? Assume 300 students arrive steadily over 10 minutes and each till serves 4 per minute.",
+    "Let Qₙ be the queue after n minutes: Qₙ₊₁ = max(0, Qₙ + Aₙ − 4T), where Aₙ = 30 for the first 10 minutes and T = number of tills.",
+    "In a spreadsheet with T = 2: the queue reaches 220 after 10 minutes, then falls by 8 a minute and clears 37.5 minutes into lunch.",
+    "Compare with a real count: students actually rush in early. Refine the arrivals and rerun. Try T = 3: cleared in 25 minutes.",
+    "Recommend 3 tills for the first 25 minutes. State the assumptions, show the graph, and note that the model ignores students who skip the queue."]},
+  {n:"Filling a pool", q:"How long will it take to fill the town pool?", st:[
+    "What's the pool's size and shape? How fast does water flow in? Assume a 25 m × 10 m cuboid, 1.5 m deep, and one hydrant giving 10 L/s.",
+    "Volume V = 25 × 10 × 1.5 m³. Time t = V ÷ flow rate. Remember 1 m³ = 1 000 L.",
+    "V = 375 m³ = 375 000 L, so t = 37 500 s ≈ 10.4 hours.",
+    "The deep end is deeper: refine to an average depth of 1.8 m → 12.5 h. The answer is very sensitive to the flow rate, so measure it.",
+    "\"About half a day with one hydrant; two hydrants roughly halve it.\" List the assumptions (no leaks, constant flow)."]},
+  {n:"Ticket price", q:"What price raises the most money for the school musical?", st:[
+    "Survey students: how many would come at €5 and at €10? Assume demand falls in a straight line as price rises. The hall holds 400.",
+    "From the survey: N = 600 − 40p. Revenue R = pN = 600p − 40p².",
+    "dR/dp = 600 − 80p = 0, so p = €7.50, N = 300 and R = €2 250.",
+    "Check: 300 people fits in 400 seats. But the survey was small, and there are costs. Refine to a profit model and test ±10% demand.",
+    "Recommend €7.50 (or €8 for easy change), show the revenue curve, and say the result depends on the survey being representative."]},
+];
+const cy = {p:0, s:0};
+$("cyP").innerHTML = CY_PROB.map((p,k)=>`<button data-k="${k}" aria-pressed="${k===0}">${p.n}</button>`).join("");
+$("cyS").innerHTML = STAGES.map((s,k)=>`<button data-k="${k}" aria-pressed="${k===0}">${k+1} · ${s}</button>`).join("");
+function cyUpd(){ pressGroup([...$("cyP").children], $("cyP").children[cy.p]); pressGroup([...$("cyS").children], $("cyS").children[cy.s]);
+  const P=CY_PROB[cy.p]; setReadout($("cyOut"),[["Problem",P.q],["Stage "+(cy.s+1)+" of 5",STAGES[cy.s]],["What the modeller does",P.st[cy.s]]]); if(cycC) cycC.redraw(); }
+$("cyP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; cy.p=+b.dataset.k; cy.s=0; cyUpd(); });
+$("cyS").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; cy.s=+b.dataset.k; cyUpd(); });
+$("cyNext").addEventListener("click",()=>{ cy.s=(cy.s+1)%5; cyUpd(); });
+// Fermi
+const fm = {...FERMI_DEF};
+$("fmCtl").innerHTML = FERMI_F.map(([k,n,a,b,st,u])=>`<div class="ctl"><label for="fm_${k}">${n} <output id="fm_${k}o">${fm[k]}${u}</output></label><input type="range" id="fm_${k}" min="${a}" max="${b}" step="${st}" value="${fm[k]}"></div>`).join("") + `<div class="ctl"><span class="lbl">Estimates</span><div class="btns"><button id="fmReset">Reset</button></div></div>`;
+function fmUpd(){ FERMI_F.forEach(([k,,,,,u])=>$("fm_"+k+"o").textContent=nf(fm[k],fm[k]%1?1:0)+u); const p=fermiParts(fm), s=fermiSens(fm)[0];
+  setReadout($("fmOut"),[["Total per day",`${nf(p.total)} L`],["Per person",`${nf(p.total/fm.N,1)} L`],["Order of magnitude",`10${"⁰¹²³⁴⁵⁶⁷"[Math.round(Math.log10(Math.max(1,p.total)))]} L`],["Matters most",s.n]]); if(fmC) fmC.redraw(); }
+$("fmCtl").addEventListener("click",e=>{ if(e.target.id!=="fmReset") return; Object.assign(fm,FERMI_DEF); FERMI_F.forEach(([k])=>$("fm_"+k).value=fm[k]); fmUpd(); });
+$("fmCtl").addEventListener("input",e=>{ const k=e.target.id.slice(3); if(k in fm){ fm[k]=+e.target.value; fmUpd(); } });
+// Falling object
+const fa = {obj:0, model:"A", vt:10};
+$("faObj").innerHTML = FALL_OBJ.map((o,k)=>`<button data-k="${k}" aria-pressed="${k===0}">${o.n}</button>`).join("");
+function faUpd(){ const ob=FALL_OBJ[fa.obj], f=fallF(fa.model,fa.vt), err=rmsErr(f,ob.data), tm=tFall(f);
+  $("faVt").disabled = fa.model==="A"; $("faVto").textContent = fa.model==="A"? "not used" : nf(fa.vt,1)+" m/s";
+  setReadout($("faOut"),[["Typical error (RMS)",`${nf(err,2)} m`],["Model: time to fall 10 m",`${nf(tm,2)} s`],["Measured time",`≈ ${nf(ob.tTrue,2)} s`],["Verdict", err<0.1? "Excellent fit" : err<0.3? "Good enough" : err<0.8? "Rough" : "Poor: rethink the assumption"]]);
+  $("faChips").innerHTML = chipsHTML([["Particle model","neutral"],["g = 9.8 m/s²","neutral"],["Dropped from rest","neutral"],[fa.model==="A"?"No air resistance":fa.model==="B"?"Drag ∝ v":"Drag ∝ v²", err<0.3?"real":"alert"]]);
+  if(faC) faC.redraw(); }
+$("faObj").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; fa.obj=+b.dataset.k; pressGroup([...$("faObj").children],b); faUpd(); });
+$("faMod").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; fa.model=b.dataset.m; pressGroup([...$("faMod").children],b); faUpd(); });
+$("faVt").addEventListener("input",e=>{ fa.vt=+e.target.value; faUpd(); });
+// Bounce + fit
+const bn = {H0:150, r:0.7, hs:[150], model:"lin", rnd:Math.random};
+function bnNew(){ bn.H0=pick([120,150,180]); bn.r=0.55+Math.random()*0.27; bn.hs=[bn.H0]; bnUpd(); }
+$("bnRec").addEventListener("click",()=>{ if(bn.hs.length>8) return; const n=bn.hs.length, h=bn.H0*bn.r**n*(1+(Math.random()-0.5)*0.04); bn.hs.push(Math.max(0.5,Math.round(h*2)/2)); bnUpd(); });
+$("bnNew").addEventListener("click",bnNew);
+$("bnMod").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; bn.model=b.dataset.m; pressGroup([...$("bnMod").children],b); bnUpd(); });
+function bnFit(){ const pts=bn.hs.map((h,n)=>[n,h]); return pts.length>=3? fitModel(bn.model,pts) : null; }
+function bnUpd(){ const pts=bn.hs.map((h,n)=>[n,h]), fit=bnFit();
+  $("bnRec").disabled = bn.hs.length>8;
+  $("bnTable").innerHTML = pts.map(([n,h],i)=>`<tr><td>${n}</td><td>${nf(h,1)}</td><td>${i? nf(h/pts[i-1][1],3) : "–"}</td></tr>`).join("");
+  $("bnResult").innerHTML = fit? `<b>${fit.eq}</b> · R² = ${fit.r2.toFixed(4)} · predicts h₁₀ = ${nf(fit.f(10),1)} cm${fit.f(10)<0?" (negative: impossible!)":""}` : "Record at least two bounces to fit a model.";
+  if(bnC){ bnC.redraw(); bnG.redraw(); } }
+// Queue
+const qu = {S:300,W:10,T:2,s:4,rush:false,meas:false};
+const quP = () => ({S:qu.S,W:qu.W,T:qu.T,s:qu.s,rush:qu.rush});
+function quUpd(){ [["quS","S",""],["quW","W",""],["quT","T",""],["quR","s",""]].forEach(([id,k])=>$(id+"o").textContent=qu[k]);
+  const rows=simQueue(quP()), st=queueStats(rows,quP());
+  const items=[["Queue clears",st.clear? `minute ${st.clear}${st.clear>40?" (after lunch ends!)":""}` : "not within an hour"],["Longest queue",`${nf(st.qmax)} students`],["Longest wait ≈",`${nf(st.wait,1)} min`]];
+  if(qu.meas){ const e=Math.sqrt(QMEAS.reduce((a,[n,q])=>a+(rows[n-1].Q-q)**2,0)/QMEAS.length); items.push(["Error vs Tuesday (RMS)",`${nf(e,1)} students`]); }
+  setReadout($("quOut"),items);
+  $("quWork").innerHTML = `<b>Model:</b> Qₙ₊₁ = max(0, Qₙ + Aₙ − ${qu.T} × ${qu.s}) · A = ${qu.rush? "rush: starts at "+nf(2*qu.S/qu.W,0)+"/min and falls to 0" : nf(qu.S/qu.W,1)+" per minute"} for ${qu.W} min`;
+  const last=Math.min(60,(st.clear||60)+1);
+  $("quTable").innerHTML = rows.slice(0,last).map(r=>`<tr${r.n>40?' style="color:var(--bad)"':""}><td>${r.n}</td><td>${nf(r.A,1)}</td><td>${nf(r.served,1)}</td><td>${nf(r.Q,1)}</td></tr>`).join("");
+  if(quC) quC.redraw(); }
+["quS","quW","quT","quR"].forEach((id,i)=>$(id).addEventListener("input",e=>{ qu[["S","W","T","s"][i]]=+e.target.value; quUpd(); }));
+$("quArr").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; qu.rush=b.dataset.a==="1"; pressGroup([...$("quArr").children],b); quUpd(); });
+$("quMeas").addEventListener("click",()=>{ qu.meas=!qu.meas; $("quMeas").setAttribute("aria-pressed",qu.meas); quUpd(); });
+// Ticket price
+const tk = {ver:1,a:600,b:40,c:2,F:500,cap:400,sens:false};
+function tkUpd(){ $("tkAo").textContent=tk.a; $("tkBo").textContent=tk.b; $("tkCo").textContent=eur(tk.c); $("tkFo").textContent=eur(tk.F);
+  $("tkCst").disabled=$("tkF").disabled= tk.ver<3;
+  const o=tkOpt(tk), lbl=tk.ver>=3?"Maximum profit":"Maximum revenue";
+  const items=[["Best price",eur(o.p)],["Tickets sold",nf(o.N)],[lbl,eur(o.y)]];
+  if(tk.sens){ const lo=tkOpt({...tk,a:tk.a*0.9}), hi=tkOpt({...tk,a:tk.a*1.1}); items.push(["Best price if demand ±10%",`${eur(lo.p)} to ${eur(hi.p)}`]); }
+  setReadout($("tkOut"),items);
+  const N=`N = ${tk.a} − ${tk.b}p`;
+  $("tkWork").innerHTML = tk.ver===1? `<b>Model 1:</b> ${N} · R = p(${tk.a} − ${tk.b}p) · dR/dp = 0 → p = ${tk.a} ÷ ${2*tk.b} = ${eur(tk.a/(2*tk.b))}`
+    : tk.ver===2? `<b>Model 2:</b> N = min(${tk.cap}, ${tk.a} − ${tk.b}p) · R = pN${tk.a-tk.b*tk.a/(2*tk.b)>tk.cap?" · demand exceeds the seats at the old best price, so the answer changes":" · the seat limit doesn't bind here"}`
+    : `<b>Model 3:</b> profit = (p − ${tk.c})·N − ${tk.F}, with N = min(${tk.cap}, ${tk.a} − ${tk.b}p)`;
+  if(tkC) tkC.redraw(); }
+$("tkVer").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; tk.ver=+b.dataset.v; pressGroup([...$("tkVer").children],b); tkUpd(); });
+[["tkA","a"],["tkB","b"],["tkCst","c"],["tkF","F"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ tk[k]=+e.target.value; tkUpd(); }));
+$("tkSens").addEventListener("click",()=>{ tk.sens=!tk.sens; $("tkSens").setAttribute("aria-pressed",tk.sens); tkUpd(); });
+
+/* ================= CREATE CANVASES ================= */
+let cycC=null, fmC=null, faC=null, bnC=null, bnG=null, quC=null, tkC=null;
+const hero = makeCanvas($("heroCanvas"), 0.75, 240, s => drawCycle(s.ctx,s.w,s.h,{t:reduce?null:heroT, stage:Math.floor(heroT/2.2)%5}), 440);
+cycC = makeCanvas($("cycC"), 0.55, 280, s => drawCycle(s.ctx,s.w,s.h,{stage:cy.s}), 440);
+fmC = makeCanvas($("fmC"), 0.75, 420, s => drawFermi(s.ctx,s.w,s.h,{v:fm}), 560);
+faC = makeCanvas($("faC"), 0.55, 280, s => drawFall(s.ctx,s.w,s.h,fa), 460);
+bnC = makeCanvas($("bnC"), 0.42, 220, s => drawBounce(s.ctx,s.w,s.h,{H0:bn.H0,hs:bn.hs}), 380);
+bnG = makeCanvas($("bnG"), 0.7, 200, s => { const pts=bn.hs.map((h,n)=>[n,h]); drawFitGraph(s.ctx,s.w,s.h,{pts,fit:bnFit(),H0:bn.H0,compact:true}); }, 320);
+quC = makeCanvas($("quC"), 0.5, 260, s => drawQueue(s.ctx,s.w,s.h,{rows:simQueue(quP()),meas:qu.meas}), 440);
+tkC = makeCanvas($("tkC"), 0.5, 260, s => drawProfit(s.ctx,s.w,s.h,tk), 440);
+predC = makeCanvas($("predC"), 0.6, 210, s => drawCycle(s.ctx,s.w,s.h,{compact:true,bgc:C["surface-2"],stage: pd.shown? PRED[pd.k][1] : -1}), 320);
+pdNew();
+const MINI = {
+  cycle:(s,o)=>drawCycle(s.ctx,s.w,s.h,{...o,compact:true}),
+  fermi:(s,o)=>drawFermi(s.ctx,s.w,s.h,{...o,compact:true}),
+  fall:(s,o)=>drawFall(s.ctx,s.w,s.h,{...o,compact:true}),
+  fit:(s,o)=>drawFitGraph(s.ctx,s.w,s.h,{...o,compact:true,fit:fitModel("exp",o.pts)}),
+  queue:(s,o)=>drawQueue(s.ctx,s.w,s.h,{...o,compact:true}),
+  profit:(s,o)=>drawProfit(s.ctx,s.w,s.h,{...o,compact:true}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, kind==="fermi"?0.5:0.66, 150, s=>MINI[kind](s,o), 380); });
+const INFO = {cycle:{stage:3}, fermi:{}, fall:{obj:0,model:"C",vt:6.8}};
+document.querySelectorAll("canvas[data-mini]").forEach(el=>{ const k=el.dataset.mini; makeCanvas(el,0.7,160,s=>MINI[k](s,{...INFO[k],bgc:C["surface-2"]})); });
+cyUpd(); fmUpd(); faUpd(); bnUpd(); quUpd(); tkUpd();
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>

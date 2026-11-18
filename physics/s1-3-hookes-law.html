@@ -1,0 +1,1765 @@
+<title>Stretching &amp; Compressing</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<style>
+:root{--band-ink:#3b2b21}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--surface)}
+.xlink:hover{border-color:var(--terra)}
+.working.wrap{white-space:normal;font-family:var(--f-body);font-size:.9rem}
+.spec-bullets{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+</style>
+<style>
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.rc-card{display:grid;gap:8px;padding:16px}
+.rc-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.rc-card .ico svg{width:24px;height:24px}
+.rc-card p{font-size:.9rem;margin:0}
+.rc-card p b{color:var(--terra)}
+</style>
+<style>
+.cases .rc-card canvas{width:100%;display:block;border-radius:12px}
+.sec td,.sec th{padding:4px 8px;text-align:right;font-family:var(--f-mono);font-size:.85rem;white-space:nowrap}
+.sec{border-collapse:collapse;width:100%}
+.sec tr+tr td{border-top:1px solid var(--line)}
+.secwrap{overflow-x:auto}
+.srt .row .btns button{padding:6px 10px;font-size:.85rem}
+.predopts .btns button{min-width:84px}
+</style>
+
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v3l-5 2 10 3-10 3 10 3-5 2v4"/></svg></div>
+        <div style="min-width:0"><b>Stretching &amp; Compressing</b><span>Leaving Cert Physics · Strand 1 · Section 1.3</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details open><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="here"><span class="mono">1.3</span>Stretching &amp; compressing</li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 1 · Section 1.3 · Stretching and compressing objects</span>
+          <h1 style="margin-top:12px">Stretch it.<br>Squash it.<br><em>Let it spring back.</em></h1>
+          <p class="lede">Springs, bungee cords, car suspensions and rubber bands all push or pull back when you change their length. Find out when that force is proportional to the stretch (Hooke's law), measure a spring constant, and see what happens past the elastic limit.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="A block on a spring moving back and forth, with the restoring force arrow and a graph of force against displacement"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/3</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">1.3.1</span><span>investigate the force needed to compress or stretch an object using primary and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">1.3.2</span><span>verify Hooke’s law for elastic objects using primary and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">1.3.3</span><span>solve problems involving compressed and stretched materials</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">Students learn about:</p>
+        <ul class="spec-bullets"><li>stretching and compressing objects</li><li>Hooke’s law; F = −ks</li></ul>
+        <p class="result" style="margin-top:10px">Builds on 1.2 (forces, tension, weight W = mg). The energy stored in a stretched or compressed spring, E<sub>P</sub> = ½ks², comes next in 1.4.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Hang loads on springs, squash them, find a hidden spring constant, push a spring past its elastic limit, combine springs and test real-world data. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="springs">
+        <div class="labhead"><span class="pill t">Stretch or squash</span><p class="goal">Hang a load from a spring to stretch it, or stand the spring on the bench and put the load on top to compress it. Compare the new length with the natural length.</p></div>
+        <div class="panel sim">
+          <canvas id="spC" aria-label="A spring stretched by a hanging load or compressed by a load on top, with its natural length shown as a dashed outline"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Mode</span><div class="btns" id="spMode"><button data-m="stretch" aria-pressed="true">Stretch (hang the load)</button><button data-m="compress" aria-pressed="false">Compress (load on top)</button></div></div>
+            <div class="ctl"><label for="spM">Load m <output id="spMo">200 g</output></label><input type="range" id="spM" min="0" max="500" step="50" value="200"></div>
+            <div class="ctl"><span class="lbl">Spring</span><div class="btns" id="spK"><button data-k="20" aria-pressed="true">Soft (20 N/m)</button><button data-k="40" aria-pressed="false">Medium (40 N/m)</button><button data-k="80" aria-pressed="false">Stiff (80 N/m)</button></div></div>
+          </div>
+          <div class="readout" id="spOut"></div>
+          <div class="working wrap" id="spWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Stretched, compressed or both?</h3></div>
+          <div class="srt" id="sqList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="sqReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="sqOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Double the load on the soft spring. What happens to the extension?</div><div class="try"><b>2</b>Same load, stiff spring: why is the extension smaller?</div><div class="try"><b>3</b>Compress the soft spring with 500 g. Why does Hooke's law stop working?</div></div>
+      </div>
+
+      <div class="lab" data-lab="hooke" hidden>
+        <div class="labhead"><span class="pill t">Experiment: verify Hooke's law</span><p class="goal">A spring with a pointer hangs beside a metre stick. Record the pointer reading with no load, then add 100 g masses one at a time and record each reading. Plot force against extension: the slope is the spring constant k.</p></div>
+        <div class="panel sim">
+          <canvas id="hkC" aria-label="A spring on a clamp stand with a pointer next to a vertical metre stick, a hanger with slotted masses, and a magnified view of the pointer on the scale"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="hkN">100 g masses on the hanger <output id="hkNo">0</output></label><input type="range" id="hkN" min="0" max="6" step="1" value="0"></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="hkGo">Read the pointer</button><button id="hkClear">Clear</button><button id="hkNew">New spring</button><button id="hkReveal">Reveal answer</button></div></div>
+          </div>
+          <div class="readout" id="hkOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>masses</th><th>F (N)</th><th>reading (cm)</th><th>extension (cm)</th><th></th></tr></thead><tbody id="hkTable"></tbody></table><div class="empty" id="hkEmpty">No readings yet. Start with no masses, then add them one at a time.</div></div>
+            <div class="graphbox"><canvas id="hkGraph" aria-label="Graph of force against extension with a line of best fit"></canvas><p class="result" id="hkResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Simulated readings: the pointer is read to the nearest 0.1 cm, with a small random reading error. Each 100 g mass adds a force of 0.100 × 9.8 = 0.98 N. "New spring" hides a new spring constant and a new starting reading.</p>
+        <div class="tries"><div class="try"><b>1</b>Why do you need a reading with no masses on the hanger?</div><div class="try"><b>2</b>What shape is the force–extension graph? What does that verify?</div><div class="try"><b>3</b>Use the slope to find k. Then predict the extension for 250 g and test it in your head.</div></div>
+      </div>
+
+      <div class="lab" data-lab="law" hidden>
+        <div class="labhead"><span class="pill t">Model: F = −ks</span><p class="goal">A block on a smooth track is fixed to a spring. Pull it right (stretch) or push it left (compress). The spring's restoring force always points back towards the natural length.</p></div>
+        <div class="panel sim">
+          <canvas id="lwC" aria-label="A block attached to a horizontal spring, with displacement and restoring force arrows, and a graph of force against displacement with a negative slope"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="lwS">Displacement s <output id="lwSo">+0.050 m</output></label><input type="range" id="lwS" min="-0.1" max="0.1" step="0.005" value="0.05"></div>
+            <div class="ctl"><label for="lwK">Spring constant k <output id="lwKo">40 N/m</output></label><input type="range" id="lwK" min="10" max="100" step="5" value="40"></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="lwPlay">Let go</button><button id="lwStop">Stop</button></div></div>
+          </div>
+          <div class="readout" id="lwOut"></div>
+          <div class="working wrap" id="lwWork"></div>
+        </div>
+        <p class="result">The block has a mass of 0.50 kg and the track has no friction, so once you let go it keeps moving back and forth (you'll meet this again in 1.4 as an energy story).</p>
+        <div class="tries"><div class="try"><b>1</b>Set s = +0.08 m, then −0.08 m. What changes about the force, and what stays the same?</div><div class="try"><b>2</b>Double k. What happens to the slope of the graph?</div><div class="try"><b>3</b>Let go. Where is the force biggest? Where is it zero?</div></div>
+      </div>
+
+      <div class="lab" data-lab="limit" hidden>
+        <div class="labhead"><span class="pill t">Beyond the elastic limit</span><p class="goal">Load a sample bit by bit and watch its force–extension graph. Then lower the load. Does it go back to its original length, or is it now permanently longer?</p></div>
+        <div class="panel sim">
+          <canvas id="lmC" aria-label="A sample hanging from a clamp beside its force-extension graph, showing the limit of proportionality, the elastic limit and the unloading path"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Sample</span><div class="btns" id="lmMat"></div></div>
+            <div class="ctl"><label for="lmF">Load F <output id="lmFo">0 N</output></label><input type="range" id="lmF" min="0" max="8" step="0.1" value="0"></div>
+            <div class="ctl"><div class="btns"><button id="lmNew">Fresh sample</button></div></div>
+          </div>
+          <div class="readout" id="lmOut"></div>
+          <div class="working wrap" id="lmWork"></div>
+        </div>
+        <p class="result">Model curves based on typical shapes for each material (illustrative values). Lowering the load after passing the elastic limit follows a line parallel to the first straight part.</p>
+        <div class="tries"><div class="try"><b>1</b>Steel spring: load to 5 N, then back to 0. Is there any permanent stretch?</div><div class="try"><b>2</b>Now load to 7 N and back to 0. How much longer is it now?</div><div class="try"><b>3</b>Rubber band: is it elastic? Does it obey Hooke's law?</div></div>
+      </div>
+
+      <div class="lab" data-lab="combine" hidden>
+        <div class="labhead"><span class="pill t">Solve: combining springs</span><p class="goal">Hang a load on one spring, two springs end to end (series) or two side by side (parallel). Work out the extension and the combined spring constant.</p></div>
+        <div class="panel sim">
+          <canvas id="cbC" aria-label="One spring, two springs in series or two springs in parallel holding a load, with their extensions marked"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Arrangement</span><div class="btns" id="cbArr"><button data-a="single" aria-pressed="false">One spring</button><button data-a="series" aria-pressed="true">Series</button><button data-a="parallel" aria-pressed="false">Parallel</button></div></div>
+            <div class="ctl"><label for="cbK1">Spring 1: k₁ <output id="cbK1o">100 N/m</output></label><input type="range" id="cbK1" min="50" max="200" step="10" value="100"></div>
+            <div class="ctl"><label for="cbK2">Spring 2: k₂ <output id="cbK2o">100 N/m</output></label><input type="range" id="cbK2" min="50" max="200" step="10" value="100"></div>
+            <div class="ctl"><label for="cbM">Load m <output id="cbMo">0.50 kg</output></label><input type="range" id="cbM" min="0.1" max="1" step="0.05" value="0.5"></div>
+          </div>
+          <div class="readout" id="cbOut"></div>
+          <div class="working wrap" id="cbWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Two identical springs in series: how does the extension compare with one spring?</div><div class="try"><b>2</b>Two identical springs in parallel: what fraction of the load does each carry?</div><div class="try"><b>3</b>A car rests on four springs. Which arrangement is that, and why?</div></div>
+      </div>
+
+      <div class="lab" data-lab="data" hidden>
+        <div class="labhead"><span class="pill t">Secondary data: test results</span><p class="goal">Pick a set of test results. Choose how many of the first points to fit with a straight line. Find k and spot where the material stops obeying Hooke's law.</p></div>
+        <div class="panel sim">
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Data set</span><div class="btns" id="dsSet"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><label for="dsN">Fit the line to the first <output id="dsNo">5 points</output></label><input type="range" id="dsN" min="2" max="8" step="1" value="5"></div>
+          </div>
+          <p class="result" id="dsDesc" style="padding:0 16px"></p>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>F (N)</th><th id="dsXh">x</th><th>F ÷ x</th><th>fit?</th></tr></thead><tbody id="dsTable"></tbody></table></div>
+            <div class="graphbox"><canvas id="dsGraph" aria-label="Graph of force against extension or compression with a line fitted to the first points"></canvas><p class="result" id="dsResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Sample test results made up for practice, with shapes typical of real tests. Filled dots are used for the line; hollow dots are left out.</p>
+        <div class="tries"><div class="try"><b>1</b>Car spring: fit all 8 points, then only the first 6. Which gives a better k? Why?</div><div class="try"><b>2</b>Copper wire: between which loads does the limit of proportionality lie?</div><div class="try"><b>3</b>Rubber band: can any choice of points give a good straight line?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of stretching and compressing objects"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Stretched and compressed materials · LO 1.3.3</p><h2>Six springs around you, solved</h2></div><p>Each one obeys F = ks while it stays below its limit. The numbers are typical values, worked out with s = F ÷ k.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>Graphs to know</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="fx"></canvas><h3>F ∝ extension</h3><p>A straight line through the origin is Hooke's law. The steeper line is the stiffer spring: slope = k.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="curve"></canvas><h3>P, E and beyond</h3><p>Straight up to the limit of proportionality (P). Past the elastic limit (E) the stretch is permanent.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="neg"></canvas><h3>F = −ks</h3><p>Stretch it (+s) and the force pulls back (−F). Compress it (−s) and it pushes out (+F).</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Secondary data · LO 1.3.1 and 1.3.2</p><h2>A school Hooke's law experiment</h2></div><p>Sample results (made up for practice): 100 g masses added to a spring hanging beside a metre stick. Check the results verify Hooke's law and find k.</p></div>
+        <div class="secwrap"><table class="sec" id="secT"></table></div>
+        <canvas class="mini" data-mini="sample" aria-label="Graph of force against extension for the sample results, with a line of best fit through the origin" style="margin-top:12px"></canvas>
+        <p class="result" id="secRes" style="margin-top:10px"></p>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Where you meet it</p><h2>Stretch and squash around you</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li><b>Extension = new length − natural length.</b> Subtract before you use Hooke's law.</li>
+            <li>Convert cm and mm to <b>metres</b> first, so k comes out in N/m.</li>
+            <li>A hanging mass gives a force <b>W = mg</b>: 100 g gives 0.98 N.</li>
+            <li>Plot <b>force against extension</b> (not length). A straight line through the origin verifies Hooke's law; the slope is k.</li>
+            <li>In F = −ks the minus sign means the force is <b>opposite</b> to the displacement. Give the size and say which way.</li>
+            <li>Hooke's law holds only up to the <b>limit of proportionality</b>. Past the elastic limit the stretch is permanent.</li>
+            <li>Springs side by side (parallel) <b>share</b> the load; springs end to end (series) each carry the <b>full</b> load.</li>
+            <li>Describe an experiment with: <b>apparatus, what you measure, how, the graph, and one precaution</b>.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The verb tells you what the examiner wants. The learning outcomes for this section use investigate, verify and solve.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="text" placeholder="e.g. 12.5 or -2" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which spring is stiffer?</h2></div></div>
+          <canvas id="predC" aria-label="Two springs, A and B, each stretched by a different load"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" data-g="0"><button data-a="A">Spring A</button><button data-a="B">Spring B</button><button data-a="same">Same k</button></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next pair</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: extension, elastic limit, k…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>Stretching and compressing objects. Forces in newtons (N), lengths in metres (m), g = 9.8 m/s².</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Hooke's law</span><span class="big">F = −ks</span><dl><dt>F</dt><dd>restoring force, N</dd><dt>k</dt><dd>spring constant, N/m</dd><dt>s</dt><dd>extension or compression, m</dd></dl><div class="ex">Minus: F is opposite to s</div></div>
+        <div class="panel fcell"><span class="pill">Size of the force</span><span class="big">F = ks</span><dl><dt>use</dt><dd>for sizes; then say the direction</dd></dl><div class="ex">k = 40 N/m, s = 0.05 m: F = 2.0 N</div></div>
+        <div class="panel fcell"><span class="pill">Spring constant</span><span class="big">k = F / s</span><dl><dt>graph</dt><dd>slope of F (y) against s (x)</dd></dl><div class="ex">6.0 N stretches 0.15 m: k = 40 N/m</div></div>
+        <div class="panel fcell"><span class="pill">Extension</span><span class="big">s = l − l₀</span><dl><dt>l₀</dt><dd>natural length</dd><dt>l</dt><dd>new length</dd></dl><div class="ex">15.5 cm − 12.0 cm = 3.5 cm</div></div>
+        <div class="panel fcell"><span class="pill">Compression</span><span class="big">s = l₀ − l</span><dl><dt>l</dt><dd>squashed length</dd></dl><div class="ex">20 cm squashed to 16 cm: 4 cm</div></div>
+        <div class="panel fcell"><span class="pill a">Load from a mass</span><span class="big">W = mg</span><dl><dt>m</dt><dd>in kg (100 g = 0.100 kg)</dd></dl><div class="ex">100 g: W = 0.98 N</div></div>
+        <div class="panel fcell"><span class="pill a">Series</span><span class="big">1/k = 1/k₁ + 1/k₂</span><dl><dt>each spring</dt><dd>carries the full load</dd></dl><div class="ex">100 and 100 N/m: k = 50 N/m</div></div>
+        <div class="panel fcell"><span class="pill a">Parallel</span><span class="big">k = k₁ + k₂</span><dl><dt>load</dt><dd>shared (equal springs: half each)</dd></dl><div class="ex">100 and 100 N/m: k = 200 N/m</div></div>
+        <div class="panel fcell"><span class="pill a">Shared load</span><span class="big">F<sub>each</sub> = W / n</span><dl><dt>n</dt><dd>identical springs side by side</dd></dl><div class="ex">1200 kg car on 4 springs: 2940 N each</div></div>
+        <div class="panel fcell"><span class="pill">Next in 1.4</span><span class="big">E<sub>P</sub> = ½ks²</span><dl><dt>E<sub>P</sub></dt><dd>elastic potential energy, J</dd></dl><div class="ex">Area under the F–s line</div></div>
+      </div>
+      <footer>
+        <p>Built on section 1.3 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes are quoted from the specification. Experiment readings and test data are simulated or made up for practice; material curves are illustrative.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent","--band-ink"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+/* ---------- icons + topics ---------- */
+const ICON = {
+  springs:'<path d="M12 2v3l-5 2 10 3-10 3 10 3-5 1.5V18"/><rect x="8" y="18" width="8" height="4" rx="1"/>',
+  hooke:'<path d="M4 2v20M4 6h3M4 10h2M4 14h3M4 18h2"/><path d="M14 2v3l-4 1.5 8 3-8 3 4 1.5v2"/><path d="M14 16h4"/><rect x="11" y="17" width="6" height="4" rx="1"/>',
+  law:'<path d="M3 4v14"/><path d="M3 11h2l1.5-3 3 6 3-6 1.5 3h1"/><rect x="15" y="8" width="6" height="6" rx="1"/><path d="M14 20H6M8 18l-2 2 2 2"/>',
+  limit:'<path d="M3 3v18h18"/><path d="M4 20l8-10c2-2 5-3 8-3"/><circle cx="12" cy="10" r="1.5"/>',
+  combine:'<path d="M3 3h18"/><path d="M7 3v2l-2 1 4 2-4 2 4 2-2 1v2M17 3v2l-2 1 4 2-4 2 4 2-2 1v2"/><path d="M5 15h14"/><rect x="9" y="17" width="6" height="5" rx="1"/>',
+  data:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M10 4v16"/>',
+  car:'<path d="M3 15l2-5h14l2 5v3H3z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M8 10l1-3h6l1 3"/>',
+  bungee:'<path d="M4 3h16"/><path d="M12 3c-2 3 2 5 0 8s2 5 0 7"/><circle cx="12" cy="20" r="2"/>',
+  scale:'<rect x="4" y="6" width="16" height="14" rx="3"/><circle cx="12" cy="13" r="4"/><path d="M12 13l2-2"/>',
+  tramp:'<ellipse cx="12" cy="9" rx="9" ry="3"/><path d="M5 11l-1 8M19 11l1 8M12 12v7"/>',
+  bed:'<path d="M2 18V8M22 18v-6H2"/><path d="M5 12V9h6v3"/>',
+  rope:'<circle cx="12" cy="6" r="2"/><path d="M12 8v6l-3 5M12 14l3 5M8 11h8M12 4V1"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"springs", name:"Stretching and compressing", short:"Extension, compression, natural length and the restoring force.", tint:"var(--blush)"},
+  {id:"hooke", name:"Verifying Hooke's law", short:"Add weights, read a pointer, plot force against extension: slope = k.", tint:"var(--apricot)"},
+  {id:"law", name:"The model: F = −ks", short:"The spring constant, stiffness, and why the force has a minus sign.", tint:"var(--sage)"},
+  {id:"limit", name:"Elastic limits", short:"Limit of proportionality, elastic limit and permanent (plastic) stretch.", tint:"var(--cream)"},
+  {id:"combine", name:"Solving spring problems", short:"Shared loads, springs in series and parallel, car suspensions.", tint:"var(--blush)"},
+  {id:"data", name:"Secondary data", short:"Test results for car springs, bungee cords, copper wire and rubber bands.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Stretching","tension","Pulling on an object so that it gets longer.","springs"],
+  ["Compressing","squashing","Pushing on an object so that it gets shorter.","springs"],
+  ["Extension","s","The increase in length of an object from its natural length.","springs","extension = new length − natural length"],
+  ["Compression","s","The decrease in length of an object from its natural length.","springs","compression = natural length − new length"],
+  ["Natural length","l₀","The length of a spring or elastic object when no force stretches or compresses it.","springs"],
+  ["Restoring force","F","The force a stretched or compressed object exerts to return to its natural length. It acts opposite to the displacement.","springs","F = −ks"],
+  ["Load","","The force applied to stretch or compress an object, often the weight of a hanging mass.","springs","W = mg"],
+  ["Deformation","","A change in the shape or size of an object caused by a force.","springs"],
+  ["Elastic object","","An object that returns to its original shape and size when the deforming force is removed.","springs"],
+  ["Newton meter","spring balance","A spring with an evenly spaced scale that measures force. It works because extension is proportional to force.","springs"],
+  ["Bending","","Stretching one side of an object and compressing the other side at the same time, e.g. a ruler bent over a desk.","springs"],
+  ["Hooke's law","","The restoring force of a spring is proportional to its extension or compression, provided the limit of proportionality is not passed.","hooke","F = −ks"],
+  ["Pointer","","A thin marker fixed to the bottom of a spring so its position can be read on a metre stick.","hooke"],
+  ["Parallax error","","An error in reading a scale caused by looking at it from an angle. Avoid it by keeping your eye level with the pointer.","hooke"],
+  ["Primary data","","Data you collect yourself in an experiment.","hooke"],
+  ["Line of best fit","","The straight line (or smooth curve) that passes as close as possible to all the plotted points.","hooke"],
+  ["Slope","gradient","The rise divided by the run of a graph line. For force against extension, the slope is k.","hooke","slope = ΔF / Δs"],
+  ["Directly proportional","∝","Two quantities are directly proportional if doubling one doubles the other. The graph is a straight line through the origin.","hooke"],
+  ["Weight","W","The gravitational force on a mass. A 100 g mass has a weight of 0.98 N.","hooke","W = mg"],
+  ["Independent variable","","The quantity you change on purpose: in the Hooke's law experiment, the force (load).","hooke"],
+  ["Dependent variable","","The quantity you measure: in the Hooke's law experiment, the extension.","hooke"],
+  ["Equilibrium","","When the forces on an object balance, so the resultant force is zero. A hanging load at rest is in equilibrium: ks = mg.","hooke"],
+  ["Spring constant","k","The force needed per metre of extension or compression. A measure of stiffness, in N/m.","law","k = F / s"],
+  ["Stiffness","","How hard it is to stretch or compress an object. A stiffer spring has a larger spring constant.","law"],
+  ["Displacement","s","In F = −ks, how far the end of the spring has moved from its natural length. Positive for stretching, negative for compressing (if stretching is taken as positive).","law"],
+  ["Minus sign in F = −ks","","Shows that the restoring force is always in the opposite direction to the displacement.","law"],
+  ["Newton per metre","N/m","The unit of the spring constant k.","law"],
+  ["Newton","N","The SI unit of force: the force that gives 1 kg an acceleration of 1 m/s².","law"],
+  ["Limit of proportionality","P","The point beyond which force is no longer proportional to extension: the force–extension graph stops being a straight line.","limit"],
+  ["Elastic limit","E","The largest force (or extension) an object can take and still return to its original length when the force is removed.","limit"],
+  ["Elastic deformation","","A change in shape that is completely undone when the force is removed.","limit"],
+  ["Plastic deformation","","A permanent change in shape that remains after the force is removed. It happens beyond the elastic limit.","limit"],
+  ["Permanent extension","permanent set","The extra length an object keeps after being loaded past its elastic limit and then unloaded.","limit"],
+  ["Breaking point","","The load at which a material snaps.","limit"],
+  ["Hysteresis","","When the unloading curve of a material (e.g. rubber) is different from its loading curve. The area between them is energy turned into heat.","limit"],
+  ["Ductile","","Describes a material, like copper, that can be stretched a long way plastically (into a wire) before it breaks.","limit"],
+  ["Brittle","","Describes a material, like glass, that breaks with little or no plastic deformation.","limit"],
+  ["Series","end to end","Springs joined one below the other. Each carries the full load and the extensions add.","combine","1/k = 1/k₁ + 1/k₂"],
+  ["Parallel","side by side","Springs placed side by side holding the same load. They share it and stretch by the same amount.","combine","k = k₁ + k₂"],
+  ["Effective spring constant","","The single spring constant that would behave like a combination of springs.","combine"],
+  ["Suspension","","The springs (and shock absorbers) between a car's body and its wheels. Each spring is compressed by part of the car's weight.","combine"],
+  ["Shared load","","When several springs hold up one object, each takes part of the weight: W ÷ n for n identical springs side by side.","combine"],
+  ["Secondary data","","Data collected by someone else, e.g. a manufacturer's test results, a textbook table or an online data set.","data"],
+  ["Coil bind","","When a compressed spring's coils touch each other. The spring can't shorten any more and no longer obeys Hooke's law.","data"],
+  ["Anomalous result","outlier","A reading that does not fit the pattern of the others. Check it or repeat it.","data"],
+  ["Uncertainty","","The range within which the true value of a measurement is likely to lie.","data"],
+  ["Elastic potential energy","E_P","The energy stored in a stretched or compressed object. Met fully in 1.4.","data","E_P = ½ks²"],
+  ["k","spring constant","Symbol for the spring constant, in N/m.","law"],
+  ["s","displacement","Symbol for extension or compression in F = −ks, in metres.","law"],
+  ["F","force","Symbol for force, in newtons (N). In Hooke's law, the restoring force.","law"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["limit of proportionality","Limit of proportionality"],["elastic limit","Elastic limit"],["restoring force","Restoring force"],["natural length","Natural length"],["spring constant","Spring constant"],["extension","Extension"],["compression","Compression"],["plastic deformation","Plastic deformation"],["elastic deformation","Elastic deformation"],["permanent","Permanent extension"],["parallax","Parallax error"],["secondary data","Secondary data"],["equilibrium","Equilibrium"],["series","Series"],["parallel","Parallel"],["slope","Slope"],["pointer","Pointer"],["stiff","Stiffness"]];
+/* ---------- glossary links + canvas helpers ---------- */
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function dbl(ctx,x1,y1,x2,y2,color,w=2){ line(ctx,x1,y1,x2,y2,color,w); const a=Math.atan2(y2-y1,x2-x1); arrowHead(ctx,x2,y2,a,color,8); arrowHead(ctx,x1,y1,a+Math.PI,color,8); }
+function dimArrow(ctx,xa,xb,y,label,col){ line(ctx,xa,y,xb,y,col,1.4); arrowHead(ctx,xa,y,Math.PI,col,7); arrowHead(ctx,xb,y,0,col,7); line(ctx,xa,y-5,xa,y+5,col,1.2); line(ctx,xb,y-5,xb,y+5,col,1.2); if(label) text(ctx,label,(xa+xb)/2,y-5,col,F(12),"center"); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const s3 = x => (+x.toPrecision(3)).toString();
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
+const sup = n => String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(x,d=3){ if(x===0) return "0"; let e=Math.floor(Math.log10(Math.abs(x))), ms=(x/Math.pow(10,e)).toFixed(d-1);
+  if(Math.abs(+ms)>=10){ e++; ms=(x/Math.pow(10,e)).toFixed(d-1); } return e===0? ms : `${ms} × 10${sup(e)}`; }
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+/* ================= MODELS + DRAWINGS ================= */
+const G = 9.8;
+const fmtN = x => { const t=s3(x); return Math.abs(x)>=10000? t.replace(/\B(?=(\d{3})+(?!\d))/g," ") : t; };
+const sg = (v,d) => Math.abs(v) < 0.5*Math.pow(10,-d) ? "0" : (v>0?"+":"−")+Math.abs(v).toFixed(d);
+function coilV(ctx,x,y1,y2,n,wd,col,lw=2){ const lead=Math.min(8,(y2-y1)*0.12), a=y1+lead, b=y2-lead, seg=(b-a)/(2*n);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x,a);
+  for(let i=0;i<2*n;i++) ctx.lineTo(x+(i%2?-1:1)*wd/2, a+seg*(i+0.5)); ctx.lineTo(x,b); ctx.lineTo(x,y2); ctx.stroke(); ctx.restore(); }
+function coilH(ctx,x1,x2,y,n,ht,col,lw=2){ const lead=Math.min(8,(x2-x1)*0.12), a=x1+lead, b=x2-lead, seg=(b-a)/(2*n);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(a,y);
+  for(let i=0;i<2*n;i++) ctx.lineTo(a+seg*(i+0.5), y+(i%2?-1:1)*ht/2); ctx.lineTo(b,y); ctx.lineTo(x2,y); ctx.stroke(); ctx.restore(); }
+function massBlock(ctx,x,y,wd,ht,label){ rrect(ctx,x-wd/2,y,wd,ht,5,C.apricot,C.ink,1.4); text(ctx,label,x,y+ht/2+4,"#3b2b21",F(11),"center"); }
+function vdim(ctx,x,ya,yb,label,col){ line(ctx,x,ya,x,yb,col,1.4); line(ctx,x-5,ya,x+5,ya,col,1.2); line(ctx,x-5,yb,x+5,yb,col,1.2);
+  if(Math.abs(yb-ya)>16){ const d=yb>ya?1:-1; arrowHead(ctx,x,ya,-d*Math.PI/2,col,7); arrowHead(ctx,x,yb,d*Math.PI/2,col,7); }
+  if(label) text(ctx,label,x+8,(ya+yb)/2+4,col,F(12)); }
+// Spring stretched by a hanging load or compressed by a load on top
+const SP_L0 = 0.20, SP_SOLID = 0.06;
+function spModel(o){ const Fl=o.m*G; let x=Fl/o.k, solid=false; if(o.mode==="compress" && x>SP_L0-SP_SOLID){ x=SP_L0-SP_SOLID; solid=true; } return {Fl,x,solid,L:o.mode==="compress"?SP_L0-x:SP_L0+x}; }
+function drawSpringLab(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc);
+  const r=spModel(o), cmp=o.mode==="compress", cx=w*0.45, top=16, bot=h-14;
+  const sc=(bot-top-44)/0.46, bw=Math.min(66,w*0.22), bh=26, wd=Math.min(28,w*0.08), lab=o.label||`${Math.round(o.m*1000)} g`;
+  const fl=14+Math.min(1,r.Fl/4.9)*46;
+  if(!cmp){
+    line(ctx,cx-60,top,cx+60,top,C.ink,4);
+    const y0=top+SP_L0*sc, yE=top+r.L*sc;
+    line(ctx,cx-wd-30,y0,cx+wd+30,y0,C.muted,1.2,[5,4]);
+    if(!o.compact) text(ctx,"natural length",cx-wd-34,y0+4,C.muted,F(11),"right");
+    coilV(ctx,cx,top,yE,12,wd,C.terra,2.2);
+    if(o.m>0){ massBlock(ctx,cx,yE,bw,bh,lab);
+      arrow(ctx,cx-bw/2-12,yE+bh/2,cx-bw/2-12,yE+bh/2-fl,C.olive,2.4); arrow(ctx,cx+bw/2+12,yE+bh/2,cx+bw/2+12,yE+bh/2+fl,C.bad,2.4);
+      if(!o.compact){ text(ctx,"spring pulls up",cx-bw/2-18,yE+bh/2-fl+4,C["olive-ink"],F(11),"right"); text(ctx,"W = mg",cx+bw/2+18,yE+bh/2+fl,C.ink,F(11)); } }
+    if(r.x>0.003) vdim(ctx,cx+wd/2+14,y0,yE,o.compact?"":`s = ${(r.x*100).toFixed(1)} cm`,C["olive-ink"]);
+  } else {
+    ctx.fillStyle=C["surface-2"]; ctx.fillRect(0,bot,w,h-bot); line(ctx,0,bot,w,bot,C.ink,2);
+    const yT=bot-r.L*sc, y0=bot-SP_L0*sc;
+    line(ctx,cx-wd-30,y0,cx+wd+30,y0,C.muted,1.2,[5,4]);
+    if(!o.compact) text(ctx,"natural length",cx-wd-34,y0+4,C.muted,F(11),"right");
+    coilV(ctx,cx,yT,bot,12,wd,r.solid?C.bad:C.terra,2.2);
+    rrect(ctx,cx-bw/2-6,yT-6,bw+12,6,2,C.olive);
+    if(o.m>0){ const yb=yT-6-bh; massBlock(ctx,cx,yb,bw,bh,lab);
+      arrow(ctx,cx-bw/2-14,yb+bh/2,cx-bw/2-14,yb+bh/2-fl,C.olive,2.4); arrow(ctx,cx+bw/2+14,yb+bh/2,cx+bw/2+14,yb+bh/2+fl,C.bad,2.4);
+      if(!o.compact){ text(ctx,"spring pushes up",cx-bw/2-20,yb+bh/2-fl+4,C["olive-ink"],F(11),"right"); text(ctx,"W = mg",cx+bw/2+20,yb+bh/2+fl,C.ink,F(11)); } }
+    if(r.x>0.003) vdim(ctx,cx+bw/2+40,y0,yT,o.compact?"":`s = ${(r.x*100).toFixed(1)} cm`,C["olive-ink"]);
+    if(r.solid) text(ctx,"coils touching!",cx+wd/2+10,bot-8,C.bad,F(12));
+  }
+}
+// Hooke's law experiment: spring, pointer, metre stick
+function drawHooke(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc);
+  const top=14, sc=(h-28)/0.62, rx=o.compact? w*0.58 : w*0.36, sx=rx-30, p=o.L0+o.n*0.1*G/o.k, yP=top+p*sc, rw=24;
+  const stx=Math.max(14,sx-70); line(ctx,stx,top-4,stx,h-6,C.muted,4); line(ctx,stx-20,h-6,stx+30,h-6,C.muted,5); line(ctx,stx,top,sx+6,top,C.muted,4);
+  rrect(ctx,rx,top,rw,0.60*sc,2,C["surface-2"],C.ink,1);
+  for(let c=0;c<=60;c++){ if(sc/100<2.2 && c%5) continue; const y=top+c/100*sc, L=c%10===0?rw*0.8:c%5===0?rw*0.55:rw*0.3;
+    line(ctx,rx,y,rx+L,y,C.ink,c%10?0.8:1.3); if(c%10===0) text(ctx,String(c),rx+rw+4,y+4,C.ink,M(10)); }
+  coilV(ctx,sx,top,yP,14,Math.min(20,w*0.05),C.terra,2);
+  line(ctx,sx,yP,rx+rw*0.9,yP,C.bad,2); circle(ctx,rx+rw*0.9,yP,2.5,C.bad);
+  const dw=28, dh=6, hy=yP+10; line(ctx,sx,yP,sx,hy,C.ink,1.6);
+  for(let i=0;i<o.n;i++) rrect(ctx,sx-dw/2,hy+i*dh,dw,dh-1,1.5,C.apricot,C.ink,1);
+  rrect(ctx,sx-dw/2-3,hy+o.n*dh,dw+6,4,1,C.ink);
+  if(!o.compact && w>=420){
+    const ix=w*0.6, iw=w-ix-14, iy=top+10, ih=Math.min(h-50,220), isc=ih/0.04, x0=ix+14, cy=iy+ih/2;
+    rrect(ctx,ix,iy,iw,ih,10,C.surface,C.line,1.5);
+    ctx.save(); ctx.beginPath(); ctx.rect(ix+1,iy+1,iw-2,ih-2); ctx.clip();
+    ctx.fillStyle=C["surface-2"]; ctx.fillRect(x0,iy,60,ih);
+    const mm0=Math.floor((p-0.022)*1000), mm1=Math.ceil((p+0.022)*1000);
+    for(let m=mm0;m<=mm1;m++){ const y=cy+(m/1000-p)*isc, L=m%10===0?40:m%5===0?26:14; line(ctx,x0,y,x0+L,y,C.ink,m%10===0?1.6:1);
+      if(m%10===0) text(ctx,(m/10)+" cm",x0+64,y+5,C.ink,M(13)); }
+    line(ctx,x0-6,cy,ix+iw-8,cy,C.bad,2.2); text(ctx,"pointer",ix+iw-10,cy-6,C.bad,F(11),"right");
+    ctx.restore();
+    text(ctx,"magnified: read to 0.1 cm",ix+iw/2,iy+ih+16,C.muted,F(11),"center");
+  }
+}
+// F = -ks: block on a horizontal spring + graph
+function drawLaw(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc);
+  const side=!o.stack && w>=520;
+  const A= side? {x0:0,x1:w*0.56,y0:0,y1:h} : {x0:0,x1:w,y0:0,y1:h*0.5};
+  const Gr= side? {x0:w*0.6,x1:w-12,y0:14,y1:h-14} : {x0:12,x1:w-12,y0:h*0.54,y1:h-8};
+  const aw=A.x1-A.x0, floor=A.y0+(A.y1-A.y0)*0.66, bw=Math.min(56,aw*0.15), bh=bw*0.72, xe=A.x0+aw*0.6, ss=aw*0.24/0.1, bx=xe+o.s*ss, wallX=A.x0+18;
+  ctx.fillStyle=C["surface-2"]; ctx.fillRect(A.x0,floor-bh*2.2,wallX-A.x0,bh*2.2); line(ctx,wallX,floor-bh*2.2,wallX,floor,C.ink,2);
+  line(ctx,A.x0,floor,A.x1,floor,C.ink,1.6);
+  line(ctx,xe,floor-bh*1.9,xe,floor+6,C.muted,1.2,[4,4]); text(ctx,"s = 0",xe,floor-bh*1.9-4,C.muted,F(10),"center");
+  coilH(ctx,wallX,bx-bw/2,floor-bh/2,10,bh*0.55,C.terra,2.2);
+  rrect(ctx,bx-bw/2,floor-bh,bw,bh,5,C.apricot,C.ink,1.4);
+  if(Math.abs(o.s)>0.002) arrow(ctx,xe,floor+12,bx,floor+12,C.olive,2);
+  text(ctx,`s = ${sg(o.s,3)} m`,xe,floor+30,C["olive-ink"],F(12),"center");
+  const Fv=-o.k*o.s, L=Fv/10*aw*0.32;
+  if(Math.abs(L)>3) arrow(ctx,bx,floor-bh-10,bx+L,floor-bh-10,C.bad,2.6);
+  text(ctx,`F = ${sg(Fv,2)} N`,bx,floor-bh-18,C.ink,F(12),"center");
+  const gcx=(Gr.x0+Gr.x1)/2, gcy=(Gr.y0+Gr.y1)/2, gw=(Gr.x1-Gr.x0)/2, gh=(Gr.y1-Gr.y0)/2, X=v=>gcx+v/0.1*gw*0.88, Y=v=>gcy-v/10*gh*0.82;
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1; ctx.strokeRect(Gr.x0,Gr.y0,Gr.x1-Gr.x0,Gr.y1-Gr.y0);
+  line(ctx,Gr.x0,gcy,Gr.x1,gcy,C.ink,1.2); line(ctx,gcx,Gr.y0,gcx,Gr.y1,C.ink,1.2);
+  text(ctx,"s (m)",Gr.x1-4,gcy-6,C.ink,F(11),"right"); text(ctx,"F (N)",gcx+6,Gr.y0+12,C.ink,F(11));
+  text(ctx,"0.1",X(0.1),gcy+13,C.muted,M(10),"center"); text(ctx,"−0.1",X(-0.1),gcy+13,C.muted,M(10),"center");
+  text(ctx,"10",gcx-5,Y(10)+4,C.muted,M(10),"right"); text(ctx,"−10",gcx-5,Y(-10)+4,C.muted,M(10),"right");
+  ctx.save(); ctx.beginPath(); ctx.rect(Gr.x0,Gr.y0,Gr.x1-Gr.x0,Gr.y1-Gr.y0); ctx.clip(); line(ctx,X(-0.1),Y(o.k*0.1),X(0.1),Y(-o.k*0.1),C.terra,2.6); ctx.restore();
+  circle(ctx,X(o.s),Y(Fv),5.5,C.bad,C.surface,2);
+  if(!o.compact){ text(ctx,"stretched: F < 0",Gr.x1-6,Gr.y1-6,C.muted,F(10),"right"); text(ctx,"compressed: F > 0",Gr.x0+6,Gr.y0+12,C.muted,F(10)); }
+}
+// Materials loaded past their limits (extensions in mm)
+const MATS = [
+  {n:"Steel spring",k:0.05,Fp:5,Fe:5.5,Fb:8,xb:400,kind:"spring",step:0.1},
+  {n:"Copper wire",k:20,Fp:40,Fe:44,Fb:60,xb:30,kind:"wire",step:0.5},
+  {n:"Polythene strip",k:0.5,Fp:4,Fe:4.4,Fb:6,xb:150,kind:"strip",step:0.1},
+  {n:"Rubber band",rubber:true,Fb:12,kind:"band",step:0.1},
+];
+function xLoad(mt,f){ f=Math.min(f,mt.Fb);
+  if(mt.rubber) return 6*f+80*(Math.tanh((f-4)/1.5)+Math.tanh(4/1.5));
+  if(f<=mt.Fp) return f/mt.k; const xe=mt.Fe/mt.k*1.08;
+  if(f<=mt.Fe) return f/mt.k+(xe-mt.Fe/mt.k)*Math.pow((f-mt.Fp)/(mt.Fe-mt.Fp),2);
+  return xe+(mt.xb-xe)*Math.pow((f-mt.Fe)/(mt.Fb-mt.Fe),1.6); }
+function xUnload(mt,f,fm){ if(f>=fm) return xLoad(mt,f);
+  if(mt.rubber) return xLoad(mt,f)*(1+0.15*Math.sin(Math.PI*f/fm));
+  if(fm<=mt.Fe) return xLoad(mt,f);
+  return xLoad(mt,fm)-(fm-f)/mt.k-(mt.Fe/mt.k*0.08)*(1-f/fm); }
+function drawLimit(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc);
+  const mt=MATS[o.mi], snapped=o.Fmax>=mt.Fb-1e-9, sk=!o.compact && w>=520, gx0=sk? w*0.26 : 0;
+  const xTop=xLoad(mt,mt.Fb)*1.05, yTop=mt.Fb*1.1;
+  const padL=gx0+46,padR=12,padT=14,padB=32, X=v=>padL+v/xTop*(w-padL-padR), Y=v=>h-padB-v/yTop*(h-padT-padB);
+  const stx=niceStep(xTop/4), sty=niceStep(yTop/4);
+  for(let v=0; v<=xTop+1e-9; v+=stx){ line(ctx,X(v),padT,X(v),h-padB,C.grid,1); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); }
+  for(let v=0; v<=yTop+1e-9; v+=sty){ line(ctx,padL,Y(v),w-padR,Y(v),C.grid,1); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); }
+  line(ctx,padL,h-padB,w-padR,h-padB,C.ink,1.4); line(ctx,padL,padT,padL,h-padB,C.ink,1.4);
+  text(ctx,"extension (mm)",w-padR,h-6,C.ink,F(11),"right"); text(ctx,"F (N)",padL+5,padT+10,C.ink,F(11));
+  const fTop=Math.min(o.Fmax,mt.Fb);
+  if(fTop>0){ ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=3; ctx.lineJoin="round"; ctx.beginPath();
+    for(let i=0;i<=160;i++){ const f=fTop*i/160, x=xLoad(mt,f); i?ctx.lineTo(X(x),Y(f)):ctx.moveTo(X(x),Y(f)); } ctx.stroke(); ctx.restore(); }
+  if(!snapped && o.F<o.Fmax-1e-9){ ctx.save(); ctx.strokeStyle=C.olive; ctx.lineWidth=2.4; ctx.setLineDash([6,4]); ctx.beginPath();
+    for(let i=0;i<=100;i++){ const f=o.Fmax*(1-i/100), x=xUnload(mt,f,o.Fmax); i?ctx.lineTo(X(x),Y(f)):ctx.moveTo(X(x),Y(f)); } ctx.stroke(); ctx.restore(); }
+  if(!mt.rubber){
+    if(o.Fmax>=mt.Fp){ const px=X(mt.Fp/mt.k), py=Y(mt.Fp); circle(ctx,px,py,4.5,C.olive); text(ctx,"P",px-8,py-6,C["olive-ink"],F(13,800),"right"); }
+    if(o.Fmax>=mt.Fe){ const ex=X(xLoad(mt,mt.Fe)), ey=Y(mt.Fe); circle(ctx,ex,ey,4.5,C.olive); text(ctx,"E",ex+2,ey-9,C["olive-ink"],F(13,800)); }
+  }
+  if(snapped) text(ctx,"Snapped!",X(xTop*0.62),Y(yTop*0.45),C.bad,F(20,800),"center");
+  else { const xc=xUnload(mt,o.F,o.Fmax); circle(ctx,X(xc),Y(o.F),6,C.bad,C.surface,2); }
+  if(sk){
+    const cx=w*0.12, top=16, base=60, maxL=h-110, xc= snapped? xLoad(mt,mt.Fb) : xUnload(mt,o.F,o.Fmax), L=base+xc/xTop*maxL, yE=top+L;
+    line(ctx,cx-40,top,cx+40,top,C.ink,4);
+    const yDraw = snapped? top+L*0.45 : yE;
+    if(mt.kind==="spring") coilV(ctx,cx,top,yDraw,10,18,C.terra,2);
+    else if(mt.kind==="wire") line(ctx,cx,top,cx,yDraw,C.apricot,2.5);
+    else if(mt.kind==="strip"){ rrect(ctx,cx-6,top,12,yDraw-top,2,C.blush,C.olive,1.2); }
+    else { rrect(ctx,cx-7,top,14,yDraw-top,7,null,C.olive,3); }
+    if(snapped){ rrect(ctx,cx-22,h-34,44,22,5,C.apricot,C.ink,1.4); line(ctx,0,h-12,w*0.24,h-12,C.ink,1.5); }
+    else { line(ctx,cx,yE,cx,yE+8,C.ink,1.6); massBlock(ctx,cx,yE+8,46,22,`${trim(o.F)} N`); }
+  }
+}
+// Springs in series and parallel
+function cbCalc(o){ const Fl=o.m*G;
+  if(o.arr==="single") return {Fl,k:o.k1,x1:Fl/o.k1,x2:0,x:Fl/o.k1,total:Fl/o.k1,F1:Fl,F2:0};
+  if(o.arr==="series"){ const x1=Fl/o.k1, x2=Fl/o.k2; return {Fl,k:1/(1/o.k1+1/o.k2),x1,x2,x:x1+x2,total:x1+x2,F1:Fl,F2:Fl}; }
+  const k=o.k1+o.k2, x=Fl/k; return {Fl,k,x1:x,x2:x,x,total:x,F1:o.k1*x,F2:o.k2*x}; }
+function drawCombine(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc);
+  const r=cbCalc(o), top=14, sc=(h-60)/0.70, L0=0.15, cx=w*0.45, wd=Math.min(24,w*0.07), bw=Math.min(66,w*0.22), bh=26, dx=Math.min(50,w*0.15);
+  line(ctx,cx-90,top,cx+90,top,C.ink,4);
+  let yB;
+  if(o.arr!=="parallel"){ const y1=top+(L0+r.x1)*sc; coilV(ctx,cx,top,y1,10,wd,C.terra,2.2); text(ctx,"k₁",cx-wd/2-8,(top+y1)/2+4,C.ink,F(13),"right");
+    if(o.arr==="series"){ circle(ctx,cx,y1,4,C.ink); const y2=y1+(L0+r.x2)*sc; coilV(ctx,cx,y1,y2,10,wd,C.olive,2.2); text(ctx,"k₂",cx-wd/2-8,(y1+y2)/2+4,C.ink,F(13),"right"); yB=y2; } else yB=y1; }
+  else { const y1=top+(L0+r.x)*sc; coilV(ctx,cx-dx,top,y1,10,wd,C.terra,2.2); coilV(ctx,cx+dx,top,y1,10,wd,C.olive,2.2);
+    line(ctx,cx-dx-12,y1,cx+dx+12,y1,C.ink,4); text(ctx,"k₁",cx-dx-wd/2-6,(top+y1)/2+4,C.ink,F(13),"right"); text(ctx,"k₂",cx+dx+wd/2+6,(top+y1)/2+4,C.ink,F(13));
+    line(ctx,cx,y1,cx,y1+10,C.ink,1.6); yB=y1+10; }
+  massBlock(ctx,cx,yB,bw,bh,`${o.m.toFixed(2)} kg`);
+  const yN=top+(o.arr==="series"?2*L0:L0)*sc, yEnd=o.arr==="parallel"? yB-10 : yB, dimX=cx+(o.arr==="parallel"? dx+wd : bw/2)+22;
+  line(ctx,cx-bw/2-40,yN,dimX+6,yN,C.muted,1.2,[5,4]);
+  if(!o.compact) text(ctx,"natural length",cx-bw/2-44,yN+4,C.muted,F(11),"right");
+  vdim(ctx,dimX,yN,yEnd,o.compact?"":`${(r.total*100).toFixed(1)} cm`,C["olive-ink"]);
+}
+// Drill: which spring is stiffer?
+function drawDrill(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const top=14, L0=h*0.2, mx=Math.max(o.xA,o.xB), scl=(h-top-L0-46)/mx;
+  line(ctx,w*0.12,top,w*0.88,top,C.ink,4);
+  [["A",w*0.3,o.FA,o.xA,C.terra],["B",w*0.7,o.FB,o.xB,C.olive]].forEach(([n,x,f,s,col])=>{
+    const yN=top+L0, yE=yN+s*scl;
+    line(ctx,x-34,yN,x+34,yN,C.muted,1.2,[5,4]);
+    coilV(ctx,x,top,yE,10,20,col,2.2); massBlock(ctx,x,yE,54,24,`${f} N`);
+    text(ctx,n,x-26,top+22,C.ink,F(16,800),"right");
+    vdim(ctx,x+20,yN,yE,`${s3(s*100)} cm`,C["olive-ink"]); });
+}
+// Infographic minis
+function axes(ctx,w,h,xl,yl,pad=28){ line(ctx,pad,h-pad,w-10,h-pad,C.ink,1.5); line(ctx,pad,10,pad,h-pad,C.ink,1.5); text(ctx,yl,pad+5,18,C.ink,F(11)); text(ctx,xl,w-10,h-pad-6,C.ink,F(11),"right"); }
+function drawFxMini(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const p=28; axes(ctx,w,h,"extension s (m)","F (N)",p);
+  line(ctx,p,h-p,w*0.55,22,C.terra,3); line(ctx,p,h-p,w-14,h*0.5,C.olive,3);
+  text(ctx,"stiff: big k",w*0.55+6,30,C["terra-ink"],F(11)); text(ctx,"soft: small k",w-14,h*0.5+18,C["olive-ink"],F(11),"right"); }
+function drawCurveMini(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const p=28; axes(ctx,w,h,"extension","F",p);
+  const gw=w-p-16, gh=h-p-20, X=f=>p+f*gw, Y=f=>h-p-f*gh;
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(X(0),Y(0)); ctx.lineTo(X(.3),Y(.6)); ctx.quadraticCurveTo(X(.35),Y(.66),X(.4),Y(.69)); ctx.quadraticCurveTo(X(.6),Y(.8),X(.95),Y(.86)); ctx.stroke(); ctx.restore();
+  line(ctx,X(.7),Y(.82),X(.29),Y(0),C.olive,2,[6,4]);
+  circle(ctx,X(.3),Y(.6),4.5,C.olive); text(ctx,"P",X(.3)-8,Y(.6)-4,C["olive-ink"],F(12,800),"right");
+  circle(ctx,X(.4),Y(.69),4.5,C.olive); text(ctx,"E",X(.4)-2,Y(.69)-10,C["olive-ink"],F(12,800));
+  text(ctx,"permanent stretch",X(.3)+4,h-p-6,C["olive-ink"],F(10)); }
+function drawNegMini(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cx=w/2, cy=h/2;
+  line(ctx,14,cy,w-10,cy,C.ink,1.5); line(ctx,cx,10,cx,h-10,C.ink,1.5); text(ctx,"s",w-12,cy-6,C.ink,F(12),"right"); text(ctx,"F",cx+6,20,C.ink,F(12));
+  line(ctx,cx-(w/2-24),cy-(h/2-22),cx+(w/2-24),cy+(h/2-22),C.terra,3);
+  text(ctx,"stretched: s > 0, F < 0",w-12,h-14,C.muted,F(10),"right"); text(ctx,"compressed: s < 0, F > 0",16,20,C.muted,F(10)); }
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h,o.bgc);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ if(p[2]) circle(ctx,X(p[0]),Y(p[1]),4.5,null,C.olive,2); else { ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); } });
+}
+// Secondary data sets (made up for practice, typical shapes)
+const DATASETS = [
+  {n:"Car coil spring", d:"Compression test on a car's coil spring. At large loads the coils start to touch (coil bind).", xl:"compression (mm)", u:"mm", toM:1000, F:[0,1000,2000,3000,4000,5000,6000,7000], x:[0,33,66,101,133,167,190,196]},
+  {n:"Bungee cord", d:"Static stretch test on a bungee cord in a drop-test rig.", xl:"extension (m)", u:"m", toM:1, F:[0,200,400,600,800,1000,1200,1400], x:[0,0.42,0.80,1.21,1.60,2.02,2.55,3.30]},
+  {n:"Copper wire", d:"A 1.0 m length of thin copper wire loaded in a school lab (wear goggles!).", xl:"extension (mm)", u:"mm", toM:1000, F:[0,10,20,30,40,45,50,55], x:[0,0.50,1.01,1.49,2.00,2.30,2.90,4.60]},
+  {n:"Rubber band", d:"A rubber band loaded with 1 N weights.", xl:"extension (mm)", u:"mm", toM:1000, F:[0,1,2,3,4,5,6,7,8], x:[0,8,18,32,58,98,128,145,156]},
+];
+function dsFit(i,n){ const D=DATASETS[i], pts=D.F.map((f,j)=>[D.x[j],f]).slice(0,n); return linfit(pts); }
+function drawDataG(s,i,n,bgc){ const D=DATASETS[i], pts=D.F.map((f,j)=>[D.x[j],f,j>=n]); scatter(s,pts,{xr:[0],yr:[0],xl:D.xl,yl:"F (N)",fit:dsFit(i,n),bgc}); }
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "springs", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+const loIds=["lo1","lo2","lo3"]; const loState=store.get("s13-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s13-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s13-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+/* ================= LEARN ================= */
+const LEARN = {
+  springs:{ vis:[["spring",{mode:"stretch",m:0.2,k:20}],["spring",{mode:"compress",m:0.2,k:40}]], cap:"Top: a 200 g load stretches a soft spring by 9.8 cm. Bottom: the same load compresses a stiffer spring by 4.9 cm.",
+    keys:[["↕","Stretching makes an object longer: extension = new length − natural length. Compressing makes it shorter: compression = natural length − new length."],["←","The object pulls or pushes back towards its natural length. This restoring force gets bigger the more you stretch or squash it."],["⚖","When a hanging load is at rest, the restoring force balances the weight: ks = mg."]],
+    f:"extension = l − l₀ · compression = l₀ − l", mistake:"Using the new length instead of the extension. A 20 cm spring stretched to 25 cm has an extension of 5 cm, not 25 cm." },
+  hooke:{ vis:[["hooke",{n:3,L0:0.15,k:25}]], cap:"Three 100 g masses (2.94 N) pull the pointer down 11.8 cm from its no-load reading of 15.0 cm.",
+    keys:[["1","Read the pointer with no load. Add 100 g masses one at a time (0.98 N each) and read the pointer each time, with your eye level with it."],["2","Extension = reading − no-load reading. Plot force (y-axis) against extension (x-axis)."],["3","A straight line through the origin verifies Hooke's law. The slope of the line is the spring constant k."]],
+    f:"k = slope of F against s", mistake:"Plotting force against the pointer reading (the length). That line doesn't go through the origin: use the extension." },
+  law:{ vis:[["law",{k:40,s:0.06}]], cap:"Stretched 0.060 m to the right, the spring pulls the block back to the left with a force of 2.4 N.",
+    keys:[["k","The spring constant k is the force needed per metre of stretch or squash, in N/m. A stiff spring has a big k."],["−","F = −ks. The minus sign means the restoring force always points the opposite way to the displacement s."],["0","At the natural length s = 0, so F = 0. Twice the displacement gives twice the force."]],
+    f:"F = −ks", mistake:"Dropping the minus sign and never saying the direction. If you use F = ks for the size, say that the force points back towards the natural length." },
+  limit:{ vis:[["limit",{mi:0,F:2,Fmax:7}]], cap:"A steel spring loaded to 7 N, past its elastic limit (E). As the load is lowered it does not come back to its original length.",
+    keys:[["P","Up to the limit of proportionality (P), force ∝ extension: the graph is a straight line and Hooke's law holds."],["E","Up to the elastic limit (E), the object returns to its original length when the load is removed: elastic deformation."],["∞","Past E the change is permanent: plastic deformation. A rubber band is elastic but never obeys Hooke's law."]],
+    f:"Hooke's law holds only up to P", mistake:"Thinking the limit of proportionality and the elastic limit are the same point. P is where the line stops being straight; E is where the stretch stops being reversible." },
+  combine:{ vis:[["combine",{arr:"parallel",k1:100,k2:100,m:0.6}]], cap:"Two 100 N/m springs side by side share a 0.60 kg load: each stretches by 2.9 cm.",
+    keys:[["÷","Side by side (parallel), springs share the load: k = k₁ + k₂. A car on four springs: each takes a quarter of the weight."],["+","End to end (series), each spring carries the full load and the extensions add: 1/k = 1/k₁ + 1/k₂."],["✓","Solve in steps: find the force on each spring, convert lengths to metres, then use s = F/k."]],
+    f:"parallel: k = k₁ + k₂ · series: 1/k = 1/k₁ + 1/k₂", mistake:"Forgetting to share the load. If four springs hold up a car, each spring takes only a quarter of the car's weight." },
+  data:{ vis:[["data",{ds:2,n:5}]], cap:"Copper wire test results: the first points lie on a straight line (k = 20 000 N/m). The last points fall away: past the limit of proportionality.",
+    keys:[["📋","Secondary data is collected by someone else: a manufacturer's test, a textbook table or an online data set."],["📈","Fit a straight line to the first points. Its slope (converted to N/m) is k."],["⚠","The first point well off the line (by more than the experimental error) shows where the limit of proportionality is."]],
+    f:"k = ΔF ÷ Δs on the straight part", mistake:"Forcing one straight line through every point, including those past the limit. That gives the wrong k: fit only the straight part." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  {n:"Car suspension", mode:"compress", Fl:1200*G/4, k:30000, vis:{m:0.2,k:40}, lab:"car", d:"A 1200 kg car rests on four springs, so each one takes a quarter of the weight."},
+  {n:"Bungee jumper hanging still", mode:"stretch", Fl:70*G, k:400, vis:{m:0.35,k:20}, lab:"70 kg", d:"Once the 70 kg jumper hangs at rest, the cord's pull equals their weight."},
+  {n:"Kitchen spring balance", mode:"stretch", Fl:2.0, k:40, vis:{m:0.2,k:40}, lab:"2.0 N", d:"A newton meter's scale is evenly spaced because extension is proportional to force."},
+  {n:"Sofa spring", mode:"compress", Fl:20*G, k:4000, vis:{m:0.3,k:40}, lab:"20 kg", d:"Part of the sitter's weight (20 kg worth) squashes one spring."},
+  {n:"Click pen spring", mode:"compress", Fl:1.5, k:300, vis:{m:0.1,k:40}, lab:"thumb", d:"Your thumb pushes with 1.5 N on a small, stiff spring, which pushes the button back out."},
+  {n:"Garage door spring", mode:"stretch", Fl:600, k:6000, vis:{m:0.3,k:40}, lab:"door", d:"A stretched spring takes most of the door's weight, so it's easy to lift."},
+];
+const lenTxt = x => x>=1? s3(x)+" m" : x>=0.01? s3(x*100)+" cm" : s3(x*1000)+" mm";
+$("cases").innerHTML = CASES.map((S,i)=>`<div class="panel rc-card"><canvas data-case="${i}" aria-label="${S.n}: a ${S.mode==="stretch"?"stretched":"compressed"} spring"></canvas><h3>${S.n}</h3><p>${S.d} <b>F = ${fmtN(S.Fl)} N, k = ${fmtN(S.k)} N/m, so s = F ÷ k = ${lenTxt(S.Fl/S.k)}</b> (${S.mode==="stretch"?"extension":"compression"}).</p></div>`).join("");
+const SAMPLE = [[0,15.0],[100,17.4],[200,20.0],[300,22.5],[400,24.9],[500,27.5]];
+const SAMPLE_PTS = SAMPLE.map(([m,r])=>[(r-SAMPLE[0][1])/100, m/1000*G]);
+const SAMPLE_FIT = linfit(SAMPLE_PTS);
+$("secT").innerHTML = `<tr><th style="text-align:left">Mass (g)</th><th>F (N)</th><th>Reading (cm)</th><th>Extension (cm)</th><th>F ÷ s (N/m)</th></tr>`
+  + SAMPLE.map(([m,r],j)=>{ const x=r-SAMPLE[0][1], f=m/1000*G; return `<tr><td style="text-align:left">${m}</td><td>${f.toFixed(2)}</td><td>${r.toFixed(1)}</td><td>${x.toFixed(1)}</td><td>${j? (f/(x/100)).toFixed(1) : "–"}</td></tr>`; }).join("");
+$("secRes").innerHTML = `F ÷ s stays close to 39–41 N/m for every reading, and the graph is a straight line through the origin: the spring obeys Hooke's law. Line of best fit: slope = <b>k = ${SAMPLE_FIT[0].toFixed(1)} N/m</b>, intercept = ${SAMPLE_FIT[1].toFixed(2)} N (close to zero).`;
+const AROUND = [
+  ["scale","Newton meters and kitchen scales","Extension is proportional to force, so the scale markings are evenly spaced. Overload one and it may never read zero again.",[["Hooke's law","neutral"],["Elastic limit","alert"]],"var(--blush)"],
+  ["car","Car suspension","Coil springs compress over bumps and push the car back up. Shock absorbers stop it bouncing on and on.",[["Compression","neutral"],["Shared load","real"]],"var(--apricot)"],
+  ["bungee","Bungee jumping","The cord stretches a long way, so it stops the jumper over a long time and the force stays safe. Cords are retired before they deform permanently.",[["Stretching","neutral"],["Safety","alert"]],"var(--sage)"],
+  ["tramp","Trampolines","Dozens of springs around the edge stretch as you land and pull the mat back up, launching you again.",[["Springs in parallel","real"]],"var(--cream)"],
+  ["bed","Mattresses and sofas","Hundreds of small springs compress under you. Pocket springs each take part of your weight, so the load is shared.",[["Compression","neutral"],["Shared load","real"]],"var(--blush)"],
+  ["rope","Climbing ropes","A dynamic rope stretches when a climber falls. The longer stopping time keeps the force on the climber lower (impulse, 1.2).",[["Stretching","neutral"],["Impulse","real"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"springs",label:"Stretch & squash",col:"var(--blush)",leaves:[["Extension","New length − natural length."],["Compression","Natural length − new length."],["Restoring force","Pulls or pushes back towards the natural length."],["Both at once","Bending: one side stretched, the other compressed."]]},
+  {id:"hooke",label:"Hooke's law expt",col:"var(--apricot)",leaves:[["Add weights","100 g = 0.98 N each."],["Read the pointer","Eye level: no parallax error."],["F v s graph","Straight line through the origin."],["Slope = k","In N/m, with s in metres."]]},
+  {id:"law",label:"F = −ks",col:"var(--sage)",leaves:[["k","Spring constant, N/m: stiffness."],["Minus sign","Force opposite to the displacement."],["s","Displacement from the natural length."]]},
+  {id:"limit",label:"Limits",col:"var(--cream)",leaves:[["P","Limit of proportionality: end of the straight line."],["E","Elastic limit: past it, the stretch is permanent."],["Plastic","Permanent change of shape."],["Rubber","Elastic, but never obeys Hooke's law."]]},
+  {id:"combine",label:"Problems",col:"var(--blush)",leaves:[["Series","1/k = 1/k₁ + 1/k₂; each takes the full load."],["Parallel","k = k₁ + k₂; the load is shared."],["Shared load","W ÷ n for n identical springs."]]},
+  {id:"data",label:"Secondary data",col:"var(--sage)",leaves:[["Test tables","Manufacturers' and textbook results."],["Fit first points","Slope of the straight part = k."],["Spot the limit","First point off the line."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["springs","What is the extension of a spring?","The increase in length from its natural length: extension = new length − natural length."],
+  ["springs","What is compression?","The decrease in length from the natural length when an object is squashed: compression = natural length − new length."],
+  ["springs","What is a restoring force?","The force a stretched or compressed object exerts to return to its natural length. It acts opposite to the displacement."],
+  ["springs","Give two things that are stretched and two that are compressed in everyday life.","Stretched: a bungee cord, the spring in a newton meter. Compressed: a car suspension spring, a mattress spring."],
+  ["springs","What happens to a ruler bent over the edge of a desk?","One surface is stretched and the opposite surface is compressed."],
+  ["hooke","State Hooke's law.","The restoring force of a spring is proportional to its extension (or compression), provided the limit of proportionality is not exceeded: F = −ks."],
+  ["hooke","Describe an experiment to verify Hooke's law.","Hang a spring with a pointer beside a metre stick. Read the pointer with no load. Add known weights one at a time and read the pointer each time. Extension = reading − first reading. Plot force against extension: a straight line through the origin verifies the law."],
+  ["hooke","How do you find k from your graph?","k = slope of the force (y) against extension (x) graph, with extension in metres, giving N/m."],
+  ["hooke","Why take readings while unloading as well as loading?","If the unloading readings match, the spring went back to its original length: the elastic limit was not passed."],
+  ["hooke","Give two ways to make Hooke's law readings more accurate.","Read the pointer with your eye level with it (no parallax error); wait until the spring stops moving; use six or more loads; repeat and average."],
+  ["hooke","What force does a 100 g mass exert on a spring?","W = mg = 0.100 × 9.8 = 0.98 N."],
+  ["law","What is the spring constant k?","The force needed per metre of extension or compression, k = F/s. Unit: N/m. A bigger k means a stiffer spring."],
+  ["law","In F = −ks, what is s?","The displacement from the natural length (the extension or compression), in metres."],
+  ["law","Why is there a minus sign in F = −ks?","The restoring force always acts in the opposite direction to the displacement: stretch it to the right and it pulls to the left."],
+  ["law","A spring with k = 200 N/m is stretched by 5.0 cm. Find the force.","s = 0.050 m. F = ks = 200 × 0.050 = 10 N, pulling back towards the natural length."],
+  ["law","What is the unit of the spring constant?","Newtons per metre, N/m."],
+  ["limit","Define the elastic limit.","The largest force (or extension) an object can take and still return to its original length when the force is removed."],
+  ["limit","What is the limit of proportionality?","The point beyond which force is no longer proportional to extension: the force–extension graph stops being a straight line."],
+  ["limit","What is elastic deformation?","A change in shape that is completely undone when the force is removed."],
+  ["limit","What is plastic deformation?","A permanent change in shape that stays after the force is removed. It happens beyond the elastic limit."],
+  ["limit","Does a rubber band obey Hooke's law?","No. Its force–extension graph is a curve, even though it is elastic (it returns to its original length)."],
+  ["combine","Two springs in series (end to end): what is the combined k?","1/k = 1/k₁ + 1/k₂. The combination is less stiff. Each spring carries the full load and the extensions add."],
+  ["combine","Two springs in parallel (side by side): what is the combined k?","k = k₁ + k₂. The combination is stiffer. The springs share the load and stretch by the same amount."],
+  ["combine","A car of weight W rests equally on four springs. What force does each spring take?","W ÷ 4. Then each spring's compression is s = (W ÷ 4) ÷ k."],
+  ["data","What is secondary data?","Data collected by someone else, e.g. a manufacturer's test results, a table in a textbook or an online data set."],
+  ["data","How do you find the limit of proportionality from a data table?","Fit a straight line to the first points. The first point that lies well off the line (more than the experimental error) marks the end of proportionality."],
+  ["data","Why does a car spring's graph get steeper at large compressions?","The coils start to touch (coil bind), so the spring can hardly shorten any more. It no longer obeys Hooke's law."],
+  ["data","Why use the slope of a graph rather than one reading to find k?","The slope uses all the readings, so random errors average out, and you can see if any reading is off the line."],
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Stretching &amp;</text><text x="${cx}" y="${cy+22}" text-anchor="middle">compressing</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("s13-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s13-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s13-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s13-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["springs","A spring has a natural length of 12.0 cm. When stretched, its length is 15.5 cm. Its extension is:",["3.5 cm","15.5 cm","27.5 cm","12.0 cm"],0,"Extension = new length − natural length = 15.5 − 12.0 = 3.5 cm."],
+  ["springs","Which of these is compressed?",["A bungee cord holding a jumper","A car suspension spring","A tuned guitar string","A newton meter holding a bag"],1,"The car's weight squashes the suspension springs. The others are all stretched."],
+  ["springs","The force a stretched spring exerts back on whatever is stretching it is called the:",["Restoring force","Upthrust","Friction","Normal reaction"],0,"It tries to restore the spring to its natural length, so it's called the restoring force."],
+  ["hooke","In a Hooke's law experiment, which graph is a straight line through the origin?",["Force against extension","Force against spring length","Spring length against extension","Extension against time"],0,"F ∝ s, so force against extension is a straight line through the origin. Force against length has an intercept at the natural length."],
+  ["hooke","A force of 6.0 N stretches a spring by 0.15 m. The spring constant is:",["0.90 N/m","40 N/m","0.025 N/m","6.15 N/m"],1,"k = F/s = 6.0 / 0.15 = 40 N/m."],
+  ["hooke","Why should you read the pointer with your eye level with it?",["To avoid parallax error","To make the spring stiffer","To reduce the load","To keep the mass constant"],0,"Looking from above or below makes the pointer seem to line up with the wrong mark: parallax error."],
+  ["hooke","The slope of a graph of force (y-axis) against extension (x-axis) gives:",["The spring constant k","1/k","The natural length","The weight of the spring"],0,"slope = ΔF/Δs = k."],
+  ["law","In F = −ks, the minus sign shows that:",["The restoring force is opposite to the displacement","The spring constant is negative","The force is always zero","The spring is always compressed"],0,"Stretch the spring one way and it pulls the other way: the force opposes the displacement."],
+  ["law","A spring with k = 50 N/m is compressed by 0.040 m. The size of the force it exerts is:",["2.0 N","1250 N","0.0008 N","12.5 N"],0,"F = ks = 50 × 0.040 = 2.0 N."],
+  ["law","The unit of the spring constant k is:",["N/m","N m","kg/m","m/N"],0,"k = F/s: newtons divided by metres, N/m."],
+  ["limit","After being loaded past its elastic limit and unloaded, a wire:",["Returns to its original length","Stays permanently longer","Becomes shorter than at the start","Always snaps"],1,"Beyond the elastic limit the deformation is plastic: some of the extension stays."],
+  ["limit","A rubber band's force–extension graph is a curve. This shows that:",["It does not obey Hooke's law","It has no elastic limit","Its spring constant is constant","It cannot be stretched"],0,"Hooke's law needs a straight line through the origin. A curve means force is not proportional to extension."],
+  ["limit","On a force–extension graph, the limit of proportionality is where:",["The graph stops being a straight line","The material breaks","The extension is zero","The force is largest"],0,"Up to that point F ∝ s; after it, the graph curves."],
+  ["combine","Two identical springs, each with k = 100 N/m, are joined end to end (in series). The combined spring constant is:",["200 N/m","100 N/m","50 N/m","25 N/m"],2,"1/k = 1/100 + 1/100 = 2/100, so k = 50 N/m. Series springs are less stiff."],
+  ["combine","A 1200 kg car rests equally on four springs, each with k = 30 000 N/m. Each spring is compressed by (g = 9.8 m/s²):",["9.8 cm","39 cm","2.5 cm","0.98 cm"],0,"Each spring takes 1200 × 9.8 ÷ 4 = 2940 N. s = F/k = 2940 / 30 000 = 0.098 m = 9.8 cm."],
+  ["data","A spring stretches 4.0 cm with a 2.0 N load. If it obeys Hooke's law, its extension with a 5.0 N load is:",["10 cm","8.0 cm","20 cm","2.5 cm"],0,"Extension ∝ force: 5.0/2.0 = 2.5 times the load, so 2.5 × 4.0 = 10 cm."],
+  ["data","Test data for a cord: 200 N → 0.50 m, 400 N → 1.00 m, 600 N → 1.70 m. Which is true?",["It obeys Hooke's law up to at least 400 N","It obeys Hooke's law up to 600 N","k = 400 N/m works for all three readings","The cord is being compressed"],0,"F/s = 400 N/m for the first two. At 600 N Hooke's law predicts 1.50 m, but it stretched 1.70 m, so it has passed the limit of proportionality."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s13-best",null); if(best==null||pct>best) store.set("s13-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Define","Give the exact meaning in one full, precise sentence.","Define the elastic limit."],
+  ["State","Give a short fact, law or value. No explanation needed.","State Hooke's law."],
+  ["Investigate","Observe, study or examine in detail to establish facts and reach new conclusions.","Investigate the force needed to compress a spring."],
+  ["Verify","Show by experiment or calculation that a law or relationship holds.","Verify Hooke's law for a spring."],
+  ["Solve","Work out the answer to a problem, showing each step.","Solve for the compression of each car spring."],
+  ["Calculate","Write the formula, substitute the numbers, give the answer with a unit.","Calculate the spring constant."],
+  ["Explain","Give reasons, using physics ideas, for why something happens.","Explain the minus sign in F = −ks."],
+  ["Describe","Give the steps or features in a clear order.","Describe how to measure the extension of a spring."],
+  ["Sketch","Draw a rough graph with labelled axes that shows the shape.","Sketch force against extension for a rubber band."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+
+// Calculation trainer
+// Calculation trainer
+function parseNum(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,ch=>({"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-"})[ch]);
+  s=s.replace(/[x×*]10\^?/i,"e");
+  return parseFloat(s);
+}
+const r1 = x => Math.round(x*10)/10;
+const PTYPES = {
+  fks:{ name:"F = ks", gen(){ const k=pick([20,25,40,50,80,200]), c=pick([2,4,5,8,10,12]), s=c/100, f=k*s;
+    return { q:`A spring has a spring constant of <b>${k} N/m</b>. It is stretched by <b>${c} cm</b>. Calculate the size of the restoring force.`, ans:f, unit:"N", steps:[`s = ${c} cm = ${s} m`,"F = ks",`F = ${k} × ${s} = ${s3(f)} N`] }; } },
+  kk:{ name:"Find k", gen(){ const f=pick([2,3,4.5,6,8,10]), c=pick([3,4,5,6,8,10]), s=c/100, k=f/s;
+    return { q:`A force of <b>${f} N</b> stretches a spring by <b>${c} cm</b>. Calculate the spring constant.`, ans:k, unit:"N/m", steps:[`s = ${c} cm = ${s} m`,"k = F / s",`k = ${f} / ${s} = ${s3(k)} N/m`] }; } },
+  ss:{ name:"Find the extension", gen(){ const k=pick([20,25,40,50,80,100]), f=pick([1,2,3,4,5,6]), s=f/k, cm=s*100;
+    return { q:`A force of <b>${f} N</b> acts on a spring with k = <b>${k} N/m</b>. Calculate the extension in cm.`, ans:cm, unit:"cm", steps:["s = F / k",`s = ${f} / ${k} = ${s3(s)} m`,`s = ${s3(cm)} cm`] }; } },
+  len:{ name:"New length", gen(){ const L0=pick([10,12,15,20]), mg=pick([100,200,250,300,500]), k=pick([20,25,40,49]), f=mg/1000*G, x=f/k*100, L=L0+x;
+    return { q:`A spring of natural length <b>${L0} cm</b> has k = <b>${k} N/m</b>. A <b>${mg} g</b> mass hangs from it at rest. Calculate the new length in cm. (g = 9.8 m/s²)`, ans:L, unit:"cm", steps:[`F = mg = ${mg/1000} × 9.8 = ${s3(f)} N`,`s = F / k = ${s3(f)} / ${k} = ${s3(x/100)} m = ${s3(x)} cm`,`New length = ${L0} + ${s3(x)} = ${s3(L)} cm`] }; } },
+  car:{ name:"Car springs", gen(){ const m=pick([900,1000,1200,1500]), k=pick([20000,25000,30000,40000]), f=m*G/4, s=f/k, cm=s*100;
+    return { q:`A car of mass <b>${m} kg</b> rests equally on four springs, each with k = <b>${fmtN(k)} N/m</b>. Calculate the compression of each spring in cm. (g = 9.8 m/s²)`, ans:cm, unit:"cm", steps:[`Weight = ${m} × 9.8 = ${Math.round(m*G)} N; each spring takes ÷ 4 = ${Math.round(f)} N`,`s = F / k = ${Math.round(f)} / ${fmtN(k)} = ${s3(s)} m`,`s = ${s3(cm)} cm`] }; } },
+  mass:{ name:"Mass from stretch", gen(){ const k=pick([20,40,49,50,98]), c=pick([2,4,5,10]), f=k*c/100, mkg=f/G, g=mkg*1000;
+    return { q:`A mass hangs at rest on a spring with k = <b>${k} N/m</b> and stretches it by <b>${c} cm</b>. Calculate the mass in grams. (g = 9.8 m/s²)`, ans:g, unit:"g", steps:[`Weight = ks = ${k} × ${c/100} = ${s3(f)} N`,`m = W / g = ${s3(f)} / 9.8 = ${s3(mkg)} kg`,`m = ${s3(g)} g`] }; } },
+  series:{ name:"Series", gen(){ const k1=pick([100,150,200,300]), k2=pick([100,150,200,300]), k=k1*k2/(k1+k2);
+    return { q:`Two springs, k₁ = <b>${k1} N/m</b> and k₂ = <b>${k2} N/m</b>, are joined end to end (in series). Calculate the spring constant of the combination.`, ans:k, unit:"N/m", steps:["1/k = 1/k₁ + 1/k₂",`1/k = 1/${k1} + 1/${k2} = ${s3(1/k1+1/k2)} m/N`,`k = 1 ÷ ${s3(1/k1+1/k2)} = ${s3(k)} N/m`] }; } },
+  par:{ name:"Parallel", gen(){ const k1=pick([50,80,100,150]), k2=pick([50,80,100,150]), f=pick([4,6,9,12]), k=k1+k2, cm=f/k*100;
+    return { q:`Two springs, k₁ = <b>${k1} N/m</b> and k₂ = <b>${k2} N/m</b>, hang side by side (in parallel) and together hold a load of <b>${f} N</b>. Both stretch by the same amount. Calculate the extension in cm.`, ans:cm, unit:"cm", steps:[`Parallel: k = k₁ + k₂ = ${k1} + ${k2} = ${k} N/m`,`s = F / k = ${f} / ${k} = ${s3(f/k)} m`,`s = ${s3(cm)} cm`] }; } },
+  grad:{ name:"k from two readings", gen(){ const k=pick([20,25,40,50]), L0=pick([12,15,18,20]), f1=0.2*G, f2=0.5*G, L1=r1(L0+f1/k*100), L2=r1(L0+f2/k*100), dx=r1(L2-L1), ans=(f2-f1)/(dx/100);
+    return { q:`A spring's pointer reads <b>${L1.toFixed(1)} cm</b> with a 200 g load and <b>${L2.toFixed(1)} cm</b> with a 500 g load. Calculate the spring constant. (g = 9.8 m/s²)`, ans, unit:"N/m", steps:[`Extra force = (0.500 − 0.200) × 9.8 = ${s3(f2-f1)} N`,`Extra extension = ${L2.toFixed(1)} − ${L1.toFixed(1)} = ${dx.toFixed(1)} cm = ${s3(dx/100)} m`,`k = ${s3(f2-f1)} / ${s3(dx/100)} = ${s3(ans)} N/m`] }; } },
+  sign:{ name:"F = −ks with signs", gen(){ const k=pick([40,60,120,150,200]), c=pick([2,3,4,5]), st=Math.random()<0.5, s=(st?1:-1)*c/100, f=-k*s;
+    return { q:`Take right as positive. A spring with k = <b>${k} N/m</b> is ${st?"stretched":"compressed"}: its end moves <b>${c} cm to the ${st?"right":"left"}</b>. Use F = −ks to find the restoring force, with its sign.`, ans:f, unit:"N", steps:[`s = ${st?"+":"−"}${c/100} m`,`F = −ks = −${k} × (${st?"+":"−"}${c/100})`,`F = ${f>0?"+":"−"}${s3(Math.abs(f))} N (${f>0?"to the right":"to the left"}, back towards the natural length)`] }; } },
+};
+let pType="fks", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseNum($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 12.5 or 0.68.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(Math.abs(pCur.ans)*0.02, 0.01);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: use the extension (not the length); convert cm and mm to metres; use W = mg for hanging masses; in F = −ks keep the sign. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+// Drill: which spring is stiffer?
+let pd = { FA:4, FB:6, kA:40, kB:40, xA:0.1, xB:0.15, k:"same", sel:null, shown:false, streak:0 };
+let predC=null;
+function pdNew(){ const ks=[20,25,40,50,80,100], Fs=[2,4,5,6,8,10];
+  const kA=pick(ks), kB=Math.random()<0.2? kA : pick(ks), FA=pick(Fs); let FB=pick(Fs); while(kA===kB && FB===FA) FB=pick(Fs);
+  pd={...pd,FA,FB,kA,kB,xA:FA/kA,xB:FB/kB,k:kA>kB?"A":kB>kA?"B":"same",sel:null,shown:false};
+  $("predQ").innerHTML=`Spring A: <b>${FA} N</b> stretches it <b>${s3(pd.xA*100)} cm</b>. Spring B: <b>${FB} N</b> stretches it <b>${s3(pd.xB*100)} cm</b>. Which spring has the bigger spring constant?`;
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML=""; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const ok=pd.sel===pd.k; pd.streak=ok?pd.streak+1:0; pd.shown=true;
+  const why=`k = F ÷ s. A: ${pd.FA} ÷ ${s3(pd.xA)} m = ${s3(pd.kA)} N/m. B: ${pd.FB} ÷ ${s3(pd.xB)} m = ${s3(pd.kB)} N/m. `+(pd.k==="same"?"Same spring constant: the bigger load just gives a proportionally bigger extension.":`Spring ${pd.k} is stiffer: it needs more force per metre of stretch. A longer extension doesn't always mean a softer spring; compare F ÷ s.`);
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Verifying Hooke's law", intro:"A student hangs a spring beside a metre stick, with a pointer fixed to the bottom of the spring. Weights are added in 1.0 N steps and the pointer is read each time:<br>F (N): 0 · 1.0 · 2.0 · 3.0 · 4.0 · 5.0<br>Reading (cm): 20.0 · 22.6 · 25.0 · 27.4 · 30.1 · 32.5",
+    parts:[["a","State Hooke's law.",6,"The restoring force of a spring is proportional to its extension (3), provided the limit of proportionality / elastic limit is not exceeded (3). Accept F = −ks with symbols explained."],
+      ["b","Describe how the extension for each weight is found, and give one precaution.",9,"Extension = pointer reading − reading with no load (3); read the pointer at eye level with it / avoid parallax (3); any other valid precaution: wait for the spring to stop moving, pointer close to the scale, check readings when unloading (3)."],
+      ["c","Calculate each extension and draw a graph of force against extension.",12,"Extensions 0, 2.6, 5.0, 7.4, 10.1, 12.5 cm (3); axes labelled with quantities and units (3); points plotted correctly (3); straight line of best fit through the origin (3)."],
+      ["d","Use your graph to find the spring constant of the spring.",6,"Slope of F against s with s in metres (3); k ≈ 5.0 / 0.125 = 40 N/m, accept 38–42 N/m (3)."],
+      ["e","Predict the pointer reading for a load of 3.5 N.",6,"s = F/k = 3.5 / 40 = 0.0875 m = 8.75 cm (3); reading = 20.0 + 8.75 ≈ 28.8 cm, accept 28.6–29.0 cm (3)."]] },
+  { title:"Car suspension", intro:"A car of mass 1200 kg is supported equally by four coil springs. Each spring has a spring constant of 25 000 N/m. (g = 9.8 m/s²)",
+    parts:[["a","Write Hooke's law as an equation and explain the minus sign.",6,"F = −ks, with F restoring force, k spring constant, s compression or extension (3). The minus sign: the restoring force acts in the opposite direction to the displacement (3)."],
+      ["b","Calculate the force on each spring and its compression.",9,"Weight = 1200 × 9.8 = 11 760 N (3); each spring 11 760 ÷ 4 = 2940 N (3); s = F/k = 2940 / 25 000 = 0.118 m = 11.8 cm (3)."],
+      ["c","Four passengers with a total mass of 300 kg get in. By how much more is each spring compressed?",9,"Extra weight = 300 × 9.8 = 2940 N (3); per spring 735 N (3); extra compression = 735 / 25 000 = 0.0294 m ≈ 2.9 cm (3). (Total 14.7 cm.)"],
+      ["d","The four springs act side by side. Find their combined spring constant and use it to check your answer to (b).",6,"Parallel: k = 4 × 25 000 = 100 000 N/m (3); s = 11 760 / 100 000 = 0.118 m, the same as in (b) (3)."],
+      ["e","Explain why the springs must not be compressed until the coils touch.",6,"Once the coils touch the spring can't compress further / no longer obeys Hooke's law (3); the force rises sharply, so no cushioning and possible damage or permanent deformation (3)."]] },
+  { title:"Testing a bungee cord (secondary data)", intro:"A manufacturer tests a new bungee cord. Sample results:<br>Load (N): 0 · 200 · 400 · 600 · 800 · 1000 · 1200<br>Extension (m): 0 · 0.50 · 1.00 · 1.50 · 2.00 · 2.70 · 3.80",
+    parts:[["a","Define the limit of proportionality and the elastic limit.",6,"Limit of proportionality: the point beyond which force is no longer proportional to extension (3). Elastic limit: the greatest load the cord can take and still return to its original length when it is removed (3)."],
+      ["b","Use the data to show that the cord obeys Hooke's law for small loads, and find its spring constant.",9,"F ÷ s = 200/0.50 = 400/1.00 = 600/1.50 = 800/2.00 = 400 N/m (6): constant, so F ∝ s (Hooke's law) with k = 400 N/m (3). Accept a graph showing a straight line through the origin."],
+      ["c","Estimate the limit of proportionality.",6,"At 1000 N Hooke's law predicts 2.50 m but the cord stretched 2.70 m (3); so the limit lies between 800 N and 1000 N (3)."],
+      ["d","A 70 kg jumper hangs at rest at the end of the jump. Calculate the extension of the cord. (g = 9.8 m/s²)",9,"Weight = 70 × 9.8 = 686 N (3); below 800 N, so Hooke's law applies (2); s = 686 / 400 = 1.7 m (4)."],
+      ["e","The test cord was loaded to 1200 N. Explain why it should not be used for jumping afterwards.",6,"1200 N may be past the elastic limit, so the cord could be permanently stretched / plastically deformed (3); it no longer behaves as designed, so a jumper could fall further than planned (3)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+// Revision checklist
+const RAG = ["Define extension and compression","Say whether an object is stretched, compressed or both","State Hooke's law (F = −ks)","Explain the minus sign in F = −ks","Use F = ks with lengths in metres","Find k from the slope of a force–extension graph","Describe the experiment to verify Hooke's law","Convert hanging masses to forces (W = mg)","Find natural length and new length from pointer readings","Define the limit of proportionality and the elastic limit","Describe elastic and plastic deformation","Solve shared-load problems (car springs)","Combine springs in series and in parallel","Use secondary data to find k and spot the limit"];
+const ragState=store.get("s13-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s13-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Plan a fair test","Independent variable: the load (force). Dependent: the extension. Controlled: the same spring, pointer and scale.","Hooke's law lab"],["Collect primary data","Take a no-load reading first, then six or more loads; read again while unloading.","Hooke's law lab"],["Read instruments well","Eye level with the pointer to avoid parallax error; wait until the spring stops moving.","Hooke's law lab"],["Choose the right graph","Force against extension (not length): a straight line through the origin.","Hooke's law lab"],["Use the slope","k = slope of F against s, with s in metres, in N/m.","Hooke's law and secondary data labs"],["Use secondary data","Fit the first points of a test table; find where the line stops fitting.","Secondary data lab"],["Know the limits of a model","Hooke's law only holds up to the limit of proportionality; rubber never obeys it.","Elastic limits lab"],["Work safely","Don't overload springs; wear goggles in case a wire snaps; keep feet clear of hanging masses.","Elastic limits lab"]];
+const skState=store.get("s13-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s13-skills",skState); });
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+const fx2 = x => (Math.abs(x)<0.005?0:x).toFixed(2);
+// Stretch or squash
+const sp = { mode:"stretch", m:0.2, k:20 };
+function spUpd(){ const r=spModel(sp), cmp=sp.mode==="compress", L0c=(SP_L0*100).toFixed(1), Lc=(r.L*100).toFixed(1), xc=(r.x*100).toFixed(1);
+  $("spMo").textContent=Math.round(sp.m*1000)+" g";
+  setReadout($("spOut"),[["Load F = mg",s3(r.Fl)+" N"],["Natural length",L0c+" cm"],["New length",Lc+" cm"],[cmp?"Compression":"Extension",xc+" cm"],["Spring constant k",sp.k+" N/m"],["Restoring force",r.Fl>0? s3(r.Fl)+(cmp?" N, pushing up":" N, pulling up") : "0 N"]]);
+  $("spWork").innerHTML = sp.m===0? `No load: the spring sits at its natural length, ${L0c} cm. No ${cmp?"compression":"extension"}, so no restoring force.`
+    : r.solid? `The load (${s3(r.Fl)} N) would need a compression of ${s3(r.Fl/sp.k*100)} cm, but the coils touch after ${((SP_L0-SP_SOLID)*100).toFixed(0)} cm. The spring is now solid, so it no longer obeys Hooke's law: the bench takes the rest of the weight.`
+    : `${cmp?"Compression = natural length − new length":"Extension = new length − natural length"} = ${cmp? L0c+" − "+Lc : Lc+" − "+L0c} = <b>${xc} cm</b>. At rest the restoring force balances the weight: ks = mg, so s = mg ÷ k = ${s3(r.Fl)} ÷ ${sp.k} = ${s3(r.x)} m.`;
+  spC.redraw(); }
+$("spMode").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sp.mode=b.dataset.m; pressGroup([...$("spMode").querySelectorAll("button")],b); spUpd(); });
+$("spK").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sp.k=+b.dataset.k; pressGroup([...$("spK").querySelectorAll("button")],b); spUpd(); });
+$("spM").addEventListener("input",e=>{ sp.m=+e.target.value/1000; spUpd(); });
+const SQ = [["A trampoline's edge springs as you land","S","The springs are pulled longer."],["A car's suspension springs","C","The car's weight squashes them."],["A bungee cord at the bottom of a jump","S","The cord is pulled much longer."],["The spring in a click pen as you press it","C","Your thumb squashes it."],["A newton meter holding a bag of apples","S","The weight pulls the spring longer."],["A mattress spring under a sleeper","C","The sleeper's weight squashes it."],["A ruler bent over the edge of a desk","B","Bending: the top surface stretches, the bottom surface squashes."],["A rubber band around a rolled-up poster","S","It is stretched around the roll."],["The legs of a chair you sit on","C","Solid objects are compressed a tiny amount too."],["A diving board with a diver on the end","B","It bends: one surface stretches, the other compresses."],["A pogo stick spring as you land","C","Your weight and speed squash it."],["A guitar string tuned to pitch","S","Tuning tightens (stretches) the string."]];
+const SQN = {S:"Stretched",C:"Compressed",B:"Both"}, sqS = { order:[], ans:{} };
+const sqRender=()=>sorter("sqList","sqOut",SQ,SQN,sqS);
+function sqNew(){ sqS.order=shuffle(SQ.map((s,k)=>k)); sqS.ans={}; sqRender(); }
+$("sqList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b) return; sqS.ans[+b.dataset.k]=b.dataset.v; sqRender(); });
+$("sqReset").addEventListener("click",sqNew);
+// Hooke's law experiment
+const hk = { n:0, k:25, L0:0.15, data:[], revealed:false, last:null };
+function hkNewHidden(){ hk.k=pick([20,25,32,40,50]); hk.L0=rnd(120,200)/1000; hk.data=[]; hk.revealed=false; hk.last=null; }
+hkNewHidden();
+const hkPos = n => hk.L0 + n*0.1*G/hk.k;
+function hkUpd(){ $("hkNo").textContent=n0(hk.n);
+  const last=hk.last&&hk.last.n===hk.n? hk.last : null;
+  setReadout($("hkOut"),[["Masses on the hanger",`${hk.n} × 100 g = ${hk.n*100} g`],["Force F = mg",`${(hk.n*0.1*G).toFixed(2)} N`],["Pointer reading",last? last.r.toFixed(1)+" cm" : "press Read"],["Readings",String(hk.data.length)]]);
+  hkC.redraw(); }
+function n0(n){ return n+" ("+(n*100)+" g)"; }
+function hkTable(){ const z=hk.data.find(d=>d[0]===0);
+  $("hkTable").innerHTML = hk.data.map(([n,f,r],k)=>`<tr><td>${n}</td><td>${f.toFixed(2)}</td><td>${r.toFixed(1)}</td><td>${z? (r-z[2]).toFixed(1) : "–"}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("hkEmpty").hidden = hk.data.length>0; if(hkGraph) hkGraph.redraw(); }
+$("hkTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ hk.data.splice(+k,1); hkTable(); hkUpd(); } });
+$("hkN").addEventListener("input",e=>{ hk.n=+e.target.value; hkUpd(); });
+$("hkGo").addEventListener("click",()=>{ const r=Math.round((hkPos(hk.n)*100+(Math.random()*2-1)*0.12)*10)/10;
+  hk.last={n:hk.n,r}; hk.data=hk.data.filter(d=>d[0]!==hk.n); hk.data.push([hk.n,hk.n*0.1*G,r]); hk.data.sort((a,b)=>a[0]-b[0]); hkTable(); hkUpd(); });
+$("hkClear").addEventListener("click",()=>{ hk.data=[]; hk.last=null; hkTable(); hkUpd(); });
+$("hkNew").addEventListener("click",()=>{ hkNewHidden(); hkTable(); hkUpd(); });
+$("hkReveal").addEventListener("click",()=>{ hk.revealed=!hk.revealed; hkTable(); });
+// F = -ks
+const LW_M = 0.5;
+const lw = { k:40, s:0.05, play:false, t:0, s0:0.05 };
+function lwUpd(){ const f=-lw.k*lw.s, st=Math.abs(lw.s)<0.0005? "at natural length" : lw.s>0? "stretched" : "compressed";
+  $("lwSo").textContent=sg(lw.s,3)+" m"; $("lwKo").textContent=lw.k+" N/m";
+  setReadout($("lwOut"),[["Displacement s",sg(lw.s,3)+" m ("+st+")"],["Restoring force F = −ks",sg(f,2)+" N"],["Direction of F",Math.abs(f)<0.005?"none":f<0?"to the left":"to the right"],["Acceleration a = F/m",sg(f/LW_M,2)+" m/s²"]]);
+  $("lwWork").innerHTML = `Take right as positive. F = −ks = −${lw.k} × (${sg(lw.s,3)}) = <b>${sg(f,2)} N</b>. `+(st==="at natural length"? "At the natural length there is no restoring force." : `The spring is ${st}, so it ${lw.s>0?"pulls the block back to the left":"pushes the block back to the right"}: always towards s = 0. Size: ks = ${lw.k} × ${Math.abs(lw.s).toFixed(3)} = ${Math.abs(f).toFixed(2)} N.`);
+  lwC.redraw(); }
+$("lwS").addEventListener("input",e=>{ lw.play=false; lw.s=+e.target.value; lwUpd(); });
+$("lwK").addEventListener("input",e=>{ lw.k=+e.target.value; lwUpd(); });
+$("lwPlay").addEventListener("click",()=>{ if(Math.abs(lw.s)<0.001){ lw.s=0.08; }
+  if(reduce){ lw.s=-lw.s; $("lwS").value=lw.s; lwUpd(); return; } lw.s0=lw.s; lw.t=0; lw.play=true; });
+$("lwStop").addEventListener("click",()=>{ lw.play=false; lw.s=Math.round(lw.s/0.005)*0.005; $("lwS").value=lw.s; lwUpd(); });
+// Elastic limits
+const lm = { mi:0, F:0, Fmax:0 };
+$("lmMat").innerHTML = MATS.map((m,k)=>`<button data-k="${k}" aria-pressed="${k===0}">${m.n}</button>`).join("");
+function lmSet(mi){ lm.mi=mi; lm.F=0; lm.Fmax=0; const mt=MATS[mi]; $("lmF").max=mt.Fb; $("lmF").step=mt.step; $("lmF").value=0; lmUpd(); }
+function lmUpd(){ const mt=MATS[lm.mi], snapped=lm.Fmax>=mt.Fb-1e-9, x=xUnload(mt,lm.F,lm.Fmax), set=xUnload(mt,0,lm.Fmax);
+  $("lmFo").textContent=trim(lm.F)+" N";
+  const region = snapped? "Snapped" : mt.rubber? "Elastic, but not proportional" : lm.Fmax<=mt.Fp? "Straight line: obeys Hooke's law" : lm.Fmax<=mt.Fe? "Past P: still elastic" : "Past E: plastic";
+  setReadout($("lmOut"),[["Load now",trim(lm.F)+" N"],["Extension now",snapped?"–":s3(x)+" mm"],["Biggest load so far",trim(lm.Fmax)+" N"],["Region",region],["Permanent extension if unloaded",snapped?"–":(set<0.005?"0":s3(set))+" mm"]]);
+  let tx;
+  if(snapped) tx=`The ${mt.n.toLowerCase()} broke at about ${mt.Fb} N, its breaking point. Press "Fresh sample" to start again.`;
+  else if(mt.rubber) tx=`Rubber is elastic: it goes back to its original length when unloaded. But its graph is a curve, so force is not proportional to extension: rubber does not obey Hooke's law.`+(lm.F<lm.Fmax?" Unloading follows a lower curve (hysteresis): some energy becomes heat.":"");
+  else if(lm.Fmax<=mt.Fp) tx=`Up to ${mt.Fp} N (the limit of proportionality, P) the graph is a straight line through the origin: F = ks with k = ${s3(mt.k)} N/mm = ${fmtN(mt.k*1000)} N/m. Remove the load and it returns to its original length.`;
+  else if(lm.Fmax<=mt.Fe) tx=`Past P (${mt.Fp} N) the line starts to curve, but it is still below the elastic limit E (${mt.Fe} N): lower the load and it returns to its original length.`;
+  else tx=`Past the elastic limit E (${mt.Fe} N) the stretch is plastic. Lower the load and it comes back along a line parallel to the first straight part, ending ${s3(set)} mm longer than at the start: a permanent extension.`;
+  $("lmWork").innerHTML=tx; lmC.redraw(); }
+$("lmMat").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pressGroup([...$("lmMat").querySelectorAll("button")],b); lmSet(+b.dataset.k); });
+$("lmF").addEventListener("input",e=>{ const mt=MATS[lm.mi]; if(lm.Fmax>=mt.Fb-1e-9){ e.target.value=lm.F; return; } lm.F=+e.target.value; lm.Fmax=Math.max(lm.Fmax,lm.F); lmUpd(); });
+$("lmNew").addEventListener("click",()=>lmSet(lm.mi));
+// Combining springs
+const cb = { arr:"series", k1:100, k2:100, m:0.5 };
+function cbUpd(){ const r=cbCalc(cb);
+  $("cbK1o").textContent=cb.k1+" N/m"; $("cbK2o").textContent=cb.k2+(cb.arr==="single"?" N/m (not used)":" N/m"); $("cbMo").textContent=cb.m.toFixed(2)+" kg"; $("cbK2").disabled = cb.arr==="single";
+  setReadout($("cbOut"),[["Load W = mg",s3(r.Fl)+" N"],["Combined k",s3(r.k)+" N/m"],["Force on spring 1",s3(r.F1)+" N"]].concat(cb.arr==="single"?[]:[["Force on spring 2",s3(r.F2)+" N"]]).concat([["Total extension",(r.total*100).toFixed(1)+" cm"]]));
+  $("cbWork").innerHTML = cb.arr==="single"? `One spring: s = W ÷ k = ${s3(r.Fl)} ÷ ${cb.k1} = <b>${s3(r.total)} m</b>.`
+    : cb.arr==="series"? `Series: each spring carries the full ${s3(r.Fl)} N. s₁ = ${s3(r.Fl)} ÷ ${cb.k1} = ${s3(r.x1)} m, s₂ = ${s3(r.Fl)} ÷ ${cb.k2} = ${s3(r.x2)} m. Total = <b>${s3(r.total)} m</b>. Check: 1/k = 1/${cb.k1} + 1/${cb.k2}, so k = ${s3(r.k)} N/m and W ÷ k = ${s3(r.Fl/r.k)} m ✓. Less stiff than either spring.`
+    : `Parallel: both springs stretch by the same amount and share the load. k = ${cb.k1} + ${cb.k2} = ${r.k} N/m, so s = ${s3(r.Fl)} ÷ ${r.k} = <b>${s3(r.total)} m</b>. Spring 1 takes ${cb.k1} × ${s3(r.x)} = ${s3(r.F1)} N, spring 2 takes ${s3(r.F2)} N: they add up to the load ✓.`;
+  cbC.redraw(); }
+$("cbArr").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; cb.arr=b.dataset.a; pressGroup([...$("cbArr").querySelectorAll("button")],b); cbUpd(); });
+[["cbK1","k1"],["cbK2","k2"],["cbM","m"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ cb[k]=+e.target.value; cbUpd(); }));
+// Secondary data
+const ds = { i:0, n:6 };
+$("dsSet").innerHTML = DATASETS.map((d,k)=>`<button data-k="${k}" aria-pressed="${k===0}">${d.n}</button>`).join("");
+function dsUpd(){ const D=DATASETS[ds.i], N=D.F.length; ds.n=Math.min(Math.max(2,ds.n),N); $("dsN").max=N; $("dsN").value=ds.n; $("dsNo").textContent=ds.n+" points";
+  $("dsDesc").textContent=D.d; $("dsXh").textContent=D.xl;
+  $("dsTable").innerHTML = D.F.map((f,j)=>`<tr><td>${f}</td><td>${D.x[j]}</td><td>${j? fmtN(f/(D.x[j]/D.toM)) : "–"}</td><td>${j<ds.n?"✓":"–"}</td></tr>`).join("");
+  if(dsGraph) dsGraph.redraw(); }
+$("dsSet").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ds.i=+b.dataset.k; ds.n=DATASETS[ds.i].F.length; pressGroup([...$("dsSet").querySelectorAll("button")],b); dsUpd(); });
+$("dsN").addEventListener("input",e=>{ ds.n=+e.target.value; dsUpd(); });
+function dsResult(){ const D=DATASETS[ds.i], [m,c]=dsFit(ds.i,ds.n), kNm=m*D.toM, dev=j=>{ const p=m*D.x[j]+c; return (D.F[j]-p)/p; };
+  const badUsed=D.F.map((f,j)=>j).filter(j=>j>0 && j<ds.n && Math.abs(dev(j))>0.05);
+  let out=`Line through the first ${ds.n} points: slope = <b>k = ${fmtN(kNm)} N/m</b> (${s3(m)} N per ${D.u}), intercept = ${s3(c)} N. `;
+  if(badUsed.length) out+=`Some points you used are more than 5% off the line (at ${badUsed.map(j=>D.F[j]+" N").join(", ")}), so this isn't a good straight line: use fewer points.`;
+  else { const first=D.F.map((f,j)=>j).find(j=>j>=ds.n && Math.abs(dev(j))>0.05);
+    if(first==null) out+= ds.n<D.F.length? "The points you left out still lie on the line: try including them." : "Every point lies on the line: F ∝ s over the whole test.";
+    else out+=`The first point well off the line is at ${D.F[first]} N, so the limit of proportionality lies between ${D.F[first-1]} N and ${D.F[first]} N.`; }
+  if(ds.i===3) out+=" A rubber band's graph curves from the start: no part of it is properly straight.";
+  $("dsResult").innerHTML=out; }
+
+/* ================= CREATE CANVASES ================= */
+let hkGraph=null, dsGraph=null;
+const hero = makeCanvas($("heroCanvas"), 0.7, 240, s => drawLaw(s.ctx,s.w,s.h,{k:40,s:reduce?0.07:0.08*Math.cos(heroT*2.2),stack:true}), 420);
+const spC = makeCanvas($("spC"), 0.55, 300, s => drawSpringLab(s.ctx,s.w,s.h,sp), 440);
+const hkC = makeCanvas($("hkC"), 0.6, 300, s => drawHooke(s.ctx,s.w,s.h,{n:hk.n,L0:hk.L0,k:hk.k}), 460);
+const lwC = makeCanvas($("lwC"), 0.5, 300, s => drawLaw(s.ctx,s.w,s.h,lw), 420);
+const lmC = makeCanvas($("lmC"), 0.5, 280, s => drawLimit(s.ctx,s.w,s.h,lm), 420);
+const cbC = makeCanvas($("cbC"), 0.55, 300, s => drawCombine(s.ctx,s.w,s.h,cb), 440);
+hkGraph = makeCanvas($("hkGraph"), 0.72, 190, s => {
+  const z=hk.data.find(d=>d[0]===0), pts= z? hk.data.map(([n,f,r])=>[(r-z[2])/100,f]) : [];
+  const spread=pts.length? Math.max(...pts.map(p=>p[0])) : 0, fit = pts.length>=3 && spread>0.01 ? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,0.1],yr:[0,6],xl:"extension s (m)",yl:"F (N)",fit});
+  const truth = hk.revealed? ` True spring constant: <b>${hk.k} N/m</b>; no-load reading ${(hk.L0*100).toFixed(1)} cm.` : "";
+  if(!z){ $("hkResult").innerHTML=(hk.data.length?"Record the reading with no masses too: you need it to work out each extension.":"Start with no masses on the hanger and read the pointer.")+truth; return; }
+  if(!fit){ $("hkResult").innerHTML="Record three or more loads to draw the line."+truth; return; }
+  $("hkResult").innerHTML = `Slope = <b>k = ${fit[0].toFixed(1)} N/m</b>. Intercept = ${fit[1].toFixed(2)} N (should be close to 0). A straight line through the origin shows F ∝ s: Hooke's law is verified.`+truth;
+}, 300);
+dsGraph = makeCanvas($("dsGraph"), 0.72, 190, s => { drawDataG(s,ds.i,ds.n); dsResult(); }, 300);
+predC = makeCanvas($("predC"), 0.6, 220, s => drawDrill(s.ctx,s.w,s.h,{...pd,bgc:C["surface-2"]}), 320);
+pdNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    spring:s=>drawSpringLab(s.ctx,s.w,s.h,{...o,compact:true}),
+    hooke:s=>drawHooke(s.ctx,s.w,s.h,{...o,compact:true}),
+    law:s=>drawLaw(s.ctx,s.w,s.h,{...o,compact:true,stack:true}),
+    limit:s=>drawLimit(s.ctx,s.w,s.h,{...o,compact:true}),
+    combine:s=>drawCombine(s.ctx,s.w,s.h,{...o,compact:true}),
+    data:s=>drawDataG(s,o.ds,o.n),
+  };
+  makeCanvas(el, ["hooke","law","combine"].includes(kind)? 0.75 : 0.6, 170, draws[kind], 380);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-case]").forEach(el=>{ const S=CASES[+el.dataset.case]; makeCanvas(el,0.62,170,s=>drawSpringLab(s.ctx,s.w,s.h,{mode:S.mode,...S.vis,label:S.lab,compact:true,bgc:C["surface-2"]}),260); });
+document.querySelectorAll("canvas[data-mini=fx]").forEach(el=>makeCanvas(el,0.7,160,s=>drawFxMini(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=curve]").forEach(el=>makeCanvas(el,0.7,160,s=>drawCurveMini(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=neg]").forEach(el=>makeCanvas(el,0.7,160,s=>drawNegMini(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=sample]").forEach(el=>makeCanvas(el,0.42,220,s=>scatter(s,SAMPLE_PTS,{xr:[0,0.14],yr:[0,5],xl:"extension s (m)",yl:"F (N)",fit:SAMPLE_FIT,bgc:C["surface-2"]}),320));
+spUpd(); sqNew(); hkTable(); hkUpd(); lwUpd(); lmSet(0); cbUpd(); dsUpd();
+
+/* ================= LOOP / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(view==="labs" && !reduce && lab==="law" && lw.play){ lw.t+=dt; lw.s=lw.s0*Math.cos(Math.sqrt(lw.k/LW_M)*lw.t); $("lwS").value=lw.s; lwUpd(); }
+  requestAnimationFrame(loop);
+})(performance.now());
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>

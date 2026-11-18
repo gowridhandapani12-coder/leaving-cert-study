@@ -1,0 +1,1640 @@
+<title>Doppler Effect Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="16" cy="12" r="1.5"/><circle cx="14" cy="12" r="5"/><circle cx="11.5" cy="12" r="9.5"/></svg></div>
+        <div style="min-width:0"><b>The Doppler Effect</b><span>Leaving Cert Physics · Strand 2 · Section 2.7</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a href="index.html" style="display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px">⌂ Course home</a>
+      <details><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details open><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="here"><span class="mono">2.7</span>Doppler effect</li></ol></details>
+      <details><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 2 · Section 2.7 · Wave effects</span>
+          <h1 style="margin-top:12px">Hear the pitch drop.<br>Catch a <em>speeder</em>.<br>Measure the universe.</h1>
+          <p class="lede">Why a siren sounds higher as it comes towards you, and how the same idea clocks cars, scans blood flow and shows the universe is expanding.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated wavefronts from a moving source, bunched up in front and spread out behind"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/2</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">2.7.1</span><span>model real life situations involving the Doppler effect</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">2.7.2</span><span>investigate the Doppler effect in real life applications using secondary sources</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">The specification's formula is f′ = fc / (c ± u), where u is the speed of the source. Sonic booms, red shift and reflected waves are extras that help with the applications outcome.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Slide, listen and record data. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="waves">
+        <div class="labhead"><span class="pill t">Ripple tank</span><p class="goal">Speed up the source and watch the wavefronts bunch up in front. Listener A is ahead, B is behind.</p></div>
+        <div class="panel sim">
+          <canvas id="ripC" aria-label="Wavefronts spreading from a moving source, with listener A ahead and listener B behind"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="rpM">Source speed <output id="rpMo">0.40 c</output></label><input type="range" id="rpM" min="0" max="0.9" step="0.01" value="0.4"></div>
+            <div class="ctl"><label for="rpF">Source frequency <output id="rpFo">400 Hz</output></label><input type="range" id="rpF" min="200" max="1000" step="10" value="400"></div>
+            <div class="ctl"><span class="lbl">Animation</span><div class="btns"><button id="rpPlay" aria-pressed="true">Pause</button><button id="rpStill">Still source</button></div></div>
+          </div>
+          <div class="readout" id="rpOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Set the speed to 0. Are the circles evenly spaced?</div><div class="try"><b>2</b>Speed up the source. Who hears the higher pitch, A or B?</div><div class="try"><b>3</b>Find the speed where A hears double the frequency.</div></div>
+      </div>
+
+      <div class="lab" data-lab="pitch" hidden>
+        <div class="labhead"><span class="pill t">Siren pass-by</span><p class="goal">A car with a siren drives past you. Turn the sound on and watch the frequency you hear on the graph.</p></div>
+        <div class="panel sim">
+          <canvas id="passC" aria-label="A car driving past a listener, with a graph of the frequency heard against the car's position"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="psU">Car speed <output id="psUo">30 m/s</output></label><input type="range" id="psU" min="5" max="100" step="1" value="30"></div>
+            <div class="ctl"><label for="psF">Siren frequency <output id="psFo">600 Hz</output></label><input type="range" id="psF" min="300" max="1000" step="10" value="600"></div>
+            <div class="ctl"><label for="psD">You stand from the road <output id="psDo">10 m</output></label><input type="range" id="psD" min="2" max="50" step="1" value="10"></div>
+            <div class="ctl"><span class="lbl">Controls</span><div class="btns"><button id="psPlay" aria-pressed="true">Pause</button><button id="psSnd" aria-pressed="false">🔊 Sound on</button><button id="psRestart">Restart</button></div></div>
+          </div>
+          <div class="readout" id="psOut"></div>
+          <div class="working" id="psWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Turn the sound on. When exactly does the pitch drop?</div><div class="try"><b>2</b>Stand further from the road. Is the drop sharper or smoother?</div><div class="try"><b>3</b>Use the formula to check the "approaching" readout by hand.</div></div>
+      </div>
+
+      <div class="lab" data-lab="sonic" hidden>
+        <div class="labhead"><span class="pill t">Sound barrier</span><p class="goal">Push the jet past Mach 1. Watch the wavefronts pile up into a shock wave, then a cone.</p></div>
+        <div class="panel sim">
+          <canvas id="sonC" aria-label="Wavefronts from a jet. Above Mach 1 they form a cone-shaped shock wave."></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="soM">Jet speed <output id="soMo">Mach 1.50</output></label><input type="range" id="soM" min="0.5" max="2.5" step="0.05" value="1.5"></div>
+            <div class="ctl"><span class="lbl">Presets</span><div class="btns" id="soPresets"><button data-m="0.8">Airliner</button><button data-m="1">Mach 1</button><button data-m="2">Concorde</button></div></div>
+            <div class="ctl"><span class="lbl">Animation</span><div class="btns"><button id="soPlay" aria-pressed="true">Pause</button></div></div>
+          </div>
+          <div class="readout" id="soOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>At Mach 1, where do the wavefronts meet?</div><div class="try"><b>2</b>Go faster. Does the cone get wider or narrower?</div><div class="try"><b>3</b>Check the cone angle with sin θ = c / u.</div></div>
+      </div>
+
+      <div class="lab" data-lab="experiment" hidden>
+        <div class="labhead"><span class="pill t">Experiment</span><p class="goal">A car's horn is "about 1 kHz" and the air temperature is unknown. Record readings at different speeds, then use the graph to find the true horn frequency and the speed of sound.</p></div>
+        <div class="panel sim">
+          <canvas id="trackC" aria-label="A car with a horn driving towards or away from a sound sensor"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="dxU">Car speed <output id="dxUo">20 m/s</output></label><input type="range" id="dxU" min="0" max="40" step="1" value="20"></div>
+            <div class="ctl"><span class="lbl">Direction</span><div class="btns"><button id="dxTo" aria-pressed="true">Towards sensor</button><button id="dxAway" aria-pressed="false">Away</button></div></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="dxRec">Record reading</button><button id="dxClear">Clear</button><button id="dxNew">New day</button><button id="dxReveal">Reveal answers</button></div></div>
+          </div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>u (m/s)</th><th>f′ (Hz)</th><th>1/f′ (×10⁻³ s)</th><th></th></tr></thead><tbody id="dxTable"></tbody></table><div class="empty" id="dxEmpty">No readings yet. Record at five or more speeds. Use "Away" for negative u.</div></div>
+            <div class="graphbox"><canvas id="dxGraph" aria-label="Graph of 1/f′ against speed u"></canvas><p class="result" id="dxResult"></p></div>
+          </div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Record at u = 0. That's the horn's true frequency.</div><div class="try"><b>2</b>Take readings from 0 to 40 m/s, towards and away.</div><div class="try"><b>3</b>Is your c sensible for air (330–350 m/s)?</div></div>
+      </div>
+
+      <div class="lab" data-lab="light" hidden>
+        <div class="labhead"><span class="pill t">Red shift</span><p class="goal">Compare hydrogen lines from the lab with light from a galaxy. Move the galaxy, or take on a mystery galaxy.</p></div>
+        <div class="panel sim">
+          <canvas id="specC" aria-label="Two spectra. The galaxy's hydrogen lines are shifted compared with the lab spectrum."></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="ltU">Galaxy speed (+ away, − towards) <output id="ltUo">15 000 km/s</output></label><input type="range" id="ltU" min="-5000" max="30000" step="100" value="15000"></div>
+            <div class="ctl"><span class="lbl">Challenge</span><div class="btns"><button id="ltMyst">Mystery galaxy</button><button id="ltShow">Reveal speed</button></div></div>
+          </div>
+          <div class="readout" id="ltOut"></div>
+          <div class="working" id="ltWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Make the galaxy approach. Which way do the lines move?</div><div class="try"><b>2</b>Do all four lines move by the same number of nm?</div><div class="try"><b>3</b>Mystery galaxy: read λ′ for Hα and calculate its speed.</div></div>
+      </div>
+
+      <div class="lab" data-lab="uses" hidden>
+        <div class="labhead"><span class="pill t">Reflected waves</span><p class="goal">A wave bounces off a moving target and comes back with a new frequency. Pick a use and change the target's speed.</p></div>
+        <div class="panel sim">
+          <canvas id="radC" aria-label="Waves sent towards a moving target and reflected back with closer spacing"></canvas>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Use</span><div class="btns" id="rdMode"><button data-v="radar" aria-pressed="true">Speed gun</button><button data-v="blood" aria-pressed="false">Blood flow</button><button data-v="bat" aria-pressed="false">Bat &amp; moth</button></div></div>
+            <div class="ctl"><label for="rdU">Target speed (towards) <output id="rdUo">30 m/s</output></label><input type="range" id="rdU" min="0" max="60" step="1" value="30"></div>
+          </div>
+          <div class="readout" id="rdOut"></div>
+        </div>
+        <p class="result">The change in spacing is exaggerated so you can see it. Reflected waves are shifted twice (Δf ≈ 2uf / c), which is an extra beyond the specification's formula.</p>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of the Doppler effect"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>Six speeds, six patterns</h2></div><p>The same source of sound, moving faster and faster to the right.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Model a real situation · LO 2.7.1</p><h2>What you hear as a siren passes</h2></div><p>Car at 30 m/s, siren 600 Hz, you 10 m from the road.</p></div>
+        <canvas class="mini" data-mini="pass"></canvas>
+        <div class="chips" style="margin-top:12px"><span class="chip real">Approaching: 658 Hz</span><span class="chip neutral">Level with you: 600 Hz</span><span class="chip virtual">Moving away: 551 Hz</span></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Doppler with light</p><h2>Blue, unshifted or red</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="spectrum" data-u="-12000"></canvas><h3>Approaching: blue shift</h3><p>Lines move to shorter wavelengths. The Andromeda galaxy does this.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="spectrum" data-u="0"></canvas><h3>Not moving: no shift</h3><p>The galaxy's lines match the lab's exactly.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="spectrum" data-u="22000"></canvas><h3>Moving away: red shift</h3><p>Lines move to longer wavelengths. Almost every galaxy does this.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">By the numbers</p><h2>How much does a 1000 Hz siren change?</h2></div><p>Frequency heard as it comes towards you (bar) and goes away (right). c = 340 m/s.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Real life applications · LO 2.7.2</p><h2>Doppler around you</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Write the formula first, then substitute, then the answer <b>with its unit</b>.</li>
+            <li>Approaching: <b>c − u</b>, so f′ goes up. Moving away: <b>c + u</b>, so f′ goes down. Check your answer makes sense.</li>
+            <li>u is the speed of the <b>source</b>; c is the speed of the <b>wave</b> (340 m/s for sound unless you're told otherwise).</li>
+            <li>Convert km/h to m/s first: <b>divide by 3.6</b>.</li>
+            <li>Wavefront sketches: each circle is centred where the source <b>was</b> when it made that wave. Bunched on the side it's moving towards.</li>
+            <li>"Define the Doppler effect" needs two ideas: <b>apparent change in frequency</b> and <b>relative motion</b>.</li>
+            <li>For light, use c = 3.0 × 10⁸ m/s and Δλ / λ ≈ u / c. Longer λ means moving <b>away</b>.</li>
+            <li>For an application, name it, say what is measured (the frequency shift) and what it tells you (a speed).</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The verb tells you what the examiner wants. The learning outcomes for this section use model and investigate.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Higher, lower or the same?</h2></div></div>
+          <canvas id="predC" aria-label="Wavefronts from a source, with you as the listener"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns" data-g="0"><button data-a="Higher">Higher</button><button data-a="Same">The same</button><button data-a="Lower">Lower</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next situation</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: f′, red shift, Mach, wavefront…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>The first two are the specification's formula f′ = fc / (c ± u). The rest are useful extras for working with it.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Approaching</span><span class="big">f′ = fc / (c − u)</span><dl><dt>f′</dt><dd>frequency heard</dd><dt>f</dt><dd>frequency of the source</dd><dt>c</dt><dd>speed of the wave</dd><dt>u</dt><dd>speed of the source</dd></dl><div class="ex">500 × 340 / (340 − 40) = 567 Hz</div></div>
+        <div class="panel fcell"><span class="pill">Moving away</span><span class="big">f′ = fc / (c + u)</span><dl><dt>c + u</dt><dd>bigger bottom, so f′ is lower</dd></dl><div class="ex">500 × 340 / (340 + 40) = 447 Hz</div></div>
+        <div class="panel fcell"><span class="pill">Wave equation</span><span class="big">c = fλ</span><dl><dt>λ</dt><dd>wavelength in metres</dd></dl><div class="ex">340 / 500 = 0.68 m</div></div>
+        <div class="panel fcell"><span class="pill a">Extra</span><span class="big">u = c (f₁ − f₂) / (f₁ + f₂)</span><dl><dt>f₁</dt><dd>heard while approaching</dd><dt>f₂</dt><dd>heard while moving away</dd></dl><div class="ex">567 Hz and 447 Hz → u ≈ 40 m/s</div></div>
+        <div class="panel fcell"><span class="pill a">Extra</span><span class="big">Δλ / λ ≈ u / c</span><dl><dt>Δλ</dt><dd>change in wavelength (red shift if positive)</dd><dt>c</dt><dd>3.0 × 10⁸ m/s</dd></dl><div class="ex">656.3 → 669.4 nm: u ≈ 6.0 × 10⁶ m/s</div></div>
+        <div class="panel fcell"><span class="pill a">Extra</span><span class="big">Δf ≈ 2uf / c</span><dl><dt>Δf</dt><dd>shift of a wave reflected from a target moving at u</dd></dl><div class="ex">24.125 GHz gun, car at 30 m/s: Δf ≈ 4.8 kHz</div></div>
+        <div class="panel fcell"><span class="pill a">Extra</span><span class="big">Mach = u / c</span><dl><dt>sin θ = c / u</dt><dd>half-angle of the shock-wave cone</dd></dl><div class="ex">Mach 2 → θ = 30°</div></div>
+      </div>
+      <footer>
+        <p>Built on section 2.7 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes are quoted from the specification. Experiment data is simulated with small random errors. Speed of sound taken as 340 m/s unless stated.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const D2R = Math.PI/180, R2D = 180/Math.PI;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  waves:'<circle cx="16" cy="12" r="1.5"/><circle cx="14" cy="12" r="5"/><circle cx="11.5" cy="12" r="9.5"/>',
+  pitch:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 010 7"/><path d="M19.5 5.5a9 9 0 010 13"/>',
+  sonic:'<path d="M21 12L9 8.5v7z"/><path d="M9 8.5L3 4M9 15.5L3 20"/>',
+  experiment:'<path d="M3 3v18h18"/><path d="M6 8l13 9"/><circle cx="8" cy="9.5" r="1.3"/><circle cx="13" cy="13" r="1.3"/><circle cx="17" cy="16" r="1.3"/>',
+  light:'<rect x="2" y="7" width="20" height="10" rx="2"/><path d="M8 7v10M15 7v10M18 7v10"/>',
+  uses:'<path d="M3 9h10v5H8l-1 5H4l1-5H3z"/><path d="M16 8.5a4 4 0 010 4"/><path d="M19 6a8 8 0 010 9"/>',
+  car:'<path d="M3 16v-4l2-5h14l2 5v4z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>',
+  siren:'<path d="M7 18v-6a5 5 0 0110 0v6"/><path d="M4 18h16v3H4z"/><path d="M12 2v2M4 6l1.5 1.5M20 6l-1.5 1.5"/>',
+  plane:'<path d="M21 12L3 5l4 7-4 7z"/>',
+  heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 10-7 10z"/><path d="M4 12h4l2-3 3 6 2-3h5"/>',
+  cloud:'<path d="M7 17a4 4 0 01-.5-8 5.5 5.5 0 0110.6 1.5A3.5 3.5 0 0117 17z"/><path d="M9 21l1-2M13 21l1-2"/>',
+  galaxy:'<ellipse cx="12" cy="12" rx="10" ry="4"/><circle cx="12" cy="12" r="2"/>',
+  bat:'<path d="M2 9c2 0 3 2 4 4 1-2 3-2 4 0l2-3 2 3c1-2 3-2 4 0 1-2 2-4 4-4-1 4-3 8-7 9l-3-2-3 2c-4-1-6-5-7-9z"/>',
+  planet:'<circle cx="9" cy="12" r="5"/><circle cx="20" cy="7" r="1.6"/><path d="M14.5 9.5L18.5 8"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"waves", name:"Moving sources", short:"Why wavefronts bunch up in front of a moving source.", tint:"var(--blush)"},
+  {id:"pitch", name:"Pitch & the formula", short:"f′ = fc/(c ± u), and the siren that drops in pitch.", tint:"var(--apricot)"},
+  {id:"sonic", name:"Sonic booms", short:"Mach 1, shock waves and the cone behind a jet.", tint:"var(--sage)"},
+  {id:"experiment", name:"Measuring it", short:"Collect data, plot 1/f′ against u, find c.", tint:"var(--cream)"},
+  {id:"light", name:"Red shift", short:"Doppler with light, and the expanding universe.", tint:"var(--blush)"},
+  {id:"uses", name:"Applications", short:"Speed guns, Doppler ultrasound, weather radar, bats.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary data: [term, also known as / symbol, definition, topic, formula] ---------- */
+const GLOSS = [
+  ["Doppler effect","","The apparent change in the frequency of a wave caused by relative motion between the source and the observer.","waves"],
+  ["Source","","The object giving out the waves, such as a siren, a loudspeaker or a star.","waves"],
+  ["Observer","listener, detector","The person or instrument that receives the waves.","waves"],
+  ["Relative motion","","The source and observer moving towards or away from each other. Only motion along the line between them causes a Doppler shift.","waves"],
+  ["Wavefront","","A line joining points on a wave that are in step, such as all the crests. Drawn as circles around a point source.","waves"],
+  ["Wavelength","λ","The distance between two neighbouring wavefronts (crests). Unit: metre.","waves","c = fλ"],
+  ["Frequency","f","The number of waves passing a point each second. Unit: hertz (Hz).","waves"],
+  ["Hertz","Hz","The unit of frequency. 1 Hz = one wave per second.","waves"],
+  ["Pitch","","How high or low a sound seems. A higher frequency sounds higher pitched.","waves"],
+  ["Medium","","The material a wave travels through. For sound this is usually air.","waves"],
+  ["Wave speed","c","How fast the wave travels through the medium. It does not change when the source moves.","waves","c = fλ"],
+  ["Speed of sound","","About 340 m/s in air at room temperature. It rises with temperature: roughly 331 + 0.6 × (temperature in °C) m/s.","waves","c ≈ 340 m/s"],
+  ["Observed frequency","f′ (f dash)","The frequency the observer actually receives.","pitch","f′ = fc / (c ± u)"],
+  ["Source frequency","f","The frequency the source actually gives out. It doesn't change when the source moves.","pitch"],
+  ["Source speed","u","How fast the source moves towards or away from the observer.","pitch"],
+  ["Approaching","","Moving towards the observer. Use c − u, so f′ is higher than f.","pitch","f′ = fc / (c − u)"],
+  ["Receding","","Moving away from the observer. Use c + u, so f′ is lower than f.","pitch","f′ = fc / (c + u)"],
+  ["Siren","","A device that makes a loud sound at a set frequency, used on emergency vehicles.","pitch"],
+  ["Line of sight","","The straight line between source and observer. Only motion along it changes the frequency heard.","pitch"],
+  ["km/h to m/s","","Divide by 3.6. For example, 90 km/h = 25 m/s.","pitch"],
+  ["Mach number","","The speed of an object divided by the speed of sound in the same medium.","sonic","Mach = u / c"],
+  ["Subsonic","","Slower than the speed of sound (below Mach 1).","sonic"],
+  ["Supersonic","","Faster than the speed of sound (above Mach 1).","sonic"],
+  ["Sound barrier","","The sudden rise in air resistance and pressure as an aircraft reaches the speed of sound.","sonic"],
+  ["Shock wave","","A sudden, strong pressure wave formed when wavefronts pile up in front of an object moving at or above the speed of sound.","sonic"],
+  ["Sonic boom","","The loud bang heard when the shock wave cone of a supersonic object passes over you.","sonic"],
+  ["Mach cone","","The cone-shaped shock wave behind a supersonic object. Its half-angle θ obeys sin θ = c / u.","sonic","sin θ = c / u"],
+  ["Datalogger","","Equipment that records measurements automatically, such as a microphone linked to a frequency meter or phone app.","experiment"],
+  ["Primary data","","Data you collect yourself.","experiment"],
+  ["Secondary data","","Data collected by someone else, such as published measurements, articles or data sets.","experiment"],
+  ["Linear graph","","A straight-line graph. Rearranging an equation into the form y = mx + c lets you get results from the slope and the intercept.","experiment"],
+  ["Intercept","","Where a line crosses an axis. On a graph of 1/f′ against u, the vertical intercept is 1/f.","experiment"],
+  ["Slope","gradient","Rise over run. On a graph of 1/f′ against u, the slope is −1/(fc).","experiment","1/f′ = 1/f − u / (fc)"],
+  ["Random error","","Unpredictable scatter in readings. Reduce it by repeating readings and averaging.","experiment"],
+  ["Red shift","","An increase in the wavelength of light from a source moving away. Its spectral lines move towards the red end.","light","Δλ / λ ≈ u / c"],
+  ["Blue shift","","A decrease in the wavelength of light from an approaching source. Its spectral lines move towards the blue end.","light"],
+  ["Spectrum","","The range of wavelengths (colours) in light, spread out by a prism or a diffraction grating.","light"],
+  ["Spectral line","absorption line","A dark (or bright) line at an exact wavelength, caused by a particular element such as hydrogen.","light"],
+  ["Speed of light","c","3.0 × 10⁸ m/s in a vacuum, the same for every observer.","light","c = 3.0 × 10⁸ m/s"],
+  ["Galaxy","","A huge group of billions of stars. Almost every distant galaxy shows red shift.","light"],
+  ["Expanding universe","","The idea that space itself is stretching, so galaxies move apart. Red shift is the main evidence.","light"],
+  ["Hubble's law","","The further away a galaxy is, the faster it recedes. An extra beyond the specification.","light","v = H₀ d"],
+  ["Radar","","Radio detection and ranging: sending out radio waves or microwaves and detecting their reflections.","uses"],
+  ["Speed gun","radar gun","A device that measures a vehicle's speed from the Doppler shift of microwaves reflected from it.","uses","Δf ≈ 2uf / c"],
+  ["Doppler ultrasound","","A scan that measures blood flow from the frequency shift of ultrasound reflected by moving blood cells.","uses"],
+  ["Ultrasound","","Sound with a frequency above 20 kHz, too high for humans to hear.","uses"],
+  ["Echolocation","","How bats and dolphins find prey: they send out sound and listen to the echoes, including their Doppler shift.","uses"],
+  ["Weather radar","Doppler radar","Radar that uses the Doppler shift of reflections from raindrops to show wind speed and spinning storms.","uses"],
+  ["Exoplanet","","A planet orbiting another star. Its pull makes the star wobble, which shows up as a tiny repeating Doppler shift.","uses"],
+  ["Frequency shift","Δf","The difference between the frequency received and the frequency sent out.","uses","Δf = f′ − f"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+// Key terms in notes become tappable: [text to find, glossary term, case-sensitive]
+const GL_LINKS = [["wavefronts","Wavefront"],["wavelength","Wavelength"],["frequency","Frequency"],["pitch","Pitch"],["red shift","Red shift"],["blue shift","Blue shift"],["shock wave","Shock wave"],["sonic boom","Sonic boom"],["Mach number","Mach number"],["ultrasound","Ultrasound"],["intercept","Intercept"],["approaching","Approaching"],["receding","Receding"],["relative motion","Relative motion"]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const fmt = (x,d=1) => Number.isFinite(x)? x.toFixed(d) : "∞";
+const grp = x => Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
+function car(ctx,x,y,s=1){ ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+  ctx.fillStyle=C.terra; ctx.beginPath(); ctx.roundRect(-22,-9,44,14,4); ctx.fill();
+  ctx.fillStyle=C.apricot; ctx.beginPath(); ctx.roundRect(-12,-17,22,9,3); ctx.fill();
+  ctx.fillStyle=C.ink; [-12,12].forEach(cx=>{ ctx.beginPath(); ctx.arc(cx,6,4.5,0,7); ctx.fill(); });
+  ctx.fillStyle=C.ray; ctx.fillRect(-3,-21,6,4); ctx.restore(); }
+function person(ctx,x,y,col,label){ ctx.save(); ctx.fillStyle=col; ctx.strokeStyle=col; ctx.lineWidth=3; ctx.lineCap="round";
+  ctx.beginPath(); ctx.arc(x,y-15,5,0,7); ctx.fill(); ctx.beginPath(); ctx.moveTo(x,y-9); ctx.lineTo(x,y+4); ctx.moveTo(x-6,y-4); ctx.lineTo(x+6,y-4); ctx.moveTo(x,y+4); ctx.lineTo(x-5,y+12); ctx.moveTo(x,y+4); ctx.lineTo(x+5,y+12); ctx.stroke(); ctx.restore();
+  if(label) text(ctx,label,x+10,y-12,col,F(12)); }
+function ear(ctx,x,y,lbl){ ctx.save(); ctx.fillStyle=C.olive; ctx.beginPath(); ctx.arc(x,y,11,0,7); ctx.fill(); ctx.restore(); text(ctx,lbl,x,y+1,C["on-accent"],F(12),"center","middle"); }
+
+/* ================= DOPPLER MODELS + DRAWINGS ================= */
+const CS = 340; // speed of sound used on this page (m/s)
+const fApp = (f,u,c=CS) => f*c/(c-u), fRec = (f,u,c=CS) => f*c/(c+u);
+// Wavefronts from a source moving right at m × (wave speed). anim: source loops across the canvas.
+function drawRipple(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc);
+  const m=o.m||0, T=o.T||0.55, t=o.t!=null? o.t : T*0.35, cpx=Math.max(34,w*(o.compact?0.085:0.1)), cy=h*(o.cy||0.5), diag=Math.hypot(w,h);
+  let srcX, oldA=null;
+  if(o.anim && m>0){ const x0=w*0.08, P=(w*0.84)/(m*cpx), k=Math.floor(t/P), age=t-k*P; srcX = te => x0+(te-Math.floor(te/P)*P)*m*cpx;
+    oldA = te => Math.floor(te/P)<k ? Math.max(0,1-age/0.9) : 1; } // waves from the previous pass fade out after the source loops back
+  else { const sx=w*(o.sx!=null?o.sx:0.55); srcX = te => sx-m*cpx*(t-te); }
+  const n0=Math.floor(t/T), N=Math.ceil(diag*1.1/(cpx*T))+1;
+  ctx.save(); ctx.lineWidth=o.compact?1.5:2; ctx.strokeStyle=C.terra;
+  for(let n=n0;n>n0-N;n--){ const r=cpx*(t-n*T), a0=oldA? oldA(n*T) : 1; if(r<0.5||a0<=0) continue; ctx.globalAlpha=Math.max(0.12,1-r/(diag*1.05))*a0; ctx.beginPath(); ctx.arc(srcX(n*T),cy,r,0,7); ctx.stroke(); }
+  ctx.restore();
+  const x=srcX(t);
+  if(m>=1){ const th=Math.asin(1/m), L=diag*1.2, lw=o.compact?2.2:3.2; line(ctx,x,cy,x-L*Math.cos(th),cy-L*Math.sin(th),C.olive,lw); line(ctx,x,cy,x-L*Math.cos(th),cy+L*Math.sin(th),C.olive,lw); }
+  if(o.icon==="plane"){ ctx.save(); ctx.translate(x,cy); ctx.fillStyle=C.ink; ctx.beginPath(); ctx.moveTo(14,0); ctx.lineTo(-10,-8); ctx.lineTo(-5,0); ctx.lineTo(-10,8); ctx.closePath(); ctx.fill(); ctx.restore(); }
+  else { ctx.fillStyle=C.ink; ctx.beginPath(); ctx.arc(x,cy,o.compact?5:7,0,7); ctx.fill(); }
+  if(m>0 && !o.noArrow){ const a0=x+(o.icon==="plane"?18:10), len=Math.min(w*0.12,16+m*26); arrow(ctx,a0,cy,a0+len,cy,C.ink,2.2); }
+  if(o.ears){ ear(ctx,w*0.95,cy,"A"); ear(ctx,w*0.05,cy,"B"); }
+  if(o.ear==="ahead") ear(ctx,w*0.93,cy,"You"); if(o.ear==="behind") ear(ctx,w*0.07,cy,"You");
+  if(o.labels){ const fs=F(o.compact?11:13);
+    if(m===0) text(ctx,"even spacing: same f all round",w/2,16,C.ink,fs,"center");
+    else if(m<1){ text(ctx,"short λ · high f →",w-8,16,C.ink,fs,"right"); text(ctx,"← long λ · low f",8,16,C.ink,fs); }
+    else text(ctx,m===1?"Mach 1: wavefronts pile up":"Mach "+m+": shock-wave cone",8,16,C.ink,fs); }
+}
+// Frequency heard by a listener d metres from a straight road, car at position x (m), 0 = closest point
+function passF(f,u,d,x){ const r=Math.hypot(x,d); return f*CS/(CS+u*x/r); }
+function drawPass(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc);
+  const {u,f,d,x}=o, cp=o.compact, hs=Math.round(h*0.42), roadY=hs*0.32, X=m=>w/2+m*(w*0.46/200);
+  ctx.fillStyle=C["surface-2"]; ctx.fillRect(0,roadY-15,w,30); line(ctx,0,roadY,w,roadY,C.line,2,[12,10]);
+  const ly=roadY+30+d/50*(hs-roadY-44);
+  line(ctx,X(x),roadY,w/2,ly-14,C.muted,1.2,[3,4]);
+  person(ctx,w/2,ly,C.olive,cp?"":"you");
+  car(ctx,X(x),roadY+2,cp?0.75:1);
+  if(!cp) arrow(ctx,X(x)+26,roadY-22,X(x)+50,roadY-22,C.ink,2);
+  const gx0=cp?14:52, gx1=w-12, gy0=hs+18, gy1=h-(cp?18:34);
+  const fa=fApp(f,u), fr=fRec(f,u), pad=(fa-fr)*0.14, ylo=fr-pad, yhi=fa+pad;
+  const GX=m=>gx0+(m+200)/400*(gx1-gx0), GY=v=>gy1-(v-ylo)/(yhi-ylo)*(gy1-gy0);
+  line(ctx,gx0,gy1,gx1,gy1,C.muted,1.2); line(ctx,gx0,gy0,gx0,gy1,C.muted,1.2);
+  line(ctx,gx0,GY(f),gx1,GY(f),C.olive,1.4,[5,4]); line(ctx,GX(0),gy0,GX(0),gy1,C.grid,1.2);
+  const curve=(a,b,col,wd)=>{ if(b<=a) return; ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=wd; ctx.lineJoin="round"; ctx.beginPath(); for(let k=0;k<=200;k++){ const m=a+(b-a)*k/200, px=GX(m), py=GY(passF(f,u,d,m)); k?ctx.lineTo(px,py):ctx.moveTo(px,py);} ctx.stroke(); ctx.restore(); };
+  curve(-200,200,C.grid,3); curve(-200,Math.min(200,x),C.terra,3.2);
+  const fn=passF(f,u,d,x); ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(GX(x),GY(fn),5.5,0,7); ctx.fill();
+  if(cp){ text(ctx,"f′",gx0+4,gy0+8,C.ink,F(12)); text(ctx,"f",gx1-4,GY(f)-5,C.olive,F(12),"right"); text(ctx,"time →",gx1,gy1+14,C.muted,F(11),"right"); text(ctx,"passes you",GX(0),gy1+14,C.muted,F(11),"center"); }
+  else {
+    [[fa,C.terra],[f,C.olive],[fr,C.terra]].forEach(([v,col])=>text(ctx,Math.round(v),gx0-6,GY(v)+4,col,M(11),"right"));
+    text(ctx,"f′ (Hz)",gx0+6,gy0+4,C.ink,F(12)); text(ctx,"car position (m) →   0 = level with you",gx1,gy1+30,C.muted,F(11),"right");
+    [-200,-100,0,100,200].forEach(v=>text(ctx,v,GX(v),gy1+14,C.muted,M(10),"center"));
+  }
+  return fn;
+}
+// Car with horn driving towards (dir 1) or away from (dir −1) a sensor at the right
+function drawTrack(ctx,w,h,o){
+  bg(ctx,w,h); const gy=h*0.72;
+  ctx.fillStyle=C["surface-2"]; ctx.fillRect(0,gy-2,w,24); line(ctx,0,gy+10,w,gy+10,C.line,2,[12,10]);
+  const sx=w-40; ctx.fillStyle=C.ink; ctx.fillRect(sx-3,gy-54,6,54); ctx.beginPath(); ctx.arc(sx,gy-58,8,0,7); ctx.fill();
+  text(ctx,"sensor",sx,gy-72,C.muted,F(11),"center");
+  const bw=Math.min(170,w*0.36), bx=sx-bw-22, by=10, bh=46;
+  ctx.fillStyle=C["surface-2"]; ctx.strokeStyle=C.line; ctx.lineWidth=1.5; ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,10); ctx.fill(); ctx.stroke();
+  text(ctx,"frequency received",bx+10,by+16,C.muted,F(11)); text(ctx,o.reading!=null? o.reading.toFixed(1)+" Hz" : "— Hz",bx+10,by+38,C.ink,M(18));
+  const towards=o.dir>0, cx=towards? w*0.28 : w*0.5, cy=gy-2;
+  // wavefronts ahead of the car, towards the sensor
+  const sq=1-(towards?1:-1)*o.u/CS*3, sp=18*sq;
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=1.8; for(let k=1;k<=6;k++){ const r=k*sp+8; ctx.globalAlpha=1-k/7; ctx.beginPath(); ctx.arc(cx+24,cy-6,r,-0.6,0.6); ctx.stroke(); } ctx.restore();
+  car(ctx,cx,cy,1.15);
+  text(ctx,"horn ≈ 1 kHz",cx,cy-30,C.muted,F(11),"center");
+  if(o.u>0){ const len=12+o.u*1.6, y=gy+34>h-6? cy-44 : gy+34; if(towards) arrow(ctx,cx-20,y,cx-20+len,y,C.ink); else arrow(ctx,cx+20,y,cx+20-len,y,C.ink); text(ctx,o.u+" m/s",towards?cx-24:cx+24,y+4,C.ink,F(12),towards?"right":"left"); }
+}
+const HLINES = [[656.3,"Hα"],[486.1,"Hβ"],[434.0,"Hγ"],[410.2,"Hδ"]];
+function lamRGB(l){ let r=0,g=0,b=0; l=Math.max(380,Math.min(780,l));
+  if(l<440){ r=(440-l)/60; b=1; } else if(l<490){ g=(l-440)/50; b=1; } else if(l<510){ g=1; b=(510-l)/20; } else if(l<580){ r=(l-510)/70; g=1; } else if(l<645){ r=1; g=(645-l)/65; } else r=1;
+  const a = l<420? 0.35+0.65*(l-380)/40 : l>700? 0.35+0.65*(780-l)/80 : 1;
+  return `rgb(${Math.round(255*r*a)},${Math.round(255*g*a)},${Math.round(255*b*a)})`; }
+function drawSpectrum(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc);
+  const cp=o.compact, L0=380, L1=760, x0=cp?8:16, x1=w-(cp?8:16), X=l=>x0+(l-L0)/(L1-L0)*(x1-x0);
+  const sh=h*(cp?0.24:0.22), y1=h*(cp?0.13:0.12), y2=h*(cp?0.58:0.56), k=1+(o.u||0)/3e5;
+  const strip=(y,shift,label)=>{ const g=ctx.createLinearGradient(x0,0,x1,0); for(let l=L0;l<=L1;l+=10) g.addColorStop((l-L0)/(L1-L0),lamRGB(l));
+    ctx.fillStyle=g; ctx.fillRect(x0,y,x1-x0,sh);
+    HLINES.forEach(([l])=>{ const ls=l*shift; if(ls<L0||ls>L1) return; ctx.fillStyle="#141414"; ctx.fillRect(X(ls)-1.5,y,3,sh); });
+    text(ctx,label,x1,y-5,C.ink,F(cp?11:13),"right"); };
+  strip(y1,1,cp?"lab":"Hydrogen in the lab"); strip(y2,k,cp?"galaxy":"Light from the galaxy");
+  HLINES.forEach(([l,nm])=>{ const a=X(l), ls=l*k; if(ls>L1||ls<L0) return; const b=X(ls); line(ctx,a,y1+sh,b,y2,C.muted,1.2,[3,3]); if(!cp) text(ctx,nm,a+4,y1+sh+14,C.muted,F(11)); });
+  if(!cp){ for(let l=400;l<=750;l+=50) text(ctx,l,X(l),y2+sh+15,C.muted,M(10),"center"); text(ctx,"wavelength (nm)",x0,y2+sh+30,C.muted,F(11)); }
+}
+const RMODES = {
+  radar:{ name:"Speed gun", f:24.125e9, c:3e8, umax:60, step:1, tx:"speed gun", target:"car" },
+  blood:{ name:"Doppler ultrasound", f:5e6, c:1540, umax:1, step:0.01, tx:"probe", target:"blood cells" },
+  bat:{ name:"Bat and moth", f:50e3, c:340, umax:10, step:0.1, tx:"bat", target:"moth" },
+};
+function arcV(ctx,x,y,half,col,left){ const R=half*2.2, a=Math.asin(half/R); ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=2.4; ctx.lineCap="round"; ctx.beginPath(); if(left) ctx.arc(x+R,y,R,Math.PI-a,Math.PI+a); else ctx.arc(x-R,y,R,-a,a); ctx.stroke(); ctx.restore(); }
+function drawRadar(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc);
+  const Md=RMODES[o.mode], t=o.t||0, k=0.3*o.u/Md.umax, cp=o.compact;
+  const ex=w*0.1, tx=w*0.8, yo=h*0.32, yr=h*0.68, lam=Math.max(14,w*0.05), sp=lam*2.2, half=h*0.1;
+  const off=(t*sp)%lam; for(let x=ex+18+off; x<tx-10; x+=lam) arcV(ctx,x,yo,half,C.terra);
+  const lr=lam*(1-k)/(1+k), offr=(t*sp)%lr; for(let x=tx-10-offr; x>ex+18; x-=lr) arcV(ctx,x,yr,half,C.olive,true);
+  ctx.fillStyle=C.ink; ctx.beginPath(); ctx.roundRect(ex-16,h/2-22,26,44,7); ctx.fill();
+  text(ctx,Md.tx,ex-3,h/2+38,C.muted,F(cp?10:12),"center");
+  const gx=tx+w*0.08, gy=h/2;
+  if(o.mode==="radar") car(ctx,gx,gy+6,cp?0.8:1.1);
+  else if(o.mode==="blood"){ line(ctx,tx-4,gy-22,w,gy-22,C.line,2); line(ctx,tx-4,gy+22,w,gy+22,C.line,2); [-14,4,20].forEach((d,i)=>{ ctx.fillStyle=C.terra; ctx.beginPath(); ctx.ellipse(gx+d,gy+(i-1)*7,7,4.5,0,0,7); ctx.fill(); }); }
+  else { ctx.fillStyle=C.apricot; ctx.beginPath(); ctx.ellipse(gx-6,gy,9,5,-0.5,0,7); ctx.ellipse(gx+6,gy,9,5,0.5,0,7); ctx.fill(); ctx.fillStyle=C.ink; ctx.fillRect(gx-1.5,gy-6,3,12); }
+  text(ctx,Md.target,gx,gy+(cp?26:34),C.muted,F(cp?10:12),"center");
+  if(o.u>0){ const len=10+28*o.u/Md.umax; arrow(ctx,gx,gy-28,gx-len,gy-28,C.ink,2); }
+  text(ctx,"sent: f",ex+18,yo-half-8,C.terra,F(cp?11:13)); text(ctx,"reflected: f + Δf",ex+18,yr+half+18,C.olive,F(cp?11:13));
+}
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  if(x0<=0&&x1>=0) line(ctx,X(0),padT,X(0),h-padB,C.muted,1);
+  if(y0<=0&&y1>=0) line(ctx,padL,Y(0),w-padR,Y(0),C.muted,1);
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); });
+}
+
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "waves", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+// Canvases inside hidden views have no size; size them as soon as their view is shown.
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2"]; const loState=store.get("s27-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s27-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s27-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  waves:{ vis:[["ripple",{m:0}],["ripple",{m:0.5}]], grid:"vis2", cap:"Still source (left): even circles. Moving source (right): bunched in front, spread out behind.",
+    keys:[["◎","A still source sends out circular wavefronts, evenly spaced, so everyone hears the same frequency."],["→","A moving source catches up on the waves in front, so the wavelength there is shorter."],["c","The wave speed doesn't change, so a shorter wavelength means a higher frequency: c = fλ."]],
+    f:"c = fλ", mistake:"Saying the sound travels faster when the source moves towards you. Only the frequency and wavelength change." },
+  pitch:{ vis:[["pass",{u:30,f:600,d:10,x:-60}]], cap:"Frequency heard as a car (30 m/s, 600 Hz siren) drives past you",
+    keys:[["↑","Approaching: you hear a higher frequency than the source gives out."],["↓","Receding: you hear a lower frequency."],["⚡","The pitch drops quickly at the moment the source passes you."]],
+    f:"approaching: f′ = fc / (c − u) · moving away: f′ = fc / (c + u)", mistake:"Mixing up the signs. Approaching makes the bottom smaller (c − u), so f′ gets bigger." },
+  sonic:{ vis:[["ripple",{m:1,sx:0.78}],["ripple",{m:1.8,sx:0.8}]], grid:"vis2", cap:"At Mach 1 the wavefronts pile up into a wall. Faster still, they form a cone.",
+    keys:[["M","Mach number = speed of the object ÷ speed of sound."],["▲","At Mach 1 the source keeps up with its own waves, and they pile up into a shock wave."],["💥","Above Mach 1 the shock wave is a cone. You hear a sonic boom as it sweeps over you."]],
+    f:"Mach = u / c · sin θ = c / u", mistake:"Thinking the boom happens only once, when the plane breaks the sound barrier. The cone follows the plane the whole time." },
+  experiment:{ vis:[["graph",{}]], cap:"1/f′ against u is a straight line. The intercept is 1/f, and c = −intercept ÷ slope.",
+    keys:[["u","Move the source straight towards the sensor at several known speeds."],["f′","Record the frequency received at each speed. Repeat and average."],["📈","1/f′ = 1/f − u/(fc), so a graph of 1/f′ against u is a straight line."]],
+    f:"1/f′ = 1/f − u / (fc)", mistake:"Measuring while the source passes at an angle. Only motion straight towards the sensor uses the full speed." },
+  light:{ vis:[["spectrum",{u:15000}]], cap:"Hydrogen lines in the lab (top) and from a galaxy moving away at 15 000 km/s (bottom)",
+    keys:[["λ","Light from a source moving away is stretched to longer wavelengths: red shift."],["↔","An approaching source gives blue shift: shorter wavelengths."],["🌌","Nearly every distant galaxy is red-shifted, so the universe is expanding."]],
+    f:"Δλ / λ ≈ u / c", mistake:"Thinking red shift means the galaxy looks red. Every line moves by the same fraction, even into the infrared." },
+  uses:{ vis:[["radar",{mode:"radar",u:30}]], cap:"A speed gun: the reflected microwaves (bottom) come back closer together, so at a higher frequency",
+    keys:[["🚓","Speed guns measure the frequency shift of microwaves reflected from a car."],["❤","Doppler ultrasound measures how fast blood flows through the heart and arteries."],["☁","Weather radar, bats, satellite tracking and finding exoplanets all use the shift."]],
+    f:"Δf ≈ 2uf / c   (reflected waves, extra)", mistake:"Forgetting that a reflected wave is shifted twice: once on the way to the target and once on the way back." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div class="${L.grid||""}" style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+function drawGraphMini(ctx,w,h){
+  bg(ctx,w,h); const pad=34, X=v=>pad+v*(w-pad-14), Y=v=>h-pad-v*(h-pad-14);
+  line(ctx,pad,h-pad,w-10,h-pad,C.muted,1.4); line(ctx,pad,h-pad,pad,10,C.muted,1.4);
+  text(ctx,"u (m/s)",w-12,h-pad+18,C.ink,F(12),"right"); text(ctx,"1/f′",pad+6,18,C.ink,F(12));
+  line(ctx,X(0),Y(0.8),X(0.95),Y(0.28),C.olive,2.4);
+  [[.12,.73],[.3,.64],[.48,.53],[.66,.43],[.84,.34]].forEach(([a,b])=>{ ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(a),Y(b+Math.sin(a*30)*0.012),5,0,7); ctx.fill(); });
+  text(ctx,"1/f",X(0)-6,Y(0.8)+4,C.terra,F(13),"right"); text(ctx,"slope = −1/(fc)",X(0.55),Y(0.62),C.olive,F(12),"left");
+}
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  {m:0,t:"Still source",chips:[["Same pitch all round","neutral"]],use:["pitch","Loudspeaker on a desk"]},
+  {m:0.1,t:"0.1 × speed of sound",chips:[["Slightly higher ahead","real"]],use:["car","Car on a motorway (34 m/s)"]},
+  {m:0.3,t:"0.3 × speed of sound",chips:[["Higher ahead","real"],["Lower behind","virtual"]],use:["car","F1 car at top speed (100 m/s)"]},
+  {m:0.8,t:"0.8 × speed of sound",chips:[["Much higher ahead","real"]],use:["plane","Airliner cruising"]},
+  {m:1,t:"Mach 1",chips:[["Shock wave","alert"]],use:["plane","Jet at the sound barrier"]},
+  {m:1.6,t:"Mach 1.6",chips:[["Mach cone","alert"],["Sonic boom","alert"]],use:["sonic","Fighter jet, Concorde"]},
+];
+$("cases").innerHTML = CASES.map((c,k)=>`<div class="panel case"><canvas class="mini" data-case="${k}"></canvas><h3>${c.t}</h3><div class="chips">${chipsHTML(c.chips)}</div><div class="use">${svg(c.use[0])}${c.use[1]}</div></div>`).join("");
+const MOVERS = [["Cyclist",5],["Car in town",14],["Motorway car",33],["High-speed train",83],["F1 car",100],["Propeller plane",150]];
+$("bars").innerHTML = MOVERS.map(([n,u])=>{ const fa=fApp(1000,u), fr=fRec(1000,u);
+  return `<div class="barrow"><span><b>${n}</b><br><small style="color:var(--muted)">${u} m/s</small></span><div class="track"><i style="width:${(fa/1800*100).toFixed(1)}%;background:${u>90?"var(--terra)":u>30?"var(--apricot)":"var(--blush)"}"></i></div><span class="v">↑ ${Math.round(fa)} Hz · ↓ ${Math.round(fr)} Hz</span></div>`; }).join("");
+const AROUND = [
+  ["uses","Speed guns","Microwaves bounce off a car and come back shifted. The size of the shift gives the car's speed.",[["Microwaves","neutral"],["Reflection","real"]],"var(--blush)"],
+  ["heart","Doppler ultrasound","Ultrasound reflected from moving blood shows how fast and which way it flows. Used for the heart, arteries and unborn babies.",[["Medicine","neutral"]],"var(--apricot)"],
+  ["cloud","Weather radar","Shifts from raindrops show wind speed, and spinning storms that might form tornadoes.",[["Radio waves","neutral"]],"var(--sage)"],
+  ["galaxy","Expanding universe","Red shift shows distant galaxies moving away. The further away, the faster they go.",[["Red shift","alert"]],"var(--cream)"],
+  ["bat","Bats and dolphins","Echolocation: the shift in an echo tells a bat whether a moth is flying towards it or away.",[["Ultrasound","neutral"]],"var(--blush)"],
+  ["planet","Finding exoplanets","A planet makes its star wobble, so the star's light shifts red and blue over and over.",[["Astronomy","neutral"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"waves",label:"Moving sources",col:"var(--blush)",leaves:[["Wavefronts","Circles spreading out from the source, one for each wave."],["Bunched in front","Shorter wavelength ahead of a moving source, so a higher frequency."],["Spread out behind","Longer wavelength behind, so a lower frequency."],["Speed unchanged","The medium sets the wave speed, not the source."]]},
+  {id:"pitch",label:"Pitch & formula",col:"var(--apricot)",leaves:[["Approaching","f′ = fc / (c − u). Higher pitch."],["Receding","f′ = fc / (c + u). Lower pitch."],["Passing","The pitch drops quickly as the source goes by."],["Symbols","f′ heard, f sent out, c wave speed, u source speed."]]},
+  {id:"sonic",label:"Sonic booms",col:"var(--sage)",leaves:[["Mach number","The object's speed ÷ the speed of sound."],["Shock wave","Wavefronts pile up at Mach 1."],["Sonic boom","Heard as the cone sweeps over you."]]},
+  {id:"experiment",label:"Measuring it",col:"var(--cream)",leaves:[["Buzzer on a string","Whirl it round: the pitch rises and falls."],["Straight line","Plot 1/f′ against u."],["Find c","c = −intercept ÷ slope."]]},
+  {id:"light",label:"Red shift",col:"var(--blush)",leaves:[["Red shift","Moving away: longer wavelength."],["Blue shift","Approaching: shorter wavelength."],["Expanding universe","Distant galaxies are all red-shifted."],["Δλ/λ ≈ u/c","Find a galaxy's speed from its shift."]]},
+  {id:"uses",label:"Applications",col:"var(--sage)",leaves:[["Speed guns","Microwaves reflected from cars."],["Ultrasound","Speed of blood flow in the body."],["Weather radar","Wind speed and storms."],["Bats","Echolocation of moving prey."]]},
+];
+let mmSel = {b:1,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      // left/right branches: leaves stacked in a column; top/bottom branches: leaves in a staggered row
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Doppler</text><text x="${cx}" y="${cy+22}" text-anchor="middle">effect</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["waves","What is the Doppler effect?","The apparent change in the frequency of a wave caused by relative motion between the source and the observer."],
+  ["waves","What happens to the wavefronts in front of a moving source?","They bunch up. The wavelength is shorter, so a higher frequency is heard."],
+  ["waves","What happens to the wavefronts behind a moving source?","They spread out. The wavelength is longer, so a lower frequency is heard."],
+  ["waves","Does the speed of sound change when the source moves?","No. The speed depends only on the medium. Only the wavelength and frequency heard change."],
+  ["waves","Does the frequency the source gives out change?","No. The source sends out the same frequency. Only the frequency the observer receives changes."],
+  ["waves","Can the Doppler effect happen if the observer moves instead?","Yes. Any relative motion causes it. The formula on your course is for a moving source."],
+  ["pitch","Formula for a source moving towards you?","f′ = fc / (c − u)"],
+  ["pitch","Formula for a source moving away from you?","f′ = fc / (c + u)"],
+  ["pitch","What does each symbol mean in f′ = fc / (c ± u)?","f′ = frequency heard, f = frequency of the source, c = speed of the wave, u = speed of the source."],
+  ["pitch","Describe the sound of a car horn as the car drives past you.","A steady high pitch as it approaches, a quick drop as it passes, then a steady lower pitch as it moves away."],
+  ["pitch","A 600 Hz siren approaches at 30 m/s (c = 340 m/s). What frequency is heard?","f′ = 600 × 340 / (340 − 30) = 658 Hz."],
+  ["pitch","How do you convert 72 km/h to m/s?","Divide by 3.6: 72 ÷ 3.6 = 20 m/s."],
+  ["sonic","What is a sonic boom?","The loud bang heard when the cone-shaped shock wave from an object moving faster than sound passes you."],
+  ["sonic","What is the Mach number?","The object's speed divided by the speed of sound. Mach 1 = the speed of sound."],
+  ["sonic","Why does a shock wave form?","At or above the speed of sound, the source keeps up with or overtakes its own wavefronts, so they pile up into one big pressure wave."],
+  ["sonic","Is the boom heard only when the plane breaks the sound barrier?","No. The cone travels with the plane, so people along the whole flight path hear the boom as the cone sweeps over them."],
+  ["experiment","How can you demonstrate the Doppler effect in class?","Whirl a buzzer on a string in a circle, or move a speaker towards and away from a microphone or phone app."],
+  ["experiment","Why plot 1/f′ against u?","Because 1/f′ = 1/f − u/(fc), which is a straight line: intercept 1/f, slope −1/(fc)."],
+  ["experiment","How do you find c from the graph of 1/f′ against u?","c = −intercept ÷ slope."],
+  ["experiment","Name two sources of error in a Doppler experiment.","Any two: the source's speed isn't constant, wind, sound reflecting off walls, measuring while the angle to the sensor changes."],
+  ["light","What is red shift?","Light from a source moving away has a longer wavelength, so its spectral lines move towards the red end."],
+  ["light","What is blue shift?","Light from an approaching source has a shorter wavelength, so its lines move towards the blue end."],
+  ["light","What does the red shift of distant galaxies tell us?","Almost all galaxies are moving away from us, so the universe is expanding. Further galaxies move faster."],
+  ["light","How do you find a galaxy's speed from its red shift?","u = c × Δλ / λ (for speeds much less than the speed of light)."],
+  ["light","Why do astronomers measure spectral lines, not just colour?","Lines such as hydrogen's are at exactly known wavelengths, so a tiny shift can be measured precisely."],
+  ["uses","How does a radar speed gun work?","It sends microwaves at a car. They reflect back with a changed frequency, and the size of the shift gives the car's speed."],
+  ["uses","How does Doppler ultrasound measure blood flow?","Ultrasound reflects off moving red blood cells. The frequency shift gives the speed and direction of the blood."],
+  ["uses","Give three other uses of the Doppler effect.","Any three: weather radar, bats and dolphins hunting, finding planets around other stars, tracking satellites."],
+  ["uses","Why is the shift doubled for reflected waves?","The moving target receives a shifted frequency, then sends it back as a moving source, so it's shifted twice: Δf ≈ 2uf / c."],
+];
+let fcKnown = store.get("s27-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s27-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s27-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s27-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["waves","The Doppler effect is:",["A change in the speed of sound when the source moves","The apparent change in frequency caused by relative motion between source and observer","The bending of waves around corners","The reflection of sound off a wall"],1,"It's about the frequency received, and it needs relative motion between the source and the observer."],
+  ["waves","In front of a moving source of sound, the wavelength is:",["Shorter","Longer","The same","Zero"],0,"The source catches up on the waves it has already sent forward, so the wavefronts are squashed together."],
+  ["waves","A sound source moves towards you. The speed of the sound reaching you:",["Increases","Decreases","Stays the same","Doubles"],2,"Wave speed depends only on the medium (the air). The frequency and wavelength change, not the speed."],
+  ["pitch","A 1000 Hz siren approaches you at 20 m/s (c = 340 m/s). You hear:",["941 Hz","1000 Hz","1059 Hz","1063 Hz"],3,"f′ = 1000 × 340 / (340 − 20) = 340 000 / 320 = 1062.5 Hz."],
+  ["pitch","The same siren moves away from you at 20 m/s. You hear:",["944 Hz","941 Hz","1000 Hz","1063 Hz"],0,"f′ = 1000 × 340 / (340 + 20) = 340 000 / 360 = 944 Hz."],
+  ["pitch","As a car sounding its horn drives past you, the pitch you hear:",["Rises suddenly","Drops quickly from high to low","Stays the same","Drops to zero"],1,"Higher while it approaches, lower while it moves away. The change happens as it passes."],
+  ["pitch","In the formula f′ = fc / (c ± u), u is:",["The speed of the observer","The speed of the source","The speed of sound","The wavelength"],1,"u is the speed of the source. c is the speed of the wave."],
+  ["sonic","A sonic boom is heard when:",["A plane travels faster than the speed of sound","A plane's engine stops","A plane lands","A plane slows down"],0,"Above Mach 1 the wavefronts pile up into a cone-shaped shock wave. You hear a boom as it passes over you."],
+  ["sonic","A jet flies at Mach 2 (c = 340 m/s). Its speed is:",["170 m/s","340 m/s","680 m/s","1360 m/s"],2,"Mach 2 = 2 × 340 = 680 m/s."],
+  ["experiment","For an approaching source, a graph of 1/f′ against its speed u is:",["A straight line with a negative slope","A curve through the origin","A horizontal line","A straight line with a positive slope"],0,"1/f′ = 1/f − u/(fc), which is y = c + mx with a negative slope of −1/(fc)."],
+  ["experiment","On a graph of 1/f′ against u, the intercept on the 1/f′ axis is:",["1/f","The speed of sound","The source speed","Zero"],0,"When u = 0 there's no shift, so 1/f′ = 1/f."],
+  ["light","Light from a galaxy moving away from us is:",["Blue-shifted","Red-shifted","Unchanged","Brighter"],1,"Moving away stretches the wavelength, so the lines move towards the red end."],
+  ["light","A spectral line normally at 500 nm is measured at 505 nm. The galaxy's speed is about:",["3 × 10⁵ m/s","3 × 10⁶ m/s","3 × 10⁷ m/s","1.5 × 10⁶ m/s"],1,"u = c × Δλ / λ = 3 × 10⁸ × 5 / 500 = 3 × 10⁶ m/s, moving away."],
+  ["light","The red shift of distant galaxies is evidence that:",["The universe is expanding","Galaxies are getting hotter","Stars are red","Light slows down in space"],0,"Almost all galaxies move away from us, and further ones move faster: space is expanding."],
+  ["uses","Doppler ultrasound is used in hospitals to:",["Measure the speed of blood flow","Kill bacteria","Take X-ray images","Measure body temperature"],0,"Ultrasound reflected from moving blood cells comes back shifted. The shift gives the blood's speed."],
+  ["uses","A police speed gun works by:",["Measuring the frequency change of microwaves reflected from a car","Timing the car between two lines","Measuring the brightness of the headlights","Listening to the engine"],0,"The reflected microwaves are Doppler-shifted. A bigger shift means a faster car."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s27-best",null); if(best==null||pct>best) store.set("s27-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+// tap-to-define popover
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Define","Give the exact meaning in one full, precise sentence.","Define the Doppler effect."],
+  ["State","Give a short fact, law or value. No explanation needed.","State the formula for the frequency heard as a source approaches."],
+  ["Explain","Say what happens and why, using the physics behind it.","Explain why the pitch of a siren drops as it passes."],
+  ["Describe","Give the steps or features in a clear order.","Describe how you would demonstrate the Doppler effect in the lab."],
+  ["Calculate","Write the formula, substitute the numbers, give the answer with a unit.","Calculate the frequency heard by the observer."],
+  ["Draw / Sketch","Draw: neat, labelled, ruler. Sketch: shows the shape or pattern, not to scale.","Sketch the wavefronts from a moving source."],
+  ["Model","Represent a situation with a diagram, equation or graph, and use it to predict.","Model the sound heard as a train passes a platform."],
+  ["Verify","Use data to show that a law or equation holds.","Verify the Doppler formula using the data."],
+  ["Investigate","Plan, collect data or use secondary sources, analyse it and draw a conclusion.","Investigate how the Doppler effect is used in medicine."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+
+// Calculation trainer
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+const s4=x=>(+x.toPrecision(4)).toString();
+const PTYPES = {
+  app:{ name:"Approaching", gen(){ const f=rnd(8,24)*50, u=rnd(10,60), v=fApp(f,u);
+    return { q:`An ambulance siren has a frequency of <b>${f} Hz</b>. The ambulance moves <b>towards</b> you at <b>${u} m/s</b>. Calculate the frequency you hear. (c = 340 m/s)`, ans:v, unit:"Hz", tol:0.004,
+      steps:["Approaching, so use c − u:  f′ = fc / (c − u)", `f′ = ${f} × 340 / (340 − ${u})`, `f′ = ${f*340} / ${340-u}`, `f′ = ${v.toFixed(1)} Hz  (higher than ${f} Hz ✓)`] }; } },
+  rec:{ name:"Moving away", gen(){ const f=rnd(8,24)*50, u=rnd(10,60), v=fRec(f,u);
+    return { q:`A fire engine's siren has a frequency of <b>${f} Hz</b>. The fire engine moves <b>away from</b> you at <b>${u} m/s</b>. Calculate the frequency you hear. (c = 340 m/s)`, ans:v, unit:"Hz", tol:0.004,
+      steps:["Moving away, so use c + u:  f′ = fc / (c + u)", `f′ = ${f} × 340 / (340 + ${u})`, `f′ = ${f*340} / ${340+u}`, `f′ = ${v.toFixed(1)} Hz  (lower than ${f} Hz ✓)`] }; } },
+  kmh:{ name:"km/h first", gen(){ const kmh=pick([36,54,72,90,108,126,144]), u=kmh/3.6, f=rnd(8,20)*50, away=Math.random()<0.5, v=away?fRec(f,u):fApp(f,u);
+    return { q:`A car travelling at <b>${kmh} km/h</b> sounds its <b>${f} Hz</b> horn as it moves <b>${away?"away from":"towards"}</b> you. Calculate the frequency you hear. (c = 340 m/s)`, ans:v, unit:"Hz", tol:0.004,
+      steps:[`Convert: u = ${kmh} ÷ 3.6 = ${u} m/s`, away?"Moving away:  f′ = fc / (c + u)":"Approaching:  f′ = fc / (c − u)", `f′ = ${f} × 340 / (340 ${away?"+":"−"} ${u})`, `f′ = ${v.toFixed(1)} Hz`] }; } },
+  speed:{ name:"Find the speed", gen(){ const f=rnd(8,20)*50, fo=Math.round(fApp(f,rnd(10,50))), u=CS*(fo-f)/fo;
+    return { q:`A car horn has a frequency of <b>${f} Hz</b>. As the car approaches, a student hears <b>${fo} Hz</b>. Calculate the speed of the car. (c = 340 m/s)`, ans:u, unit:"m/s",
+      steps:["f′ = fc / (c − u)  →  c − u = fc / f′", `340 − u = ${f} × 340 / ${fo} = ${s4(f*340/fo)}`, `u = 340 − ${s4(f*340/fo)} = ${u.toFixed(1)} m/s`] }; } },
+  pair:{ name:"Two readings", gen(){ const f=rnd(8,20)*50, u0=rnd(10,45), fa=Math.round(fApp(f,u0)), fr=Math.round(fRec(f,u0)), u=CS*(fa-fr)/(fa+fr);
+    return { q:`A train passes a station sounding its horn. The frequency heard is <b>${fa} Hz</b> as it approaches and <b>${fr} Hz</b> as it moves away. Calculate the speed of the train. (c = 340 m/s)`, ans:u, unit:"m/s",
+      steps:["Divide the two formulas: f₁ / f₂ = (c + u) / (c − u)", "Rearrange: u = c (f₁ − f₂) / (f₁ + f₂)", `u = 340 × (${fa} − ${fr}) / (${fa} + ${fr})`, `u = 340 × ${fa-fr} / ${fa+fr} = ${u.toFixed(1)} m/s`] }; } },
+  red:{ name:"Red shift", gen(){ const [l0,nm]=pick(HLINES), uk=rnd(10,200)*100, lo=+(l0*(1+uk/3e5)).toFixed(1), u=3e5*(lo-l0)/l0;
+    return { q:`The ${nm} line of hydrogen has a wavelength of <b>${l0} nm</b> in the lab. In the light from a galaxy it is measured at <b>${lo} nm</b>. Calculate the speed of the galaxy in km/s. (c = 3.0 × 10⁵ km/s)`, ans:u, unit:"km/s",
+      steps:[`Δλ = ${lo} − ${l0} = ${(lo-l0).toFixed(1)} nm  (longer, so red shift: moving away)`, "u = c × Δλ / λ", `u = 3.0 × 10⁵ × ${(lo-l0).toFixed(1)} / ${l0}`, `u = ${grp(u)} km/s`] }; } },
+  radar:{ name:"Speed gun (extra)", gen(){ const kmh=rnd(40,160), df=Math.round(2*(kmh/3.6)*24.125e9/3e8), u=df*3e8/(2*24.125e9);
+    return { q:`A speed gun sends out microwaves of frequency <b>24.125 GHz</b>. The waves reflected from a car come back <b>${df} Hz</b> higher. Calculate the car's speed in m/s. Use Δf ≈ 2uf / c with c = 3.0 × 10⁸ m/s.`, ans:u, unit:"m/s",
+      steps:["Δf = 2uf / c  →  u = cΔf / (2f)", `u = 3.0 × 10⁸ × ${df} / (2 × 24.125 × 10⁹)`, `u = ${u.toFixed(1)} m/s  (= ${(u*3.6).toFixed(0)} km/h)`] }; } },
+};
+let pType="app", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseFloat($("paIn").value.replace(/\s/g,"").replace(",",".").replace("−","-"));
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 658 or 24.5.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(0.15, Math.abs(pCur.ans)*(pCur.tol||0.02));
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: approaching uses c − u, moving away uses c + u. Convert km/h to m/s first, and check your units. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Higher, lower or the same? [situation, source speed (× c) for the picture, where you are, answer, why]
+const PRED = [
+  ["A fire engine drives towards you with its siren on.",0.3,"ahead","Higher","The source is approaching, so the wavefronts reaching you are bunched up: f′ = fc / (c − u)."],
+  ["An ambulance has passed you and is now driving away.",0.3,"behind","Lower","The source is receding, so the wavefronts reaching you are spread out: f′ = fc / (c + u)."],
+  ["A parked car beside you sounds its horn.",0,"ahead","Same","No relative motion, so no Doppler shift."],
+  ["You cycle behind a bus at exactly its speed while it beeps.",0.2,"behind","Same","You and the bus aren't moving relative to each other, so there's no shift."],
+  ["A train sounds its horn as it pulls away from the platform where you stand.",0.25,"behind","Lower","Moving away from you: lower frequency."],
+  ["A galaxy is moving towards us. What happens to the frequency of its light?",0.15,"ahead","Higher","An approaching source gives a higher frequency and shorter wavelength: blue shift."],
+  ["A distant galaxy is moving away from us. What happens to the frequency of its light?",0.15,"behind","Lower","A receding source gives a lower frequency and longer wavelength: red shift."],
+  ["A buzzer whirled on a string is moving straight towards you.",0.2,"ahead","Higher","At that instant the source is approaching, so you hear a higher pitch."],
+  ["A drone hovers in one spot above you, buzzing.",0,"ahead","Same","The drone isn't moving towards or away from you, so there's no shift."],
+  ["A speed gun's microwaves reflect off a car driving away from it.",0.2,"behind","Lower","The car is receding, so the reflected microwaves come back at a lower frequency."],
+];
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k && PRED.length>1); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>${PRED[k][0]}</b> Is the frequency you receive higher, lower or the same?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick Higher, The same or Lower first.</div>`; return; }
+  const [,,,ans,why]=PRED[pd.k], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true;
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${ans==="Same"?"The same.":ans+"."} ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"An ambulance siren", intro:"An ambulance with a 900 Hz siren travels along a straight road at 25 m/s. The speed of sound in air is 340 m/s.",
+    parts:[["a","What is the Doppler effect?",3,"The apparent change in the frequency of a wave (3) caused by relative motion between the source and the observer. Both ideas are needed for full marks."],
+      ["b","Calculate the frequency heard by a person the ambulance is driving towards.",6,"f′ = fc / (c − u) = 900 × 340 / (340 − 25) (3) · f′ = 306 000 / 315 = 971 Hz (3)."],
+      ["c","Calculate the frequency heard after the ambulance has passed.",6,"f′ = fc / (c + u) = 900 × 340 / (340 + 25) (3) · f′ = 306 000 / 365 = 838 Hz (3)."],
+      ["d","Explain, with a labelled diagram, why the pitch is higher in front of the ambulance.",9,"Diagram of wavefronts bunched in front and spread out behind, each centred where the source was (3) · in front the wavefronts are closer together, so the wavelength is shorter (3) · the speed of sound is unchanged, so by c = fλ the frequency is higher (3)."],
+      ["e","A cyclist follows the ambulance at exactly 25 m/s. What frequency do they hear? Explain.",3,"900 Hz, because there is no relative motion between the cyclist and the ambulance (3)."]] },
+  { title:"Experiment: the speed of sound from the Doppler effect", intro:"A car sounding its horn drove straight towards a sensor at different steady speeds u. The sensor recorded the frequency f′ each time:",
+    table:[["u (m/s)",0,10,15,20,25,30],["f′ (Hz)",480.0,494.5,502.2,510.0,518.1,526.5]],
+    parts:[["a","State the Doppler formula that applies here, and say why it has a minus sign.",3,"f′ = fc / (c − u) (2) · the source is approaching the sensor (1)."],
+      ["b","Show that a graph of 1/f′ against u should be a straight line.",6,"Rearranging: 1/f′ = (c − u)/(fc) (3) · = 1/f − u/(fc), which has the form y = c + mx, a straight line (3)."],
+      ["c","Plot the graph and use it to find the frequency of the horn and the speed of sound.",15,"1/f′ values calculated (3) · axes labelled with units (3) · points plotted and straight line of best fit (3) · intercept 2.083 × 10⁻³ s so f = 480 Hz (3) · slope ≈ −6.13 × 10⁻⁶ s²/m, so c = −intercept ÷ slope ≈ 340 m/s (3)."],
+      ["d","Give one source of error in this experiment.",3,"Any one: the car's speed not constant or speedometer inaccurate · wind · sound reflecting from buildings · temperature changing between runs (3)."],
+      ["e","Why were the readings taken with the car driving straight towards the sensor, not past it?",3,"Only the part of the velocity along the line to the sensor causes the shift; driving straight at it means all of u counts (3)."]] },
+  { title:"Red shift and Doppler in medicine", intro:"The hydrogen line at 656.3 nm in the lab is measured at 669.4 nm in the light from a distant galaxy. The speed of light is 3.0 × 10⁸ m/s.",
+    parts:[["a","Is the galaxy moving towards or away from Earth? Explain.",6,"Away from Earth (3) · the wavelength has increased, which is red shift (3)."],
+      ["b","Calculate the speed of the galaxy.",6,"u = c × Δλ / λ = 3.0 × 10⁸ × 13.1 / 656.3 (3) · u = 6.0 × 10⁶ m/s (3)."],
+      ["c","What does the red shift of almost all distant galaxies suggest about the universe?",3,"The universe is expanding (3)."],
+      ["d","Using secondary sources, a student investigated Doppler ultrasound. Describe how it is used to measure the speed of blood flow.",9,"A probe sends ultrasound into the body (3) · it reflects off moving red blood cells and comes back with a changed frequency (3) · the frequency shift is measured, and a bigger shift means faster blood (3)."],
+      ["e","Give one other application of the Doppler effect.",3,"Any one: speed guns / speed cameras · weather radar · bats or sonar · satellite tracking · detecting exoplanets (3)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p>${L.table?`<div class="tablewrap" style="border:0;max-height:none"><table>${L.table.map(r=>`<tr>${r.map((c,j)=>j?`<td>${typeof c==="number"&&r[0].startsWith("f")?c.toFixed(1):c}</td>`:`<th style="position:static">${c}</th>`).join("")}</tr>`).join("")}</table></div>`:""}</header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist (red / amber / green)
+const RAG = ["Define the Doppler effect","Sketch wavefronts for a still and a moving source","Explain why the pitch is higher in front of a moving source","Use f′ = fc / (c − u) for an approaching source","Use f′ = fc / (c + u) for a source moving away","Describe what you hear as a siren passes you","Explain shock waves and sonic booms","Describe an experiment to show or measure the Doppler effect","Use a graph of 1/f′ against u to find f and c","Explain red shift and what it tells us about the universe","Calculate a galaxy's speed from its red shift","Describe two applications, such as speed guns and Doppler ultrasound"];
+const ragState=store.get("s27-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s27-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Plan a fair test","Name the independent (speed), dependent (frequency heard) and controlled variables.","Measuring lab"],["Collect primary data","Take readings at five or more speeds over a good range, and repeat them.","Measuring lab"],["Record data properly","Use a table with quantities and units in the column headings.","Measuring lab"],["Linearise","Rearrange an equation so the graph is a straight line, like 1/f′ against u.","Measuring lab"],["Use the graph","Get results from the slope and the intercept.","Measuring lab"],["Use secondary sources","Find and judge information on real applications, and say where it came from.","Red shift lab"],["Compare","Compare your result with an accepted value and give the % difference.","Measuring lab"],["Evaluate","Say how reliable your conclusion is and how you'd improve the method.","Any lab"]];
+const skState=store.get("s27-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s27-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+function playBtn(id,st){ $(id).addEventListener("click",()=>{ st.play=!st.play; $(id).setAttribute("aria-pressed",st.play); $(id).textContent=st.play?"Pause":"Play"; }); }
+// Ripple tank
+const rp = { m:0.4, f:400, t:0, play:true };
+function rpUpd(){ $("rpMo").textContent=`${rp.m.toFixed(2)} c (${Math.round(rp.m*CS)} m/s)`; $("rpFo").textContent=rp.f+" Hz"; ripC.redraw(); }
+$("rpM").addEventListener("input",e=>{ rp.m=+e.target.value; rpUpd(); });
+$("rpF").addEventListener("input",e=>{ rp.f=+e.target.value; rpUpd(); });
+$("rpStill").addEventListener("click",()=>{ rp.m=0; $("rpM").value=0; rpUpd(); });
+playBtn("rpPlay",rp);
+// Siren pass-by
+const ps = { u:30, f:600, d:10, x:-200, play:true, snd:false, fNow:600 };
+function psUpd(){ $("psUo").textContent=`${ps.u} m/s (${Math.round(ps.u*3.6)} km/h)`; $("psFo").textContent=ps.f+" Hz"; $("psDo").textContent=ps.d+" m"; passC.redraw(); }
+$("psU").addEventListener("input",e=>{ ps.u=+e.target.value; psUpd(); });
+$("psF").addEventListener("input",e=>{ ps.f=+e.target.value; psUpd(); });
+$("psD").addEventListener("input",e=>{ ps.d=+e.target.value; psUpd(); });
+$("psRestart").addEventListener("click",()=>{ ps.x=-200; passC.redraw(); });
+playBtn("psPlay",ps);
+let actx=null, osc=null, gain=null;
+function sndSet(f,g){ if(!actx) return; const t=actx.currentTime; osc.frequency.setTargetAtTime(f,t,0.03); gain.gain.setTargetAtTime(g,t,0.05); }
+$("psSnd").addEventListener("click",()=>{ ps.snd=!ps.snd;
+  try{ if(ps.snd && !actx){ actx=new (window.AudioContext||window.webkitAudioContext)(); osc=actx.createOscillator(); osc.type="triangle"; gain=actx.createGain(); gain.gain.value=0; osc.connect(gain).connect(actx.destination); osc.start(); }
+    if(ps.snd && actx) actx.resume(); }catch(e){ ps.snd=false; }
+  $("psSnd").setAttribute("aria-pressed",ps.snd); $("psSnd").textContent=ps.snd?"🔇 Sound off":"🔊 Sound on"; });
+// Sound barrier
+const so = { m:1.5, t:0, play:true };
+function soUpd(){ $("soMo").textContent="Mach "+so.m.toFixed(2); $("soM").value=so.m; sonC.redraw(); }
+$("soM").addEventListener("input",e=>{ so.m=+e.target.value; soUpd(); });
+$("soPresets").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; so.m=+b.dataset.m; soUpd(); });
+playBtn("soPlay",so);
+// Experiment: hidden horn frequency and air temperature
+const dx = { u:20, dir:1, data:[], revealed:false, reading:null };
+function newDay(){ dx.temp=Math.round(5+Math.random()*25); dx.c=331+0.6*dx.temp; dx.f=Math.round(950+Math.random()*100); dx.data=[]; dx.reading=null; dx.revealed=false; }
+newDay();
+function dxSync(){ $("dxUo").textContent=dx.u+" m/s"; pressGroup([$("dxTo"),$("dxAway")], dx.dir>0?$("dxTo"):$("dxAway")); trackC.redraw(); }
+$("dxU").addEventListener("input",e=>{ dx.u=+e.target.value; dx.reading=null; dxSync(); });
+$("dxTo").addEventListener("click",()=>{ dx.dir=1; dx.reading=null; dxSync(); });
+$("dxAway").addEventListener("click",()=>{ dx.dir=-1; dx.reading=null; dxSync(); });
+$("dxRec").addEventListener("click",()=>{ const u=dx.u*dx.dir, ft=dx.f*dx.c/(dx.c-u), fm=ft*(1+(Math.random()-.5)*0.004);
+  dx.reading=fm; dx.data.push([u+(u===0?0:(Math.random()-.5)*0.4), fm]); dxTable(); trackC.redraw(); });
+$("dxClear").addEventListener("click",()=>{ dx.data=[]; dx.reading=null; dxTable(); trackC.redraw(); });
+$("dxNew").addEventListener("click",()=>{ newDay(); dxTable(); trackC.redraw(); });
+$("dxReveal").addEventListener("click",()=>{ dx.revealed=!dx.revealed; dxTable(); });
+function dxTable(){
+  $("dxTable").innerHTML = dx.data.map(([u,f],k)=>`<tr><td>${u.toFixed(1)}</td><td>${f.toFixed(1)}</td><td>${(1000/f).toFixed(4)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("dxEmpty").hidden = dx.data.length>0; if(dxGraph) dxGraph.redraw();
+}
+$("dxTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ dx.data.splice(+k,1); dxTable(); } });
+// Red shift
+const lt = { u:15000, myst:null, show:false };
+function ltUpd(){ $("ltUo").textContent=grp(lt.u)+" km/s"; specC.redraw(); }
+$("ltU").addEventListener("input",e=>{ lt.u=+e.target.value; lt.myst=null; lt.show=false; ltUpd(); });
+$("ltMyst").addEventListener("click",()=>{ lt.myst=rnd(20,280)*100*(Math.random()<0.15?-0.1:1); lt.show=false; specC.redraw(); });
+$("ltShow").addEventListener("click",()=>{ if(lt.myst==null) return; lt.show=true; specC.redraw(); });
+// Reflected waves
+const rd = { mode:"radar", u:30, t:0 };
+function rdUpd(){ const M=RMODES[rd.mode]; $("rdUo").textContent=(M.step<1? rd.u.toFixed(M.step<0.1?2:1) : rd.u)+" m/s"; radC.redraw(); }
+$("rdU").addEventListener("input",e=>{ rd.u=+e.target.value; rdUpd(); });
+(()=>{ const btns=[...$("rdMode").querySelectorAll("button")]; btns.forEach(b=>b.addEventListener("click",()=>{ rd.mode=b.dataset.v; pressGroup(btns,b); const M=RMODES[rd.mode];
+  $("rdU").max=M.umax; $("rdU").step=M.step; rd.u=M.umax/2; $("rdU").value=rd.u; rdUpd(); })); })();
+const fmtHz = f => f>=1e9? (f/1e9).toFixed(3)+" GHz" : f>=1e6? (f/1e6).toFixed(1)+" MHz" : f>=1e3? (f/1e3).toFixed(0)+" kHz" : f.toFixed(0)+" Hz";
+
+/* ================= CREATE CANVASES ================= */
+let dxGraph=null;
+const hero = makeCanvas($("heroCanvas"), 0.7, 220, s => drawRipple(s.ctx,s.w,s.h,{m:0.55,t:heroT,T:0.5,anim:!reduce,sx:0.62}), 420);
+const ripC = makeCanvas($("ripC"), 0.5, 260, s => {
+  drawRipple(s.ctx,s.w,s.h,{m:rp.m,t:rp.t,T:240/rp.f,anim:true,ears:true});
+  const u=rp.m*CS;
+  setReadout($("rpOut"),[["Source speed",Math.round(u)+" m/s"],["λ (still)",(CS/rp.f).toFixed(3)+" m"],["λ ahead",((CS-u)/rp.f).toFixed(3)+" m"],["λ behind",((CS+u)/rp.f).toFixed(3)+" m"],["A hears",fApp(rp.f,u).toFixed(0)+" Hz"],["B hears",fRec(rp.f,u).toFixed(0)+" Hz"]]);
+}, 480);
+const passC = makeCanvas($("passC"), 0.62, 320, s => {
+  ps.fNow = drawPass(s.ctx,s.w,s.h,{u:ps.u,f:ps.f,d:ps.d,x:ps.x});
+  const fa=fApp(ps.f,ps.u), fr=fRec(ps.f,ps.u);
+  setReadout($("psOut"),[["Approaching",fa.toFixed(0)+" Hz"],["Hearing now",ps.fNow.toFixed(0)+" Hz"],["Moving away",fr.toFixed(0)+" Hz"],["Drop in pitch",(fa-fr).toFixed(0)+" Hz"],["Car",ps.x<0?"coming towards you":"going away"]]);
+  $("psWork").innerHTML = `Far away, approaching: f′ = fc / (c − u) = ${ps.f} × 340 / (340 − ${ps.u}) = <b>${fa.toFixed(1)} Hz</b>`;
+}, 560);
+const sonC = makeCanvas($("sonC"), 0.5, 260, s => {
+  drawRipple(s.ctx,s.w,s.h,{m:so.m,t:so.t,T:0.35,anim:true,icon:"plane",noArrow:true});
+  const u=so.m*CS;
+  setReadout($("soOut"),[["Mach number",so.m.toFixed(2)],["Speed",Math.round(u)+" m/s"],["Speed",grp(u*3.6)+" km/h"],["Cone half-angle",so.m>1? (Math.asin(1/so.m)*R2D).toFixed(1)+"°" : so.m===1? "90° (a flat wall)" : "no cone"],["Ahead of the jet",so.m<1? "engine pitch × "+(1/(1-so.m)).toFixed(2) : "silence, then a boom"]]);
+}, 480);
+const trackC = makeCanvas($("trackC"), 0.34, 190, s => drawTrack(s.ctx,s.w,s.h,{u:dx.u,dir:dx.dir,reading:dx.reading}), 320);
+dxGraph = makeCanvas($("dxGraph"), 0.72, 190, s => {
+  const pts=dx.data.map(([u,f])=>[u,1000/f]), spread=pts.length? Math.max(...pts.map(p=>p[0]))-Math.min(...pts.map(p=>p[0])) : 0;
+  const fit = pts.length>=2 && spread>2 ? linfit(pts) : null;
+  scatter(s,pts,{xr:dx.data.some(d=>d[0]<0)?[-40,40]:[0,40],yr:[0.85,1.1],xl:"u (m/s)",yl:"1/f′ (×10⁻³ s)",fit});
+  const truth = dx.revealed? ` True values: f = <b>${dx.f} Hz</b>, c = <b>${dx.c.toFixed(1)} m/s</b> (air at ${dx.temp} °C).` : "";
+  if(!fit){ $("dxResult").innerHTML="Record readings at three or more different speeds to draw the line."+truth; return; }
+  const fE=1000/fit[1], cE=-fit[1]/fit[0];
+  $("dxResult").innerHTML = `Intercept = <b>${fit[1].toFixed(4)}</b> ×10⁻³ s, so f = <b>${fE.toFixed(0)} Hz</b>. Slope = <b>${(fit[0]*1000).toFixed(3)}</b> ×10⁻⁶ s²/m, so c = −intercept ÷ slope = <b>${cE.toFixed(0)} m/s</b>.`+truth;
+}, 300);
+dxTable(); dxSync();
+const specC = makeCanvas($("specC"), 0.42, 230, s => {
+  const myst=lt.myst!=null, u=myst? lt.myst : lt.u;
+  drawSpectrum(s.ctx,s.w,s.h,{u});
+  const k=1+u/3e5, la=656.3*k, hid=myst&&!lt.show;
+  setReadout($("ltOut"),[["Hα in the lab","656.3 nm"],["Hα from galaxy",la.toFixed(1)+" nm"],["Δλ",(la-656.3>0?"+":"")+(la-656.3).toFixed(1)+" nm"],["Shift",Math.abs(u)<1? "none" : u>0? "red shift (away)" : "blue shift (towards)"],["Galaxy speed",hid? "? your turn" : grp(Math.abs(u))+" km/s"],["u / c",hid? "?" : (Math.abs(u)/3e5).toFixed(4)]]);
+  $("ltWork").innerHTML = hid? `Mystery galaxy: use u = c × Δλ / λ with c = 3.0 × 10⁵ km/s, then press Reveal speed.`
+    : `u = c × Δλ / λ = 3.0 × 10⁵ × ${Math.abs(la-656.3).toFixed(1)} / 656.3 = <b>${grp(Math.abs(u))} km/s</b>`;
+}, 400);
+const radC = makeCanvas($("radC"), 0.42, 220, s => {
+  drawRadar(s.ctx,s.w,s.h,{mode:rd.mode,u:rd.u,t:rd.t});
+  const M=RMODES[rd.mode], df=2*rd.u*M.f/M.c;
+  const items=[["Sent out",fmtHz(M.f)],["Wave speed",M.c>=1e8?"3.0 × 10⁸ m/s":M.c+" m/s"],["Target speed",rd.u+" m/s"],["Shift Δf ≈ 2uf/c",grp(df)+" Hz"],["Received","f + "+grp(df)+" Hz"]];
+  if(rd.mode==="radar"){ const kmh=rd.u*3.6; items.push(["100 km/h limit",kmh>100? Math.round(kmh)+" km/h: speeding!" : Math.round(kmh)+" km/h: OK"]); }
+  setReadout($("rdOut"),items);
+  if(rd.mode==="radar") $("rdOut").lastElementChild.querySelector("b").style.color = rd.u*3.6>100? C.bad : C.good;
+}, 400);
+predC = makeCanvas($("predC"), 0.5, 180, s => { const [,m,where]=PRED[pd.k<0?0:pd.k]; drawRipple(s.ctx,s.w,s.h,{m,sx:0.5,compact:true,ear:where,bgc:C["surface-2"]}); }, 320);
+pdNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    ripple:s=>drawRipple(s.ctx,s.w,s.h,{...o,compact:true,labels:true}),
+    pass:s=>drawPass(s.ctx,s.w,s.h,{...o,compact:true}),
+    graph:s=>drawGraphMini(s.ctx,s.w,s.h),
+    spectrum:s=>drawSpectrum(s.ctx,s.w,s.h,{...o,compact:true}),
+    radar:s=>drawRadar(s.ctx,s.w,s.h,{...o,compact:true}),
+  };
+  makeCanvas(el, kind==="ripple"? 0.66 : kind==="spectrum"? 0.5 : 0.62, 110, draws[kind], 380);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-case]").forEach(el=>{ const c=CASES[+el.dataset.case]; makeCanvas(el,0.62,150,s=>drawRipple(s.ctx,s.w,s.h,{m:c.m,sx:c.m>=1?0.8:0.55,compact:true,bgc:C["surface-2"]})); });
+document.querySelectorAll("canvas[data-mini=spectrum]").forEach(el=>makeCanvas(el,0.55,140,s=>drawSpectrum(s.ctx,s.w,s.h,{u:+el.dataset.u,compact:true})));
+document.querySelectorAll("canvas[data-mini=pass]").forEach(el=>makeCanvas(el,0.45,260,s=>drawPass(s.ctx,s.w,s.h,{u:30,f:600,d:10,x:200}),460));
+
+/* ================= LOOP / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(view==="labs"){
+    if(lab==="waves" && rp.play){ rp.t+=dt; ripC.redraw(); }
+    if(lab==="pitch" && ps.play){ ps.x+=Math.max(ps.u,30)*dt; if(ps.x>200) ps.x=-200; passC.redraw(); }
+    if(lab==="sonic" && so.play){ so.t+=dt; sonC.redraw(); }
+    if(lab==="uses"){ rd.t+=dt; radC.redraw(); }
+  }
+  if(actx){ const on = ps.snd && view==="labs" && lab==="pitch" && ps.play; sndSet(ps.fNow, on? Math.max(0.03,0.2*Math.min(1,12/Math.hypot(ps.x,ps.d))) : 0); }
+  requestAnimationFrame(loop);
+})(performance.now());
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+rpUpd(); psUpd(); soUpd(); ltUpd(); rdUpd();
+})();
+</script>

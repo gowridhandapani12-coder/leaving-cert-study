@@ -1,0 +1,1666 @@
+<title>The Target Market</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.sh-card{display:grid;gap:8px;padding:16px}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card p b{color:var(--terra)}
+.fbbox{padding:0 16px 14px}
+.offers{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 14px}
+.predopts .btns button{min-width:110px}
+.qmvb{display:flex;flex-wrap:wrap;gap:5px}
+.qmvb button{font-size:.78rem;padding:5px 9px}
+.qmvb button[aria-pressed="false"]{opacity:.7;text-decoration:line-through}
+.srt .row .ctl{flex:0 1 170px}
+</style>
+
+
+
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></div>
+        <div style="min-width:0"><b>The Target Market</b><span>Leaving Cert Business · Strand 2 · Topic 4</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html" class="on" aria-current="page">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Cheat sheet</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>U · Investigating Business</summary><ol><li><span class="mono">U</span>Research skills (all year)</li></ol></details>
+      <details><summary>1 · Business Environment</summary><ol><li class="link"><a href="s1-1-stakeholders.html"><span class="mono">1.1</span>Key stakeholders</a></li><li class="link"><a href="s1-2-forms-of-business.html"><span class="mono">1.2</span>Forms of business &amp; governance</a></li><li class="link"><a href="s1-3-economy.html"><span class="mono">1.3</span>Business &amp; the economy</a></li><li class="link"><a href="s1-4-policy.html"><span class="mono">1.4</span>National &amp; EU policy</a></li><li class="link"><a href="s1-5-global.html"><span class="mono">1.5</span>Irish business globally</a></li><li><span class="mono">1.6</span>Applying my learning</li></ol></details>
+      <details open><summary>2 · Understanding Enterprise</summary><ol><li class="link"><a href="s2-1-enterprise.html"><span class="mono">2.1</span>Enterprise</a></li><li class="link"><a href="s2-2-ideas.html"><span class="mono">2.2</span>Idea development</a></li><li class="link"><a href="s2-3-planning.html"><span class="mono">2.3</span>Business planning</a></li><li class="here"><span class="mono">2.4</span>The target market</li><li class="link"><a href="s2-5-operations-finance.html"><span class="mono">2.5</span>Operations &amp; finance</a></li><li class="link"><a href="s2-6-growth.html"><span class="mono">2.6</span>Growth &amp; expansion</a></li><li><span class="mono">2.7</span>Managing risk</li><li><span class="mono">2.8</span>Applying my learning</li></ol></details>
+      <details><summary>3 · Leading in Business</summary><ol><li><span class="mono">3.1</span>Leading an organisation</li><li><span class="mono">3.2</span>Leading people</li><li><span class="mono">3.3</span>Communication</li><li><span class="mono">3.4</span>Planning</li><li><span class="mono">3.5</span>Applying my learning</li></ol></details>
+      <details><summary>4 · Informed Decisions</summary><ol><li><span class="mono">4.1</span>Informed consumer</li><li><span class="mono">4.2</span>Informed financial decisions</li><li><span class="mono">4.3</span>Informed employee</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 2 · Understanding enterprise</span>
+          <h1 style="margin-top:12px">Find your customers.<br>Mix the seven Ps.<br><em>Stand out.</em></h1>
+          <p class="lede">Every successful product is aimed at a target market: the group of customers most likely to buy it. Research that market, build a marketing mix that suits it, give customers a reason to choose you (your USP), and use digital tools, ethics, a power-interest grid and a STEEPLE analysis to keep it right.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="The seven Ps of the marketing mix around a target customer, lighting up in turn"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/8</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">2.4.1</span><span>appreciate the importance of market research in identifying the target market and discuss how businesses conduct market research.</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">2.4.2</span><span>outline the elements of the marketing mix and explain their significance for a business and how they are influenced by the target market.</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">2.4.3</span><span>develop a marketing mix for a product and a service of choice and provide a USP analysis for each.</span></label></li>
+          <li><label><input type="checkbox" id="lo4"><span class="mono">2.4.4</span><span>evaluate and suggest ways of improving an existing marketing mix.</span></label></li>
+          <li><label><input type="checkbox" id="lo5"><span class="mono">2.4.5</span><span>demonstrate an understanding of the disruptive impact* and influence of digital technology on market research and marketing.</span></label></li>
+          <li><label><input type="checkbox" id="lo6"><span class="mono">2.4.6</span><span>evaluate the influence of ethics and sustainability on marketing.</span></label></li>
+          <li><label><input type="checkbox" id="lo7"><span class="mono">2.4.7</span><span>use a power interest grid* to analyse customer interest and adjust the marketing mix as necessary.</span></label></li>
+          <li><label><input type="checkbox" id="lo8"><span class="mono">2.4.8</span><span>conduct a STEEPLE analysis* to develop greater understanding of the external environment and identify issues of concern for a business.</span></label></li>
+        </ul>
+        <div class="result" style="margin-top:10px"><p><b>Students learn about:</b></p>
+          <ul style="margin:6px 0 0 18px;display:grid;gap:4px">
+            <li>the marketing mix and the importance of identifying the target market; conducting market research and marketing for a business including product/service, pricing, promotion, people, packaging, process, and place.</li>
+            <li>identifying the Unique Selling Point (USP), developing and modifying the marketing mix.</li>
+            <li>how technology changes market research and marketing.</li>
+            <li>the importance of ethics and sustainability in marketing including its influence on marketing companies and on different marketing strategies.</li>
+            <li>the potential of a range of analytical tools to analyse customer interest and the external environment.</li>
+          </ul>
+          <p style="margin-top:8px"><b>*Disruptive impact</b>, from the specification's glossary: "Disruptive impact is often used to described how digital technology can change the way in which businesses operate (including within the workplace) and how consumers interact with business. It can be both positive and negative."</p>
+          <p style="margin-top:6px"><b>*Power-interest grid</b>: "A power-interest grid is a form of stakeholder mapping which considers the motivations of stakeholders and their ability to exert influence (either positive or negative) thereby mapping them according to their relative power and interest."</p>
+          <p style="margin-top:6px"><b>*STEEPLE analysis</b>: "A STEEPLE analysis may be used to assess the impact of external factors on a business. It includes consideration of social (S), technological (T), economic (E), environmental (E), political (P), legal (L) and ethical (E) factors."</p></div>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Run a market survey and plot the results, build a marketing mix with a USP, fix a struggling café's mix, plan a digital campaign, check adverts for ethics, and analyse customers and the outside world with a power-interest grid and STEEPLE.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="research">
+        <div class="labhead"><span class="pill t">Research the market</span><p class="goal">"Oat &amp; Go" (illustrative) is a new oat snack bar. Pick a possible target market and a research method, then run a survey. Each survey asks people if they would buy the bar at five prices. Plot the results and find the price that earns the most.</p></div>
+        <div class="panel sim">
+          <canvas id="rsC" aria-label="A graph of the percentage of people who would buy at each price, with the survey results as points and a revenue curve"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Target market (segment)</span><div class="btns" id="rsSeg"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Research method</span><div class="btns" id="rsMeth"></div></div>
+            <div class="ctl"><label for="rsN">People asked <output id="rsNo"></output></label><input type="range" id="rsN" min="20" max="400" step="20" value="100"></div>
+            <div class="ctl"><span class="lbl">Survey</span><div class="btns"><button class="primary" id="rsRun">Run the survey</button><button id="rsClear">Clear results</button></div></div>
+          </div>
+          <div class="readout" id="rsOut"></div>
+          <div class="working wrap" id="rsWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Primary or secondary research?</h3></div>
+          <div class="srt" id="psList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="psReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="psOut"></div>
+        </div>
+        <p class="result">Survey answers are simulated: each segment has a hidden "true" demand and small samples are noisy. Figures are illustrative.</p>
+        <div class="tries"><div class="try"><b>1</b>Run the same survey with 20 people, then 400. How much do the points jump around?</div><div class="try"><b>2</b>Which segment gives the most revenue per week? Is the best price the same for every segment?</div><div class="try"><b>3</b>Why might a focus group tell you more than an online survey, even with fewer people?</div></div>
+      </div>
+
+      <div class="lab" data-lab="mix" hidden>
+        <div class="labhead"><span class="pill t">Build a marketing mix</span><p class="goal">Develop a marketing mix for a product and for a service. Pick the target market, choose an option for each of the seven Ps, then choose a USP. The wheel shows how well each P suits that target market.</p></div>
+        <div class="panel sim">
+          <canvas id="mxC" aria-label="A seven-part wheel showing how well each P of the marketing mix fits the target market"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Product or service</span><div class="btns" id="mxItem"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Target market</span><div class="btns" id="mxTgt"></div></div>
+          </div>
+          <div class="srt" id="mxList"></div>
+          <div class="readout" id="mxOut"></div>
+          <div class="working wrap" id="mxWork"></div>
+        </div>
+        <p class="result">Products, prices and fit scores are illustrative. A fit score is a simple model to compare choices.</p>
+        <div class="tries"><div class="try"><b>1</b>Get a fit above 90% for one target market. Now switch the target market: which Ps no longer fit?</div><div class="try"><b>2</b>Why is the USP "it's cheap" weak if a rival can cut its price tomorrow?</div><div class="try"><b>3</b>For the service, why do people and process matter more than packaging?</div></div>
+      </div>
+
+      <div class="lab" data-lab="improve" hidden>
+        <div class="labhead"><span class="pill t">Fix the mix</span><p class="goal">The Corner Café (illustrative) is losing customers to a new coffee chain. Read the evaluation of its current mix, then spend up to €12 000 on improvements. Watch the scores and the sales forecast.</p></div>
+        <div class="panel sim">
+          <canvas id="imC" aria-label="Bars showing each P's score before and after your improvements, and weekly sales"></canvas>
+          <div class="working wrap" id="imEval"></div>
+          <div class="srt" id="imList"></div>
+          <div class="readout" id="imOut"></div>
+          <div class="working wrap" id="imWork"></div>
+        </div>
+        <p class="result">Scores, costs and sales effects are illustrative.</p>
+        <div class="tries"><div class="try"><b>1</b>Which P was weakest? Fix it first. What happens to sales?</div><div class="try"><b>2</b>Is cutting price the best answer when a big chain is cheaper than you anyway?</div><div class="try"><b>3</b>Find a plan under €12 000 that lifts weekly sales above €6 000.</div></div>
+      </div>
+
+      <div class="lab" data-lab="digital" hidden>
+        <div class="labhead"><span class="pill t">Digital disruption</span><p class="goal">Plan a €6 000 launch campaign for Oat &amp; Go. Switch channels on and off and compare traditional and digital marketing. The funnel shows how many people see the message, respond and buy.</p></div>
+        <div class="panel sim">
+          <canvas id="dgC" aria-label="A marketing funnel from people reached to responses to sales, for the channels you chose"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Channels (tap to switch on or off)</span><div class="btns" id="dgCh"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Use customer data to target adverts?</span><div class="btns" id="dgTg"></div></div>
+          </div>
+          <div class="readout" id="dgOut"></div>
+          <div class="working wrap" id="dgWork"></div>
+        </div>
+        <p class="result">Costs, reach and response rates are illustrative, not real prices. Each new regular customer is worth about €40 profit in the first year. Reach figures overlap between channels.</p>
+        <div class="tries"><div class="try"><b>1</b>Spend the whole budget on traditional channels, then on digital ones. Which gives a lower cost per sale?</div><div class="try"><b>2</b>Switch on targeting. What does it gain, and what must the business do under data protection law (GDPR)?</div><div class="try"><b>3</b>Why can a digital campaign be measured more accurately than a newspaper advert?</div></div>
+      </div>
+
+      <div class="lab" data-lab="ethics" hidden>
+        <div class="labhead"><span class="pill t">Ethical and sustainable marketing</span><p class="goal">You work for an advertising standards body. Check each marketing claim or tactic: is it acceptable, misleading (including greenwashing), or unethical in another way?</p></div>
+        <div class="panel sim">
+          <canvas id="etC" aria-label="Three columns filling up: acceptable, misleading and unethical"></canvas>
+          <div class="srt" id="etList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="etReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="etOut"></div>
+        </div>
+        <p class="result">All the claims are illustrative. Real complaints about adverts in Ireland go to the Advertising Standards Authority (ASA); misleading sales practices can also break consumer protection law.</p>
+        <div class="tries"><div class="try"><b>1</b>What makes "eco-friendly" on its own a weak claim? What evidence would make it acceptable?</div><div class="try"><b>2</b>Why are adverts aimed at children treated more strictly?</div><div class="try"><b>3</b>How can ethical marketing win customers, not just avoid trouble?</div></div>
+      </div>
+
+      <div class="lab" data-lab="tools" hidden>
+        <div class="labhead"><span class="pill t">Power-interest grid and STEEPLE</span><p class="goal">ZipRide (illustrative) rents e-scooters in an Irish city. First map its customer groups on a power-interest grid and see how to adjust the mix for each. Then sort outside factors into a STEEPLE analysis.</p></div>
+        <div class="panel sim">
+          <canvas id="pgC" aria-label="A power-interest grid with ZipRide's customer groups placed in the four boxes"></canvas>
+          <div class="srt" id="pgList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Grid</span><div class="btns"><button id="pgReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="pgOut"></div>
+        </div>
+        <div class="panel sim">
+          <canvas id="stC" aria-label="A STEEPLE wheel with seven segments filling up as factors are sorted"></canvas>
+          <div class="srt" id="stList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">STEEPLE</span><div class="btns"><button id="stReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="stOut"></div>
+        </div>
+        <p class="result">ZipRide and its customer groups are illustrative.</p>
+        <div class="tries"><div class="try"><b>1</b>Which customer group must ZipRide "manage closely"? What would you change in the mix for them?</div><div class="try"><b>2</b>Which STEEPLE factors are threats and which are opportunities?</div><div class="try"><b>3</b>A factor can fit two letters (e.g. a new law about emissions). How would you decide?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of the target market"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it · LO 2.4.2, 2.4.5 and 2.4.6</p><h2>Marketing in the real world</h2></div><p>Well-known brands and one part of their marketing, in general terms. Check a current source before using one in your own work.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>Mix, funnel, grid</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="wheel"></canvas><h3>Seven Ps, one customer</h3><p>Every P is chosen to suit the same target market. If one P doesn't fit, the whole mix suffers.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="funnel"></canvas><h3>Reach, respond, buy</h3><p>Digital marketing can count every step: how many saw it, clicked and bought.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="grid"></canvas><h3>Power and interest</h3><p>Customers with lots of power and interest are managed closely; the mix is adjusted for them.</p></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">LO 2.4.5 · Then and now</p><h2>How digital technology changed marketing</h2></div><p>The disruptive impact can be positive and negative.</p></div>
+      <div class="cases" id="impacts"></div>
+
+      <div class="head"><div><p class="eyebrow">In Ireland</p><h2>Data, rules and help</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% Business Alive Investigative Study">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>Higher or Ordinary level, set by the SEC. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Business Alive Investigative Study · 40%</b><p>An investigation based on a common brief from the SEC. The same brief for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Learn the spec's <b>seven Ps</b>: product, price, promotion, place, people, packaging, process. Apply each one to the business in the question.</li>
+            <li>A <b>target market</b> is a specific group of customers. Describe it precisely: age, location, income, lifestyle.</li>
+            <li>Market research: name the <b>method</b> (survey, interview, focus group, desk research) and say if it is <b>primary or secondary</b>.</li>
+            <li>A good <b>USP</b> is unique, valued by customers and hard for rivals to copy. "Cheap" is rarely a USP.</li>
+            <li>"Evaluate and suggest" questions want a <b>judgement</b> on each P, then a <b>specific improvement</b> and why it would help.</li>
+            <li>Digital: give <b>both sides</b> of the disruptive impact: cheaper, targeted and measurable, but privacy, fierce online competition and fast-changing platforms.</li>
+            <li>For STEEPLE, write the <b>letter, the factor and its effect</b> on the business (threat or opportunity).</li>
+            <li>Show the <b>formula and working</b> for numbers: market share, conversion rate, cost per sale, return on a campaign.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Action verbs</h2></div><p>Meanings summarised from the specification's glossary of action verbs, which will be aligned with the exam's command words.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Business and financial literacy</p><h2>Numbers trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which P is it?</h2></div></div>
+          <canvas id="predC" aria-label="The element of the marketing mix, shown after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns" data-g="0"><button data-a="pr">Product</button><button data-a="pc">Price</button><button data-a="pm">Promotion</button><button data-a="pl">Place</button><button data-a="pe">People</button><button data-a="pk">Packaging</button><button data-a="ps">Process</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Skills the Business Alive Investigative Study rewards (from the Investigating Business strand). Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term in this chapter. Learn the definitions: "define" and "outline" questions reward precise wording.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: USP, segment, STEEPLE…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= CHEAT SHEET ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Cheat sheet</h2></div><p>The whole chapter on one page, plus the numbers you might meet in a marketing question.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Target market</span><span class="big">The specific group of customers a business aims to sell to</span><dl><dt>Segment by</dt><dd>age, gender, income, location, lifestyle, behaviour</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Market research (LO 2.4.1)</span><span class="big">Primary (field) · Secondary (desk)</span><dl><dt>Primary</dt><dd>surveys, interviews, focus groups, observation, test marketing</dd><dt>Secondary</dt><dd>CSO data, reports, websites, own sales records</dd></dl></div>
+        <div class="panel fcell"><span class="pill">The marketing mix (spec)</span><span class="big">Product · Price · Promotion · Place · People · Packaging · Process</span></div>
+        <div class="panel fcell"><span class="pill">USP</span><span class="big">Unique · Valued by customers · Hard to copy</span><dl><dt>Analysis</dt><dd>what is it, why it matters to the target market, how to protect it</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Improving a mix (LO 2.4.4)</span><span class="big">Evaluate each P → find the weakest → suggest a change → explain the benefit</span></div>
+        <div class="panel fcell"><span class="pill">Digital disruption</span><span class="big">Online surveys · analytics · social media · targeting · influencers · e-commerce</span><dl><dt>+</dt><dd>cheaper, targeted, measurable, two-way</dd><dt>−</dt><dd>privacy (GDPR), negative reviews spread fast, constant change</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Ethics and sustainability</span><span class="big">Honest claims · no greenwashing · protect children · respect data · sustainable packaging</span></div>
+        <div class="panel fcell"><span class="pill">Power-interest grid</span><span class="big">Manage closely · Keep satisfied · Keep informed · Monitor</span><dl><dt>High power + high interest</dt><dd>manage closely</dd><dt>High power, low interest</dt><dd>keep satisfied</dd><dt>Low power, high interest</dt><dd>keep informed</dd><dt>Low + low</dt><dd>monitor</dd></dl></div>
+        <div class="panel fcell"><span class="pill">STEEPLE</span><span class="big">Social · Technological · Economic · Environmental · Political · Legal · Ethical</span></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Market share % = firm's sales ÷ total market sales × 100</span><div class="ex">€300 000 ÷ €2 000 000 × 100 = 15%</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Conversion rate % = sales ÷ visitors × 100</span><div class="ex">60 ÷ 2 400 × 100 = 2.5%</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Cost per sale = campaign cost ÷ sales made</span><div class="ex">€1 500 ÷ 600 = €2.50</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Return on a campaign % = (extra profit − cost) ÷ cost × 100</span><div class="ex">(€9 000 − €6 000) ÷ €6 000 × 100 = 50%</div></div>
+      </div>
+      <footer>
+        <p>Built on Strand 2, topic 4 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/business/" target="_blank" rel="noopener">Leaving Certificate Business Specification</a> (NCCA, for introduction September 2025). Learning outcomes and the definitions of disruptive impact, power-interest grid and STEEPLE analysis are quoted from the specification. Cases, scores and euro figures are illustrative unless stated.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("bs-theme","auto"), font = store.get("bs-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("bs-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("bs-font",font); applyFont(); });
+
+
+
+/* ---------- icons + topics ---------- */
+/* ---------- icons + topics ---------- */
+const ICON = {
+  research:'<circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L21 21"/><path d="M7 11l2-2 2 2 2-3"/>',
+  mix:'<circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.4 6.4M12 12l-8.6 2.6M12 12l3-8.5"/>',
+  improve:'<path d="M4 20V14M10 20V9M16 20V5"/><path d="M3 7l5-4 4 3 7-4"/><path d="M19 2h2v2"/>',
+  digital:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/><path d="M9 11l2 2 4-5"/>',
+  ethics:'<path d="M12 21C7 17 3 13 3 8.5A4.5 4.5 0 0112 6a4.5 4.5 0 019 2.5C21 13 17 17 12 21z"/><path d="M9 11l2 2 4-4"/>',
+  tools:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18M3 12h18"/><circle cx="17" cy="7" r="1.6"/><circle cx="7.5" cy="16.5" r="1.6"/>',
+  burger:'<path d="M4 10a8 5 0 0116 0z"/><path d="M3 13h18M4 16h16a0 0 0 01-1 3H5a0 0 0 01-1-3z"/>',
+  bag:'<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 016 0v2"/>',
+  leaf:'<path d="M5 20c0-9 6-15 15-15 0 9-6 15-15 15z"/><path d="M5 20l8-8"/>',
+  tv:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 21h8M9 2l3 4 3-4"/>',
+  shop:'<path d="M3 9l2-5h14l2 5"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/>',
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+  gov:'<path d="M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M12 3l9 5H3z"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  people:'<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0112 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20a5 5 0 016-4.8"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+  lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"research", name:"Market research and the target market", short:"Find out who your customers are and what they want: primary and secondary research.", tint:"var(--blush)"},
+  {id:"mix", name:"The marketing mix", short:"Product, price, promotion, place, people, packaging and process, all aimed at one target market.", tint:"var(--apricot)"},
+  {id:"improve", name:"USP and improving the mix", short:"Give customers a reason to choose you, then evaluate and improve an existing mix.", tint:"var(--sage)"},
+  {id:"digital", name:"Digital disruption", short:"How digital technology changes market research and marketing, for better and worse.", tint:"var(--cream)"},
+  {id:"ethics", name:"Ethics and sustainability", short:"Honest claims, no greenwashing, fair targeting and sustainable choices in marketing.", tint:"var(--blush)"},
+  {id:"tools", name:"Power-interest grid and STEEPLE", short:"Analyse customer interest and the external environment, then adjust the mix.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Market","","All the potential buyers of a product or service, and the sellers who compete for them.","research"],
+  ["Target market","","The specific group of customers a business aims its product and marketing at: those most likely to buy.","research"],
+  ["Market segment","segment","A group of customers within a market who share similar characteristics or needs.","research"],
+  ["Market segmentation","","Dividing a market into groups by age, gender, income, location, lifestyle or buying behaviour, so the business can target one or more of them.","research"],
+  ["Niche market","","A small, specialised segment with particular needs, e.g. gluten-free baking.","research"],
+  ["Mass market","","A very large market where one product is sold to almost everyone, e.g. bread or milk.","research"],
+  ["Market research","","Gathering and analysing information about customers, competitors and the market to reduce the risk of business decisions.","research"],
+  ["Primary research","field research","Collecting new information first-hand for a specific purpose: surveys, interviews, focus groups, observation, test marketing.","research"],
+  ["Secondary research","desk research","Using information that already exists: CSO statistics, reports, newspapers, websites, the business's own sales records.","research"],
+  ["Questionnaire","survey","A set of questions asked to a sample of people. Can be online, by phone or face to face.","research"],
+  ["Focus group","","A small group of people from the target market who discuss a product in depth, led by a researcher.","research"],
+  ["Sample","","The group of people actually asked in a survey. A bigger, well-chosen sample gives more reliable results.","research"],
+  ["Test marketing","","Launching a product in one small area first to see how it sells before a full launch.","research"],
+  ["Quantitative data","","Data in numbers, e.g. 62% would buy at €1.50.","research"],
+  ["Qualitative data","","Data about opinions, feelings and reasons, e.g. why people prefer a brand.","research"],
+  ["Marketing","","Identifying what customers want and supplying it profitably, through the marketing mix.","mix"],
+  ["Marketing mix","seven Ps","The combination of product, price, promotion, place, people, packaging and process that a business uses to meet the needs of its target market.","mix"],
+  ["Product","product/service","What the business sells: its features, quality, design, brand and after-sales service.","mix"],
+  ["Price","pricing","What customers pay. Pricing strategies include cost-plus, penetration, premium, competitive and psychological pricing.","mix"],
+  ["Promotion","","How the business communicates with customers: advertising, social media, sales promotions, public relations, sponsorship, personal selling.","mix"],
+  ["Place","distribution","How and where the product gets to customers: shops, online, direct, wholesalers, delivery.","mix"],
+  ["People","","Everyone who deals with customers: staff, their training, attitude and appearance. Very important for services.","mix"],
+  ["Packaging","","The container and wrapping of a product: it protects, informs (labelling) and attracts customers.","mix"],
+  ["Process","","The steps and systems used to deliver the product or service to the customer, e.g. ordering, payment, waiting times.","mix"],
+  ["Penetration pricing","","Setting a low price at launch to win market share quickly, then raising it.","mix"],
+  ["Premium pricing","prestige pricing","Setting a high price to give an image of quality and exclusivity.","mix"],
+  ["Psychological pricing","","Setting prices just below a round number, e.g. €9.99, so they seem cheaper.","mix"],
+  ["Cost-plus pricing","","Adding a mark-up to the cost of making or buying the product.","mix","price = cost × (1 + mark-up %)"],
+  ["Brand","","A name, logo, design or image that makes a product recognisable and different from rivals.","mix"],
+  ["Unique selling point","USP","A feature or benefit that makes a product different from and better than rivals, valued by customers and hard to copy.","improve"],
+  ["USP analysis","","Identifying the USP, explaining why it matters to the target market and how the business will protect it.","improve"],
+  ["Competitive advantage","","Something that lets a business do better than its rivals, e.g. lower costs or a stronger USP.","improve"],
+  ["Evaluate","","Judge the strengths and weaknesses of something and reach a conclusion, e.g. how well each P of a mix is working.","improve"],
+  ["Market share","","A business's sales as a percentage of total sales in the market.","improve","market share % = firm's sales ÷ market sales × 100"],
+  ["Product life cycle","","The stages a product goes through: introduction, growth, maturity and decline. The mix is modified at each stage.","improve"],
+  ["Extension strategy","","A change to the mix that extends a product's life, e.g. new flavours, new packaging or new markets.","improve"],
+  ["Disruptive impact","","From the spec: how digital technology can change the way businesses operate and how consumers interact with business. It can be both positive and negative.","digital"],
+  ["Digital marketing","","Promoting products through digital channels: social media, search engines, email, websites and apps.","digital"],
+  ["Social media marketing","","Using platforms such as Instagram or TikTok to reach customers, often with two-way conversation.","digital"],
+  ["Influencer marketing","","Paying or gifting people with large online followings to promote a product. Paid posts must be clearly labelled as ads.","digital"],
+  ["Targeted advertising","","Showing adverts to people chosen using data about their age, location, interests or online behaviour.","digital"],
+  ["Analytics","web analytics","Data on how people find and use a website or app: visits, clicks, time spent and sales.","digital"],
+  ["Click-through rate","CTR","The percentage of people who see an online advert and click on it.","digital","CTR % = clicks ÷ impressions × 100"],
+  ["Conversion rate","","The percentage of visitors who go on to buy.","digital","conversion % = sales ÷ visitors × 100"],
+  ["Cost per sale","cost per acquisition, CPA","The marketing cost of winning each sale.","digital","cost per sale = campaign cost ÷ sales"],
+  ["A/B testing","","Showing two versions of an advert or web page to different groups to see which works better.","digital"],
+  ["GDPR","General Data Protection Regulation","EU law on personal data: businesses need a lawful basis such as consent, must keep data secure and must tell people how it is used.","digital"],
+  ["Ethical marketing","","Marketing that is honest, fair and responsible: no misleading claims, no pressure tactics, protecting vulnerable groups.","ethics"],
+  ["Greenwashing","","Making misleading claims that a product or business is more environmentally friendly than it is.","ethics"],
+  ["Sustainable marketing","","Marketing that considers long-term effects on society and the environment, e.g. promoting reusable products and recyclable packaging.","ethics"],
+  ["Misleading advertising","","Advertising that deceives or is likely to deceive consumers, e.g. false claims, hidden costs or fake reviews.","ethics"],
+  ["Advertising Standards Authority","ASA","Ireland's independent self-regulatory body for advertising. It sets the code that ads should be legal, decent, honest and truthful, and handles complaints.","ethics"],
+  ["Cause-related marketing","","Linking a product to a good cause, e.g. a donation from each sale to a charity.","ethics"],
+  ["Power-interest grid","","From the spec: a form of stakeholder mapping which considers the motivations of stakeholders and their ability to exert influence, mapping them according to their relative power and interest.","tools"],
+  ["Manage closely","key players","Grid box for high power and high interest: involve them and adjust the mix to their needs.","tools"],
+  ["Keep satisfied","","Grid box for high power, low interest: meet their needs so they don't become a problem.","tools"],
+  ["Keep informed","","Grid box for low power, high interest: communicate with them regularly.","tools"],
+  ["Monitor","","Grid box for low power, low interest: minimum effort, but watch for changes.","tools"],
+  ["STEEPLE analysis","","From the spec: assesses the impact of external factors on a business: social, technological, economic, environmental, political, legal and ethical.","tools"],
+  ["External environment","","Factors outside the business that it cannot control but must respond to, such as the economy, laws and technology.","tools"],
+  ["Opportunity","","An external factor the business could use to its advantage.","tools"],
+  ["Threat","","An external factor that could harm the business.","tools"],
+];
+GLOSS.forEach((g,i)=>{ GLOSS[i]={t:g[0],aka:g[1],d:g[2],topic:g[3],f:g[4],id:"g-"+g[0].toLowerCase().replace(/[^a-z0-9]+/g,"-")}; });
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["target market","Target market"],["market research","Market research"],["primary research","Primary research"],["secondary research","Secondary research"],["focus group","Focus group"],["segment","Market segment"],["sample","Sample"],["marketing mix","Marketing mix"],["packaging","Packaging"],["penetration pricing","Penetration pricing"],["premium pricing","Premium pricing"],["USP","Unique selling point",true],["market share","Market share"],["product life cycle","Product life cycle"],["disruptive impact","Disruptive impact"],["influencer","Influencer marketing"],["targeted","Targeted advertising"],["analytics","Analytics"],["conversion rate","Conversion rate"],["GDPR","GDPR",true],["greenwashing","Greenwashing"],["power-interest grid","Power-interest grid"],["STEEPLE","STEEPLE analysis",true],["A/B test","A/B testing"]];
+
+
+
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function arrow(ctx,x1,y1,x2,y2,col,w=3,dash){ line(ctx,x1,y1,x2,y2,col,w,dash); const a=Math.atan2(y2-y1,x2-x1), s=8+w; ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-s*Math.cos(a-0.45),y2-s*Math.sin(a-0.45)); ctx.lineTo(x2-s*Math.cos(a+0.45),y2-s*Math.sin(a+0.45)); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const n0 = x => Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const eur = x => "€"+n0(x);
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+function wrapText(ctx,str,maxW){ const words=str.split(" "), out=[]; let cur=""; words.forEach(wd=>{ const t=cur?cur+" "+wd:wd; if(ctx.measureText(t).width>maxW && cur){ out.push(cur); cur=wd; } else cur=t; }); if(cur) out.push(cur); return out; }
+const f2 = x => x.toFixed(2);
+// box with centred (wrapped) label
+function box(ctx,cx,cy,bw,bh,label,fill,stroke,col,fs){ rrect(ctx,cx-bw/2,cy-bh/2,bw,bh,12,fill,stroke,2); ctx.save(); ctx.font=F(fs); const ls=wrapText(ctx,label,bw-10); ctx.restore(); ls.forEach((s,i)=>text(ctx,s,cx,cy+(i-(ls.length-1)/2)*(fs+3)+fs*0.35,col,F(fs),"center")); }
+const fm = x => f2(x).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const sgn = v => (v>0?"+€":v<0?"−€":"€")+Math.abs(Math.round(v*100)/100);
+
+
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "research", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3","lo4","lo5","lo6","lo7","lo8"]; const loState=store.get("b24-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("b24-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("b24-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+/* ================= LEARN ================= */
+const LEARN = {
+  research:{ vis:[["demand",{seg:0}]], cap:"A survey asks students if they would buy an oat bar at five prices. Fewer say yes as the price rises. The best price balances price against the number of buyers.",
+    keys:[["🎯","The target market is the specific group of customers a business aims at. Segment the market by age, gender, income, location, lifestyle or behaviour, then pick the segment you can serve best."],["🔍","Market research reduces risk: it shows who the customers are, what they want, what they will pay and what rivals offer, before money is spent."],["📋","Primary (field) research collects new data: surveys, interviews, focus groups, observation, test marketing. Secondary (desk) research uses existing data: CSO statistics, reports, sales records, websites."]],
+    f:"Segment → Research → Target", mistake:"Saying the target market is \"everyone\". Even mass-market products aim their mix at particular groups." },
+  mix:{ vis:[["wheel",{}]], cap:"The seven Ps in the specification, all aimed at one target market in the centre.",
+    keys:[["7","Product (or service) · Price · Promotion · Place · People · Packaging · Process. Together they are the marketing mix."],["🎯","The target market shapes every P: students want low prices and social media; gym-goers pay more for protein and expect to find it in gyms."],["🧩","The Ps must fit together: a premium price needs premium packaging, staff and places to sell. One weak P can undo the rest."]],
+    f:"Product · Price · Promotion · Place · People · Packaging · Process", mistake:"Listing the seven Ps without applying them. Exam answers must say what each P means for this business and its target market." },
+  improve:{ vis:[["bars",{before:[4,3,1,3,4,2,1],after:[4,3,4,4,4,4,4]}]], cap:"The Corner Café's mix before (light) and after (dark) improvements. Its weakest Ps were promotion and process.",
+    keys:[["⭐","A USP (unique selling point) is a feature or benefit that makes you different and better: unique, valued by the target market and hard to copy."],["🔎","USP analysis: what is the USP, why does it matter to the target market, and how will the business protect it (brand, patent, quality, service)?"],["🔧","To improve a mix, evaluate each P, find the weakest, suggest a specific change and explain the benefit. Mixes also change over the product life cycle."]],
+    f:"Evaluate → Find the weak P → Suggest → Justify", mistake:"Saying \"lower the price\" as the fix for everything. Price cuts reduce profit per sale and rivals can copy them; fix the P that is actually weak." },
+  digital:{ vis:[["funnel",{a:80000,b:960,c:77}]], cap:"A social media campaign reaches 80 000 people; 960 click and 77 become customers. Every step can be measured.",
+    keys:[["📱","Digital technology has a disruptive impact: it changes how businesses research and market, and how customers find and talk about products. The impact can be positive and negative."],["📊","Research: online surveys, website analytics, social listening and A/B tests give fast, cheap, detailed data. Marketing: targeted social ads, search ads, influencers, email, online shops open 24/7."],["⚠","Downsides: privacy and GDPR rules on personal data, bad reviews spread fast, fierce online competition, platforms change their rules, and older customers can be left out."]],
+    f:"Reach → Click → Buy (all measurable)", mistake:"Saying digital marketing is free. Ads, content, staff time and data protection all cost money." },
+  ethics:{ vis:[["bins",{labels:["Acceptable","Misleading","Unethical"],counts:[4,5,3],tot:[4,5,3]}]], cap:"Twelve marketing claims sorted: honest claims are fine; vague green claims, hidden ads and fake reviews mislead; some tactics are unethical.",
+    keys:[["⚖","Ethical marketing is honest and fair: no false or vague claims, no hidden ads, no pressure tactics, extra care with children and vulnerable people, respect for personal data."],["🌱","Sustainable marketing promotes products and packaging that are better for the planet, backed by evidence. Greenwashing (misleading green claims) damages trust."],["€","Ethics and sustainability influence marketing strategies: many customers choose ethical brands, and regulators (ASA, CCPC) act against misleading adverts."]],
+    f:"Honest · Evidence-based · Fair · Sustainable", mistake:"Thinking ethics only means obeying the law. Some legal tactics, like pestering-power adverts to children, are still unethical." },
+  tools:{ vis:[["grid",{}],["steeple",{}]], cap:"ZipRide's customers on a power-interest grid, and a STEEPLE analysis of the world outside the business.",
+    keys:[["▦","Power-interest grid: map customer groups by their power (influence on sales and the business) and interest. Manage closely, keep satisfied, keep informed or monitor."],["🔧","Adjust the mix for each box, e.g. a monthly pass for daily commuters (manage closely), a tailored offer for a large employer (keep satisfied)."],["🌍","STEEPLE: social, technological, economic, environmental, political, legal and ethical factors outside the business. Identify each, then say if it's a threat or an opportunity."]],
+    f:"Power × Interest · S T E E P L E", mistake:"Putting internal issues (e.g. staff shortages in the business) in a STEEPLE analysis. STEEPLE is about the external environment." },
+};
+/* ================= INFOGRAPHICS ================= */
+const TINTS = ["var(--blush)","var(--apricot)","var(--sage)","var(--cream)"];
+const BIZ = [
+  {n:"Tayto", ic:"star", chip:["Promotion","real"], who:"An Irish crisp brand, first sold in the 1950s.", job:"Its cartoon mascot, Mr Tayto, has featured in its advertising for decades, building a strong, playful brand.", ie:"Promotion builds a brand that customers recognise and trust."},
+  {n:"Lidl and Aldi", ic:"shop", chip:["Price","real"], who:"German discount supermarket chains with many stores across Ireland.", job:"Low prices, a limited range and many own-brand products help them compete with bigger supermarkets.", ie:"Price can be the core of a mix, but the other Ps (range, place, process) must keep costs low too."},
+  {n:"Apple", ic:"bag", chip:["Packaging · premium price","real"], who:"The American technology company.", job:"High prices and carefully designed packaging support an image of quality; unboxing is part of the experience.", ie:"Premium pricing only works when product, packaging, people and place all say \"premium\"."},
+  {n:"Patagonia", ic:"leaf", chip:["Ethics · sustainability","real"], who:"An American outdoor clothing company.", job:"Its 2011 \"Don't buy this jacket\" advert asked customers to think before buying; it also repairs and resells used clothing.", ie:"Sustainability can be a brand's USP, if the business backs it with real action."},
+  {n:"Lush", ic:"leaf", chip:["Packaging · sustainability","real"], who:"A British cosmetics retailer.", job:"Sells many products \"naked\", with no packaging at all, such as solid shampoo bars.", ie:"Packaging decisions can be a marketing message in themselves."},
+  {n:"Supermac's", ic:"burger", chip:["Place","real"], who:"An Irish fast-food chain founded in Ballinasloe in 1978.", job:"Its outlets are in towns across Ireland and in motorway service areas, close to where travellers stop.", ie:"Place: being where your target market already is."},
+];
+$("cases").innerHTML = BIZ.map((c,k)=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${TINTS[k%4]}">${svg(c.ic)}</div><h3>${c.n}</h3></div><div class="chips">${chipsHTML([c.chip])}</div><p><b>Who:</b> ${c.who}</p><p><b>Marketing:</b> ${c.job}</p><p><b>Lesson:</b> ${c.ie}</p></div>`).join("");
+const IMPACTS = [
+  ["research","Research: paper surveys → online data","Then: printed questionnaires and street interviews, slow to analyse. Now: online surveys, website analytics and social listening give results in hours. But online samples can leave out people who are rarely online.","var(--blush)"],
+  ["tv","Adverts: one message for all → targeted ads","Then: TV, radio and newspaper adverts seen by everyone. Now: social and search ads aimed at chosen groups, measured click by click. But targeting uses personal data, so GDPR applies.","var(--apricot)"],
+  ["star","Word of mouth → reviews and influencers","Then: people told friends. Now: online reviews and influencers reach thousands. Good news spreads fast, and so do complaints.","var(--sage)"],
+  ["shop","Shops → e-commerce","Then: customers had to visit a shop in opening hours. Now: online shops open 24/7 and small firms can sell worldwide. But price comparison is one click away.","var(--cream)"],
+];
+$("impacts").innerHTML = IMPACTS.map(([i,t,p,tn])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${t}</h3></div><p>${p}</p></div>`).join("");
+const AROUND = [
+  ["chart","Central Statistics Office (CSO)","Publishes free secondary data such as census results on population by age and county, useful for sizing a target market.",[["Secondary research","real"]],"var(--blush)"],
+  ["shield","Advertising Standards Authority (ASA)","Ireland's self-regulatory body for advertising. Its code says ads should be legal, decent, honest and truthful; anyone can complain about an ad.",[["Ethics","real"]],"var(--apricot)"],
+  ["gov","Competition and Consumer Protection Commission (CCPC)","Enforces consumer protection law, including rules against misleading commercial practices.",[["Consumer law","real"]],"var(--sage)"],
+  ["lock","Data Protection Commission","Ireland's regulator for GDPR. Businesses using customer data for marketing must follow data protection law.",[["Digital","real"],["GDPR","neutral"]],"var(--cream)"],
+  ["leaf","Bord Bia","The Irish food board shares consumer insights and market information with Irish food and drink companies.",[["Market research","real"]],"var(--blush)"],
+  ["people","Local Enterprise Offices","Offer training and mentoring for small businesses, including marketing and online trading supports. Check your local office for current supports.",[["Support","neutral"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"research",label:"Market research",col:"var(--blush)",leaves:[["Target market","The group you aim at."],["Segments","Age, income, location, lifestyle."],["Primary","Surveys, focus groups, tests."],["Secondary","CSO, reports, records."]]},
+  {id:"mix",label:"Marketing mix",col:"var(--apricot)",leaves:[["Product","What you sell."],["Price","What they pay."],["Promotion","How you tell them."],["Place","Where they buy."],["People · packaging · process","Staff, wrapping, systems."]]},
+  {id:"improve",label:"USP and improving",col:"var(--sage)",leaves:[["USP","Unique, valued, hard to copy."],["Evaluate","Score each P."],["Improve","Fix the weakest P."]]},
+  {id:"digital",label:"Digital disruption",col:"var(--cream)",leaves:[["Research","Online surveys, analytics."],["Marketing","Targeted ads, influencers."],["Downsides","Privacy, reviews, competition."]]},
+  {id:"ethics",label:"Ethics and sustainability",col:"var(--blush)",leaves:[["Honest claims","No misleading ads."],["Greenwashing","Fake green claims."],["Children","Extra care."]]},
+  {id:"tools",label:"Analytical tools",col:"var(--sage)",leaves:[["Power-interest grid","Map customer groups."],["Adjust the mix","For each box."],["STEEPLE","Seven external factors."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["research","What is a target market?","The specific group of customers a business aims its product and marketing at: the people most likely to buy."],
+  ["research","Name five ways to segment a market.","Age, gender, income, location (geographic), lifestyle, buying behaviour."],
+  ["research","Why is market research important in identifying the target market?","It shows who the customers are, what they want and will pay, and what rivals offer, so the business reduces risk and aims its mix at the right group."],
+  ["research","What is the difference between primary and secondary research?","Primary (field) collects new data first-hand for a purpose; secondary (desk) uses data that already exists."],
+  ["research","Give three methods of primary research.","Questionnaires/surveys, interviews, focus groups, observation, test marketing."],
+  ["research","Give three sources of secondary research.","CSO statistics, market reports, newspapers and websites, competitors' websites, the business's own sales records."],
+  ["research","Why does sample size matter in a survey?","Small samples give results that vary a lot by chance; larger, well-chosen samples are more reliable."],
+  ["mix","Name the seven Ps of the marketing mix in the specification.","Product (or service), price, promotion, place, people, packaging and process."],
+  ["mix","How does the target market influence the marketing mix?","Every P is chosen to suit the target market's needs, budget, habits and media, e.g. low prices and social media for students."],
+  ["mix","Name four pricing strategies.","Penetration, premium, cost-plus, competitive and psychological pricing."],
+  ["mix","What are the functions of packaging?","Protects the product, informs (labels, allergens, instructions), attracts customers and carries the brand."],
+  ["mix","Why are people and process so important for a service?","A service can't be seen before buying, so staff and the way it's delivered (booking, waiting, payment) are what the customer experiences."],
+  ["mix","Give four methods of promotion.","Advertising, social media, sales promotions, public relations, sponsorship, personal selling."],
+  ["improve","What is a USP?","A unique selling point: a feature or benefit that makes a product different and better than rivals, valued by customers and hard to copy."],
+  ["improve","What does a USP analysis include?","What the USP is, why it matters to the target market, and how the business will protect or communicate it."],
+  ["improve","How would you evaluate an existing marketing mix?","Judge each P against the target market's needs and rivals, find strengths and the weakest Ps, and reach a conclusion."],
+  ["improve","Give two reasons a business modifies its marketing mix.","New competitors; changing customer tastes; a new target market; a stage of the product life cycle; new technology; falling sales."],
+  ["digital","What is meant by the disruptive impact of digital technology? (spec)","How digital technology can change the way businesses operate and how consumers interact with business; it can be positive and negative."],
+  ["digital","How has digital technology changed market research?","Online surveys, website analytics, social listening and A/B tests give faster, cheaper and more detailed data."],
+  ["digital","Give two advantages and two disadvantages of digital marketing.","Advantages: targeted, measurable, cheaper reach, two-way contact, 24/7 sales. Disadvantages: privacy/GDPR, bad reviews spread fast, fierce competition, platforms change, some customers left out."],
+  ["digital","What is a conversion rate?","The percentage of visitors who buy: sales ÷ visitors × 100."],
+  ["ethics","What is greenwashing?","Making misleading claims that a product or business is more environmentally friendly than it is."],
+  ["ethics","Give three examples of unethical marketing.","Hidden adverts by influencers; fake reviews; fake urgency; misleading claims; targeting children with unhealthy products; using personal data without consent."],
+  ["ethics","How do ethics and sustainability influence marketing strategies?","Brands use honest, evidence-based claims, sustainable packaging and causes; they avoid tactics that damage trust; regulators and customers punish misleading marketing."],
+  ["tools","What is a power-interest grid? (spec)","A form of stakeholder mapping which considers stakeholders' motivations and ability to exert influence, mapping them by relative power and interest."],
+  ["tools","Name the four boxes of a power-interest grid.","Manage closely (high power, high interest); keep satisfied (high power, low interest); keep informed (low power, high interest); monitor (low, low)."],
+  ["tools","What does STEEPLE stand for?","Social, technological, economic, environmental, political, legal and ethical factors."],
+  ["tools","Why conduct a STEEPLE analysis?","To understand the external environment, spot threats and opportunities early, and identify issues of concern before they hurt the business."],
+];
+
+
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Target</text><text x="${cx}" y="${cy+22}" text-anchor="middle">market</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("b24-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("b24-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("b24-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("b24-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["research","A target market is:",["Everyone who lives in Ireland","The specific group of customers a business aims its product at","The shop where the product is sold","The business's main competitor"],1,"It's a specific group, the customers most likely to buy, so the mix can be aimed at them."],
+  ["research","Which of these is an example of primary research?",["CSO census figures","A market report bought from a research firm","A focus group of eight teenagers tasting a new drink","Last year's sales records"],2,"A focus group collects new, first-hand information. The others already exist: secondary research."],
+  ["research","Which is the main advantage of secondary research?",["It is up to date and exactly fits your question","It is usually quicker and cheaper to get","Competitors can't see it","It always uses a large sample"],1,"Existing data is quick and cheap, but it may be out of date or not fit your exact question."],
+  ["research","A survey of 20 people gives very different results each time it's repeated. The best fix is to:",["Ask a larger sample","Ask only friends","Stop doing research","Ask the same 20 people again"],0,"Bigger, well-chosen samples vary less by chance, so the results are more reliable."],
+  ["mix","Which list matches the seven Ps in the specification?",["Product, price, promotion, place, people, packaging, process","Product, profit, promotion, place, people, packaging, planning","Price, profit, people, planet, place, packaging, process","Product, price, promotion, place, partners, policy, process"],0,"The spec lists product/service, pricing, promotion, people, packaging, process and place."],
+  ["mix","Setting a low price at launch to win customers quickly is called:",["Premium pricing","Penetration pricing","Psychological pricing","Cost-plus pricing"],1,"Penetration pricing gets into the market fast; the price can rise later."],
+  ["mix","Selling coffee at €2.99 instead of €3.00 is an example of:",["Penetration pricing","Psychological pricing","Premium pricing","Competitive pricing"],1,"Prices just below a round number seem cheaper."],
+  ["mix","A takeaway lets customers order ahead in an app and skip the queue. Which P is this mainly about?",["Packaging","Process","Promotion","Product"],1,"Process is the system for delivering the product or service: ordering, paying, waiting."],
+  ["improve","Which is the strongest USP for a new phone-repair shop?",["We repair phones","Screens fixed in 30 minutes while you wait, with a 12-month guarantee","We are friendly","Prices from €40"],1,"It's specific, valued by customers and harder for rivals to copy. The others are vague or easy to match."],
+  ["improve","When evaluating an existing marketing mix, the first step is to:",["Cut the price","Judge how well each P meets the target market's needs","Change the logo","Hire more staff"],1,"Evaluate first, find the weakest P, then suggest a specific improvement."],
+  ["improve","A café's food and staff are excellent, but it has no social media and few people know it exists. The P to improve first is:",["Product","People","Promotion","Packaging"],2,"Its weakest P is promotion: customers can't choose a café they don't know about."],
+  ["digital","According to the specification, the disruptive impact of digital technology:",["Is always positive","Is always negative","Can be both positive and negative","Only affects large companies"],2,"The spec's glossary says the impact can be both positive and negative."],
+  ["digital","An online advert is seen 50 000 times and clicked 600 times. The click-through rate is:",["0.12%","1.2%","12%","83%"],1,"CTR = 600 ÷ 50 000 × 100 = 1.2%."],
+  ["digital","Which EU law sets rules on using customers' personal data for marketing?",["GDPR","The Sale of Goods Act","The Companies Act","The Single European Act"],0,"The General Data Protection Regulation (GDPR) applies to personal data, including data used to target adverts."],
+  ["ethics","A plastic bottle is labelled \"eco-friendly\" with no evidence. This is:",["Sustainable marketing","Greenwashing","Cause-related marketing","Test marketing"],1,"Vague, unsupported green claims are greenwashing, a form of misleading marketing."],
+  ["ethics","An influencer posts about a free gift from a brand without labelling it as an advert. This is a problem because:",["It is too expensive","Followers are misled into thinking it's an independent opinion","Influencers can't use social media","It breaks GDPR"],1,"Paid or gifted promotion must be clearly labelled so consumers know it's an ad."],
+  ["tools","On a power-interest grid, a group with high power but low interest should be:",["Managed closely","Kept satisfied","Kept informed","Ignored completely"],1,"High power, low interest: keep them satisfied so they don't become a problem."],
+  ["tools","In a STEEPLE analysis, \"higher interest rates make loans dearer\" is:",["A social factor","An economic factor","An ethical factor","A technological factor"],1,"Interest rates are part of the economy: an economic factor."],
+  ["tools","Which is NOT part of a STEEPLE analysis?",["A new law on e-scooters","Rising fuel prices","Staff in the business being poorly trained","A trend towards healthy living"],2,"STEEPLE covers the external environment. Staff training is an internal issue."],
+];
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Appreciate","Recognise the meaning, value or importance of something, or have a practical understanding of it.","Appreciate the importance of market research in identifying the target market."],
+  ["Discuss","Offer a considered, balanced review that includes a range of arguments, factors or hypotheses, supported by evidence.","Discuss how businesses conduct market research."],
+  ["Outline","Give the main points; restrict to essential points of information.","Outline the elements of the marketing mix."],
+  ["Explain","Give a detailed account including reasons or causes.","Explain how the target market influences the price."],
+  ["Develop","Build on an idea or plan, adding detail and making it fit a purpose.","Develop a marketing mix for a service of your choice."],
+  ["Evaluate","Judge the strengths and weaknesses of something and reach a supported conclusion.","Evaluate the café's current marketing mix."],
+  ["Suggest","Propose a solution, hypothesis or other possible answer.","Suggest two ways of improving the marketing mix."],
+  ["Demonstrate an understanding","Show, with examples, that you understand how something works.","Demonstrate an understanding of the disruptive impact of digital technology on marketing."],
+  ["Use","Apply knowledge, a tool or a method to a situation.","Use a power-interest grid to analyse customer interest."],
+  ["Conduct","Carry out an analysis or investigation in an organised way.","Conduct a STEEPLE analysis for an e-scooter business."],
+  ["Calculate","Obtain a numerical answer showing the relevant stages in the working.","Calculate the conversion rate of the campaign."],
+];
+
+
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("b24-best",null); if(best==null||pct>best) store.set("b24-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+
+// Numbers trainer
+const r1 = x => Math.round(x*10)/10, r2 = x => Math.round(x*100)/100;
+const PTYPES = {
+  share:{ name:"Market share", gen(){ const M=pick([2000000,4000000,5000000]), s=pick([150000,300000,450000,600000]), pc=s/M*100;
+    return { q:`Total sales in the Irish market for snack bars are <b>€${n0(M)}</b> a year. Oat &amp; Go's sales are <b>€${n0(s)}</b>. Calculate its market share.`, ans:pc, unit:"%", steps:["Market share = firm's sales ÷ total market sales × 100",`= ${n0(s)} ÷ ${n0(M)} × 100`,`= <b>${r2(pc)}%</b>`] }; } },
+  rev:{ name:"Sales revenue", gen(){ const p=pick([1.5,2.2,3.5,12]), u=pick([800,1500,2400,6000]), r=p*u;
+    return { q:`A business sells <b>${n0(u)}</b> units at <b>€${f2(p)}</b> each. Calculate its sales revenue.`, ans:r, unit:"€", steps:["Sales revenue = price × units sold",`= €${f2(p)} × ${n0(u)}`,`= <b>€${fm(r)}</b>`] }; } },
+  costplus:{ name:"Cost-plus price", gen(){ const c=pick([0.8,1.2,4,25]), m=pick([25,40,50,60]), p=c*(1+m/100);
+    return { q:`A product costs <b>€${f2(c)}</b> to make. The business uses cost-plus pricing with a <b>${m}%</b> mark-up. Calculate the selling price.`, ans:p, unit:"€", steps:[`Mark-up = €${f2(c)} × ${m}% = €${f2(c*m/100)}`,"Selling price = cost + mark-up",`= €${f2(c)} + €${f2(c*m/100)} = <b>€${f2(p)}</b>`] }; } },
+  disc:{ name:"Sales promotion price", gen(){ const p=pick([20,45,60,80]), d=pick([10,15,20,25]), n=p*(1-d/100);
+    return { q:`As a sales promotion, a shop takes <b>${d}%</b> off a jacket priced at <b>€${p}</b>. Calculate the promotional price.`, ans:n, unit:"€", steps:[`Discount = €${p} × ${d}% = €${f2(p*d/100)}`,"New price = old price − discount",`= €${p} − €${f2(p*d/100)} = <b>€${f2(n)}</b>`] }; } },
+  ctr:{ name:"Click-through rate", gen(){ const i=pick([20000,40000,80000,120000]), c=pick([240,500,960,1800]), pc=c/i*100;
+    return { q:`An online advert is shown <b>${n0(i)}</b> times and clicked <b>${n0(c)}</b> times. Calculate the click-through rate (CTR).`, ans:pc, unit:"%", steps:["CTR = clicks ÷ impressions × 100",`= ${n0(c)} ÷ ${n0(i)} × 100`,`= <b>${r2(pc)}%</b>`] }; } },
+  conv:{ name:"Conversion rate", gen(){ const v=pick([1200,2400,5000,8000]), s=pick([30,60,90,150]), pc=s/v*100;
+    return { q:`An online shop has <b>${n0(v)}</b> visitors in a week and <b>${s}</b> of them buy something. Calculate the conversion rate.`, ans:pc, unit:"%", steps:["Conversion rate = sales ÷ visitors × 100",`= ${s} ÷ ${n0(v)} × 100`,`= <b>${r2(pc)}%</b>`] }; } },
+  cps:{ name:"Cost per sale", gen(){ const c=pick([600,1500,2000,3000]), s=pick([40,120,250,400]), x=c/s;
+    return { q:`A campaign costs <b>€${n0(c)}</b> and brings in <b>${s}</b> sales. Calculate the cost per sale.`, ans:x, unit:"€", steps:["Cost per sale = campaign cost ÷ sales",`= €${n0(c)} ÷ ${s}`,`= <b>€${f2(x)}</b>`] }; } },
+  roi:{ name:"Return on a campaign", gen(){ const c=pick([2000,4000,5000,6000]), g=c*pick([0.5,1.5,1.8,2,2.5]), pc=(g-c)/c*100;
+    return { q:`A marketing campaign costs <b>€${n0(c)}</b> and brings in extra profit (before the campaign cost) of <b>€${n0(g)}</b>. Calculate the return on the campaign as a percentage.`, ans:pc, unit:"%", steps:["Return % = (extra profit − cost) ÷ cost × 100",`= (€${n0(g)} − €${n0(c)}) ÷ €${n0(c)} × 100`,`= <b>${r1(pc)}%</b>`+(pc<0?" (a loss)":"")] }; } },
+  seg:{ name:"Segment size", gen(){ const pop=pick([60000,120000,250000]), a=pick([10,15,20]), b=pick([25,30,40]), x=pop*a/100*b/100;
+    return { q:`A town has <b>${n0(pop)}</b> people. <b>${a}%</b> are aged 16 to 24, and a survey finds <b>${b}%</b> of them would buy the product. How many potential customers are in this target market?`, ans:x, unit:"people", steps:[`People aged 16 to 24 = ${n0(pop)} × ${a}% = ${n0(pop*a/100)}`,`Would buy = ${n0(pop*a/100)} × ${b}%`,`= <b>${n0(x)}</b>`] }; } },
+};
+
+
+let pType="share", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const raw=$("paIn").value.replace(/[€%£$\sm]/g,"").replace(/years?/i,"").replace(/[−–]/g,"-").replace(/,(?=\d{3}(\D|$))/g,"").replace(",",".");
+  const x=parseFloat(raw);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 1500 or 59.3.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(0.05, Math.abs(pCur.ans)*0.005);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: write the formula first; a percentage of an amount = amount × rate ÷ 100; monthly × 12 for a year. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Which P is it? [statement, key, why]
+const PNAME = {pr:["Product","What the business sells: features, quality, range, guarantee","apricot"],pc:["Price","What customers pay and the pricing strategy","sage"],pm:["Promotion","How the business communicates with customers","blush"],pl:["Place","How and where customers get the product","cream"],pe:["People","Staff who deal with customers: training, attitude","sage"],pk:["Packaging","Protects, informs and attracts","apricot"],ps:["Process","The systems for ordering, paying and delivering","blush"]};
+const PRED = [
+  ["A phone company adds a two-year guarantee and free repairs to its handsets.","pr","Guarantees and after-sales service are part of the product."],
+  ["A café prices its coffee at €2.99 instead of €3.00.","pc","Psychological pricing."],
+  ["A sports brand sponsors a GAA championship.","pm","Sponsorship is a method of promotion."],
+  ["A craft brewery starts selling through supermarkets as well as pubs.","pl","New channels of distribution: place."],
+  ["A hotel trains reception staff to greet every guest by name.","pe","Staff training and attitude: people."],
+  ["A juice brand switches to a fully recyclable carton with a bright new design.","pk","Packaging: protects, attracts and can show sustainability."],
+  ["A takeaway lets customers order and pay in an app and collect with no queue.","ps","The ordering and payment system: process."],
+  ["A new streaming app charges a low launch price to win subscribers fast.","pc","Penetration pricing."],
+  ["A cosmetics firm launches a vegan range.","pr","Extending the product range."],
+  ["An online shop offers free next-day delivery anywhere in Ireland.","pl","Getting the product to the customer: place."],
+  ["A bank gives every business customer a named personal adviser.","pe","The people who serve customers."],
+  ["A games company runs a competition on TikTok.","pm","Social media and competitions are promotion."],
+  ["A dentist sends text reminders and lets patients book online.","ps","The booking system: process."],
+  ["A chocolate bar's wrapper shows nutrition traffic lights and allergens.","pk","Packaging informs customers through labelling."],
+];
+// Long questions
+const LONGQ = [
+  { title:"Launching Oat & Go", intro:"Sinéad plans to launch Oat & Go, an oat snack bar (illustrative). She isn't sure which customers to aim at, so she plans some market research first.",
+    parts:[["a","Appreciate the importance of market research in identifying the target market for Oat & Go.",8,"Any four × 2, applied: shows which segment (students, gym-goers, parents) is most interested; finds what they'll pay; what flavours/size they want; what rivals offer; reduces the risk of a costly failed launch; supports a bank or grant application."],
+      ["b","Distinguish between primary and secondary research, giving two examples of each that Sinéad could use.",8,"Definitions 2 × 2: primary = new, first-hand data for this purpose; secondary = existing data. Examples 4 × 1: questionnaire of students, focus group tasting, test marketing in one town; CSO population data, a snack-market report, competitors' websites and prices."],
+      ["c","Discuss the use of an online survey and a focus group for Oat & Go.",8,"Online survey (4): cheap, fast, large sample, easy to analyse numbers; but may miss people rarely online, answers can be careless, no chance to probe. Focus group (4): rich, detailed opinions and reasons, can taste the bar; but small sample, costly per person, group members influence each other."],
+      ["d","A survey of 200 students finds 46% would buy the bar at €1.50. Sinéad estimates 4 000 students pass her selling points each week. Calculate the expected weekly sales in units and in euro.",6,"Units = 4 000 × 46% = 1 840 bars (3). Revenue = 1 840 × €1.50 = €2 760 a week (3)."]] },
+  { title:"The marketing mix", intro:"The Corner Café (illustrative) has good coffee and friendly staff, but sales are falling since a coffee chain opened nearby. It takes cash only, has long queues at 8:30 am, plain paper cups and no social media.",
+    parts:[["a","Outline the seven elements of the marketing mix in the specification.",14,"7 × 2 (name 1 + outline 1): product/service, price, promotion, place, people, packaging, process."],
+      ["b","Evaluate the Corner Café's current marketing mix and suggest two ways of improving it.",12,"Evaluation (6): strengths: product and people (good coffee, loyal staff); weaknesses: promotion (no social media), process (cash only, queues), packaging (plain cups). Conclusion: promotion and process are weakest. Two suggestions (2 × 3), e.g. card payments and an order-ahead app to cut queues; an Instagram account and loyalty card; branded cups with a reusable-cup discount. Each must say how it helps sales."],
+      ["c","Develop a marketing mix for a service of your choice and provide a USP analysis.",10,"Named service and target market (2). Mix with at least four Ps applied, including people and process (4). USP (2): unique, valued, hard to copy. Analysis (2): why it matters to the target market and how it will be protected/communicated."]] },
+  { title:"Digital, ethics and the outside world", intro:"ZipRide (illustrative) rents e-scooters through an app in an Irish city.",
+    parts:[["a","Demonstrate an understanding of the disruptive impact of digital technology on market research and marketing for ZipRide.",10,"Research (4): app and GPS data show when and where people ride; in-app surveys; A/B testing prices. Marketing (4): targeted social ads, push notifications, referral codes, online reviews. Balance (2): negative impacts too, e.g. privacy/GDPR, bad reviews spread fast, rivals can copy online offers quickly."],
+      ["b","Evaluate the influence of ethics and sustainability on ZipRide's marketing.",8,"Points (3 × 2): green claims must be backed by evidence (avoid greenwashing); fair pay for chargers can be part of the brand; responsible parking messages; respect riders' data. Judgement (2): ethical, sustainable marketing builds trust and fits its eco-minded target market."],
+      ["c","Conduct a STEEPLE analysis for ZipRide, giving one factor for each of four different letters.",8,"4 × 2 (factor 1 + effect 1), e.g. S: fewer young people own cars (opportunity); T: longer-range batteries; E: rising fuel prices; En: pressure to cut transport emissions; P: support for cycle lanes; L: e-scooter speed limits and footpath ban; Et: scooters blocking footpaths for wheelchair users."],
+      ["d","ZipRide spends €3 000 on social media ads. They reach 120 000 people, 1.5% click, and 5% of those who click sign up. Each new rider is worth €50 profit in the first year. Calculate the cost per new rider and the return on the campaign.",8,"Clicks = 120 000 × 1.5% = 1 800 (2). Sign-ups = 1 800 × 5% = 90 (2). Cost per rider = €3 000 ÷ 90 = €33.33 (2). Profit = 90 × €50 = €4 500; return = (€4 500 − €3 000) ÷ €3 000 × 100 = 50% (2)."]] },
+];
+const RAG = ["Define a target market and give ways to segment a market","Appreciate why market research matters in finding the target market","Distinguish primary and secondary research, with methods of each","Discuss the pros and cons of surveys, interviews and focus groups","Name and outline the seven Ps in the specification","Explain how the target market influences each P","Develop a marketing mix for a product and for a service","Identify a USP and write a USP analysis","Evaluate an existing mix and suggest improvements","Explain the disruptive impact of digital technology (positive and negative)","Evaluate the influence of ethics and sustainability on marketing","Spot greenwashing and other misleading marketing","Use a power-interest grid and adjust the mix for each box","Conduct a STEEPLE analysis and say if each factor is a threat or opportunity","Calculate market share, CTR, conversion rate, cost per sale and return"];
+const SKILLS = [["Plan your own primary research","Write a short questionnaire with closed and open questions, and choose a sensible sample.","Research lab"],["Use secondary data","Find CSO or industry figures to size a target market, and note the date and source.","Infographics"],["Show data as a graph","Plot survey results and describe the pattern, as in the price survey.","Research lab"],["Apply a model","Use the seven Ps, a power-interest grid or STEEPLE on a real business, not just list the headings.","Mix and tools labs"],["Evaluate and recommend","Judge each part of a mix and back each suggestion with a reason.","Fix the mix lab"],["Consider ethics and sustainability","Check marketing claims for evidence and think about who could be harmed.","Ethics lab"],["Use numbers as evidence","Work out conversion rates, cost per sale and returns, showing the working.","Numbers trainer"],["Check your sources","Company adverts and websites are one-sided; compare with independent sources.","Infographics"]];
+
+
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k && PRED.length>1); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>${PRED[k][0]}</b> Which P of the marketing mix is this?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick a P first.</div>`; return; }
+  const [,ans,why]=PRED[pd.k], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> It's ${PNAME[ans][0].toLowerCase()}. ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+const ragState=store.get("b24-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("b24-rag",ragState); ragRender(); });
+ragRender();
+const skState=store.get("b24-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("b24-skills",skState); });
+/* ================= LAB STATE + WIRING ================= */
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+
+/* ================= DRAWINGS ================= */
+const PS7 = ["Product","Price","Promotion","Place","People","Packaging","Process"];
+const PRICES = [1,1.5,2,2.5,3];
+function drawDemand(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, L=cp?36:48, Rm=cp?12:20, T=cp?14:26, B=cp?24:40, W=w-L-Rm, H=h-T-B;
+  const X=p=>L+(p-0.75)/2.5*W, Y=v=>T+H-(v/100)*H;
+  [0,25,50,75,100].forEach(v=>{ line(ctx,L,Y(v),L+W,Y(v),C.grid,1); text(ctx,v+"%",L-6,Y(v)+4,C.muted,M(cp?9:11),"right"); });
+  PRICES.forEach(p=>{ line(ctx,X(p),T,X(p),T+H,C.grid,1); text(ctx,"€"+f2(p),X(p),T+H+(cp?14:17),C.muted,M(cp?9:11),"center"); });
+  line(ctx,L,T+H,L+W,T+H,C.ink,1.4); line(ctx,L,T,L,T+H,C.ink,1.4);
+  if(!cp){ text(ctx,"Price of one bar",L+W/2,h-6,C.ink,F(12),"center"); text(ctx,"% who would buy (dots, fitted line)",L,T-10,C.ink,F(11)); }
+  if(o.fit){ const {a,b}=o.fit, ps=[]; for(let i=0;i<=60;i++) ps.push(0.75+2.5*i/60);
+    ctx.save(); ctx.strokeStyle=C.olive; ctx.lineWidth=2.5; ctx.beginPath(); ps.forEach((p,i)=>{ const v=Math.max(0,Math.min(100,a-b*p)); i?ctx.lineTo(X(p),Y(v)):ctx.moveTo(X(p),Y(v)); }); ctx.stroke(); ctx.restore();
+    if(o.size){ const rev=p=>p*Math.max(0,Math.min(100,a-b*p))/100*o.size, mx=Math.max(...ps.map(rev))||1;
+      ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2; ctx.setLineDash([6,5]); ctx.beginPath(); ps.forEach((p,i)=>{ const y=T+H-rev(p)/mx*H*0.9; i?ctx.lineTo(X(p),y):ctx.moveTo(X(p),y); }); ctx.stroke(); ctx.restore();
+      if(o.best!=null){ line(ctx,X(o.best),T,X(o.best),T+H,C.terra,1.5,[3,4]); const lab=`best ≈ €${f2(o.best)}`, lx=Math.min(L+W-4,Math.max(L+4,X(o.best)+6)); text(ctx,lab,lx,T+12,C.terra,F(cp?10:12),X(o.best)>L+W*0.7?"right":"left"); }
+      if(!cp) text(ctx,"revenue (dashed)",L+W,T-10,C.terra,F(11),"right"); } }
+  if(o.pts) o.pts.forEach(([p,v])=>circle(ctx,X(p),Y(v),cp?4:5.5,C.terra,C.surface,1.5));
+  else if(!cp) text(ctx,"Run the survey to collect data",L+W/2,T+H/2,C.muted,F(13),"center");
+}
+function sector(ctx,cx,cy,r0,r1,a0,a1){ ctx.beginPath(); ctx.arc(cx,cy,r1,a0,a1); ctx.arc(cx,cy,r0,a1,a0,true); ctx.closePath(); }
+function drawWheel(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const labels=o.labels||PS7, n=labels.length, cx=w/2, cy=h/2, R=Math.min(w,h)/2-8, r0=R*0.34;
+  const cols=o.cols||labels.map((l,i)=>C[["apricot","sage","blush","cream"][i%4]]), fs=Math.max(9,Math.min(14,R/10));
+  labels.forEach((lb,i)=>{ const a0=-Math.PI/2+i*2*Math.PI/n+0.015, a1=a0+2*Math.PI/n-0.03, f=o.fill?Math.max(0,Math.min(1,o.fill[i])):1;
+    sector(ctx,cx,cy,r0,R,a0,a1); ctx.fillStyle=C["surface-2"]; ctx.fill(); ctx.strokeStyle=C.line; ctx.lineWidth=1; ctx.stroke();
+    if(f>0){ sector(ctx,cx,cy,r0,r0+(R-r0)*f,a0,a1); ctx.fillStyle=cols[i]; ctx.fill(); }
+    if(o.hl===i){ sector(ctx,cx,cy,r0,R,a0,a1); ctx.strokeStyle=C.terra; ctx.lineWidth=3.5; ctx.stroke(); }
+    const am=(a0+a1)/2, lr=r0+(R-r0)*0.58, x=cx+Math.cos(am)*lr, y=cy+Math.sin(am)*lr, dark=f>0.62;
+    text(ctx,lb,x,y+(o.sub?-2:fs*0.35),dark?"#3b2b21":C.ink,F(o.sub?fs+4:fs),"center");
+    if(o.sub) text(ctx,o.sub[i],x,y+fs+1,dark?"#3b2b21":C.muted,F(Math.max(8,fs-3),600),"center"); });
+  circle(ctx,cx,cy,r0-4,C.terra); const cl=(o.centre||"Target\nmarket").split("\n"), cf=Math.max(10,Math.min(16,r0/3.6));
+  cl.forEach((s,i)=>text(ctx,s,cx,cy+(i-(cl.length-1)/2)*(cf+3)+cf*0.35,C["on-accent"],F(cf),"center"));
+}
+function drawBars(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, sh=["Product","Price","Promo","Place","People","Pack","Process"], L=cp?22:30, T=cp?14:(o.sales?50:20), B=cp?22:28, W=w-L-10, H=h-T-B, gw=W/7, bw=Math.min(18,gw*0.32);
+  for(let v=0;v<=5;v++){ const y=T+H-v/5*H; line(ctx,L,y,L+W,y,C.grid,1); text(ctx,String(v),L-6,y+4,C.muted,M(cp?9:10),"right"); }
+  sh.forEach((s,i)=>{ const x=L+gw*(i+0.5), b=o.before[i], a=o.after?o.after[i]:null;
+    rrect(ctx,x-bw-1,T+H-b/5*H,bw,b/5*H,4,C.blush); if(a!=null) rrect(ctx,x+1,T+H-a/5*H,bw,a/5*H,4,C.olive);
+    text(ctx,s,x,T+H+(cp?14:17),C.ink,F(cp?8.5:11),"center"); });
+  line(ctx,L,T+H,L+W,T+H,C.ink,1.3);
+  if(!cp && o.sales){ text(ctx,o.sales,L,22,C.ink,F(Math.min(15,w/32))); const lx=L, ly=40; rrect(ctx,lx,ly-9,12,10,3,C.blush); text(ctx,"before",lx+16,ly,C.muted,F(11,600)); rrect(ctx,lx+70,ly-9,12,10,3,C.olive); text(ctx,"after your changes",lx+86,ly,C.muted,F(11,600)); }
+}
+function drawFunnel(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, lv=[[o.la||"Reached",o.a,C.cream],[o.lb||"Clicked or responded",o.b,C.apricot],[o.lc||"New customers",o.c,C.sage]], fr=[1,0.64,0.34,0.2], T=8, lh=(h-16)/3, mw=Math.min(w-24,560), cx=w/2;
+  lv.forEach(([l,v,c],i)=>{ const y=T+i*lh, tw=mw*fr[i], bw2=mw*fr[i+1];
+    ctx.beginPath(); ctx.moveTo(cx-tw/2,y+2); ctx.lineTo(cx+tw/2,y+2); ctx.lineTo(cx+bw2/2,y+lh-2); ctx.lineTo(cx-bw2/2,y+lh-2); ctx.closePath(); ctx.fillStyle=c; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=1; ctx.stroke();
+    const s=`${l}: ${n0(v)}`, fs=cp?10.5:13; ctx.save(); ctx.font=F(fs); const tw2=ctx.measureText(s).width; ctx.restore();
+    rrect(ctx,cx-tw2/2-7,y+lh/2-fs*0.75-2,tw2+14,fs*1.5+4,8,C.surface); text(ctx,s,cx,y+lh/2+fs*0.38,C.ink,F(fs),"center");
+    if(!cp && i>0 && lv[i-1][1]>0) text(ctx,`${r2(v/lv[i-1][1]*100)}%`,cx+mw*fr[i]/2+8,y+12,C.muted,M(11)); });
+}
+function drawBins(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, n=o.labels.length, gap=w/n, bw=Math.min(130,gap*0.62), top=cp?14:22, base=h-(cp?26:32), H=base-top, cols=[C.sage,C.apricot,C.blush,C.cream];
+  o.labels.forEach((l,i)=>{ const cx=gap*(i+0.5), f=o.tot[i]?o.counts[i]/o.tot[i]:0;
+    rrect(ctx,cx-bw/2,top,bw,H,10,C["surface-2"],C.line,1.2); if(f>0) rrect(ctx,cx-bw/2,base-H*f,bw,H*f,10,cols[i%4]);
+    text(ctx,`${o.counts[i]} / ${o.tot[i]}`,cx,top+18,C.ink,M(cp?10:12),"center"); text(ctx,l,cx,base+(cp?16:20),C.ink,F(cp?10.5:13),"center"); });
+}
+const GRIDBOX = {KS:["Keep satisfied",0,0,"blush"],MC:["Manage closely",1,0,"apricot"],MO:["Monitor",0,1,"cream"],KI:["Keep informed",1,1,"sage"]};
+function drawGrid(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, L=cp?24:34, T=8, B=cp?22:28, W=w-L-8, H=h-T-B, fs=cp?9:11;
+  Object.entries(GRIDBOX).forEach(([k,[n,cx,cy,c]])=>{ const x=L+cx*W/2, y=T+cy*H/2; rrect(ctx,x+2,y+2,W/2-4,H/2-4,10,C[c]); text(ctx,n,x+10,y+18,"#3b2b21",F(cp?10:13));
+    const its=(o.items||[]).filter(it=>it[1]===k); its.forEach((it,j)=>{ const yy=y+28+j*(fs+9); if(yy>y+H/2-10) return; ctx.save(); ctx.font=F(fs,700); const s=wrapText(ctx,it[0],W/2-30)[0], tw=ctx.measureText(s).width; ctx.restore();
+      rrect(ctx,x+10,yy,tw+12,fs+6,6,C.surface,it[2]===false?C.bad:C.ink,it[2]===false?2:1); text(ctx,s,x+16,yy+fs+1,C.ink,F(fs,700)); }); });
+  arrow(ctx,L,T+H+(cp?10:12),L+W*0.98,T+H+(cp?10:12),C.ink,1.4); text(ctx,"Interest",L+W/2,T+H+(cp?20:25),C.ink,F(cp?10:12),"center");
+  arrow(ctx,L-(cp?10:14),T+H,L-(cp?10:14),T+6,C.ink,1.4); ctx.save(); ctx.translate(L-(cp?16:22),T+H/2); ctx.rotate(-Math.PI/2); text(ctx,"Power",0,0,C.ink,F(cp?10:12),"center"); ctx.restore();
+}
+function drawWhichP(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const [n,d,c]=PNAME[o.ans], bw=Math.min(w-30,340);
+  rrect(ctx,w/2-bw/2,h/2-44,bw,88,18,C[c],C.ink,1.5); text(ctx,n,w/2,h/2-8,"#3b2b21",F(22),"center");
+  ctx.save(); ctx.font=F(12,600); const ls=wrapText(ctx,d,bw-20); ctx.restore(); ls.forEach((s,i)=>text(ctx,s,w/2,h/2+16+i*15,"#3b2b21",F(12,600),"center")); }
+
+/* ================= LAB DATA + WIRING ================= */
+// 1. Research the market
+const SEGS = [{n:"Students 16-24",size:4000,a:95,b:30,q:"\"I'd buy it between lectures if it was in the vending machine, but not over €2.\""},{n:"Gym-goers",size:2500,a:100,b:22,q:"\"Put the protein in big print on the front and I'd pay more.\""},{n:"Parents of young children",size:5000,a:70,b:20,q:"\"A multipack for lunchboxes with no added sugar would sell.\""},{n:"Adults over 60",size:3500,a:40,b:12,q:"\"The wrapper is hard to open and the writing is tiny.\""}];
+const METH = [{n:"Online survey",fixed:100,per:0.5,bias:6,max:400,note:"cheap and fast, but people who answer online surveys tend to be keener than average, so results run a little high."},{n:"Street interviews",fixed:0,per:3,bias:0,max:400,note:"dearer per person, but you choose who to ask and can explain the questions."},{n:"Focus group",fixed:450,per:0,bias:0,max:10,note:"only 10 people, so the percentages are unreliable, but you hear why people feel as they do."}];
+const rs = { seg:0, m:0, pts:null, fit:null, best:null, n:0 };
+function fitLine(pts){ const n=pts.length, mx=pts.reduce((s,p)=>s+p[0],0)/n, my=pts.reduce((s,p)=>s+p[1],0)/n; let sxy=0,sxx=0; pts.forEach(([x,y])=>{ sxy+=(x-mx)*(y-my); sxx+=(x-mx)**2; }); const sl=sxy/sxx; return {a:my-sl*mx, b:-sl}; }
+const bestPrice = f => f.b>0 ? Math.max(1,Math.min(3,f.a/(2*f.b))) : 3;
+const revAt = (f,p,size) => p*Math.max(0,Math.min(100,f.a-f.b*p))/100*size;
+function rsSize(){ return Math.min(+$("rsN").value, METH[rs.m].max); }
+function rsRender(){ const S=SEGS[rs.seg], Mt=METH[rs.m], n=rsSize(), cost=Mt.fixed+Mt.per*n;
+  $("rsNo").textContent = n + (Mt.max<+$("rsN").value? " (group max)" : "");
+  const out=[["Segment (people a week)",n0(S.size)],["People asked",String(n)],["Research cost",eur(cost)],["Margin of error","± "+Math.round(98/Math.sqrt(n))+" points"]];
+  if(rs.fit){ out.push(["Best price (your data)","€"+f2(rs.best)],["Weekly revenue (est.)",eur(revAt(rs.fit,rs.best,S.size))]); }
+  setReadout($("rsOut"),out);
+  $("rsWork").innerHTML = `<b>${Mt.n}:</b> ${Mt.note}` + (rs.fit? `<br>Fitted line: % who buy = ${r1(rs.fit.a)} − ${r1(rs.fit.b)} × price. Revenue = price × % × ${n0(S.size)} people. Best price = ${r1(rs.fit.a)} ÷ (2 × ${r1(rs.fit.b)}) = <b>€${f2(rs.best)}</b>, giving about <b>${eur(revAt(rs.fit,rs.best,S.size))}</b> a week.` : "<br>Press <b>Run the survey</b> to ask people about five prices.") + (rs.fit&&rs.m===2? `<br>A focus group member says: ${S.q}` : "");
+  rsC.redraw(); }
+function rsRun(){ const S=SEGS[rs.seg], Mt=METH[rs.m], n=rsSize();
+  rs.pts = PRICES.map(p=>{ const tp=Math.max(0,Math.min(100,S.a-S.b*p+Mt.bias))/100; let k=0; for(let i=0;i<n;i++) if(Math.random()<tp) k++; return [p,k/n*100]; });
+  rs.fit=fitLine(rs.pts); rs.best=bestPrice(rs.fit); rs.n=n; rsRender(); }
+$("rsSeg").innerHTML = SEGS.map((s,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${s.n}</button>`).join("");
+$("rsMeth").innerHTML = METH.map((m,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${m.n}</button>`).join("");
+$("rsSeg").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; rs.seg=+b.dataset.i; pressGroup([...$("rsSeg").querySelectorAll("button")],b); rs.pts=rs.fit=null; rsRender(); });
+$("rsMeth").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; rs.m=+b.dataset.i; pressGroup([...$("rsMeth").querySelectorAll("button")],b); rs.pts=rs.fit=null; rsRender(); });
+$("rsN").addEventListener("input",rsRender);
+$("rsRun").addEventListener("click",rsRun);
+$("rsClear").addEventListener("click",()=>{ rs.pts=rs.fit=null; rsRender(); });
+const PS = [["An online questionnaire sent to 300 students","P","New data collected first-hand: primary."],["CSO population figures by age and county","S","Already published: secondary."],["A focus group of eight gym members tasting new flavours","P","Primary: a discussion organised for this purpose."],["A report on the Irish snack market bought from a research firm","S","Existing research: secondary."],["Counting how many people walk past a shop at lunchtime","P","Observation is primary research."],["The business's own sales records from last year","S","Internal secondary data: it already exists."],["Selling the bar in one town before a national launch","P","Test marketing is primary research."],["A competitor's website and price list","S","Existing information: secondary."]];
+const PSN = {P:"Primary",S:"Secondary"}, psS={order:[],ans:{}};
+function psRender(){ sorter("psList","psOut",PS,PSN,psS); }
+function psNew(){ psS.order=shuffle(PS.map((s,k)=>k)); psS.ans={}; psRender(); }
+$("psList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; psS.ans[b.dataset.k]=b.dataset.v; psRender(); });
+$("psReset").addEventListener("click",psNew);
+
+// 2. Build a marketing mix
+const MX = [
+  { n:"Oat & Go bar (product)", tg:["Students","Gym-goers","Parents"], ps:[
+    [["Chocolate chip, 150 kcal",[2,0,1]],["High-protein, 20 g protein",[1,2,0]],["No added sugar, lunchbox size",[0,1,2]]],
+    [["€1.20 (penetration)",[2,0,1]],["€2.50 (premium)",[0,2,0]],["€4 for a multipack of 5",[1,0,2]]],
+    [["TikTok and Instagram creators",[2,1,0]],["Sponsored workouts in a fitness app",[0,2,0]],["Parenting magazine + in-store tasting",[0,0,2]]],
+    [["College shops and vending machines",[2,0,0]],["Gyms and sports shops",[0,2,0]],["Supermarkets",[1,1,2]]],
+    [["Student brand ambassadors",[2,0,0]],["Advice from a qualified dietitian",[0,2,1]],["Friendly in-store sampling staff",[1,0,2]]],
+    [["Bright, fun single wrapper",[2,0,1]],["Matte black pack showing 20 g protein",[0,2,0]],["Recyclable multipack with nutrition labels",[1,0,2]]],
+    [["Tap-to-pay vending, no queue",[2,1,0]],["Subscribe online, delivered monthly",[0,2,1]],["Click-and-collect with the weekly shop",[1,0,2]]]],
+    usp:[["The cheapest bar on the shelf",false,"Weak: rivals can cut prices tomorrow, so it won't stay unique."],["Irish oats, 20 g protein and no added sugar in one bar",true,"Strong: a unique combination, valued by health-conscious buyers and hard to copy quickly."],["It tastes nice",false,"Weak: every rival says this; it isn't unique."]] },
+  { n:"FixIt phone repair (service)", tg:["Students","Busy professionals","Adults over 60"], ps:[
+    [["Screen repair in 30 minutes",[2,1,1]],["Same-day collection from your office",[0,2,0]],["Repair plus a lesson on using the phone",[0,0,2]]],
+    [["€49 student deal with ID",[2,0,1]],["€99 express, done in an hour",[0,2,0]],["Fixed price €69, no hidden extras",[1,1,2]]],
+    [["Before-and-after videos on Instagram",[2,1,0]],["LinkedIn ads and office-park leaflets",[0,2,0]],["Local radio and the parish newsletter",[0,0,2]]],
+    [["Kiosk in the shopping centre near college",[2,1,1]],["A van that comes to your workplace",[0,2,1]],["Home visits",[0,1,2]]],
+    [["Young, chatty technicians",[2,0,0]],["Fast, professional, discreet staff",[1,2,0]],["Patient, Garda-vetted staff for home visits",[0,0,2]]],
+    [["Phone returned in a branded pouch with a free screen protector",[2,1,1]],["Sleek box with a printed repair report",[0,2,1]],["Large-print instructions card",[0,0,2]]],
+    [["Book in the app and track the repair live",[2,2,0]],["Book by phone, pay by cash or card on the spot",[0,0,2]],["Walk in and wait in a queue",[1,0,1]]]],
+    usp:[["Your screen fixed in 30 minutes while you wait, with a 12-month guarantee",true,"Strong: specific, valued by people who can't be without a phone, and the guarantee is hard for small rivals to match."],["We repair phones",false,"Weak: that's what every repair shop does."],["Lowest prices in town",false,"Weak: easy to copy; rivals can match it."]] },
+];
+const mx = { i:0, t:0, ch:[0,0,0,0,0,0,0], usp:null };
+const FITW = ["poor fit","OK fit","great fit"];
+function mxFits(){ const M=MX[mx.i]; return M.ps.map((opts,k)=>opts[mx.ch[k]][1][mx.t]); }
+function mxRender(){ const M=MX[mx.i], f=mxFits(), tot=f.reduce((a,b)=>a+b,0), pct=Math.round(tot/14*100), tg=M.tg[mx.t];
+  $("mxTgt").innerHTML = M.tg.map((t,i)=>`<button data-i="${i}" aria-pressed="${i===mx.t}">${t}</button>`).join("");
+  $("mxList").innerHTML = M.ps.map((opts,k)=>`<div class="row ${f[k]===2?"ok":f[k]===0?"no":""}"><span><b>${PS7[k]}</b><small>${FITW[f[k]]} for ${tg.toLowerCase()}</small></span><div class="btns">${opts.map((o,j)=>`<button data-p="${k}" data-j="${j}" aria-pressed="${mx.ch[k]===j}">${o[0]}</button>`).join("")}</div></div>`).join("")
+    + `<div class="row ${mx.usp==null?"":M.usp[mx.usp][1]?"ok":"no"}"><span><b>USP</b><small>${mx.usp==null?"Pick the strongest unique selling point.":M.usp[mx.usp][2]}</small></span><div class="btns">${M.usp.map((u,j)=>`<button data-p="usp" data-j="${j}" aria-pressed="${mx.usp===j}">${u[0]}</button>`).join("")}</div></div>`;
+  const weak=PS7.filter((p,k)=>f[k]===0);
+  setReadout($("mxOut"),[["Fit with target market",pct+"%"],["Poor-fit Ps",weak.length?String(weak.length):"none"],["USP",mx.usp==null?"–":M.usp[mx.usp][1]?"strong":"weak"]]);
+  $("mxWork").innerHTML = `Fit = sum of scores ÷ 14 = ${tot} ÷ 14 = <b>${pct}%</b> (great fit = 2, OK = 1, poor = 0 for each P). ` + (weak.length? `Change these to suit ${tg.toLowerCase()}: <b>${weak.join(", ")}</b>.` : pct===100? `Every P suits ${tg.toLowerCase()}: a coherent mix.` : `No P is a poor fit; can you make every P a great fit?`) + (mx.i===1? " For a service, people and process are what the customer actually experiences." : "");
+  mxC.redraw(); }
+$("mxItem").innerHTML = MX.map((m,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${m.n}</button>`).join("");
+$("mxItem").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; mx.i=+b.dataset.i; mx.t=0; mx.ch=[0,0,0,0,0,0,0]; mx.usp=null; pressGroup([...$("mxItem").querySelectorAll("button")],b); mxRender(); });
+$("mxTgt").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; mx.t=+b.dataset.i; mxRender(); });
+$("mxList").addEventListener("click",e=>{ const b=e.target.closest("button[data-p]"); if(!b) return; if(b.dataset.p==="usp") mx.usp=+b.dataset.j; else mx.ch[+b.dataset.p]=+b.dataset.j; mxRender(); });
+
+// 3. Fix the mix
+const IM_BASE = [4,3,1,3,4,2,1], IM_SALES = 4800, IM_BUDGET = 12000;
+const IM_EVAL = ["good coffee and home-made scones","€3.60 a coffee, 20c dearer than the chain","no website or social media, faded sign","main street, but closed at weekends","friendly staff who know regulars by name","plain paper cups, no reusable-cup option","cash only, long queues at 8:30 am"];
+const IM_OPTS = [["Instagram account and paid local ads",2000,2,2,600,"Students and office workers find out the café exists."],["New sign and window display",1500,2,1,250,"Passers-by notice it."],["Card and phone payments + order-ahead app",3000,6,3,900,"No more lost customers at the 8:30 am queue."],["Second coffee machine for the morning rush",4000,6,1,350,"Faster service, but cash-only still slows things."],["Open on Saturdays",3000,3,1,500,"Catches weekend shoppers (extra wages)."],["Branded cups + 20c reusable-cup discount",1500,5,2,300,"Walking adverts, and wins eco-minded customers."],["Cut the coffee price to €3.30",0,1,1,100,"Busier, but every coffee earns 30c less: profit may fall."],["Loyalty card: 10th coffee free",500,2,1,200,"Rewards regulars so they don't drift to the chain."],["Customer-service training",1000,4,1,100,"Small gain: people is already a strength."]];
+const im = { on:new Set() };
+function imCalc(){ const sc=[...IM_BASE]; let cost=0, sales=IM_SALES; im.on.forEach(i=>{ const o=IM_OPTS[i]; cost+=o[1]; sc[o[2]]=Math.min(5,sc[o[2]]+o[3]); sales+=o[4]; }); return {sc,cost,sales}; }
+function imRender(){ const r=imCalc(), left=IM_BUDGET-r.cost;
+  $("imEval").innerHTML = "<b>Evaluation of the current mix (score out of 5):</b><br>" + PS7.map((p,k)=>`${p} ${IM_BASE[k]}/5: ${IM_EVAL[k]}`).join("<br>");
+  $("imList").innerHTML = IM_OPTS.map((o,i)=>{ const on=im.on.has(i), cant=!on&&o[1]>left; return `<div class="row ${on?"ok":""}"><span><b>${o[0]}</b><small>${PS7[o[2]]} +${o[3]} · ${o[1]?eur(o[1]):"no cost"} · ${o[5]}</small></span><div class="btns"><button data-i="${i}" aria-pressed="${on}" ${cant?"disabled":""}>${on?"Remove":cant?"Over budget":"Add"}</button></div></div>`; }).join("");
+  const weakest=PS7.filter((p,k)=>r.sc[k]===Math.min(...r.sc));
+  setReadout($("imOut"),[["Spent",`${eur(r.cost)} / ${eur(IM_BUDGET)}`],["Weekly sales",eur(r.sales)],["Change",(r.sales>=IM_SALES?"+":"")+r1((r.sales-IM_SALES)/IM_SALES*100)+"%"],["Weakest P now",weakest.join(", ")]]);
+  $("imWork").innerHTML = `Weekly sales = €4 800${[...im.on].map(i=>` + €${IM_OPTS[i][4]}`).join("")} = <b>${eur(r.sales)}</b>.` + (im.on.has(6)? " Remember: the price cut raises sales but lowers profit on every coffee." : "") + (r.sales>6000? " Target met: above €6 000 a week." : "");
+  imC.redraw(); }
+$("imList").addEventListener("click",e=>{ const b=e.target.closest("button[data-i]"); if(!b||b.disabled) return; const i=+b.dataset.i; im.on.has(i)? im.on.delete(i) : im.on.add(i); imRender(); });
+
+// 4. Digital disruption
+const CH = [["Local newspaper advert",1500,20000,0.5,30,"t"],["Local radio (2 weeks)",2500,60000,0.3,30,"t"],["10 000 leaflets",1000,10000,1,25,"t"],["Billboard (1 month)",2000,40000,0.25,30,"t"],["Social media adverts",1500,80000,1.2,8,"d"],["Search engine adverts",1000,15000,4,10,"d"],["Influencer posts (labelled #ad)",2000,100000,1,6,"d"],["Email to 5 000 subscribers",200,5000,5,15,"d"]];
+const dg = { on:new Set([0,4]), tg:false };
+function dgCalc(){ let spend=0,reach=0,resp=0,cust=0,tc=0,dc=0; dg.on.forEach(i=>{ const [n,c,r,rr,cv,t]=CH[i], boost=t==="d"&&dg.tg; const re=r*rr/100*(boost?1.5:1), cu=re*cv/100*(boost?1.25:1); spend+=c; reach+=r; resp+=re; cust+=cu; if(t==="d") dc+=cu; else tc+=cu; }); return {spend,reach,resp:Math.round(resp),cust:Math.round(cust),tc:Math.round(tc),dc:Math.round(dc)}; }
+function dgRender(){ const r=dgCalc(), over=r.spend>6000, cpc=r.cust? r.spend/r.cust : 0, ret=r.spend? (r.cust*40-r.spend)/r.spend*100 : 0;
+  $("dgCh").innerHTML = CH.map((c,i)=>`<button data-i="${i}" aria-pressed="${dg.on.has(i)}">${c[5]==="d"?"💻":"📰"} ${c[0]} (${eur(c[1])})</button>`).join("");
+  $("dgTg").innerHTML = `<button data-t="0" aria-pressed="${!dg.tg}">No: same advert for everyone</button><button data-t="1" aria-pressed="${dg.tg}">Yes: target by age, area and interests</button>`;
+  setReadout($("dgOut"),[["Spend",`${eur(r.spend)} / €6 000`+(over?" ⚠":"")],["Reached",n0(r.reach)],["Responses",n0(r.resp)],["New customers",n0(r.cust)],["Cost per customer",r.cust?"€"+f2(cpc):"–"],["Return",r.spend?r1(ret)+"%":"–"]]);
+  $("dgWork").innerHTML = (over? `<b style="color:var(--bad)">Over the €6 000 budget: switch a channel off.</b><br>` : "") + `New customers: ${r.tc} from traditional, ${r.dc} from digital channels. Cost per customer = ${eur(r.spend)} ÷ ${r.cust||0} = <b>${r.cust?"€"+f2(cpc):"–"}</b>. Return = (${r.cust} × €40 − ${eur(r.spend)}) ÷ ${eur(r.spend)} × 100 = <b>${r.spend?r1(ret)+"%":"–"}</b>.` + (dg.tg? "<br>Targeting lifts digital responses, but uses personal data: GDPR requires a lawful basis (usually consent) and clear privacy information." : "<br>Digital channels can be measured click by click; traditional channels' responses can only be estimated.");
+  dgC.redraw(); }
+$("dgCh").addEventListener("click",e=>{ const b=e.target.closest("button[data-i]"); if(!b) return; const i=+b.dataset.i; dg.on.has(i)? dg.on.delete(i) : dg.on.add(i); dgRender(); });
+$("dgTg").addEventListener("click",e=>{ const b=e.target.closest("button[data-t]"); if(!b) return; dg.tg=b.dataset.t==="1"; dgRender(); });
+
+// 5. Ethics sorter
+const ET = [["\"100% recyclable\" on a pack that is fully recyclable in Irish household recycling","ok","True and specific: acceptable."],["\"Eco-friendly\" on a plastic bottle, with no evidence or explanation","mis","Vague, unsupported green claim: greenwashing."],["An influencer posts about a free gift from a brand without labelling it as an ad","mis","Hidden advertising misleads followers."],["Cartoon adverts for sugary snacks in a children's game, urging kids to pester their parents","une","Exploits children: unethical even if it were legal."],["\"Only 2 left!\" countdown that resets every time the page reloads","mis","Fake urgency is a misleading practice."],["A café shows the farm its milk comes from and the carbon footprint per cup","ok","Honest, evidence-based sustainability information."],["Selling diet pills to teenagers using images of extremely thin models","une","Targets a vulnerable group and can harm health."],["\"From €19\" when the cheapest option really costs €19","ok","Accurate price claim."],["Fake 5-star reviews written by staff","mis","Fake reviews deceive consumers."],["Using people's health-app data to target adverts without asking their consent","une","Breaks trust and data protection law (GDPR)."],["A clothing brand encourages customers to repair and resell old jackets","ok","Sustainable marketing backed by action."],["\"Carbon neutral\" when the firm only plans to offset emissions some time in the future","mis","Claims must be true now: misleading green claim."]];
+const ETN = {ok:"Acceptable",mis:"Misleading",une:"Unethical"}, ETK=["ok","mis","une"], etS={order:[],ans:{}};
+function etBins(){ const c=[0,0,0], t=[0,0,0]; ET.forEach(([,k],i)=>{ const j=ETK.indexOf(k); t[j]++; if(etS.ans[i]===k) c[j]++; }); return {labels:["Acceptable","Misleading","Unethical"],counts:c,tot:t}; }
+function etRender(){ sorter("etList","etOut",ET,ETN,etS); etC.redraw(); }
+function etNew(){ etS.order=shuffle(ET.map((s,k)=>k)); etS.ans={}; etRender(); }
+$("etList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; etS.ans[b.dataset.k]=b.dataset.v; etRender(); });
+$("etReset").addEventListener("click",etNew);
+
+// 6. Power-interest grid + STEEPLE
+const PG = [["Daily commuters: 60% of all rides, would switch to a rival quickly","MC","Manage closely: offer a monthly pass and make sure scooters are waiting at 8 am.","Commuters"],["A large employer thinking about buying passes for 2 000 staff, not yet keen","KS","Keep satisfied: a tailored corporate price and a free trial for staff.","Large employer"],["Students who follow ZipRide on social media but ride now and then","KI","Keep informed: student discounts and news on social media.","Students"],["Tourists who rent once on holiday","MO","Monitor: a clear app in several languages is enough.","Tourists"],["The city council, which grants ZipRide's licence and watches complaints closely","MC","Manage closely: share data, enforce parking rules, meet regularly.","City council"],["A local residents' group interested in parking and safety, with little influence on sales","KI","Keep informed: explain parking zones and safety features.","Residents' group"],["A national news site that could cover ZipRide but has shown no interest","KS","Keep satisfied: send good-news stories and respond quickly to questions.","News site"]];
+const PGN = {MC:"Manage closely",KS:"Keep satisfied",KI:"Keep informed",MO:"Monitor"}, pgS={order:[],ans:{}};
+function pgRender(){ sorter("pgList","pgOut",PG,PGN,pgS); pgC.redraw(); }
+function pgNew(){ pgS.order=shuffle(PG.map((s,k)=>k)); pgS.ans={}; pgRender(); }
+$("pgList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; pgS.ans[b.dataset.k]=b.dataset.v; pgRender(); });
+$("pgReset").addEventListener("click",pgNew);
+const STK = ["S","T","Ec","En","P","L","Et"], STL = ["S","T","E","E","P","L","E"], STW = ["Social","Technological","Economic","Environmental","Political","Legal","Ethical"];
+const ST = [["More young people choose not to own a car","S","Social: changing lifestyles (opportunity)."],["A health trend: people want active travel","S","Social: attitudes and lifestyles (opportunity)."],["Better batteries give scooters a longer range","T","Technological (opportunity)."],["GPS and app technology let riders find and unlock scooters","T","Technological: the whole model depends on it."],["Rising fuel prices make driving dearer","Ec","Economic (opportunity)."],["Higher interest rates make it dearer to borrow for new scooters","Ec","Economic (threat)."],["Pressure to cut carbon emissions from transport","En","Environmental (opportunity)."],["Concern about disposing of old scooter batteries","En","Environmental (threat)."],["The government's climate policy supports active travel and cycle lanes","P","Political (opportunity)."],["Local election candidates promise more bike lanes","P","Political (opportunity)."],["Road traffic law sets a 20 km/h e-scooter limit and bans riding on footpaths","L","Legal: ZipRide's scooters and rules must comply."],["GDPR rules on storing riders' location data","L","Legal: data protection law."],["Fair pay for the gig workers who charge the scooters","Et","Ethical: treating workers fairly."],["Scooters left blocking footpaths for wheelchair users","Et","Ethical: harm to vulnerable people."]];
+const STN = {S:"S social",T:"T tech",Ec:"E economic",En:"E environ.",P:"P political",L:"L legal",Et:"E ethical"}, stS={order:[],ans:{}};
+function stFill(){ return STK.map(k=>{ const idx=ST.map((s,i)=>i).filter(i=>ST[i][1]===k); return idx.filter(i=>stS.ans[i]===k).length/idx.length; }); }
+function stRender(){ sorter("stList","stOut",ST,STN,stS); stC.redraw(); }
+function stNew(){ stS.order=shuffle(ST.map((s,k)=>k)); stS.ans={}; stRender(); }
+$("stList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; stS.ans[b.dataset.k]=b.dataset.v; stRender(); });
+$("stReset").addEventListener("click",stNew);
+
+/* ================= CREATE CANVASES ================= */
+const PG_ALL = PG.map(p=>[p[3],p[1]]);
+const hero = makeCanvas($("heroCanvas"), 0.8, 260, s => drawWheel(s.ctx,s.w,s.h,{hl:reduce?null:Math.floor(heroT*0.8)%7}), 420);
+const rsC = makeCanvas($("rsC"), 0.5, 290, s => drawDemand(s.ctx,s.w,s.h,{pts:rs.pts,fit:rs.fit,size:SEGS[rs.seg].size,best:rs.best}), 420);
+const mxC = makeCanvas($("mxC"), 0.55, 280, s => drawWheel(s.ctx,s.w,s.h,{fill:mxFits().map(f=>Math.max(0.12,f/2)),cols:mxFits().map(f=>[C.blush,C.apricot,C.sage][f]),centre:MX[mx.i].tg[mx.t].replace(" ","\n")}), 420);
+const imC = makeCanvas($("imC"), 0.45, 270, s => { const r=imCalc(); drawBars(s.ctx,s.w,s.h,{before:IM_BASE,after:r.sc,sales:`Weekly sales: €4 800 → ${eur(r.sales)}`}); }, 380);
+const dgC = makeCanvas($("dgC"), 0.45, 250, s => { const r=dgCalc(); drawFunnel(s.ctx,s.w,s.h,{a:r.reach,b:r.resp,c:r.cust}); }, 360);
+const etC = makeCanvas($("etC"), 0.38, 220, s => drawBins(s.ctx,s.w,s.h,etBins()), 320);
+const pgC = makeCanvas($("pgC"), 0.6, 300, s => drawGrid(s.ctx,s.w,s.h,{items:Object.entries(pgS.ans).map(([k,v])=>[PG[k][3],v,v===PG[k][1]])}), 440);
+const stC = makeCanvas($("stC"), 0.6, 300, s => drawWheel(s.ctx,s.w,s.h,{labels:STL,sub:STW,fill:stFill().map(f=>Math.max(0.06,f)),centre:"STEEPLE"}), 440);
+predC = makeCanvas($("predC"), 0.5, 180, s => { const ans=PRED[pd.k<0?0:pd.k][1];
+  if(pd.shown) drawWhichP(s.ctx,s.w,s.h,{ans,bgc:C["surface-2"]});
+  else { bg(s.ctx,s.w,s.h,C["surface-2"]); text(s.ctx,"?",s.w/2,s.h/2+18,C.muted,F(56),"center"); text(s.ctx,"The answer appears here",s.w/2,s.h-14,C.muted,F(11,600),"center"); } }, 300);
+pdNew();
+// Learn minis
+const S0 = SEGS[0], TRUE0 = PRICES.map(p=>[p,S0.a-S0.b*p]);
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    demand:s=>drawDemand(s.ctx,s.w,s.h,{compact:true,pts:TRUE0,fit:{a:S0.a,b:S0.b},size:S0.size,best:S0.a/(2*S0.b)}),
+    wheel:s=>drawWheel(s.ctx,s.w,s.h,{}),
+    bars:s=>drawBars(s.ctx,s.w,s.h,{...o,compact:true}),
+    funnel:s=>drawFunnel(s.ctx,s.w,s.h,{...o,compact:true}),
+    bins:s=>drawBins(s.ctx,s.w,s.h,{...o,compact:true}),
+    grid:s=>drawGrid(s.ctx,s.w,s.h,{compact:true,items:PG_ALL}),
+    steeple:s=>drawWheel(s.ctx,s.w,s.h,{labels:STL,centre:"STEEPLE"}),
+  };
+  makeCanvas(el, 0.62, 230, draws[kind], 380);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-mini=wheel]").forEach(el=>makeCanvas(el,0.75,200,s=>drawWheel(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=funnel]").forEach(el=>makeCanvas(el,0.75,200,s=>drawFunnel(s.ctx,s.w,s.h,{compact:true,a:80000,b:960,c:77,bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=grid]").forEach(el=>makeCanvas(el,0.75,200,s=>drawGrid(s.ctx,s.w,s.h,{compact:true,items:PG_ALL,bgc:C["surface-2"]})));
+rsRender(); psNew(); mxRender(); imRender(); dgRender(); etNew(); pgNew(); stNew();
+
+
+/* ================= LOOP / THEME / START ================= */
+
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>

@@ -1,0 +1,1751 @@
+<title>Refraction &amp; Lenses Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c3 3 3 15 0 18c-3-3-3-15 0-18z"/><path d="M2 8h8M2 16h8M14 9l8 3M14 15l8-3"/></svg></div>
+        <div style="min-width:0"><b>Refraction &amp; Lenses</b><span>Leaving Cert Physics · Strand 2 · Section 2.3</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a href="index.html" style="display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px">⌂ Course home</a>
+      <details><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details open><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="here"><span class="mono">2.3</span>Refraction &amp; lenses</li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 2 · Section 2.3 + dispersion</span>
+          <h1 style="margin-top:12px">Bend light.<br>Build a <em>camera</em>.<br>Fix an eye.</h1>
+          <p class="lede">Everything you need for refraction and lenses in the new Leaving Cert course, with labs to play with, a mind map, flashcards and a quiz.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated rays focusing through a converging lens"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/5</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">2.3.1</span><span>model wave behaviour; reflection, refraction, diffraction, interference, polarisation</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">2.3.2</span><span>verify models for refraction using primary and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">2.3.3</span><span>verify the model 1/f = 1/u + 1/v using primary and secondary data for converging lenses and secondary data for diverging lenses</span></label></li>
+          <li><label><input type="checkbox" id="lo4"><span class="mono">2.3.4</span><span>investigate the use of optics in technological and medical contexts using secondary sources</span></label></li>
+          <li><label><input type="checkbox" id="lo5"><span class="mono">2.4.2</span><span>demonstrate dispersion and explain the phenomenon</span></label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Drag, slide and record data. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="refraction">
+        <div class="labhead"><span class="pill t">Snell's law</span><p class="goal">Drag in the top half to change the angle. Record readings, then read n from the slope of the graph.</p></div>
+        <div class="panel sim">
+          <canvas id="snell" aria-label="Refraction diagram. Drag to change the angle of incidence."></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="snI">Angle of incidence <output id="snIo">40°</output></label><input type="range" id="snI" min="0" max="89" value="40"></div>
+            <div class="ctl"><label for="snM1">Top medium</label><select id="snM1"></select></div>
+            <div class="ctl"><label for="snM2">Bottom medium</label><select id="snM2"></select></div>
+            <div class="ctl"><span class="lbl">Data</span><div class="btns"><button id="snSwap">Swap</button><button class="primary" id="snRec">Record</button><button id="snClear">Clear</button></div></div>
+          </div>
+          <div class="readout" id="snOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>i (°)</th><th>r (°)</th><th>sin i</th><th>sin r</th><th></th></tr></thead><tbody id="snTable"></tbody></table><div class="empty" id="snEmpty">No readings yet. Press Record at four or more angles.</div></div>
+            <div class="graphbox"><canvas id="snGraph" aria-label="Graph of sin i against sin r"></canvas><p class="result" id="snResult"></p></div>
+          </div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Air → glass: does the ray bend towards the normal?</div><div class="try"><b>2</b>Swap to glass → air and find the critical angle.</div><div class="try"><b>3</b>Record 5 readings. How close is your n?</div></div>
+      </div>
+
+      <div class="lab" data-lab="tir" hidden>
+        <div class="labhead"><span class="pill t">Optical fibre</span><p class="goal">Change the launch angle and the glass. When does light leak out of the fibre?</p></div>
+        <div class="panel sim">
+          <canvas id="fibre" aria-label="Optical fibre with a ray bouncing inside the core"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="fbA">Launch angle <output id="fbAo">20°</output></label><input type="range" id="fbA" min="0" max="80" value="20"></div>
+            <div class="ctl"><label for="fbC">Core index <output id="fbCo">1.50</output></label><input type="range" id="fbC" min="1.40" max="1.80" step="0.01" value="1.50"></div>
+            <div class="ctl"><label for="fbK">Cladding index <output id="fbKo">1.40</output></label><input type="range" id="fbK" min="1.00" max="1.70" step="0.01" value="1.40"></div>
+          </div>
+          <div class="readout" id="fbOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Find the biggest launch angle that stays trapped.</div><div class="try"><b>2</b>Make the cladding index closer to the core. What happens?</div></div>
+      </div>
+
+      <div class="lab" data-lab="lenses" hidden>
+        <div class="labhead"><span class="pill t">Lens bench</span><p class="goal">Drag the object or tap left of the lens. Watch the image move and change.</p></div>
+        <div class="panel sim">
+          <div class="legend" id="lnLegend">
+            <button aria-pressed="true" data-ray="0"><i style="background:var(--ray)"></i>① parallel</button>
+            <button aria-pressed="true" data-ray="1"><i style="background:var(--ray2)"></i>② centre</button>
+            <button aria-pressed="true" data-ray="2"><i style="background:var(--ray3)"></i>③ focus</button>
+          </div>
+          <canvas id="bench" aria-label="Lens ray diagram. Drag the object to move it."></canvas>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Lens</span><div class="btns"><button id="lnConv" aria-pressed="true">Converging</button><button id="lnDiv" aria-pressed="false">Diverging</button></div></div>
+            <div class="ctl"><label for="lnU">Object distance u <output id="lnUo">30 cm</output></label><input type="range" id="lnU" min="2" max="58" step="0.5" value="30"></div>
+            <div class="ctl"><label for="lnF">Focal length |f| <output id="lnFo">12 cm</output></label><input type="range" id="lnF" min="5" max="25" step="0.5" value="12"></div>
+            <div class="ctl"><label for="lnH">Object height <output id="lnHo">6 cm</output></label><input type="range" id="lnH" min="2" max="10" step="0.5" value="6"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Presets</span><div class="btns" id="lnPresets">
+              <button data-k="3">Beyond 2F · camera</button><button data-k="2">At 2F</button><button data-k="1.5">F to 2F · projector</button><button data-k="1">At F</button><button data-k="0.55">Inside F · magnifier</button></div></div>
+          </div>
+          <div class="simchips chips" id="lnChips"></div>
+          <div class="readout" id="lnOut"></div>
+          <div class="working" id="lnWork"></div>
+        </div>
+      </div>
+
+      <div class="lab" data-lab="experiment" hidden>
+        <div class="labhead"><span class="pill t">Experiment</span><p class="goal">The lens has a hidden focal length. Move the screen until the cross is sharp, record, repeat, and find f.</p></div>
+        <div class="panel sim">
+          <div class="exp-grid">
+            <canvas id="expBench" aria-label="Optical bench with lamp box, lens and screen"></canvas>
+            <div class="screen-view"><canvas id="expScreen" aria-label="What appears on the screen"></canvas>
+              <div style="display:grid;gap:6px"><span class="eyebrow">Sharpness</span><div class="meter"><i id="expMeter"></i></div><span class="result" id="expSharp"></span></div></div>
+          </div>
+          <div class="controls">
+            <div class="ctl"><label for="expU">Lens position u <output id="expUo">30.0 cm</output></label><input type="range" id="expU" min="8" max="60" step="0.5" value="30"></div>
+            <div class="ctl"><label for="expV">Screen distance v <output id="expVo">20.0 cm</output></label><input type="range" id="expV" min="5" max="95" step="0.5" value="20"></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="expRec">Record reading</button><button id="expClear">Clear</button><button id="expNew">New lens</button><button id="expDiv">Diverging-lens data</button><button id="expReveal">Reveal f</button></div></div>
+          </div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>u (cm)</th><th>v (cm)</th><th>1/u</th><th>1/v</th><th>f (cm)</th><th></th></tr></thead><tbody id="expTable"></tbody></table><div class="empty" id="expEmpty">No readings yet. Find a sharp image, then press Record reading.</div></div>
+            <div class="graphbox"><canvas id="expGraph" aria-label="Graph of 1/v against 1/u"></canvas><p class="result" id="expResult"></p></div>
+          </div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Take 5 readings with u from 20 to 50 cm.</div><div class="try"><b>2</b>Compare f from the table with f from the graph.</div><div class="try"><b>3</b>Load the diverging-lens data. Why are the v values negative?</div></div>
+      </div>
+
+      <div class="lab" data-lab="eye" hidden>
+        <div class="labhead"><span class="pill t">The eye</span><p class="goal">Pick an eye and an object. If it's blurred, add glasses and read the prescription.</p></div>
+        <div class="panel sim">
+          <canvas id="eyeC" aria-label="Rays entering an eye and focusing near the retina"></canvas>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Eye</span><div class="btns" id="eyeType"><button data-v="normal" aria-pressed="true">Normal</button><button data-v="myopia" aria-pressed="false">Short-sighted</button><button data-v="hyper" aria-pressed="false">Long-sighted</button></div></div>
+            <div class="ctl"><span class="lbl">Looking at</span><div class="btns" id="eyeObj"><button data-v="far" aria-pressed="true">Distant object</button><button data-v="near" aria-pressed="false">Book at 25 cm</button></div></div>
+            <div class="ctl"><span class="lbl">Correction</span><div class="btns"><button id="eyeFix" aria-pressed="false">Add glasses</button></div></div>
+          </div>
+          <div class="simchips chips" id="eyeChips"></div>
+          <div class="readout" id="eyeOut"></div>
+        </div>
+        <p class="result">Not to scale: the up–down direction is stretched so you can see rays inside a 2.4 cm eyeball.</p>
+      </div>
+
+      <div class="lab" data-lab="dispersion" hidden>
+        <div class="labhead"><span class="pill t">Prism</span><p class="goal">Shine white light into a prism. Change the material and the angle to see the spectrum spread.</p></div>
+        <div class="panel sim">
+          <canvas id="prism" aria-label="White light passing through a prism and splitting into colours"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="prI">Angle of incidence <output id="prIo">60°</output></label><input type="range" id="prI" min="20" max="85" value="60"></div>
+            <div class="ctl"><label for="prG">Material</label><select id="prG"><option value="crown" selected>Crown glass</option><option value="flint">Dense flint glass</option><option value="water">Water</option><option value="diamond">Diamond</option></select></div>
+            <div class="ctl"><span class="lbl">View</span><div class="btns"><button id="prX" aria-pressed="true">Exaggerate ×3</button></div></div>
+          </div>
+          <div class="readout" id="prOut"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of refraction and lenses"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>Where does the image form?</h2></div><p>The same converging lens (f = 10 cm), with the object in five places, then a diverging lens.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Light at a boundary</p><h2>Three things light can do</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="snell" data-n1="1" data-n2="1.5" data-i="45"></canvas><h3>Into denser: bends towards</h3><p>Air → glass. Light slows down, r &lt; i.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="snell" data-n1="1.5" data-n2="1" data-i="30"></canvas><h3>Into less dense: bends away</h3><p>Glass → air. Light speeds up, r &gt; i.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="snell" data-n1="1.5" data-n2="1" data-i="55"></canvas><h3>Past the critical angle: TIR</h3><p>All light reflects back. i &gt; C = 41.8° for glass.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">By the numbers</p><h2>How much materials slow light</h2></div><p>Bigger n means slower light, more bending and a smaller critical angle.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Optics in technology and medicine · LO 2.3.4</p><h2>Optics around you</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Write the formula first, then substitute, then the answer <b>with its unit</b>.</li>
+            <li>Measure every angle from the <b>normal</b>, never from the surface.</li>
+            <li>Check your calculator is in <b>degrees</b> before any sin or sin⁻¹.</li>
+            <li>Real is positive: a <b>virtual</b> image gets a negative v; a <b>diverging</b> lens a negative f.</li>
+            <li>For power, convert f to <b>metres</b> before P = 1/f.</li>
+            <li>Ray diagrams: use a ruler, put arrows on rays, draw virtual rays dashed.</li>
+            <li>Graphs: label both axes with units, choose a sensible scale, draw a line of best fit.</li>
+            <li>"Define" means a full, precise sentence. Learn the glossary definitions word for word.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The verb tells you what the examiner wants. The learning outcomes use model, verify and investigate a lot.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Ray diagram drill</p><h2>Predict the image</h2></div></div>
+          <canvas id="predC" aria-label="Lens with an object. Predict the image."></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns" data-g="0"><button data-a="Real">Real</button><button data-a="Virtual">Virtual</button></div>
+            <div class="btns" data-g="1"><button data-a="Inverted">Inverted</button><button data-a="Upright">Upright</button></div>
+            <div class="btns" data-g="2"><button data-a="Magnified">Magnified</button><button data-a="Same size">Same size</button><button data-a="Diminished">Diminished</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next object</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and abbreviation in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: TIR, 2F, dioptre, normal…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>The first five are in the specification. The last two are useful extras for the eye and optics in medicine.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Reflection</span><span class="big">i = r</span><dl><dt>i</dt><dd>angle of incidence</dd><dt>r</dt><dd>angle of reflection</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Snell's law</span><span class="big">n = sin i / sin r</span><dl><dt>n</dt><dd>refractive index (no unit)</dd><dt>i, r</dt><dd>angles from the normal</dd></dl><div class="ex">sin 50° / sin 30.7° = 1.50</div></div>
+        <div class="panel fcell"><span class="pill">Speed</span><span class="big">n = c₁ / c₂</span><dl><dt>c₁</dt><dd>speed in medium 1 (air: 3×10⁸ m/s)</dd><dt>c₂</dt><dd>speed in medium 2</dd></dl><div class="ex">glass: 3×10⁸ / 1.5 = 2×10⁸ m/s</div></div>
+        <div class="panel fcell"><span class="pill">Critical angle</span><span class="big">n = 1 / sin C</span><dl><dt>C</dt><dd>critical angle</dd></dl><div class="ex">n = 1.5 → C = 41.8°</div></div>
+        <div class="panel fcell"><span class="pill">Lens formula</span><span class="big">1/f = 1/u + 1/v</span><dl><dt>u</dt><dd>object distance</dd><dt>v</dt><dd>image distance (− if virtual)</dd><dt>f</dt><dd>focal length (− if diverging)</dd></dl><div class="ex">u = 30, f = 20 → v = 60 cm</div></div>
+        <div class="panel fcell"><span class="pill a">Extra</span><span class="big">m = v / u</span><dl><dt>m</dt><dd>magnification = image height ÷ object height</dd></dl><div class="ex">v = 60, u = 30 → m = 2</div></div>
+        <div class="panel fcell"><span class="pill a">Extra</span><span class="big">P = 1 / f</span><dl><dt>P</dt><dd>power in dioptres (D)</dd><dt>f</dt><dd>in metres</dd></dl><div class="ex">f = −0.4 m → P = −2.5 D</div></div>
+      </div>
+      <footer>
+        <p>Built on section 2.3 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes are quoted from the specification. Experiment data is simulated with small random errors.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const D2R = Math.PI/180, R2D = 180/Math.PI;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  refraction:'<path d="M2 12h20"/><path d="M5 3l7 9 3 9"/>',
+  tir:'<rect x="2" y="8" width="20" height="8" rx="4"/><path d="M4 12l4-3 4 6 4-6 4 3"/>',
+  lenses:'<path d="M12 3c3 3 3 15 0 18c-3-3-3-15 0-18z"/><path d="M2 8h8M2 16h8M14 9l8 3M14 15l8-3"/>',
+  experiment:'<path d="M2 19h20"/><path d="M4 19V9h3v10"/><path d="M12 6c1.6 2 1.6 8 0 10c-1.6-2-1.6-8 0-10z"/><path d="M19 6v13"/>',
+  eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  dispersion:'<path d="M12 4l8 15H4z"/><path d="M1 13l8-2M15 11l8-3M15 12l8 1M15 13l7 4"/>',
+  camera:'<rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="4"/><path d="M8 7l2-3h4l2 3"/>',
+  projector:'<rect x="2" y="8" width="14" height="9" rx="2"/><circle cx="11" cy="12.5" r="2.5"/><path d="M16 10l6-4M16 15l6 4"/>',
+  magnifier:'<circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L21 21"/>',
+  glasses:'<circle cx="6.5" cy="14" r="4"/><circle cx="17.5" cy="14" r="4"/><path d="M10.5 14h3M2.5 14L4 8M21.5 14L20 8"/>',
+  endoscope:'<path d="M3 4c6 0 6 8 12 8s4 8 6 8"/><circle cx="21" cy="20" r="1.5"/>',
+  rainbow:'<path d="M3 18a9 9 0 0118 0"/><path d="M6.5 18a5.5 5.5 0 0111 0"/><path d="M10 18a2 2 0 014 0"/>',
+  spot:'<path d="M4 9h5v6H4z"/><path d="M9 10l11-4v12L9 14"/>',
+  copier:'<rect x="3" y="9" width="18" height="9" rx="2"/><path d="M7 9V4h10v5M7 14h10"/>',
+  peephole:'<rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="9" r="2.5"/><path d="M15 15h1"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"refraction", name:"Refraction", short:"Why light bends at a boundary, and Snell's law.", tint:"var(--blush)"},
+  {id:"tir", name:"Total internal reflection", short:"The critical angle, optical fibres and endoscopes.", tint:"var(--sage)"},
+  {id:"lenses", name:"Lenses & ray diagrams", short:"Converging and diverging lenses, and where images form.", tint:"var(--apricot)"},
+  {id:"experiment", name:"Finding f", short:"The optical bench experiment and the 1/v vs 1/u graph.", tint:"var(--cream)"},
+  {id:"eye", name:"The eye", short:"Accommodation, short and long sight, glasses.", tint:"var(--sage)"},
+  {id:"dispersion", name:"Dispersion", short:"Prisms, rainbows and why violet bends most.", tint:"var(--blush)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary data: [term, also known as / symbol, definition, topic, formula] ---------- */
+const GLOSS = [
+  ["Refraction","","The bending of light as it passes from one medium into another, caused by a change in its speed.","refraction"],
+  ["Medium","plural: media","Any material that light travels through, such as air, water or glass.","refraction"],
+  ["Normal","","A line drawn at 90° to a surface at the point where a ray meets it. All angles are measured from the normal.","refraction"],
+  ["Incident ray","","The ray of light arriving at a surface.","refraction"],
+  ["Angle of incidence","i","The angle between the incident ray and the normal.","refraction"],
+  ["Angle of refraction","r","The angle between the refracted ray and the normal.","refraction"],
+  ["Angle of reflection","","The angle between the reflected ray and the normal. It always equals the angle of incidence.","refraction","i = r"],
+  ["Refractive index","n","The ratio sin i / sin r for light passing from air (or a vacuum) into a medium. It also equals the ratio of the speeds of light in the two media. It has no unit.","refraction","n = sin i / sin r = c₁ / c₂"],
+  ["Snell's law","","For two given media, the ratio sin i / sin r is a constant, called the refractive index.","refraction","n = sin i / sin r"],
+  ["Optically dense","","Describes a medium with a high refractive index, in which light travels more slowly.","refraction"],
+  ["Speed of light","c","3.0 × 10⁸ m/s in a vacuum, and very nearly the same in air. Light is slower in every other medium.","refraction","c = 3.0 × 10⁸ m/s"],
+  ["Apparent depth","","Water looks shallower than it is, because light bends away from the normal as it leaves the water.","refraction"],
+  ["TIR","Total internal reflection","When light in a denser medium meets a boundary with a less dense medium at an angle bigger than the critical angle, all of it is reflected back. None escapes.","tir"],
+  ["Critical angle","C","The angle of incidence in the denser medium for which the angle of refraction is 90°.","tir","n = 1 / sin C"],
+  ["Optical fibre","","A thin strand of glass that carries light along its length by total internal reflection, even around bends.","tir"],
+  ["Core","","The inner glass of an optical fibre. It has the higher refractive index.","tir"],
+  ["Cladding","","The outer layer of an optical fibre. Its refractive index is lower than the core's, so TIR happens at the core boundary.","tir"],
+  ["Acceptance angle","","The largest angle at which light can enter an optical fibre and still be trapped by TIR.","tir"],
+  ["Endoscope","","A medical instrument that uses bundles of optical fibres to carry light into the body and an image back out.","tir"],
+  ["Mirage","","An image of the sky seen on a hot road, caused by refraction and TIR in layers of hot air.","tir"],
+  ["Lens","","A piece of transparent material with curved surfaces that refracts light to form an image.","lenses"],
+  ["Converging lens","convex lens","A lens that is thicker in the middle than at the edges. It bends parallel rays inwards to meet at the focal point.","lenses"],
+  ["Diverging lens","concave lens","A lens that is thinner in the middle. It spreads parallel rays out so they appear to come from the focal point.","lenses"],
+  ["Principal axis","","The straight line through the optical centre of a lens, at 90° to the lens.","lenses"],
+  ["Optical centre","","The centre of a lens. A ray passing through it goes straight on without bending.","lenses"],
+  ["Focal point","F","The point on the principal axis where rays parallel to the axis meet after passing through a converging lens, or appear to come from after a diverging lens.","lenses"],
+  ["Focal length","f","The distance from the optical centre to the focal point. It is negative for a diverging lens.","lenses"],
+  ["2F","twice the focal length","The point on the principal axis at twice the focal length from the lens. An object at 2F gives a real, inverted, same-size image at 2F on the other side. \"Between F and 2F\" means further than F but closer than 2F.","lenses"],
+  ["Object distance","u","The distance from the object to the optical centre of the lens.","lenses"],
+  ["Image distance","v","The distance from the image to the optical centre of the lens. It is negative for a virtual image.","lenses"],
+  ["Lens formula","","The equation linking focal length, object distance and image distance.","lenses","1/f = 1/u + 1/v"],
+  ["Real image","","An image formed where light rays actually meet. It can be caught on a screen, and v is positive.","lenses"],
+  ["Virtual image","","An image formed where light rays only appear to come from. It cannot be caught on a screen, and v is negative.","lenses"],
+  ["Inverted","","Upside down compared with the object.","lenses"],
+  ["Upright","erect","The same way up as the object.","lenses"],
+  ["Magnification","m","How many times bigger the image is than the object.","lenses","m = v / u = image height / object height"],
+  ["Ray diagram","","A scale drawing using two or three standard rays to find where an image forms and what it is like.","lenses"],
+  ["Sign convention","real is positive","Distances to real objects and real images are positive; distances to virtual images are negative. Converging lenses have positive f, diverging lenses negative f.","lenses"],
+  ["Lamp box","illuminated object","A box with a bulb behind a sheet with cross-wires. It is the object in the lens experiment, so you can see exactly when the image is sharp.","experiment"],
+  ["Optical bench","","A metre stick or track that holds the object, lens and screen in a line so u and v can be measured.","experiment"],
+  ["Parallax","","The apparent shift of an object against a background when you move your eye. Avoid it by reading scales straight on.","experiment"],
+  ["Precaution","","A step taken to make a measurement more accurate or an experiment safer, such as measuring from the centre of the lens.","experiment"],
+  ["Primary data","","Data you collect yourself in an experiment.","experiment"],
+  ["Secondary data","","Data collected by someone else, such as published results or a data set you are given.","experiment"],
+  ["Line of best fit","","A straight line or smooth curve drawn through plotted points, with roughly equal numbers of points on each side.","experiment"],
+  ["Intercept","","Where a graph line crosses an axis. On a 1/v against 1/u graph, both intercepts equal 1/f.","experiment"],
+  ["Slope","gradient","The rise over the run of a line. On a sin i against sin r graph, the slope is the refractive index.","experiment"],
+  ["Accommodation","","The eye changing the shape, and so the focal length, of its lens to focus objects at different distances.","eye"],
+  ["Retina","","The light-sensitive layer at the back of the eye where the image forms.","eye"],
+  ["Near point","","The closest point the eye can focus on clearly. About 25 cm for a normal eye.","eye"],
+  ["Far point","","The furthest point the eye can focus on clearly. Infinity for a normal eye.","eye"],
+  ["Myopia","short sight","Distant objects look blurred because the image forms in front of the retina. Corrected with a diverging lens.","eye"],
+  ["Hypermetropia","long sight","Near objects look blurred because the image forms behind the retina. Corrected with a converging lens.","eye"],
+  ["Power of a lens","P","How strongly a lens bends light: the reciprocal of its focal length in metres.","eye","P = 1 / f"],
+  ["Dioptre","D","The unit of lens power. A lens with a focal length of 1 m has a power of 1 D.","eye"],
+  ["Dispersion","","The splitting of white light into its colours, because the refractive index depends on the wavelength.","dispersion"],
+  ["Spectrum","","The band of colours that make up white light: red, orange, yellow, green, blue, indigo, violet.","dispersion"],
+  ["Wavelength","λ","The distance between two neighbouring crests of a wave. Red light has a longer wavelength than violet light.","dispersion"],
+  ["Prism","","A triangular block of glass. It refracts light twice, so it spreads white light into a spectrum.","dispersion"],
+  ["Chromatic aberration","","Coloured fringes around an image formed by a lens, caused by dispersion.","dispersion"],
+  ["Achromatic doublet","","A crown-glass lens and a flint-glass lens joined together so their dispersion cancels out.","dispersion"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+// Key terms in notes become tappable: [text to find, glossary term, case-sensitive]
+const GL_LINKS = [["critical angle","Critical angle"],["refractive index","Refractive index"],["converging lens","Converging lens"],["diverging lens","Diverging lens"],["accommodation","Accommodation"],["normal","Normal"],["retina","Retina"],["virtual","Virtual image"],["dioptres","Dioptre"],["wavelength","Wavelength"],["TIR","TIR",1],["2F","2F",1],["F","Focal point",1]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function ray(ctx,x1,y1,x2,y2,color,w=2.2,dash,head=true){ line(ctx,x1,y1,x2,y2,color,w,dash); if(head){ const a=Math.atan2(y2-y1,x2-x1); arrowHead(ctx,(x1+x2)/2+Math.cos(a)*5,(y1+y2)/2+Math.sin(a)*5,a,color); } }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+function pointer(el, fn){
+  let down=false; const pos = e => { const r=el.getBoundingClientRect(); return [e.clientX-r.left, e.clientY-r.top]; };
+  el.addEventListener("pointerdown", e=>{ down=true; el.setPointerCapture(e.pointerId); fn(...pos(e)); });
+  el.addEventListener("pointermove", e=>{ if(down) fn(...pos(e)); });
+  el.addEventListener("pointerup", ()=>down=false); el.addEventListener("pointercancel", ()=>down=false);
+}
+function tint(n){ const a = Math.min(0.42, (n-1)*0.3); return `rgba(157,154,128,${a.toFixed(3)})`; }
+function lensShape(ctx,x,cy,half,conv,thick=16){
+  ctx.save(); ctx.fillStyle=C.glass; ctx.strokeStyle=C["glass-edge"]; ctx.lineWidth=1.6; ctx.beginPath();
+  if(conv){ ctx.moveTo(x,cy-half); ctx.quadraticCurveTo(x+thick*1.6,cy,x,cy+half); ctx.quadraticCurveTo(x-thick*1.6,cy,x,cy-half); }
+  else { const t=thick*.75; ctx.moveTo(x-t,cy-half); ctx.lineTo(x+t,cy-half); ctx.quadraticCurveTo(x+t*0.1,cy,x+t,cy+half); ctx.lineTo(x-t,cy+half); ctx.quadraticCurveTo(x-t*0.1,cy,x-t,cy-half); }
+  ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
+}
+function fresnel(n1,n2,i){ const st=n1/n2*Math.sin(i); if(st>=1) return 1; const t=Math.asin(st), ci=Math.cos(i), ct=Math.cos(t);
+  const rs=(n1*ci-n2*ct)/(n1*ci+n2*ct), rp=(n1*ct-n2*ci)/(n1*ct+n2*ci); return (rs*rs+rp*rp)/2; }
+const fmt = (x,d=1) => Number.isFinite(x)? x.toFixed(d) : "∞";
+
+/* ---------- pure drawing functions (shared by labs, learn cards, infographics) ---------- */
+function drawSnell(ctx,w,h,o){
+  const {n1,n2,i:deg,names,compact}=o; bg(ctx,w,h);
+  const cx=w/2, cy=h/2, R=Math.min(w*0.46,h*0.47), i=deg*D2R;
+  ctx.fillStyle=tint(n1); ctx.fillRect(0,0,w,cy); ctx.fillStyle=tint(n2); ctx.fillRect(0,cy,w,h-cy);
+  line(ctx,0,cy,w,cy,C["glass-edge"],1.5); line(ctx,cx,cy-R-6,cx,cy+R+6,C.muted,1.2,[5,5]);
+  const fs = compact? 11 : 12;
+  text(ctx,`${names?names[0]+"  ":""}n = ${n1.toFixed(2)}`,10,18,C.ink,M(fs));
+  text(ctx,`${names?names[1]+"  ":""}n = ${n2.toFixed(2)}`,10,h-10,C.ink,M(fs));
+  if(!compact) text(ctx,"normal",cx+6,14,C.muted,M(11));
+  const st=n1/n2*Math.sin(i), tir=st>=1, Rf=fresnel(n1,n2,i);
+  ray(ctx,cx-R*Math.sin(i),cy-R*Math.cos(i),cx,cy,C.ray,3);
+  ctx.save(); ctx.globalAlpha=0.18+0.82*Rf; ray(ctx,cx,cy,cx+R*Math.sin(i),cy-R*Math.cos(i),C.ray,tir?3:2.2); ctx.restore();
+  ctx.save(); ctx.strokeStyle=C.ray; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(cx,cy,R*0.28,-Math.PI/2-i,-Math.PI/2); ctx.stroke(); ctx.restore();
+  text(ctx,`i = ${deg.toFixed(0)}°`,cx-8-R*0.3*Math.sin(i/2),cy-R*0.34*Math.cos(i/2),C.ray,F(compact?12:13),"right");
+  let r=NaN;
+  if(!tir){ r=Math.asin(st);
+    ray(ctx,cx,cy,cx+R*Math.sin(r),cy+R*Math.cos(r),C.ray,3);
+    ctx.save(); ctx.strokeStyle=C["olive-ink"]; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(cx,cy,R*0.34,Math.PI/2-r,Math.PI/2); ctx.stroke(); ctx.restore();
+    text(ctx,`r = ${(r*R2D).toFixed(1)}°`,cx+R*0.36*Math.sin(r/2)+8,cy+R*0.4*Math.cos(r/2)+4,C["olive-ink"],F(compact?12:13));
+  } else text(ctx,compact?"TIR":"TOTAL INTERNAL REFLECTION",cx+12,cy+24,C.bad,F(compact?12:13));
+  if(n1>n2 && !compact){ const Cc=Math.asin(n2/n1); line(ctx,cx,cy,cx-R*0.9*Math.sin(Cc),cy-R*0.9*Math.cos(Cc),C.warn,1.4,[3,4]); text(ctx,`C = ${(Cc*R2D).toFixed(1)}°`,cx-R*0.9*Math.sin(Cc)-4,cy-R*0.9*Math.cos(Cc)-6,C.warn,M(12),"right"); }
+  return {tir,r,Rf};
+}
+function lensSolve(conv,u,fa,oh){ const f = conv? fa : -fa; const d = 1/f - 1/u; const v = Math.abs(d)<1e-9 ? Infinity : 1/d; return { f, u, v, hi: Number.isFinite(v)? -oh*v/u : Infinity }; }
+function drawLens(ctx,w,h,o){
+  const {conv,u,fa,oh,rays=[true,true,true],range=60,lensFrac=0.47,compact=false}=o;
+  bg(ctx,w,h,o.bgc);
+  const lx=w*lensFrac, cy=h/2, sc=(lx-14)/range, X=cm=>lx+cm*sc, Y=cm=>cy-cm*sc;
+  const S = lensSolve(conv,u,fa,oh); const {f,v,hi}=S; const af=fa;
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  if(!compact){ for(let c=-120;c<=200;c+=5){ const x=X(c); if(x<0||x>w) continue; ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+    for(let c=0;c*sc<h/2;c+=5){ [cy-c*sc,cy+c*sc].forEach(y=>{ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke();}); } }
+  line(ctx,0,cy,w,cy,C.muted,1.2);
+  [[-af,"F"],[af,"F"],[-2*af,"2F"],[2*af,"2F"]].forEach(([c,l])=>{ const x=X(c); if(x<0||x>w) return; ctx.fillStyle=C.ink; ctx.beginPath(); ctx.arc(x,cy,compact?2.6:3.5,0,7); ctx.fill(); text(ctx,l,x,cy+(compact?14:18),C.muted,F(compact?10:12),"center"); });
+  const half=h*0.43; lensShape(ctx,lx,cy,half,conv,compact?10:14);
+  const ox=X(-u), oy=Y(oh);
+  line(ctx,ox,cy,ox,oy,C.terra,compact?3:3.5); arrowHead(ctx,ox,oy,-Math.PI/2,C.terra,compact?9:12);
+  if(!compact) text(ctx,"object",ox,cy+32,C.terra,F(12),"center");
+  if(o.noImage) return S;
+  const virtual = Number.isFinite(v) && v<0; const cols=[C.ray,C.ray2,C.ray3];
+  const y3 = (conv && Math.abs(u-af)<0.01) ? NaN : -oh*f/(u-f);
+  [oh,0,y3].forEach((yL,k)=>{
+    if(!rays[k] || !Number.isFinite(yL) || Math.abs(yL)*sc>h) return;
+    const sIn=(yL-oh)/u, sOut=sIn - yL/f, xR=(w-lx)/sc+1, lw=compact?1.6:2.2;
+    ray(ctx,ox,oy,X(0),Y(yL),cols[k],lw,null,!compact);
+    ray(ctx,X(0),Y(yL),X(xR),Y(yL+sOut*xR),cols[k],lw,null,!compact);
+    if(virtual || !conv){ const xl=Math.max(Number.isFinite(v)? v : -range, -range-2); line(ctx,X(0),Y(yL),X(xl),Y(yL+sOut*xl),cols[k],compact?1.1:1.4,[5,5]); }
+  });
+  if(Number.isFinite(v) && Math.abs(v)<400){
+    const ix=X(v), iy=Y(hi), col=virtual? C.img : C.good;
+    if(ix>-10 && ix<w+10 && Math.abs(hi)*sc<h){ line(ctx,ix,cy,ix,iy,col,compact?3:3.5,virtual?[6,4]:null); arrowHead(ctx,ix,iy,hi>0?-Math.PI/2:Math.PI/2,col,compact?9:12);
+      if(!compact) text(ctx,virtual?"virtual image":"real image",ix,hi>0?cy+32:cy-12,col,F(12),"center"); }
+    else text(ctx,`image at v = ${v.toFixed(0)} cm →`,w-8,18,col,F(compact?11:12),"right");
+  } else text(ctx,compact?"image at ∞":"rays come out parallel: image at infinity",w-8,18,C.bad,F(compact?11:12),"right");
+  return S;
+}
+function lensNature(S){
+  const {v,u,hi}=S; if(!Number.isFinite(v)) return [["No image (at infinity)","alert"]];
+  const m=Math.abs(v/u), virtual=v<0;
+  return [virtual?["Virtual","virtual"]:["Real","real"], hi>0?["Upright","neutral"]:["Inverted","neutral"], Math.abs(m-1)<0.02?["Same size","neutral"]: m>1?["Magnified","neutral"]:["Diminished","neutral"]];
+}
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+function drawFocus(ctx,w,h,conv){
+  bg(ctx,w,h); const cy=h/2, lx=w*0.48, f=w*0.28, n=5;
+  line(ctx,0,cy,w,cy,C.muted,1,[3,5]); lensShape(ctx,lx,cy,h*0.4,conv,12);
+  for(let k=0;k<n;k++){ const y=cy+(k-(n-1)/2)*h*0.15; const yL=y-cy; const s=conv? -yL/f : yL/f;
+    line(ctx,8,y,lx,y,C.ray,2); line(ctx,lx,y,w,y+s*(w-lx),C.ray,2); if(!conv) line(ctx,lx,y,lx-f,cy,C.ray,1.1,[4,4]); }
+  const fx = conv? lx+f : lx-f; ctx.fillStyle=C.ink; ctx.beginPath(); ctx.arc(fx,cy,4,0,7); ctx.fill(); text(ctx,"F",fx,cy+18,C.ink,F(13),"center");
+}
+const MEDIA = [["Air",1.00],["Water",1.33],["Perspex",1.49],["Crown glass",1.52],["Dense flint",1.65],["Diamond",2.42]];
+const EYES = { normal:{fmin:2.18,fmax:2.4}, myopia:{fmin:2.0,fmax:2.2}, hyper:{fmin:2.3,fmax:2.6} };
+const EYE_L=2.4, GL=1.5;
+function farPoint(e){ const d=1/(1/e.fmax-1/EYE_L); return d<0||!Number.isFinite(d)? Infinity : d; }
+function nearPoint(e){ return 1/(1/e.fmin-1/EYE_L); }
+function glassesF(type){ const e=EYES[type];
+  if(type==="myopia") return GL - farPoint(e);
+  if(type==="hyper"){ const u=25-GL, vg=GL-nearPoint(e); return 1/(1/u+1/vg); }
+  return Infinity; }
+function drawEye(ctx,w,h,o){
+  const {type,obj,fix,compact}=o; bg(ctx,w,h); const e=EYES[type], L=EYE_L;
+  const xs=(w*0.78)/(L+GL+3.2), ex0=w*0.6, X=c=>ex0+c*xs, cy=h/2, ys=h*0.38/0.55, Y=c=>cy-c*ys;
+  const useGl = fix && type!=="normal", fg = useGl? glassesF(type) : Infinity, dObj = obj==="far"? Infinity : 25;
+  let dEye; if(useGl){ const u=dObj-GL; const vg=Number.isFinite(u)? 1/(1/fg-1/u) : fg; dEye=GL-vg; } else dEye=dObj;
+  const need = 1/(1/L + (Number.isFinite(dEye)? 1/dEye : 0)); const fe = Math.max(e.fmin, Math.min(e.fmax, need));
+  ctx.save(); ctx.fillStyle=C["surface-2"]; ctx.strokeStyle=C.muted; ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(X(L/2+0.05),cy,(L/2+0.35)*xs,0.62*ys,0,0,7); ctx.fill(); ctx.stroke(); ctx.restore();
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=5; ctx.beginPath(); ctx.ellipse(X(L/2+0.05),cy,(L/2+0.35)*xs,0.62*ys,0,-0.75,0.75); ctx.stroke(); ctx.restore();
+  if(!compact) text(ctx,"retina",X(L+0.45),cy-0.56*ys,C.terra,F(13));
+  line(ctx,0,cy,w,cy,C.muted,1,[3,5]);
+  lensShape(ctx,X(0),cy,0.46*ys,true,6+(2.4-fe)*40);
+  if(useGl){ lensShape(ctx,X(-GL),cy,0.5*ys,fg>0,10); if(!compact) text(ctx,"glasses",X(-GL),cy+0.62*ys+16,C.terra,F(12),"center"); }
+  const xStart=-(GL+3); let focusX=null;
+  [-0.32,-0.16,0,0.16,0.32].forEach(yh=>{
+    const firstX = useGl? -GL : 0; let y0, slope;
+    if(!Number.isFinite(dObj)){ slope=0; y0=yh; } else { slope=yh/(dObj+firstX); y0=yh-slope*(firstX-xStart); }
+    let x=xStart, y=y0; const segs=[];
+    if(useGl){ const yg=y+slope*(-GL-x); segs.push([x,y,-GL,yg]); x=-GL; y=yg; slope-=y/fg; }
+    const ye=y+slope*(0-x); segs.push([x,y,0,ye]); y=ye; slope-=y/fe;
+    segs.push([0,y,L,y+slope*L]);
+    if(Math.abs(slope)>1e-9 && Math.abs(y)>1e-6 && focusX===null) focusX=-y/slope;
+    segs.forEach(([a,b,c,d])=>line(ctx,X(a),Y(b),X(c),Y(d),C.ray,1.8));
+  });
+  const dz = focusX===null? 0 : focusX-L, ok=Math.abs(dz)<0.03;
+  if(focusX!==null){ ctx.fillStyle=ok? C.good : C.bad; ctx.beginPath(); ctx.arc(X(focusX),cy,5,0,7); ctx.fill(); }
+  if(!compact) text(ctx, obj==="far"? "← light from far away (parallel rays)" : "← light from a book 25 cm away", 10, 20, C.muted, M(12));
+  return {fe,ok,dz,useGl};
+}
+const GLASS = { crown:[1.5046,0.00420], flint:[1.7280,0.01342], water:[1.3199,0.00309], diamond:[2.3818,0.01210] };
+const WAVES = [[680,"#d8392b"],[620,"#ee7a1c"],[580,"#e8bd17"],[530,"#3f9e46"],[490,"#1f9fbf"],[450,"#3b5bd6"],[410,"#8740c9"]];
+function refractV(d,n,eta){ const ci=-(n[0]*d[0]+n[1]*d[1]); const k=1-eta*eta*(1-ci*ci); if(k<0) return null; const a=eta*ci-Math.sqrt(k); return [eta*d[0]+a*n[0], eta*d[1]+a*n[1]]; }
+function segHit(p,d,a,b){ const ex=b[0]-a[0], ey=b[1]-a[1]; const den=d[0]*ey-d[1]*ex; if(Math.abs(den)<1e-9) return null; const t=((a[0]-p[0])*ey-(a[1]-p[1])*ex)/den; const s=((a[0]-p[0])*d[1]-(a[1]-p[1])*d[0])/den; return (t>1e-6&&s>=0&&s<=1)? t : null; }
+function drawPrism(ctx,w,h,o){
+  bg(ctx,w,h); const [A0,B0]=GLASS[o.glass]; const B=B0*(o.ex?3:1);
+  const size=Math.min(w*0.36,h*0.78), cx=w*0.42, cyy=h*0.56;
+  const A=[cx,cyy-size*0.577], Bv=[cx-size/2,cyy+size*0.289], Cv=[cx+size/2,cyy+size*0.289];
+  ctx.save(); ctx.fillStyle=C.glass; ctx.strokeStyle=C["glass-edge"]; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(...A); ctx.lineTo(...Bv); ctx.lineTo(...Cv); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
+  const P=[A[0]+(Bv[0]-A[0])*0.5, A[1]+(Bv[1]-A[1])*0.5];
+  const fx=Bv[0]-A[0], fy=Bv[1]-A[1], fl=Math.hypot(fx,fy); const nO=[-fy/fl, fx/fl];
+  const i=o.i*D2R, base=[-nO[0],-nO[1]], ang=-i;
+  const d0=[base[0]*Math.cos(ang)-base[1]*Math.sin(ang), base[0]*Math.sin(ang)+base[1]*Math.cos(ang)];
+  line(ctx,P[0]-d0[0]*w,P[1]-d0[1]*w,P[0],P[1],C.ink,3.2);
+  if(!o.compact) text(ctx,"white light",P[0]-d0[0]*110,P[1]-d0[1]*110-12,C.ink,F(13),"center");
+  line(ctx,P[0]-nO[0]*40,P[1]-nO[1]*40,P[0]+nO[0]*40,P[1]+nO[1]*40,C.muted,1,[4,4]);
+  const screenX=w-14, hits=[];
+  WAVES.forEach(([lam,col])=>{
+    const n=A0+B/((lam/1000)**2); const d1=refractV(d0,nO,1/n); if(!d1) return;
+    const t1=segHit(P,d1,A,Cv), t2=segHit(P,d1,Bv,Cv), t=Math.min(t1??1e9,t2??1e9); if(t>1e8) return;
+    const Q=[P[0]+d1[0]*t, P[1]+d1[1]*t], ea=(t===t1)?A:Bv;
+    const gx=Cv[0]-ea[0], gy=Cv[1]-ea[1], gl=Math.hypot(gx,gy); let nn=[-gy/gl, gx/gl]; if(nn[0]*d1[0]+nn[1]*d1[1]>0) nn=[-nn[0],-nn[1]];
+    line(ctx,P[0],P[1],Q[0],Q[1],col,2);
+    const d2=refractV(d1,nn,n); if(!d2){ if(!o.compact) text(ctx,"total internal reflection",Q[0]+8,Q[1]-6,C.bad,M(11)); return; }
+    const tt=(screenX-Q[0])/d2[0]; line(ctx,Q[0],Q[1],Q[0]+d2[0]*tt,Q[1]+d2[1]*tt,col,2.2);
+    hits.push([lam,col,Q[1]+d2[1]*tt,Math.atan2(d2[1],d2[0])*R2D,n]);
+  });
+  line(ctx,screenX,10,screenX,h-10,C.ink,3);
+  hits.forEach(([,col,y])=>{ if(y>0&&y<h){ ctx.fillStyle=col; ctx.fillRect(screenX-10,y-4,8,8); } });
+  return {hits, inAng:Math.atan2(d0[1],d0[0])*R2D};
+}
+
+/* ---------- graph helper ---------- */
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  if(x0<=0&&x1>=0) line(ctx,X(0),padT,X(0),h-padB,C.muted,1);
+  if(y0<=0&&y1>=0) line(ctx,padL,Y(0),w-padR,Y(0),C.muted,1);
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); });
+}
+
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "refraction", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+// Canvases inside hidden views have no size; size them as soon as their view is shown.
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3","lo4","lo5"]; const loState=store.get("rl-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("rl-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/5`; $("stLOb").style.width=(lo/5*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("rl-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  refraction:{ vis:[["snell",{n1:1,n2:1.5,i:45}]], cap:"Air → glass: the ray bends towards the normal",
+    keys:[["n","Light changes speed when it enters a new material, so it changes direction."],["⊥","Measure every angle from the normal, the line at 90° to the surface."],["↘","Into a denser material: bends towards the normal (r < i). Out of it: bends away."]],
+    f:"n = sin i / sin r = c₁ / c₂", mistake:"Measuring angles from the surface instead of the normal." },
+  tir:{ vis:[["snell",{n1:1.5,n2:1,i:30}],["snell",{n1:1.5,n2:1,i:41.8}],["snell",{n1:1.5,n2:1,i:55}]], grid:"vis3", cap:"Below C, at C (refracted ray along the surface), above C (TIR)",
+    keys:[["C","The critical angle is the angle of incidence that gives a refracted angle of 90°."],["2","TIR needs both: dense → less dense, and i greater than C."],["⟿","Optical fibres trap light by TIR. Endoscopes use them to see inside the body."]],
+    f:"n = 1 / sin C", mistake:"Thinking TIR can happen when light goes from air into glass. It can't." },
+  lenses:{ vis:[["focus",{conv:true}],["focus",{conv:false}],["lens",{conv:true,u:15,fa:10,oh:5}],["lens",{conv:false,u:15,fa:10,oh:5}]], grid:"vis2", cap:"Top: parallel light through each lens. Bottom: ray diagrams with the object 15 cm away.",
+    keys:[["①","A ray parallel to the axis goes through F (converging) or seems to come from F (diverging)."],["②","A ray through the centre of the lens goes straight on."],["③","A ray through F comes out parallel. Any two rays locate the image."]],
+    f:"1/f = 1/u + 1/v    m = v / u", mistake:"Forgetting that virtual images and diverging lenses take a minus sign." },
+  experiment:{ vis:[["graph",{}]], cap:"1/v against 1/u: a straight line with slope −1. Both intercepts equal 1/f.",
+    keys:[["u","Move the lens to set u, then move the screen until the image is sharp and read v."],["5×","Repeat for at least five values of u, all bigger than f."],["f","Average f = uv/(u+v), or use the intercepts of the graph."]],
+    f:"f = uv / (u + v)", mistake:"Using u smaller than f. The image is then virtual, so no screen can catch it." },
+  eye:{ vis:[["eye",{type:"myopia",obj:"far",fix:false}],["eye",{type:"myopia",obj:"far",fix:true}]], grid:"vis2", cap:"Short sight: blurred (left), fixed with a diverging lens (right)",
+    keys:[["◎","The eye lens changes shape to focus near and far objects. This is accommodation."],["−","Short sight: image forms in front of the retina. Use a diverging lens (negative power)."],["+","Long sight: image forms behind the retina. Use a converging lens (positive power)."]],
+    f:"P = 1 / f   (dioptres, f in metres)", mistake:"Mixing up which lens fixes which. Short sight needs diverging, long sight needs converging." },
+  dispersion:{ vis:[["prism",{glass:"crown",i:60,ex:true}]], cap:"White light splits because each colour has its own refractive index",
+    keys:[["λ","The refractive index of glass depends on colour (wavelength)."],["V","Violet slows the most, so it bends the most. Red bends the least."],["🌈","Raindrops disperse sunlight in the same way, which makes rainbows."]],
+    f:"n(violet) > n(red)", mistake:"Saying the prism adds colour. The colours were already in the white light." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div class="${L.grid||""}" style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+function drawGraphMini(ctx,w,h){
+  bg(ctx,w,h); const pad=34, X=v=>pad+v*(w-pad-14), Y=v=>h-pad-v*(h-pad-14);
+  line(ctx,pad,h-pad,w-10,h-pad,C.muted,1.4); line(ctx,pad,h-pad,pad,10,C.muted,1.4);
+  text(ctx,"1/u",w-12,h-pad+18,C.ink,F(12),"right"); text(ctx,"1/v",pad+6,18,C.ink,F(12));
+  line(ctx,X(0),Y(0.85),X(0.85),Y(0),C.olive,2.4);
+  [[.15,.7],[.3,.56],[.45,.4],[.6,.24],[.72,.13]].forEach(([a,b])=>{ ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(a),Y(b+(Math.sin(a*30)*0.01)),5,0,7); ctx.fill(); });
+  text(ctx,"1/f",X(0)-6,Y(0.85)+4,C.terra,F(13),"right"); text(ctx,"1/f",X(0.85),Y(0)+18,C.terra,F(13),"center");
+}
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  {u:30,conv:true,t:"Beyond 2F",use:["camera","Camera, your eye"]},
+  {u:20,conv:true,t:"At 2F",use:["copier","Photocopier (same size)"]},
+  {u:15,conv:true,t:"Between F and 2F",use:["projector","Projector, cinema"]},
+  {u:10,conv:true,t:"At F",use:["spot","Spotlight, lighthouse beam"]},
+  {u:6,conv:true,t:"Inside F",use:["magnifier","Magnifying glass"]},
+  {u:15,conv:false,t:"Diverging lens, anywhere",use:["peephole","Door peephole, glasses for short sight"]},
+];
+$("cases").innerHTML = CASES.map((c,k)=>{ const S=lensSolve(c.conv,c.u,10,5);
+  return `<div class="panel case"><canvas class="mini" data-case="${k}"></canvas><h3>${c.t}</h3><div class="chips">${chipsHTML(lensNature(S))}</div><div class="use">${svg(c.use[0])}${c.use[1]}</div></div>`; }).join("");
+$("bars").innerHTML = MEDIA.map(([n,v])=>{ const Cc = v>1? (Math.asin(1/v)*R2D).toFixed(1)+"°" : "–";
+  return `<div class="barrow"><span><b>${n}</b></span><div class="track"><i style="width:${(v/2.6*100).toFixed(1)}%;background:${v>2?"var(--terra)":v>1.4?"var(--apricot)":v>1.1?"var(--blush)":"var(--sage)"}"></i></div><span class="v">n = ${v.toFixed(2)} · C ${Cc}</span></div>`; }).join("");
+const AROUND = [
+  ["camera","Camera","Converging lens makes a real, inverted, smaller image on the sensor.",[["Converging","neutral"],["Real","real"]],"var(--blush)"],
+  ["projector","Projector","Slide sits between F and 2F, so a big real image lands on the wall.",[["Converging","neutral"],["Magnified","neutral"]],"var(--apricot)"],
+  ["magnifier","Magnifying glass","Object inside F gives a virtual, upright, larger image.",[["Converging","neutral"],["Virtual","virtual"]],"var(--sage)"],
+  ["glasses","Glasses & contacts","Diverging lenses fix short sight; converging lenses fix long sight.",[["Power in D","neutral"]],"var(--cream)"],
+  ["endoscope","Endoscope","Bundles of optical fibres carry light into and out of the body by TIR.",[["TIR","real"],["Medicine","neutral"]],"var(--blush)"],
+  ["rainbow","Rainbow","Raindrops refract and disperse sunlight, and reflect it back towards you.",[["Dispersion","neutral"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"refraction",label:"Refraction",col:"var(--blush)",leaves:[["Snell's law","n = sin i / sin r. The ratio is the same for every angle."],["n = c₁/c₂","Refractive index compares the speed of light in two materials."],["The normal","All angles are measured from the line at 90° to the surface."],["Towards / away","Into denser: towards the normal. Into less dense: away."]]},
+  {id:"tir",label:"Total internal reflection",col:"var(--sage)",leaves:[["Critical angle","Angle of incidence giving a 90° refracted ray. n = 1/sin C."],["Two conditions","Dense → less dense, and i greater than C."],["Optical fibres","Core with higher n than cladding traps light by TIR."],["Endoscope","Fibre bundles let doctors see inside the body."]]},
+  {id:"lenses",label:"Lenses",col:"var(--apricot)",leaves:[["Converging","Thicker in the middle. Brings parallel rays to F. f is positive."],["Diverging","Thinner in the middle. Spreads rays out. f is negative."],["Ray rules","Parallel → F, centre → straight, F → parallel."],["1/f = 1/u + 1/v","Real is positive. Virtual images have negative v."],["Real vs virtual","Real images can be caught on a screen. Virtual can't."]]},
+  {id:"experiment",label:"Finding f",col:"var(--cream)",leaves:[["Optical bench","Lamp box with cross-wires, lens and screen on a metre stick."],["Sharp image","Move the screen back and forth to find the sharpest image."],["Graph","1/v against 1/u: slope −1, both intercepts are 1/f."]]},
+  {id:"eye",label:"The eye",col:"var(--sage)",leaves:[["Accommodation","The lens changes shape to focus near and far objects."],["Short sight","Image in front of the retina. Fix: diverging lens."],["Long sight","Image behind the retina. Fix: converging lens."],["Power","P = 1/f in dioptres, with f in metres."]]},
+  {id:"dispersion",label:"Dispersion",col:"var(--blush)",leaves:[["Prism","Refracts white light twice, spreading the colours."],["Violet bends most","Higher n for shorter wavelengths."],["Rainbows","Raindrops disperse sunlight."],["Chromatic aberration","Coloured fringes in lens images."]]},
+];
+let mmSel = {b:2,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      // left/right branches: leaves stacked in a column; top/bottom branches: leaves in a staggered row
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Refraction</text><text x="${cx}" y="${cy+22}" text-anchor="middle">&amp; Lenses</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["refraction","What is refraction?","The bending of light as it passes from one material into another, because its speed changes."],
+  ["refraction","State Snell's law.","n = sin i / sin r, for light going from air into the material."],
+  ["refraction","Air → glass: towards or away from the normal?","Towards the normal. Light slows down in glass."],
+  ["refraction","Refractive index from speeds","n = c₁ / c₂. Glass with n = 1.5 slows light to 2×10⁸ m/s."],
+  ["refraction","Where are angles measured from?","The normal: a line at 90° to the surface."],
+  ["tir","Define the critical angle.","The angle of incidence in the denser medium that gives an angle of refraction of 90°."],
+  ["tir","Two conditions for total internal reflection","Light goes from a denser to a less dense medium, and the angle of incidence is bigger than C."],
+  ["tir","Link n and the critical angle","n = 1 / sin C"],
+  ["tir","Name three uses of TIR","Optical fibres (broadband), endoscopes, prism periscopes and binoculars, sparkling diamonds."],
+  ["tir","Why does an optical fibre have cladding?","Its refractive index is lower than the core's, so TIR happens at the core boundary even if the outside is scratched or dirty."],
+  ["lenses","What is the focal point F?","The point where rays parallel to the axis meet after a converging lens, or seem to come from after a diverging lens."],
+  ["lenses","The lens formula","1/f = 1/u + 1/v"],
+  ["lenses","Sign convention","Real is positive. A virtual image has negative v. A diverging lens has negative f."],
+  ["lenses","Magnification","m = v / u = image height ÷ object height"],
+  ["lenses","Converging lens, object beyond 2F","Real, inverted, diminished, between F and 2F. Used in a camera."],
+  ["lenses","Converging lens, object between F and 2F","Real, inverted, magnified, beyond 2F. Used in a projector."],
+  ["lenses","Converging lens, object inside F","Virtual, upright, magnified, on the same side. Used as a magnifying glass."],
+  ["lenses","What image does a diverging lens give?","Always virtual, upright and diminished."],
+  ["lenses","The three standard rays","① parallel → through F   ② through the centre → straight on   ③ through F → parallel"],
+  ["experiment","Quick way to estimate f","Focus a distant window onto a screen. The lens-to-screen distance is about f."],
+  ["experiment","Which graph gives f?","1/v against 1/u. A straight line with slope −1; both intercepts equal 1/f."],
+  ["experiment","Why must u be bigger than f?","Only then is the image real, so it can be caught on a screen."],
+  ["eye","What is accommodation?","The eye changing the focal length of its lens to focus objects at different distances."],
+  ["eye","Short sight (myopia)","Distant objects are blurred because the image forms in front of the retina. Fix: diverging lens."],
+  ["eye","Long sight (hypermetropia)","Near objects are blurred because the image forms behind the retina. Fix: converging lens."],
+  ["eye","Power of a lens","P = 1/f, in dioptres (D), with f in metres."],
+  ["dispersion","What is dispersion?","Splitting white light into colours, because the refractive index depends on wavelength."],
+  ["dispersion","Which colour bends most in glass?","Violet. It has the highest refractive index. Red bends least."],
+  ["dispersion","What is chromatic aberration?","Coloured fringes in an image caused by a lens dispersing light. Fixed with a two-glass (achromatic) lens."],
+];
+let fcKnown = store.get("rl-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("rl-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("rl-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("rl-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["refraction","Light passes from air into water. Compared with the angle of incidence, the angle of refraction is:",["Larger","Smaller","The same","Always 90°"],1,"Water is denser, so light slows down and bends towards the normal: r < i."],
+  ["refraction","Glass has n = 1.5. What is the speed of light in glass?",["4.5 × 10⁸ m/s","3.0 × 10⁸ m/s","2.0 × 10⁸ m/s","1.5 × 10⁸ m/s"],2,"n = c₁/c₂ so c₂ = 3×10⁸ / 1.5 = 2×10⁸ m/s."],
+  ["refraction","A ray enters a block at i = 50° and refracts at r = 30.7°. The refractive index is:",["0.67","1.33","1.50","1.63"],2,"n = sin 50° / sin 30.7° = 0.766 / 0.511 = 1.50."],
+  ["tir","The critical angle for a glass is 41.8°. Its refractive index is:",["1.33","1.41","1.50","1.67"],2,"n = 1/sin C = 1/0.667 = 1.50."],
+  ["tir","Which situation can give total internal reflection?",["Air → glass at 60°","Glass → air at 30°","Glass → air at 60°","Water → glass at 60°"],2,"TIR needs light going into a less dense medium (glass → air) at more than the critical angle (41.8° for glass)."],
+  ["tir","Why are optical fibres used in endoscopes?",["Light is faster in glass","TIR keeps light inside the fibre around bends","Glass magnifies","Glass absorbs harmful rays"],1,"Light hitting the core–cladding boundary above C is totally internally reflected, so it follows the bends."],
+  ["lenses","An object is between F and 2F of a converging lens. The image is:",["Virtual, upright, magnified","Real, inverted, diminished","Real, inverted, magnified","Virtual, upright, diminished"],2,"This is the projector set-up. The image forms beyond 2F, real, inverted and larger."],
+  ["lenses","An object is 30 cm from a converging lens with f = 10 cm. The image distance is:",["7.5 cm","15 cm","20 cm","40 cm"],1,"1/v = 1/10 − 1/30 = 2/30, so v = 15 cm."],
+  ["lenses","Which lens always gives a virtual, upright, diminished image of a real object?",["Converging","Diverging","Both","Neither"],1,"A diverging lens spreads light out, so rays never meet. Their backward extensions meet on the object's side."],
+  ["lenses","An object is placed exactly at F of a converging lens. The image is:",["At 2F","At F on the other side","At infinity","Virtual and magnified"],2,"Rays leave the lens parallel, so they never meet. The image is at infinity."],
+  ["lenses","A virtual image formed by a lens has v = −12 cm. The minus sign means:",["The lens is broken","The image is on the same side as the object","The image is inverted","The lens is converging"],1,"Real is positive. A negative v means a virtual image on the same side as the object."],
+  ["experiment","In the focal length experiment, a graph of 1/v against 1/u has intercepts equal to:",["f","1/f","2f","u + v"],1,"When 1/u = 0, 1/v = 1/f, and the other way round."],
+  ["experiment","Why must the object be further than f from the lens in this experiment?",["To make the lens hotter","So the image is real and appears on a screen","To reduce parallax","So the image is upright"],1,"If u < f the image is virtual and can't be caught on a screen."],
+  ["eye","A short-sighted person needs a lens that is:",["Converging","Diverging","Cylindrical","Plane glass"],1,"Short sight focuses distant light in front of the retina. A diverging lens spreads the rays so they focus further back."],
+  ["eye","A lens has power −2.5 D. It is:",["Converging, f = 40 cm","Diverging, f = 40 cm","Diverging, f = 2.5 cm","Converging, f = 2.5 m"],1,"f = 1/P = −0.4 m. Negative means diverging, |f| = 40 cm."],
+  ["dispersion","A prism splits white light because:",["Each colour has a different refractive index in glass","The prism adds colour","Red is reflected more","Light speeds up in glass"],0,"Violet has the highest n so it bends the most. Red bends least. This is dispersion."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("rl-best",null); if(best==null||pct>best) store.set("rl-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+// tap-to-define popover
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Define","Give the exact meaning in one full, precise sentence.","Define the critical angle."],
+  ["State","Give a short fact, law or value. No explanation needed.","State Snell's law."],
+  ["Explain","Say what happens and why, using the physics behind it.","Explain why a diamond sparkles."],
+  ["Describe","Give the steps or features in a clear order.","Describe how the student found the image position."],
+  ["Calculate","Write the formula, substitute the numbers, give the answer with a unit.","Calculate the power of the lens."],
+  ["Draw / Sketch","Draw: neat, labelled, ruler. Sketch: shows the shape or pattern, not to scale.","Draw a ray diagram to show…"],
+  ["Model","Represent a situation with a diagram, equation or graph, and use it to predict.","Model the image formed by a magnifying glass."],
+  ["Verify","Use data to show that a law or equation holds.","Verify 1/f = 1/u + 1/v using the data."],
+  ["Investigate","Plan, collect data, analyse it and draw a conclusion.","Investigate how fibres are used in medicine."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+
+// Calculation trainer
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+const s4=x=>(+x.toPrecision(4)).toString();
+const PTYPES = {
+  lens:{ name:"Lens: find v", gen(){ const conv=Math.random()<0.7, fa=rnd(8,20), f=conv?fa:-fa; let u; do{ u=rnd(6,60); }while(conv && Math.abs(u-fa)<3);
+    const v=1/(1/f-1/u);
+    return { q:`A <b>${conv?"converging":"diverging"}</b> lens has a focal length of <b>${fa} cm</b>. An object is placed <b>${u} cm</b> from the lens. Calculate the image distance v.`, ans:v, unit:"cm",
+      steps:["1/f = 1/u + 1/v  →  1/v = 1/f − 1/u", `1/v = 1/${conv?fa:"(−"+fa+")"} − 1/${u}`, `1/v = ${s4(1/f-1/u)}`, `v = ${v.toFixed(1)} cm  ${v<0?"(negative, so the image is virtual)":"(positive, so the image is real)"}`] }; } },
+  mag:{ name:"Magnification", gen(){ const fa=rnd(8,15); let u; do{ u=rnd(5,45); }while(Math.abs(u-fa)<3); const v=1/(1/fa-1/u), m=Math.abs(v/u);
+    return { q:`An object is <b>${u} cm</b> from a converging lens of focal length <b>${fa} cm</b>. Calculate the magnification.`, ans:m, unit:"×",
+      steps:[`1/v = 1/${fa} − 1/${u} = ${s4(1/fa-1/u)}`, `v = ${v.toFixed(1)} cm`, `m = |v| / u = ${Math.abs(v).toFixed(1)} / ${u}`, `m = ${m.toFixed(2)}`] }; } },
+  snell:{ name:"Snell: find r", gen(){ const [mn,n]=pick(MEDIA.slice(1)), i=rnd(15,75), r=Math.asin(Math.sin(i*D2R)/n)*R2D;
+    return { q:`Light passes from air into <b>${mn.toLowerCase()}</b> (n = ${n.toFixed(2)}) with an angle of incidence of <b>${i}°</b>. Calculate the angle of refraction.`, ans:r, unit:"°",
+      steps:["n = sin i / sin r  →  sin r = sin i / n", `sin r = sin ${i}° / ${n.toFixed(2)} = ${(Math.sin(i*D2R)).toFixed(4)} / ${n.toFixed(2)}`, `sin r = ${(Math.sin(i*D2R)/n).toFixed(4)}`, `r = sin⁻¹(${(Math.sin(i*D2R)/n).toFixed(4)}) = ${r.toFixed(1)}°`] }; } },
+  crit:{ name:"Critical angle", gen(){ const n=rnd(130,242)/100, Cc=Math.asin(1/n)*R2D;
+    return { q:`A transparent material has a refractive index of <b>${n.toFixed(2)}</b>. Calculate its critical angle.`, ans:Cc, unit:"°",
+      steps:["n = 1 / sin C  →  sin C = 1 / n", `sin C = 1 / ${n.toFixed(2)} = ${(1/n).toFixed(4)}`, `C = sin⁻¹(${(1/n).toFixed(4)}) = ${Cc.toFixed(1)}°`] }; } },
+  power:{ name:"Lens power", gen(){ const conv=Math.random()<0.5, fa=pick([10,12.5,20,25,40,50,80,100,200]), f=conv?fa:-fa, P=100/f;
+    return { q:`A <b>${conv?"converging":"diverging"}</b> lens has a focal length of <b>${fa} cm</b>. Calculate its power.`, ans:P, unit:"D",
+      steps:[`f = ${conv?"":"−"}${fa} cm = ${conv?"":"−"}${fa/100} m  (${conv?"converging, positive":"diverging, negative"})`, `P = 1 / f = 1 / ${conv?"":"(−"}${fa/100}${conv?"":")"}`, `P = ${P>0?"+":""}${s4(P)} D`] }; } },
+  speed:{ name:"Speed of light", gen(){ const [mn,n]=pick(MEDIA.slice(1)), c2=3/n;
+    return { q:`The refractive index of <b>${mn.toLowerCase()}</b> is ${n.toFixed(2)}. Calculate the speed of light in it. (c = 3.0 × 10⁸ m/s)`, ans:c2, unit:"× 10⁸ m/s",
+      steps:["n = c₁ / c₂  →  c₂ = c₁ / n", `c₂ = 3.0 × 10⁸ / ${n.toFixed(2)}`, `c₂ = ${c2.toFixed(2)} × 10⁸ m/s`] }; } },
+};
+let pType="lens", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseFloat($("paIn").value.replace(",",".").replace("−","-"));
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 15 or −10.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(0.15, Math.abs(pCur.ans)*0.02);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> ${Math.sign(x)!==Math.sign(pCur.ans)&&pCur.ans!==0?"Check the sign: is the image virtual or the lens diverging?":"Check your calculator is in degrees, and your units."} Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Predict the image
+const PRED = [[true,30],[true,25],[true,20],[true,15],[true,13],[true,7],[true,5],[false,8],[false,15],[false,25]];
+let pd = { k:0, shown:false, sel:[null,null,null], streak:0 };
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k && PRED.length>1); pd={...pd,k,shown:false,sel:[null,null,null]};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  const [conv,u]=PRED[k]; $("predQ").innerHTML=`<b>${conv?"Converging":"Diverging"}</b> lens, f = 10 cm, object at <b>${u} cm</b>${conv?(u>20?" (beyond 2F)":u===20?" (at 2F)":u>10?" (between F and 2F)":" (inside F)"):""}. Pick one answer in each row.`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; const g=+b.parentElement.dataset.g; pd.sel[g]=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(pd.sel.includes(null)){ $("predFb").innerHTML=`<div class="fb no">Pick one answer in each of the three rows first.</div>`; return; }
+  const [conv,u]=PRED[pd.k], truth=lensNature(lensSolve(conv,u,10,5)).map(x=>x[0]);
+  const ok=pd.sel.every((s,i)=>s===truth[i]); pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> The image is ${truth.join(", ").toLowerCase()}. The rays are now drawn on the diagram.${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Experiment: verifying 1/f = 1/u + 1/v", intro:"A student used a converging lens to verify the lens formula and recorded these results:",
+    table:[["u (cm)",15,20,25,30,40],["v (cm)",29.6,20.3,16.8,14.9,13.4]],
+    parts:[["a","Draw a labelled diagram of the apparatus.",6,"Illuminated object / lamp box with cross-wires (2) · converging lens (2) · screen and metre stick in a line (2)."],
+      ["b","How did the student know the image was in the correct position?",3,"The image on the screen was at its sharpest (clearest) (3)."],
+      ["c","Use the data to plot a graph of 1/v against 1/u and use it to find f.",15,"1/u and 1/v values calculated (3) · axes labelled with units (3) · points plotted correctly (3) · straight line of best fit (3) · intercept ≈ 0.10 cm⁻¹, so f ≈ 10 cm (3)."],
+      ["d","Give one precaution the student should take.",3,"Any one: measure distances from the centre of the lens · avoid parallax when reading the metre stick · move the screen back and forth to find the sharpest image (3)."],
+      ["e","Why could the student not use u = 8 cm?",3,"u is less than f, so the image is virtual and can't be formed on a screen (3)."]] },
+  { title:"Refraction, TIR and optical fibres", intro:"Light travels from air into a glass block of refractive index 1.52.",
+    parts:[["a","Define refractive index.",3,"The ratio sin i / sin r for light passing from air into the medium (3). Also accept: speed of light in air ÷ speed in the medium."],
+      ["b","The angle of incidence is 40°. Calculate the angle of refraction.",6,"sin r = sin 40° / 1.52 = 0.4229 (3) · r = 25.0° (3)."],
+      ["c","Calculate the critical angle for this glass.",6,"sin C = 1 / 1.52 = 0.658 (3) · C = 41.1° (3)."],
+      ["d","Explain, with the help of a diagram, how an optical fibre carries light.",9,"Diagram of core and cladding with a zig-zag ray (3) · the cladding has a lower refractive index than the core (3) · light hits the boundary at more than the critical angle, so it is totally internally reflected (3)."],
+      ["e","Give one medical use and one other use of optical fibres.",6,"Endoscope / keyhole surgery (3) · broadband, telephone or data communication, decorative lighting (3)."]] },
+  { title:"Lenses in everyday life", intro:"A converging lens of focal length 5 cm is used as a magnifying glass.",
+    parts:[["a","An object is placed 4 cm from the lens. Calculate the position of the image.",6,"1/v = 1/5 − 1/4 = −0.05 (3) · v = −20 cm, so 20 cm from the lens on the same side as the object (3)."],
+      ["b","Calculate the magnification.",3,"m = 20 / 4 = 5 (3)."],
+      ["c","Describe the nature of the image.",6,"Virtual (2) · upright (2) · magnified (2)."],
+      ["d","Define accommodation.",3,"The ability of the eye to change the focal length of its lens to focus objects at different distances (3)."],
+      ["e","A short-sighted person has a far point of 2.5 m. State the type of lens needed and calculate its power.",9,"Diverging lens (3) · f = −2.5 m (3) · P = 1/f = −0.4 D (3)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p>${L.table?`<div class="tablewrap" style="border:0;max-height:none"><table>${L.table.map(r=>`<tr>${r.map((c,j)=>j?`<td>${c}</td>`:`<th style="position:static">${c}</th>`).join("")}</tr>`).join("")}</table></div>`:""}</header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist (red / amber / green)
+const RAG = ["Define refractive index and state Snell's law","Measure i and r from the normal and calculate n","Use n = c₁ / c₂ to find the speed of light in a material","Define the critical angle and use n = 1 / sin C","State the two conditions for total internal reflection","Explain how optical fibres work and give two uses","Draw ray diagrams for converging and diverging lenses","Describe the image for every object position","Use 1/f = 1/u + 1/v with the sign convention","Describe the lens experiment and find f from a graph","Explain short and long sight, their correction, and P = 1/f","Explain dispersion of white light by a prism"];
+const ragState=store.get("rl-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("rl-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Plan a fair test","Name the independent, dependent and controlled variables.","Experiment lab"],["Collect primary data","Take at least five readings over a good range, and repeat them.","Snell's law lab"],["Record data properly","Use a table with quantities and units in the column headings.","Experiment lab"],["Draw a good graph","Label axes with units, use a sensible scale, draw a line of best fit.","Experiment lab"],["Use the graph","Find a result from the slope or an intercept.","Snell's law lab"],["Spot errors","Name sources of error and the precautions that reduce them.","Experiment lab"],["Compare","Compare your result with a secondary or accepted value and give the % difference.","Snell's law lab"],["Evaluate","Say how reliable your conclusion is and how you'd improve the method.","Any lab"]];
+const skState=store.get("rl-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("rl-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+// Snell
+["snM1","snM2"].forEach((id,j)=>{ $(id).innerHTML = MEDIA.map(([n,v],k)=>`<option value="${k}">${n} (n = ${v.toFixed(2)})</option>`).join(""); $(id).value = j===0? "0":"3"; });
+const sn = { i:40, data:[] };
+const snN = () => [MEDIA[+$("snM1").value][1], MEDIA[+$("snM2").value][1]];
+function snUpd(){ $("snIo").textContent=sn.i+"°"; snell.redraw(); }
+$("snI").addEventListener("input", e=>{ sn.i=+e.target.value; snUpd(); });
+["snM1","snM2"].forEach(id=>$(id).addEventListener("change", ()=>{ sn.data=[]; snTable(); snUpd(); }));
+$("snSwap").addEventListener("click", ()=>{ const a=$("snM1").value; $("snM1").value=$("snM2").value; $("snM2").value=a; sn.data=[]; snTable(); snUpd(); });
+$("snClear").addEventListener("click", ()=>{ sn.data=[]; snTable(); });
+$("snRec").addEventListener("click", ()=>{ const [n1,n2]=snN(); const st=n1/n2*Math.sin(sn.i*D2R);
+  if(sn.i===0 || st>=1){ $("snResult").textContent = sn.i===0 ? "At 0° there's no bending to measure. Pick a bigger angle." : "No refracted ray to measure: the light is totally internally reflected."; return; }
+  sn.data.push([sn.i+(Math.random()-.5), Math.asin(st)*R2D+(Math.random()-.5)]); snTable(); });
+function snTable(){
+  $("snTable").innerHTML = sn.data.map(([i,r],k)=>`<tr><td>${i.toFixed(1)}</td><td>${r.toFixed(1)}</td><td>${Math.sin(i*D2R).toFixed(3)}</td><td>${Math.sin(r*D2R).toFixed(3)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("snEmpty").hidden = sn.data.length>0; if(snGraph) snGraph.redraw();
+}
+$("snTable").addEventListener("click", e=>{ const k=e.target.dataset.k; if(k!=null){ sn.data.splice(+k,1); snTable(); } });
+// Fibre
+["fbA","fbC","fbK"].forEach(id=>$(id).addEventListener("input", ()=>{
+  if(+$("fbK").value > +$("fbC").value-0.01) $("fbK").value=(+$("fbC").value-0.01).toFixed(2);
+  $("fbAo").textContent=$("fbA").value+"°"; $("fbCo").textContent=(+$("fbC").value).toFixed(2); $("fbKo").textContent=(+$("fbK").value).toFixed(2); fibre.redraw(); }));
+// Lens bench
+const ln = { conv:true, u:30, f:12, h:6, rays:[true,true,true] };
+function lnSync(){ $("lnU").value=ln.u; $("lnF").value=ln.f; $("lnH").value=ln.h;
+  $("lnUo").textContent=(+ln.u.toFixed(1))+" cm"; $("lnFo").textContent=(+ln.f.toFixed(1))+" cm"; $("lnHo").textContent=(+ln.h.toFixed(1))+" cm";
+  pressGroup([$("lnConv"),$("lnDiv")], ln.conv?$("lnConv"):$("lnDiv")); bench.redraw(); }
+$("lnU").addEventListener("input",e=>{ln.u=+e.target.value; lnSync();});
+$("lnF").addEventListener("input",e=>{ln.f=+e.target.value; lnSync();});
+$("lnH").addEventListener("input",e=>{ln.h=+e.target.value; lnSync();});
+$("lnConv").addEventListener("click",()=>{ln.conv=true; lnSync();});
+$("lnDiv").addEventListener("click",()=>{ln.conv=false; lnSync();});
+$("lnPresets").addEventListener("click",e=>{ const k=e.target.dataset.k; if(!k) return; ln.conv=true; ln.u=Math.round(ln.f*(+k)*2)/2; if(ln.u>58){ ln.f=15; ln.u=45; } ln.u=Math.max(2,ln.u); lnSync(); });
+$("lnLegend").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const k=+b.dataset.ray; ln.rays[k]=!ln.rays[k]; b.setAttribute("aria-pressed",ln.rays[k]); bench.redraw(); });
+// Experiment
+const ex = { f:newF(), u:30, v:20, data:[], mode:"conv", revealed:false };
+function newF(){ return Math.round((10+Math.random()*10)*2)/2; }
+const exTrueV = () => ex.u>ex.f ? 1/(1/ex.f-1/ex.u) : NaN;
+function exBlur(){ const vt=exTrueV(); return Number.isFinite(vt)? 4*Math.abs(ex.v-vt)/vt : Infinity; }
+function exSync(){ $("expU").value=ex.u; $("expV").value=ex.v; $("expUo").textContent=ex.u.toFixed(1)+" cm"; $("expVo").textContent=ex.v.toFixed(1)+" cm"; expBench.redraw(); }
+$("expU").addEventListener("input",e=>{ ex.u=+e.target.value; if(ex.mode!=="conv"){ ex.mode="conv"; ex.data=[]; exTable(); } exSync(); });
+$("expV").addEventListener("input",e=>{ ex.v=+e.target.value; exSync(); });
+$("expRec").addEventListener("click",()=>{ if(ex.mode!=="conv"){ ex.mode="conv"; ex.data=[]; }
+  if(!Number.isFinite(exTrueV())){ $("expResult").textContent="No real image to record. Move the lens further than f from the object."; return; }
+  if(exBlur()>0.35){ $("expResult").textContent="The image isn't sharp yet. Move the screen until the meter turns green."; return; }
+  ex.data.push([ex.u+(Math.random()-.5)*0.4, ex.v+(Math.random()-.5)*0.4]); exTable(); });
+$("expClear").addEventListener("click",()=>{ ex.data=[]; ex.mode="conv"; exTable(); });
+$("expNew").addEventListener("click",()=>{ ex.f=newF(); ex.data=[]; ex.mode="conv"; ex.revealed=false; exTable(); exSync(); });
+$("expReveal").addEventListener("click",()=>{ ex.revealed=!ex.revealed; exTable(); });
+$("expDiv").addEventListener("click",()=>{ ex.mode="div"; ex.data=[10,15,20,25,30,40,50].map(u=>{ const v=1/(1/-15-1/u); return [u, +(v*(1+(Math.random()-.5)*0.03)).toFixed(1)]; }); exTable(); });
+function exTable(){
+  $("expTable").innerHTML = ex.data.map(([u,v],k)=>`<tr><td>${u.toFixed(1)}</td><td>${v.toFixed(1)}</td><td>${(1/u).toFixed(4)}</td><td>${(1/v).toFixed(4)}</td><td>${(u*v/(u+v)).toFixed(1)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("expEmpty").hidden = ex.data.length>0; if(expGraph) expGraph.redraw();
+}
+$("expTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ ex.data.splice(+k,1); exTable(); } });
+// Eye
+const eye = { type:"normal", obj:"far", fix:false };
+function eyeGroup(id,key){ const btns=[...$(id).querySelectorAll("button")]; btns.forEach(b=>b.addEventListener("click",()=>{ eye[key]=b.dataset.v; pressGroup(btns,b); eyeC.redraw(); })); }
+eyeGroup("eyeType","type"); eyeGroup("eyeObj","obj");
+$("eyeFix").addEventListener("click",()=>{ eye.fix=!eye.fix; $("eyeFix").setAttribute("aria-pressed",eye.fix); $("eyeFix").textContent=eye.fix?"Remove glasses":"Add glasses"; eyeC.redraw(); });
+// Prism
+let prX=true;
+$("prI").addEventListener("input",e=>{ $("prIo").textContent=e.target.value+"°"; prism.redraw(); });
+$("prG").addEventListener("change",()=>prism.redraw());
+$("prX").addEventListener("click",()=>{ prX=!prX; $("prX").setAttribute("aria-pressed",prX); prism.redraw(); });
+
+/* ================= CREATE CANVASES ================= */
+let snGraph=null, expGraph=null, exScreen=null, predC=null;
+const hero = makeCanvas($("heroCanvas"), 0.7, 220, s => {
+  const {ctx,w,h}=s; bg(ctx,w,h);
+  const cy=h/2, lx=w*0.46, f=w*0.24, lh=h*0.38;
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  for(let x=0;x<w;x+=26){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+  for(let y=0;y<h;y+=26){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+  line(ctx,0,cy,w,cy,C.muted,1,[4,5]); lensShape(ctx,lx,cy,lh,true,20);
+  const cols=[C.terra,C.apricot,C.olive,C.ray3,C.ray];
+  for(let k=0;k<5;k++){
+    const y0 = cy + (k-2)*(lh*0.4)*(0.92+0.08*Math.sin(heroT*0.8)), sl=-(y0-cy)/f;
+    line(ctx,0,y0,lx,y0,cols[k],3); line(ctx,lx,y0,w,y0+sl*(w-lx),cols[k],3);
+    const total=lx+(w-lx)*Math.hypot(1,sl), p=((heroT*90+k*60)%total);
+    let px,py; if(p<lx){px=p;py=y0;} else { const d=(p-lx)/Math.hypot(1,sl); px=lx+d; py=y0+sl*d; }
+    ctx.fillStyle=cols[k]; ctx.beginPath(); ctx.arc(px,py,6,0,7); ctx.fill();
+  }
+  ctx.fillStyle=C.ink; ctx.beginPath(); ctx.arc(lx+f,cy,5,0,7); ctx.fill(); text(ctx,"F",lx+f+8,cy-10,C.ink,F(16));
+}, 420);
+const snell = makeCanvas($("snell"), 0.6, 280, s => {
+  const [n1,n2]=snN(); const R=drawSnell(s.ctx,s.w,s.h,{n1,n2,i:sn.i,names:[MEDIA[+$("snM1").value][0],MEDIA[+$("snM2").value][0]]});
+  setReadout($("snOut"),[["sin i",Math.sin(sn.i*D2R).toFixed(3)],["sin r",R.tir?"—":Math.sin(R.r).toFixed(3)],["sin i / sin r",(R.tir||sn.i===0)?"—":(Math.sin(sn.i*D2R)/Math.sin(R.r)).toFixed(3)],["Critical angle",n1>n2?(Math.asin(n2/n1)*R2D).toFixed(1)+"°":"none"],["Reflected",(R.Rf*100).toFixed(0)+"%"],["Speed below",(3/n2).toFixed(2)+"×10⁸ m/s"]]);
+}, 520);
+snGraph = makeCanvas($("snGraph"), 0.72, 190, s => {
+  const pts=sn.data.map(([i,r])=>[Math.sin(r*D2R),Math.sin(i*D2R)]); let fit=null;
+  if(pts.length>=2){ const sxy=pts.reduce((a,p)=>a+p[0]*p[1],0), sxx=pts.reduce((a,p)=>a+p[0]*p[0],0); fit=[sxy/sxx,0]; }
+  scatter(s,pts,{xr:[0,1],yr:[0,1],xl:"sin r",yl:"sin i",fit}); const [n1,n2]=snN();
+  $("snResult").innerHTML = fit? `Slope = <b>${fit[0].toFixed(3)}</b>. True n₂/n₁ = ${(n2/n1).toFixed(3)} (error ${(Math.abs(fit[0]-n2/n1)/(n2/n1)*100).toFixed(1)}%).` : "Slope of sin i against sin r = refractive index. Record two or more readings.";
+}, 300);
+snTable();
+const fibre = makeCanvas($("fibre"), 0.42, 220, s => {
+  const {ctx,w,h}=s; bg(ctx,w,h);
+  const nC=+$("fbC").value, nK=Math.min(+$("fbK").value,nC), th=+$("fbA").value*D2R;
+  const cy=h/2, a=h*0.17, b=h*0.32, x0=w*0.14, x1=w-10;
+  ctx.fillStyle=tint(nK); ctx.fillRect(x0,cy-b,x1-x0,2*b); ctx.fillStyle=tint(nC*1.25); ctx.fillRect(x0,cy-a,x1-x0,2*a);
+  line(ctx,x0,cy-a,x1,cy-a,C["glass-edge"],1.4); line(ctx,x0,cy+a,x1,cy+a,C["glass-edge"],1.4);
+  line(ctx,x0,cy-b,x1,cy-b,C.line,1); line(ctx,x0,cy+b,x1,cy+b,C.line,1); line(ctx,x0,cy-b,x0,cy+b,C["glass-edge"],1.4);
+  text(ctx,"cladding",x1-6,cy-b+16,C.muted,F(12),"right"); text(ctx,"core",x1-6,cy+5,C.muted,F(12),"right");
+  const L=x0-8; ray(ctx,x0-L*Math.cos(th),cy+L*Math.sin(th),x0,cy,C.ray,2.6);
+  const tc=Math.asin(Math.sin(th)/nC), crit=Math.asin(nK/nC), phi=Math.PI/2-tc, trapped=phi>crit, slope=Math.tan(tc);
+  let x=x0, y=cy, dir=-1, alpha=1, n=0;
+  while(x<x1 && alpha>0.04 && n<200){
+    const yt=dir<0? cy-a : cy+a;
+    if(slope<1e-6){ line(ctx,x,y,x1,y,C.ray,2.4); break; }
+    let nx=x+Math.abs(yt-y)/slope, ny=yt; if(nx>x1){ ny=y+dir*(x1-x)*slope; nx=x1; }
+    ctx.save(); ctx.globalAlpha=alpha; line(ctx,x,y,nx,ny,C.ray,2.4); ctx.restore(); if(nx>=x1) break;
+    if(!trapped){ const R=fresnel(nC,nK,phi), out=Math.asin(nC/nK*Math.sin(phi)), len=(b-a)/Math.cos(out); ctx.save(); ctx.globalAlpha=alpha*(1-R); line(ctx,nx,ny,nx+len*Math.sin(out),ny+dir*len*Math.cos(out),C.ray3,2.2); ctx.restore(); alpha*=R; }
+    x=nx; y=ny; dir=-dir; n++;
+  }
+  const NA=Math.sqrt(Math.max(0,nC*nC-nK*nK)), acc=NA>=1?90:Math.asin(NA)*R2D;
+  setReadout($("fbOut"),[["Angle in core",(tc*R2D).toFixed(1)+"°"],["Angle at wall",(phi*R2D).toFixed(1)+"°"],["Critical angle",(crit*R2D).toFixed(1)+"°"],["Acceptance angle",acc>=90?"all angles":acc.toFixed(1)+"°"],["Result",trapped?"Trapped ✓":"Leaking"]]);
+  $("fbOut").lastElementChild.querySelector("b").style.color = trapped? C.good : C.bad;
+}, 420);
+const bench = makeCanvas($("bench"), 0.56, 300, s => {
+  const S=drawLens(s.ctx,s.w,s.h,{conv:ln.conv,u:ln.u,fa:ln.f,oh:ln.h,rays:ln.rays});
+  const {f,u,v,hi}=S, m=Number.isFinite(v)?Math.abs(v/u):Infinity;
+  setReadout($("lnOut"),[["u",fmt(u)+" cm"],["f",(f>0?"+":"")+fmt(f)+" cm"],["v",Number.isFinite(v)?(v>0?"+":"")+fmt(v)+" cm":"∞"],["m",Number.isFinite(m)?fmt(m,2)+"×":"∞"],["Image height",Number.isFinite(hi)?fmt(Math.abs(hi))+" cm":"—"]]);
+  const nat=lensNature(S); if(Number.isFinite(v)) nat.push(v<0?["Same side as object","neutral"]:["Can be caught on a screen","neutral"]);
+  $("lnChips").innerHTML = chipsHTML(nat);
+  const p = x => x<0? `(${x.toFixed(1)})` : x.toFixed(1);
+  $("lnWork").innerHTML = Number.isFinite(v) ? `1/f = 1/u + 1/v → 1/${p(f)} = 1/${fmt(u)} + 1/v → 1/v = ${(1/f-1/u).toFixed(4)} → <b>v = ${p(v)} cm</b>` : `1/v = 1/${fmt(f)} − 1/${fmt(u)} = 0 → <b>v = ∞</b>`;
+}, 560);
+pointer($("bench"), (x)=>{ const lx=bench.w*0.47, sc=(lx-14)/60; if(x>=lx-4) return; ln.u=Math.max(2,Math.min(58,Math.round((lx-x)/sc*2)/2)); lnSync(); });
+pointer($("snell"), (x,y)=>{ const cx=snell.w/2, cy=snell.h/2; if(y>=cy-2) return; sn.i=Math.max(0,Math.min(89,Math.round(Math.atan2(Math.abs(x-cx),cy-y)*R2D))); $("snI").value=sn.i; snUpd(); });
+exScreen = makeCanvas($("expScreen"), 1, 100, s => {
+  const {ctx,w,h}=s; bg(ctx,w,h,C["surface-2"]);
+  const vt=exTrueV(), b=exBlur(), meter=$("expMeter"), lbl=$("expSharp");
+  if(!Number.isFinite(vt)){ ctx.fillStyle=C.apricot; ctx.globalAlpha=.2; ctx.fillRect(0,0,w,h); ctx.globalAlpha=1; meter.style.width="0%"; lbl.textContent="No sharp image anywhere: u is less than f."; return; }
+  const m=Math.min(3,vt/ex.u), arm=w*0.18*m, px=b*w/12, N=px<0.6?1:28;
+  ctx.save(); ctx.translate(w/2,h/2); ctx.rotate(Math.PI); ctx.strokeStyle=C.ink; ctx.lineWidth=Math.max(1.5,2*m); ctx.globalAlpha=N===1?1:Math.min(1,5.2/N);
+  for(let k=0;k<N;k++){ const a=k*2.399, r=N===1?0:px*Math.sqrt((k+.5)/N), dx=Math.cos(a)*r, dy=Math.sin(a)*r;
+    ctx.beginPath(); ctx.moveTo(-arm+dx,dy); ctx.lineTo(arm+dx,dy); ctx.moveTo(dx,-arm+dy); ctx.lineTo(dx,arm+dy); ctx.moveTo(dx+arm*0.55,-arm*0.35+dy); ctx.lineTo(dx+arm*0.55,-arm*0.15+dy); ctx.stroke(); }
+  ctx.restore();
+  const sharp=1/(1+b*3); meter.style.width=(sharp*100).toFixed(0)+"%"; meter.style.background = sharp>0.9? C.good : sharp>0.6? C.warn : C.bad;
+  lbl.textContent = sharp>0.95? "Sharp! Record it." : sharp>0.7? "Nearly there" : "Blurred";
+}, 220);
+const expBench = makeCanvas($("expBench"), 0.42, 200, s => {
+  const {ctx,w,h}=s; bg(ctx,w,h);
+  const x0=26, x1=w-14, sc=(x1-x0)/100, X=c=>x0+c*sc, base=h*0.72, ax=h*0.42;
+  ctx.fillStyle=C["surface-2"]; ctx.fillRect(x0-6,base,x1-x0+12,22); ctx.strokeStyle=C.line; ctx.strokeRect(x0-6,base,x1-x0+12,22);
+  for(let c=0;c<=100;c++){ const t=c%10===0?10:c%5===0?7:4; line(ctx,X(c),base,X(c),base+t,C.muted,1); if(c%10===0) text(ctx,c,X(c),base+20,C.muted,M(9),"center"); }
+  line(ctx,x0,ax,x1,ax,C.muted,1,[3,5]);
+  ctx.fillStyle=C.ink; ctx.fillRect(X(0)-22,ax-26,22,52); ctx.fillStyle=C.apricot; ctx.fillRect(X(0)-3,ax-14,4,28);
+  text(ctx,"lamp + cross-wires",X(0)-22,ax-34,C.muted,F(12));
+  const lxp=X(ex.u); lensShape(ctx,lxp,ax,h*0.22,ex.mode==="conv",9); line(ctx,lxp,ax+h*0.22,lxp,base,C.muted,1.4);
+  text(ctx,"u",(X(0)+lxp)/2,ax-h*0.24,C.terra,F(14),"center");
+  const sxp=X(Math.min(100,ex.u+ex.v));
+  ctx.fillStyle=C.surface; ctx.strokeStyle=C.ink; ctx.lineWidth=2; ctx.fillRect(sxp-3,ax-h*0.27,6,h*0.54); ctx.strokeRect(sxp-3,ax-h*0.27,6,h*0.54);
+  line(ctx,sxp,ax+h*0.27,sxp,base,C.muted,1.4);
+  text(ctx,"v",(lxp+sxp)/2,ax-h*0.24,C.terra,F(14),"center"); text(ctx,"screen",sxp,ax-h*0.29,C.muted,F(12),"center");
+  if(ex.u+ex.v>100) text(ctx,"screen at end of bench",x1,16,C.bad,F(12),"right");
+  const vt=exTrueV(), ap=h*0.13; ctx.save(); ctx.globalAlpha=.22; ctx.fillStyle=C.apricot;
+  ctx.beginPath(); ctx.moveTo(X(0),ax); ctx.lineTo(lxp,ax-ap); ctx.lineTo(lxp,ax+ap); ctx.closePath(); ctx.fill();
+  if(Number.isFinite(vt)){ const fx=X(ex.u+vt);
+    if(sxp<=fx){ const sp=ap*(1-ex.v/vt); ctx.beginPath(); ctx.moveTo(lxp,ax-ap); ctx.lineTo(sxp,ax-sp); ctx.lineTo(sxp,ax+sp); ctx.lineTo(lxp,ax+ap); ctx.closePath(); ctx.fill(); }
+    else { ctx.beginPath(); ctx.moveTo(lxp,ax-ap); ctx.lineTo(fx,ax); ctx.lineTo(lxp,ax+ap); ctx.closePath(); ctx.fill(); const sp=ap*(ex.v-vt)/vt; ctx.beginPath(); ctx.moveTo(fx,ax); ctx.lineTo(sxp,ax-sp); ctx.lineTo(sxp,ax+sp); ctx.closePath(); ctx.fill(); } }
+  ctx.restore(); if(exScreen) exScreen.redraw();
+}, 380);
+expGraph = makeCanvas($("expGraph"), 0.72, 190, s => {
+  const pts=ex.data.map(([u,v])=>[1/u,1/v]), fit=pts.length>=2? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,0.12],yr:ex.mode==="div"?[-0.12,0.1]:[0,0.12],xl:"1/u (cm⁻¹)",yl:"1/v (cm⁻¹)",fit});
+  const truth=ex.mode==="div"?-15:ex.f, tag=ex.mode==="div"?"Secondary data · diverging lens. ":"";
+  if(pts.length<2){ $("expResult").innerHTML=tag+"Record at least three readings to draw the graph."; return; }
+  const fMean=ex.data.reduce((a,[u,v])=>a+u*v/(u+v),0)/ex.data.length;
+  $("expResult").innerHTML = `${tag}Mean f from table = <b>${fMean.toFixed(1)} cm</b>. Slope <b>${fit[0].toFixed(2)}</b>. From the y-intercept f = <b>${(1/fit[1]).toFixed(1)} cm</b>, from the x-intercept f = <b>${(-fit[0]/fit[1]).toFixed(1)} cm</b>.` + ((ex.revealed||ex.mode==="div")? ` True f = <b>${truth.toFixed(1)} cm</b>.` : "");
+}, 300);
+exTable(); exSync();
+const eyeC = makeCanvas($("eyeC"), 0.5, 260, s => {
+  const R=drawEye(s.ctx,s.w,s.h,eye), e=EYES[eye.type];
+  const chips=[[R.ok?"Focused on the retina":"Blurred: focus is "+(R.dz<0?"in front of":"behind")+" the retina", R.ok?"real":"alert"]];
+  if(!R.ok && !R.useGl && eye.type!=="normal") chips.push([eye.type==="myopia"?"Fix: diverging lens":"Fix: converging lens","neutral"]);
+  $("eyeChips").innerHTML=chipsHTML(chips);
+  const gF = eye.type==="normal"? null : glassesF(eye.type);
+  setReadout($("eyeOut"),[["Eye focal length",R.fe.toFixed(2)+" cm"],["Far point",Number.isFinite(farPoint(e))?farPoint(e).toFixed(0)+" cm":"infinity"],["Near point",nearPoint(e).toFixed(0)+" cm"],["Prescription",gF?((100/gF)>0?"+":"")+(100/gF).toFixed(1)+" D":"none needed"],["Lens type",gF?(gF>0?"converging":"diverging"):"—"]]);
+}, 460);
+const prism = makeCanvas($("prism"), 0.56, 280, s => {
+  const R=drawPrism(s.ctx,s.w,s.h,{glass:$("prG").value,i:+$("prI").value,ex:prX});
+  const red=R.hits.find(x=>x[0]===680), vio=R.hits.find(x=>x[0]===410), dev=x=>Math.abs(x[3]-R.inAng).toFixed(1)+"°";
+  setReadout($("prOut"),[["n (red)",red?red[4].toFixed(3):"—"],["n (violet)",vio?vio[4].toFixed(3):"—"],["Red deviates",red?dev(red):"TIR"],["Violet deviates",vio?dev(vio):"TIR"],["Spread",red&&vio?Math.abs(vio[3]-red[3]).toFixed(2)+"°":"—"]]);
+}, 500);
+predC = makeCanvas($("predC"), 0.5, 180, s => { const [conv,u]=PRED[pd.k]; drawLens(s.ctx,s.w,s.h,{conv,u,fa:10,oh:5,range:34,lensFrac:0.5,compact:true,noImage:!pd.shown,bgc:C["surface-2"]}); }, 320);
+pdNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    snell:s=>drawSnell(s.ctx,s.w,s.h,{...o,compact:true}),
+    focus:s=>drawFocus(s.ctx,s.w,s.h,o.conv),
+    lens:s=>drawLens(s.ctx,s.w,s.h,{...o,range:34,lensFrac:0.5,compact:true}),
+    graph:s=>drawGraphMini(s.ctx,s.w,s.h),
+    eye:s=>drawEye(s.ctx,s.w,s.h,{...o,compact:true}),
+    prism:s=>drawPrism(s.ctx,s.w,s.h,{...o,compact:true}),
+  };
+  makeCanvas(el, kind==="graph"||kind==="prism"? 0.62 : kind==="snell"&&LEARN[el.dataset.learn].vis.length===1 ? 0.62 : 0.66, 110, draws[kind], 380);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-case]").forEach(el=>{ const c=CASES[+el.dataset.case]; makeCanvas(el,0.62,150,s=>drawLens(s.ctx,s.w,s.h,{conv:c.conv,u:c.u,fa:10,oh:5,range:34,lensFrac:0.5,compact:true,bgc:C["surface-2"]})); });
+document.querySelectorAll("canvas[data-mini=snell]").forEach(el=>makeCanvas(el,0.66,150,s=>drawSnell(s.ctx,s.w,s.h,{n1:+el.dataset.n1,n2:+el.dataset.n2,i:+el.dataset.i,compact:true})));
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+lnSync();
+})();
+</script>

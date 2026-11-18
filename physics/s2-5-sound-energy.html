@@ -1,0 +1,1656 @@
+<title>Sound Energy Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<style>
+:root{--band-ink:#3b2b21}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--surface)}
+.xlink:hover{border-color:var(--terra)}
+.working.wrap{white-space:normal;font-family:var(--f-body);font-size:.9rem}
+.spec-bullets{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+</style>
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 010 7"/><path d="M19.5 5.5a9 9 0 010 13"/></svg></div>
+        <div style="min-width:0"><b>Sound Energy</b><span>Leaving Cert Physics · Strand 2 · Section 2.5</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details open><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="here"><span class="mono">2.5</span>Sound</li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 2 · Section 2.5 · Sound energy</span>
+          <h1 style="margin-top:12px">Squeeze the air.<br>Hear the <em>wave</em>.<br>See inside the body.</h1>
+          <p class="lede">Sound is a vibration passed from particle to particle. Find out why it needs a medium, how pitch and loudness show up on a wave, and how ultrasound lets doctors see an unborn baby.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="A loudspeaker pushing air particles into compressions and rarefactions"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/3</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">2.5.1</span><span>examine evidence to support the mechanical wave nature of sound</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">2.5.2</span><span>relate the pitch and loudness of sounds to their wave characteristics using observation and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">2.5.3</span><span>investigate the use of ultrasound in technological and medical contexts using secondary sources</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">Students learn about:</p>
+        <ul class="spec-bullets"><li>sound energy needs a medium to travel through</li><li>ultrasound</li></ul>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Pump, listen, measure and scan. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="medium">
+        <div class="labhead"><span class="pill t">Bell jar</span><p class="goal">An electric bell rings inside a glass jar. Pump the air out and listen. Turn the sound on to hear it fade.</p></div>
+        <div class="panel sim">
+          <canvas id="jarC" aria-label="An electric bell ringing inside a bell jar connected to a vacuum pump"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="jrP">Air left in the jar <output id="jrPo">100%</output></label><input type="range" id="jrP" min="0" max="100" step="1" value="100"></div>
+            <div class="ctl"><span class="lbl">Pump</span><div class="btns"><button id="jrOut">Pump air out</button><button id="jrIn">Let air back in</button><button id="jrSnd" aria-pressed="false">🔊 Sound on</button></div></div>
+          </div>
+          <div class="readout" id="jrOut2"></div>
+        </div>
+        <p class="result">In a real jar you never hear perfect silence: a little sound still travels through the wires holding the bell and through the base plate. Those are solids, so they are a medium too.</p>
+        <div class="tries"><div class="try"><b>1</b>Pump the air out. Can you still see the hammer moving?</div><div class="try"><b>2</b>What does that tell you about light compared with sound?</div><div class="try"><b>3</b>Let the air back in. Does the sound come back?</div></div>
+      </div>
+
+      <div class="lab" data-lab="wave" hidden>
+        <div class="labhead"><span class="pill t">Particle model</span><p class="goal">A loudspeaker pushes and pulls the air. Watch the red particle: it vibrates back and forth, but it doesn't travel with the wave.</p></div>
+        <div class="panel sim">
+          <canvas id="ptC" aria-label="Rows of air particles bunched into compressions and spread into rarefactions, with a pressure graph below"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="ptF">Frequency <output id="ptFo">400 Hz</output></label><input type="range" id="ptF" min="100" max="1000" step="10" value="400"></div>
+            <div class="ctl"><label for="ptA">Amplitude <output id="ptAo">70%</output></label><input type="range" id="ptA" min="0.1" max="1" step="0.05" value="0.7"></div>
+            <div class="ctl"><span class="lbl">Animation (slowed right down)</span><div class="btns"><button id="ptPlay" aria-pressed="true">Pause</button><button id="ptMark" aria-pressed="true">Labels on</button></div></div>
+          </div>
+          <div class="readout" id="ptOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Pause it. Point to a compression and a rarefaction.</div><div class="try"><b>2</b>Raise the frequency. What happens to the wavelength?</div><div class="try"><b>3</b>Does the red particle ever reach the right-hand side?</div></div>
+      </div>
+
+      <div class="lab" data-lab="evidence" hidden>
+        <div class="labhead"><span class="pill t">Two loudspeakers</span><p class="goal">Two speakers play the same note. Walk along the line and find loud and quiet spots. Only waves can cancel out like this.</p></div>
+        <div class="panel sim">
+          <canvas id="itC" aria-label="Wavefronts from two loudspeakers overlapping, with a graph of loudness along a line on the right"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="itY">Your position along the line <output id="itYo">0.00 m</output></label><input type="range" id="itY" min="-1" max="1" step="0.01" value="0"></div>
+            <div class="ctl"><label for="itF">Frequency <output id="itFo">700 Hz</output></label><input type="range" id="itF" min="200" max="1500" step="10" value="700"></div>
+            <div class="ctl"><label for="itD">Speaker separation <output id="itDo">1.00 m</output></label><input type="range" id="itD" min="0.4" max="2" step="0.05" value="1"></div>
+            <div class="ctl"><span class="lbl">Sound</span><div class="btns"><button id="itSnd" aria-pressed="false">🔊 Sound on</button></div></div>
+          </div>
+          <div class="readout" id="itOut"></div>
+        </div>
+        <p class="result">Interference is part of section 2.6 (superposition). Here it is evidence that sound is a wave: particles can't cancel each other out, but waves can.</p>
+        <div class="tries"><div class="try"><b>1</b>Find a quiet spot. What is the path difference in wavelengths?</div><div class="try"><b>2</b>Raise the frequency. Do the loud spots get closer together?</div><div class="try"><b>3</b>Turn the sound on and slide slowly through a quiet spot.</div></div>
+      </div>
+
+      <div class="lab" data-lab="speed" hidden>
+        <div class="labhead"><span class="pill t">Experiment</span><p class="goal">Stand in front of a tall wall. Clap and time the echo at different distances. Plot 2d against t: the slope is the speed of sound.</p></div>
+        <div class="panel sim">
+          <canvas id="ecC" aria-label="A student clapping in front of a wall, with the sound pulse travelling to the wall and back"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="ecD">Distance to the wall <output id="ecDo">100 m</output></label><input type="range" id="ecD" min="20" max="200" step="5" value="100"></div>
+            <div class="ctl"><span class="lbl">Timing method</span><div class="btns" id="ecM"><button data-v="watch" aria-pressed="true">Stopwatch</button><button data-v="logger" aria-pressed="false">Two microphones + datalogger</button></div></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="ecRec">Clap and record</button><button id="ecClear">Clear</button><button id="ecNew">New day</button><button id="ecReveal">Reveal answer</button></div></div>
+          </div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>d (m)</th><th>2d (m)</th><th>t (s)</th><th></th></tr></thead><tbody id="ecTable"></tbody></table><div class="empty" id="ecEmpty">No readings yet. Record at five or more distances.</div></div>
+            <div class="graphbox"><canvas id="ecGraph" aria-label="Graph of distance travelled 2d against echo time t"></canvas><p class="result" id="ecResult"></p></div>
+          </div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Why is the distance the sound travels 2d, not d?</div><div class="try"><b>2</b>Compare your speed from the stopwatch and from the datalogger.</div><div class="try"><b>3</b>The speed of sound rises with temperature. Was it a warm or cold day?</div></div>
+      </div>
+
+      <div class="lab" data-lab="pitch" hidden>
+        <div class="labhead"><span class="pill t">Oscilloscope</span><p class="goal">A signal generator drives a loudspeaker, and a microphone shows the sound on an oscilloscope. Change the frequency and the amplitude, and listen.</p></div>
+        <div class="panel sim">
+          <canvas id="scC" aria-label="An oscilloscope trace of a sound wave"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="scF">Frequency <output id="scFo">440 Hz</output></label><input type="range" id="scF" min="50" max="2000" step="10" value="440"></div>
+            <div class="ctl"><label for="scA">Amplitude <output id="scAo">50%</output></label><input type="range" id="scA" min="0.05" max="1" step="0.05" value="0.5"></div>
+            <div class="ctl"><span class="lbl">Timebase (per division)</span><div class="btns" id="scTB"><button data-v="0.5">0.5 ms</button><button data-v="1" aria-pressed="true">1 ms</button><button data-v="2">2 ms</button><button data-v="5">5 ms</button></div></div>
+            <div class="ctl"><span class="lbl">Sound</span><div class="btns" id="scK"><button data-v="pure" aria-pressed="true">Pure tone</button><button data-v="rich">Instrument</button><button id="scSnd" aria-pressed="false">🔊 Sound on</button></div></div>
+          </div>
+          <div class="readout" id="scOut"></div>
+        </div>
+        <p class="result">Keep the volume low when you turn the sound on. The dashed trace is a 440 Hz reference note (concert A).</p>
+        <div class="tries"><div class="try"><b>1</b>Double the frequency. What happens to the number of waves on the screen, and to the pitch?</div><div class="try"><b>2</b>Change only the amplitude. Does the pitch change?</div><div class="try"><b>3</b>Measure T from the screen (count divisions) and work out f = 1 / T.</div></div>
+      </div>
+
+      <div class="lab" data-lab="ultra" hidden>
+        <div class="labhead"><span class="pill t">Ultrasound scanner</span><p class="goal">A probe sends short pulses of ultrasound into the body. Each boundary sends back an echo. Use the echo times to find the depths.</p></div>
+        <div class="panel sim">
+          <canvas id="usC" aria-label="Layers of tissue with an ultrasound pulse, and the echo trace below"></canvas>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Use</span><div class="btns" id="usMode"><button data-v="body" aria-pressed="true">Pregnancy scan</button><button data-v="sea" aria-pressed="false">Sonar at sea</button></div></div>
+            <div class="ctl"><span class="lbl">Frequency (scan only)</span><div class="btns" id="usF"><button data-v="2">2 MHz</button><button data-v="5" aria-pressed="true">5 MHz</button><button data-v="10">10 MHz</button></div></div>
+            <div class="ctl" style="grid-column:1/-1"><label for="usT">Cursor: echo time <output id="usTo">0 μs</output></label><input type="range" id="usT" min="0" max="1" step="0.001" value="0.5"></div>
+          </div>
+          <div class="readout" id="usOut"></div>
+          <div class="working wrap" id="usWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Put the cursor on the baby's skull echo. How deep is it?</div><div class="try"><b>2</b>Try 10 MHz. Which echoes get weaker, and which get sharper?</div><div class="try"><b>3</b>Switch to sonar. How deep is the sea bed?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of sound energy"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Pitch and loudness · LO 2.5.2</p><h2>Six sounds on an oscilloscope</h2></div><p>Same timebase for all six: 1 ms per division.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Frequency ranges</p><h2>What can you hear?</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="hear" data-k="0"></canvas><h3>Infrasound: below 20 Hz</h3><p>Too low for us. Elephants, whales and earthquakes make it.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="hear" data-k="1"></canvas><h3>Audible: 20 Hz to 20 kHz</h3><p>Human hearing. The top limit falls as you get older.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="hear" data-k="2"></canvas><h3>Ultrasound: above 20 kHz</h3><p>Too high for us. Bats, dolphins and medical scanners use it.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Evidence it's mechanical</p><h2>Speed of sound in different materials</h2></div><p>Closer, more tightly linked particles pass the vibration on faster. In a vacuum: zero.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Ultrasound in medicine and technology · LO 2.5.3</p><h2>Ultrasound around you</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Write the formula first, then substitute, then the answer <b>with its unit</b>.</li>
+            <li>Sound is a <b>mechanical, longitudinal</b> wave. It needs a <b>medium</b>; light doesn't.</li>
+            <li>Bell jar: say what you <b>hear</b> (quieter), what you <b>see</b> (hammer still moving) and the <b>conclusion</b>.</li>
+            <li><b>Pitch ↔ frequency</b>. <b>Loudness ↔ amplitude</b>. Don't mix them up.</li>
+            <li>Echo questions: the sound goes there and back, so the distance is <b>2d</b>: v = 2d / t.</li>
+            <li>Convert first: ms × 10⁻³, μs × 10⁻⁶, kHz × 10³, MHz × 10⁶.</li>
+            <li>Ultrasound means frequency <b>above 20 kHz</b>. For depth use d = vt / 2.</li>
+            <li>For a use of ultrasound, name it, say what it detects, and why ultrasound suits it (e.g. non-ionising).</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The verb tells you what the examiner wants. The learning outcomes for this section use examine, relate and investigate.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="text" placeholder="e.g. 0.68 or 3.1e-4" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Read the traces</h2></div></div>
+          <canvas id="predC" aria-label="Two oscilloscope traces, A and B"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns" data-g="0"><button data-a="A">A</button><button data-a="Same">The same</button><button data-a="B">B</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next pair</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: compression, pitch, ultrasound, echo…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>The wave equation from 2.2 does most of the work here. Echo and depth formulae come from speed = distance ÷ time.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Wave equation</span><span class="big">v = fλ</span><dl><dt>v</dt><dd>speed of sound in m/s</dd><dt>f</dt><dd>frequency in Hz</dd><dt>λ</dt><dd>wavelength in m</dd></dl><div class="ex">512 Hz in air: λ = 340 / 512 = 0.66 m</div></div>
+        <div class="panel fcell"><span class="pill">Period</span><span class="big">T = 1 / f</span><dl><dt>T</dt><dd>time for one vibration, in s</dd></dl><div class="ex">440 Hz: T = 1 / 440 = 2.27 ms</div></div>
+        <div class="panel fcell"><span class="pill">Echo</span><span class="big">v = 2d / t</span><dl><dt>d</dt><dd>distance to the reflector</dd><dt>t</dt><dd>time from sound to echo</dd></dl><div class="ex">Wall 85 m away, echo after 0.50 s: v = 340 m/s</div></div>
+        <div class="panel fcell"><span class="pill">Depth from an echo</span><span class="big">d = vt / 2</span><dl><dt>v</dt><dd>1540 m/s in soft tissue, 1500 m/s in sea water</dd></dl><div class="ex">Echo after 100 μs in tissue: d = 7.7 cm</div></div>
+        <div class="panel fcell"><span class="pill">Useful values</span><span class="big">v ≈ 340 m/s</span><dl><dt>air</dt><dd>about 340 m/s (331 m/s at 0 °C)</dd><dt>water</dt><dd>about 1500 m/s</dd><dt>steel</dt><dd>about 5900 m/s</dd></dl><div class="ex">Hearing: 20 Hz to 20 kHz. Ultrasound: above 20 kHz.</div></div>
+        <div class="panel fcell"><span class="pill a">Extra</span><span class="big">v ≈ 331 + 0.6θ</span><dl><dt>θ</dt><dd>air temperature in °C</dd></dl><div class="ex">20 °C: v ≈ 343 m/s</div></div>
+        <div class="panel fcell"><span class="pill a">Extra</span><span class="big">dB: +10 = ×10 intensity</span><dl><dt>dB</dt><dd>decibels, a scale of sound level</dd><dt>×2 amplitude</dt><dd>+6 dB</dd></dl><div class="ex">60 dB talk, 85 dB: wear ear protection</div></div>
+      </div>
+      <footer>
+        <p>Built on section 2.5 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes are quoted from the specification. Experiment data is simulated with small random errors. Speed of sound in air taken as 340 m/s unless stated.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const D2R = Math.PI/180, R2D = 180/Math.PI;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent","--band-ink"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  medium:'<path d="M6 21V10a6 6 0 0112 0v11"/><path d="M3 21h18"/><circle cx="12" cy="12" r="2"/><path d="M12 6v4"/>',
+  wave:'<circle cx="3" cy="12" r="1"/><circle cx="5.5" cy="12" r="1"/><circle cx="7" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="16" cy="12" r="1"/><circle cx="17.5" cy="12" r="1"/><circle cx="21" cy="12" r="1"/><path d="M5 7h3M15 7h4M5 17h3M15 17h4"/>',
+  evidence:'<path d="M3 8h3v8H3z"/><path d="M3 4h3v3H3z" opacity=".0"/><path d="M8 7a7 7 0 010 10M11 4a11 11 0 010 16"/><path d="M15 9h6M15 15h6"/>',
+  speed:'<circle cx="12" cy="13" r="8"/><path d="M12 13l4-4M10 2h4"/>',
+  pitch:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M4 12c1.5-5 3-5 4.5 0s3 5 4.5 0 3-5 4.5 0 2 3 2.5 2"/>',
+  ultra:'<path d="M8 3h8l-1 5H9z"/><path d="M7 12a6 3 0 0010 0M5 15a8 4 0 0014 0M3 18a10 5 0 0018 0"/>',
+  baby:'<circle cx="12" cy="8" r="4"/><path d="M6 21c0-4 3-7 6-7s6 3 6 7"/>',
+  boat:'<path d="M3 15h18l-3 4H6z"/><path d="M12 15V5l5 7h-5"/><path d="M12 19v3M9 21l3 1 3-1"/>',
+  stone:'<path d="M7 10l4-5 6 3 1 7-6 4-6-3z"/><path d="M2 12h3M19 4l-2 2M20 18l-2-2"/>',
+  sparkle:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/>',
+  crack:'<rect x="3" y="7" width="18" height="10" rx="1"/><path d="M10 7l2 4-2 2 2 4"/>',
+  car:'<path d="M3 16v-4l2-5h14l2 5v4z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>',
+  heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 10-7 10z"/>',
+  bat:'<path d="M2 9c2 0 3 2 4 4 1-2 3-2 4 0l2-3 2 3c1-2 3-2 4 0 1-2 2-4 4-4-1 4-3 8-7 9l-3-2-3 2c-4-1-6-5-7-9z"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"medium", name:"Needs a medium", short:"No particles, no sound: the bell jar experiment.", tint:"var(--blush)"},
+  {id:"wave", name:"A longitudinal wave", short:"Compressions, rarefactions and vibrating particles.", tint:"var(--apricot)"},
+  {id:"evidence", name:"Evidence it's a wave", short:"Echoes, diffraction and two-speaker interference.", tint:"var(--sage)"},
+  {id:"speed", name:"Speed of sound", short:"Time an echo and plot a graph to find v.", tint:"var(--cream)"},
+  {id:"pitch", name:"Pitch & loudness", short:"Pitch is frequency. Loudness is amplitude.", tint:"var(--blush)"},
+  {id:"ultra", name:"Ultrasound", short:"Above 20 kHz: scans, sonar, cleaning and more.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary ---------- */
+const GLOSS = [
+  ["Sound","","A mechanical, longitudinal wave made by a vibrating object and passed on by the particles of a medium.","medium"],
+  ["Mechanical wave","","A wave that needs a medium: the particles of the medium pass the vibration on. Sound and water waves are mechanical.","medium"],
+  ["Medium","","The material a wave travels through, such as air, water or steel.","medium"],
+  ["Vacuum","","Empty space with no particles. Sound can't travel through a vacuum.","medium"],
+  ["Bell jar experiment","","An electric bell ringing in a sealed jar goes quiet as the air is pumped out, but you can still see it ringing. Evidence that sound needs a medium.","medium"],
+  ["Vacuum pump","","A pump that removes air from a container.","medium"],
+  ["Vibration","","A repeated back-and-forth motion. All sounds start with something vibrating.","medium"],
+  ["Longitudinal wave","","A wave in which the particles vibrate parallel to the direction the wave travels. Sound is longitudinal.","wave"],
+  ["Transverse wave","","A wave in which the particles vibrate at right angles to the direction of travel, such as waves on a string or light.","wave"],
+  ["Compression","C","A region of a longitudinal wave where the particles are squashed closer together, so the pressure is higher.","wave"],
+  ["Rarefaction","R","A region of a longitudinal wave where the particles are spread further apart, so the pressure is lower.","wave"],
+  ["Amplitude","A","The maximum displacement of a particle from its rest position. A bigger amplitude means a louder sound.","wave"],
+  ["Wavelength","λ","The distance between two neighbouring compressions (or rarefactions). Unit: metre.","wave","λ = v / f"],
+  ["Frequency","f","The number of vibrations per second. Unit: hertz (Hz).","wave","f = 1 / T"],
+  ["Period","T","The time for one complete vibration. Unit: second.","wave","T = 1 / f"],
+  ["Hertz","Hz","The unit of frequency: one vibration per second. 1 kHz = 1000 Hz.","wave"],
+  ["Rest position","","Where a particle sits when no wave is passing.","wave"],
+  ["Reflection","","Sound bouncing off a surface. An echo is reflected sound.","evidence"],
+  ["Echo","","A reflected sound heard a short time after the original sound.","evidence","v = 2d / t"],
+  ["Diffraction","","The spreading of a wave around an obstacle or through a gap. It is why you can hear around corners.","evidence"],
+  ["Refraction","","The change in direction of a wave when its speed changes. Sound bends in air layers at different temperatures.","evidence"],
+  ["Interference","","Two waves overlapping and adding together, giving loud and quiet regions. Only waves do this.","evidence"],
+  ["Constructive interference","","Waves arriving in step (path difference a whole number of wavelengths) add up: a loud spot.","evidence"],
+  ["Destructive interference","","Waves arriving out of step (path difference a half-wavelength, 1.5λ …) cancel: a quiet spot.","evidence"],
+  ["Path difference","Δ","The difference between the distances from two sources to a point.","evidence"],
+  ["Speed of sound","v","About 340 m/s in air, about 1500 m/s in water and about 5900 m/s in steel. It rises with air temperature.","speed","v = fλ"],
+  ["Wave equation","","Speed = frequency × wavelength.","speed","v = fλ"],
+  ["Stopwatch","","A hand-operated timer. Your reaction time adds an error of about 0.1 s to 0.2 s.","speed"],
+  ["Reaction time","","The delay between seeing or hearing something and responding to it.","speed"],
+  ["Datalogger","","Equipment that records measurements automatically, such as two microphones linked to a timer.","speed"],
+  ["Primary data","","Data you collect yourself.","speed"],
+  ["Secondary data","","Data collected by someone else, such as published values or research articles.","speed"],
+  ["Pitch","","How high or low a sound seems. It depends on the frequency: higher frequency, higher pitch.","pitch"],
+  ["Loudness","","How loud a sound seems. It depends mainly on the amplitude: bigger amplitude, louder sound.","pitch"],
+  ["Oscilloscope","CRO","An instrument that shows a signal as a trace on a screen. With a microphone it shows the shape of a sound wave.","pitch"],
+  ["Timebase","","The oscilloscope setting for the time each horizontal division stands for, such as 1 ms/div.","pitch"],
+  ["Signal generator","","A device that makes an electrical signal of a chosen frequency to drive a loudspeaker.","pitch"],
+  ["Tuning fork","","A metal fork that vibrates at one fixed frequency, stamped on it (e.g. 512 Hz).","pitch"],
+  ["Quality","timbre","What makes the same note sound different on different instruments: the shape of the wave, from its overtones.","pitch"],
+  ["Decibel","dB","A unit of sound level. +10 dB means ten times the intensity. Long exposure above 85 dB can damage hearing.","pitch"],
+  ["Audible range","","The range of frequencies humans can hear: about 20 Hz to 20 000 Hz.","pitch"],
+  ["Infrasound","","Sound below 20 Hz, too low for humans to hear.","pitch"],
+  ["Ultrasound","","Sound with a frequency above 20 kHz, too high for humans to hear.","ultra"],
+  ["Transducer","probe","A device that turns electrical signals into ultrasound and detects the echoes, usually with a piezoelectric crystal.","ultra"],
+  ["Pulse-echo","","Sending a short pulse and timing its echo to find the distance to a boundary.","ultra","d = vt / 2"],
+  ["Coupling gel","","Gel spread between the probe and the skin. It removes air, which would otherwise reflect almost all the ultrasound.","ultra"],
+  ["Boundary","","Where two materials meet, such as fat and muscle. Some ultrasound reflects at every boundary.","ultra"],
+  ["Sonar","","Sound navigation and ranging: using echoes of sound or ultrasound to find depth, fish or objects underwater.","ultra"],
+  ["Echolocation","","How bats and dolphins find their way and their prey with ultrasound echoes.","ultra"],
+  ["Lithotripsy","","Breaking up kidney stones with focused pulses of shock waves or ultrasound, without surgery.","ultra"],
+  ["Ultrasonic cleaning","","Cleaning jewellery, lenses or dental tools in a liquid shaken by ultrasound.","ultra"],
+  ["Non-destructive testing","NDT","Using ultrasound echoes to find hidden cracks in metal parts, pipes or welds without damaging them.","ultra"],
+  ["Doppler ultrasound","","Ultrasound that measures the speed of blood flow from the frequency shift of its echoes (see 2.7).","ultra"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["medium","Medium"],["vacuum","Vacuum"],["mechanical","Mechanical wave"],["longitudinal","Longitudinal wave"],["compressions","Compression"],["rarefactions","Rarefaction"],["amplitude","Amplitude"],["frequency","Frequency"],["wavelength","Wavelength"],["echo","Echo"],["diffracts","Diffraction"],["interference","Interference"],["pitch","Pitch"],["oscilloscope","Oscilloscope"],["ultrasound","Ultrasound"],["coupling gel","Coupling gel"],["sonar","Sonar"]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const s3 = x => (+x.toPrecision(3)).toString();
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
+const sup = n => String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(x,d=3){ if(x===0) return "0"; let e=Math.floor(Math.log10(Math.abs(x))), ms=(x/Math.pow(10,e)).toFixed(d-1);
+  if(Math.abs(+ms)>=10){ e++; ms=(x/Math.pow(10,e)).toFixed(d-1); } return e===0? ms : `${ms} × 10${sup(e)}`; }
+const prand = i => { const x=Math.sin(i*127.1+311.7)*43758.5453; return x-Math.floor(x); };
+function person(ctx,x,y,col,label){ ctx.save(); ctx.fillStyle=col; ctx.strokeStyle=col; ctx.lineWidth=3; ctx.lineCap="round";
+  ctx.beginPath(); ctx.arc(x,y-15,5,0,7); ctx.fill(); ctx.beginPath(); ctx.moveTo(x,y-9); ctx.lineTo(x,y+4); ctx.moveTo(x-6,y-4); ctx.lineTo(x+6,y-4); ctx.moveTo(x,y+4); ctx.lineTo(x-5,y+12); ctx.moveTo(x,y+4); ctx.lineTo(x+5,y+12); ctx.stroke(); ctx.restore();
+  if(label) text(ctx,label,x+10,y-12,col,F(12)); }
+function ear(ctx,x,y,lbl){ ctx.save(); ctx.fillStyle=C.olive; ctx.beginPath(); ctx.arc(x,y,11,0,7); ctx.fill(); ctx.restore(); text(ctx,lbl,x,y+1,C["on-accent"],F(11),"center","middle"); }
+function speaker(ctx,x,y,s=1,cone=0){ ctx.save(); ctx.translate(x,y); ctx.scale(s,s); ctx.fillStyle=C.ink; ctx.fillRect(-14,-8,8,16); ctx.beginPath(); ctx.moveTo(-6,-8); ctx.lineTo(2+cone,-16); ctx.lineTo(2+cone,16); ctx.lineTo(-6,8); ctx.closePath(); ctx.fill(); ctx.restore(); }
+
+/* ================= SOUND MODELS + DRAWINGS ================= */
+const VS = 340;
+// Bell jar. p = fraction of air left (0..1)
+function drawJar(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, p=o.p, t=o.t||0;
+  const base=h*(cp?0.86:0.8), jw=Math.min(cp?w*0.62:w*0.36,240), jh=h*(cp?0.7:0.64), cx=cp?w*0.5:w*0.36, x0=cx-jw/2, x1=cx+jw/2, top=base-jh, R=jw/2;
+  ctx.fillStyle=C.olive; ctx.fillRect(x0-14,base,jw+28,8);
+  if(!cp){ ctx.fillStyle=C.muted; ctx.fillRect(x1+14,base+2,w*0.1,5); ctx.fillStyle=C.ink; ctx.beginPath(); ctx.roundRect(x1+14+w*0.1,base-22,44,30,6); ctx.fill(); text(ctx,"vacuum pump",x1+36+w*0.1,base+24,C.muted,F(11),"center"); }
+  // particles inside
+  const N=Math.round((cp?40:80)*p); let n=0;
+  for(let i=0;n<N&&i<600;i++){ const px=x0+6+prand(i)*(jw-12), py=top+6+prand(i+999)*(jh-12);
+    if(py<top+R && Math.hypot(px-cx,py-(top+R))>R-6) continue; n++;
+    const jx=Math.sin(t*9+i)*1.5, jy=Math.cos(t*7+i*1.3)*1.5; ctx.fillStyle=C.muted; ctx.beginPath(); ctx.arc(px+jx,py+jy,cp?1.6:2.2,0,7); ctx.fill(); }
+  // bell
+  const by=top+jh*0.45, br=cp?12:18, shake=Math.sin(t*60)*(cp?2:3);
+  line(ctx,cx,top+4,cx,by-br,C.muted,1.5);
+  ctx.fillStyle=C.warn; ctx.beginPath(); ctx.arc(cx,by,br,Math.PI,0); ctx.lineTo(cx+br,by+br*0.4); ctx.lineTo(cx-br,by+br*0.4); ctx.closePath(); ctx.fill();
+  line(ctx,cx+br*0.9,by+br*0.6,cx+br*0.2+shake,by+br*0.2,C.ink,2.5); ctx.fillStyle=C.ink; ctx.beginPath(); ctx.arc(cx+br*0.2+shake,by+br*0.2,3,0,7); ctx.fill();
+  // jar glass
+  ctx.save(); ctx.strokeStyle=C["glass-edge"]; ctx.fillStyle=C.glass; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(x0,base); ctx.lineTo(x0,top+R); ctx.arc(cx,top+R,R,Math.PI,0); ctx.lineTo(x1,base); ctx.fill(); ctx.stroke(); ctx.restore();
+  // sound waves inside and outside, strength ∝ air left
+  if(p>0.02){ ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2; for(let k=0;k<4;k++){ const r=((t*40+k*22)%88)+br+4; ctx.globalAlpha=p*(1-(r-br)/92); ctx.beginPath(); ctx.arc(cx,by,r,-0.7,0.7); ctx.stroke(); } ctx.restore();
+    if(!cp){ ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2.2; for(let k=0;k<4;k++){ const r=((t*60+k*30)%120); ctx.globalAlpha=p*p*(1-r/125); ctx.beginPath(); ctx.arc(x1+4,by,r+6,-0.5,0.5); ctx.stroke(); } ctx.restore(); } }
+  if(!cp){ ear(ctx,w-26,by,"you"); text(ctx,`air left: ${Math.round(p*100)}%`,12,20,C.ink,F(13)); text(ctx,p<0.02?"You see the hammer move, but hear almost nothing":"Sound passes from particle to particle",12,38,p<0.02?C.bad:C.muted,F(12)); }
+  else text(ctx,o.label||"",8,15,C.ink,F(11));
+}
+const jarDB = p => p<=0.005? 0 : Math.max(0, 75+20*Math.log10(p));
+// Particles in a longitudinal wave. Visual wavelength shrinks as f rises; animation is slowed 250 times.
+function drawParticles(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||o.hero, hs=cp? h : Math.round(h*0.62), t=o.t||0;
+  const x0=cp?34:58, x1=w-8, y0=cp?12:18, y1=hs-(cp?10:16), gap=cp?9:11;
+  const lam=Math.max(40,Math.min(w*0.9,w*0.55*(250/o.f))), k=2*Math.PI/lam, wt=2*Math.PI*(o.f/250)*t, amp=Math.min(lam*0.18,14)*o.A;
+  speaker(ctx,x0-22,(y0+y1)/2,cp?1:1.4,-amp*Math.sin(wt)*0.5);
+  let i=0; const xm=x0+Math.round((w*0.45-x0)/gap)*gap, rows=Math.floor((y1-y0)/gap), ym=y0+Math.floor(rows/2)*gap;
+  for(let x=x0;x<x1;x+=gap){ for(let y=y0;y<=y1;y+=gap){ i++; const jx=(prand(i)-.5)*gap*0.5, jy=(prand(i+500)-.5)*gap*0.5, s=amp*Math.sin(k*(x-x0)-wt);
+    if(x===xm && y===ym) continue; ctx.fillStyle=C.ink; ctx.globalAlpha=0.7; ctx.beginPath(); ctx.arc(x+jx+s,y+jy,cp?1.7:2.2,0,7); ctx.fill(); ctx.globalAlpha=1; } }
+  const sm=amp*Math.sin(k*(xm-x0)-wt); line(ctx,xm,y0-4,xm,y1+4,C.terra,1.2,[3,3]); ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(xm+sm,ym,cp?3.5:5,0,7); ctx.fill();
+  if(o.hero || o.compact){ if(o.compact) text(ctx,o.label||"",8,12,C.ink,F(11)); return; }
+  // pressure graph
+  const gx0=x0, gx1=x1, gm=hs+(h-hs)/2+4, ga=(h-hs)*0.32;
+  line(ctx,gx0,gm,gx1,gm,C.muted,1.2); text(ctx,"pressure",gx0,hs+14,C.ink,F(11)); text(ctx,"distance from speaker →",gx1,h-6,C.muted,F(11),"right");
+  ctx.save(); ctx.strokeStyle=C.olive; ctx.lineWidth=2.4; ctx.beginPath(); for(let x=gx0;x<=gx1;x+=1){ const y=gm+ga*o.A*Math.cos(k*(x-x0)-wt); x===gx0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); ctx.restore();
+  if(o.mark){ let first=null;
+    for(let n=-2;n<40;n++){ const xc=x0+(Math.PI+wt+2*Math.PI*n)/k; if(xc<x0+6||xc>x1-6) continue; if(first==null) first=xc; text(ctx,"C",xc,hs-1,C.terra,F(12),"center"); }
+    for(let n=-2;n<40;n++){ const xr=x0+(wt+2*Math.PI*n)/k; if(xr<x0+6||xr>x1-6) continue; text(ctx,"R",xr,hs-1,C.olive,F(12),"center"); }
+    if(first!=null && first+lam<x1){ const ya=gm-ga-8; line(ctx,first,ya,first+lam,ya,C.ink,1.4); arrowHead(ctx,first,ya,Math.PI,C.ink,7); arrowHead(ctx,first+lam,ya,0,C.ink,7); text(ctx,"λ",first+lam/2,ya-4,C.ink,F(13),"center"); } }
+}
+// Two-speaker interference. Distances in metres; listener line 5 m away.
+const IT_L=5;
+function itI(f,d,y){ const lam=VS/f, r1=Math.hypot(IT_L,y+d/2), r2=Math.hypot(IT_L,y-d/2), D=r1-r2; return {r1,r2,D,lam,I:Math.pow(Math.cos(Math.PI*D/lam),2)}; }
+function drawInterf(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, t=o.t||0, sx=cp?18:34, lx=w-(cp?34:74), sc=(lx-sx)/IT_L, cy=h/2;
+  const s1=[sx,cy-o.d/2*sc], s2=[sx,cy+o.d/2*sc], lamPx=VS/o.f*sc, ph=((t*1.2)%1)*lamPx, diag=Math.hypot(w,h);
+  ctx.save(); ctx.beginPath(); ctx.rect(sx,0,lx-sx,h); ctx.clip(); ctx.lineWidth=cp?1.2:1.6;
+  [[s1,C.terra],[s2,C.olive]].forEach(([s,col])=>{ ctx.strokeStyle=col; ctx.globalAlpha=0.45; for(let r=ph;r<diag;r+=lamPx){ if(r<2) continue; ctx.beginPath(); ctx.arc(s[0],s[1],r,-Math.PI/2,Math.PI/2); ctx.stroke(); } });
+  ctx.restore();
+  speaker(ctx,s1[0],s1[1],cp?0.7:1); speaker(ctx,s2[0],s2[1],cp?0.7:1);
+  line(ctx,lx,0,lx,h,C.line,2,[5,5]);
+  const gw=cp?22:52; ctx.save(); ctx.fillStyle=C.apricot; ctx.globalAlpha=0.5; ctx.beginPath(); ctx.moveTo(lx+6,0);
+  for(let y=0;y<=h;y+=2){ const I=itI(o.f,o.d,(y-cy)/sc).I; ctx.lineTo(lx+6+I*gw,y); } ctx.lineTo(lx+6,h); ctx.closePath(); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2; ctx.beginPath(); for(let y=0;y<=h;y+=2){ const I=itI(o.f,o.d,(y-cy)/sc).I; y===0?ctx.moveTo(lx+6+I*gw,y):ctx.lineTo(lx+6+I*gw,y); } ctx.stroke(); ctx.restore();
+  if(o.y!=null){ const ly=cy+o.y*sc; ear(ctx,lx,ly,cp?"":"you"); }
+  if(!cp){ text(ctx,"loudness",w-8,14,C.muted,F(11),"right"); text(ctx,"5 m",(sx+lx)/2,h-8,C.muted,F(11),"center"); }
+}
+// Echo from a wall. pt = time since the clap (s) for the pulse animation.
+function drawEcho(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, gy=h*0.78, px=cp?26:44, xw=(cp?50:80)+(o.d/200)*(w-(cp?72:120));
+  ctx.fillStyle=C["surface-2"]; ctx.fillRect(0,gy,w,h-gy); line(ctx,0,gy,w,gy,C.olive,2);
+  ctx.fillStyle=C.terra; ctx.fillRect(xw,gy-h*0.62,cp?10:16,h*0.62); ctx.strokeStyle=C["on-accent"]; ctx.lineWidth=1; for(let y=gy-h*0.62+10;y<gy;y+=10){ ctx.beginPath(); ctx.moveTo(xw,y); ctx.lineTo(xw+(cp?10:16),y); ctx.stroke(); }
+  person(ctx,px,gy-14,C.ink,cp?"":"you");
+  const yp=gy-28;
+  if(o.pt!=null && o.v){ const s=o.v*o.pt; if(s<2*o.d){ const out=s<o.d, x= out? px+12+(s/o.d)*(xw-px-12) : xw-((s-o.d)/o.d)*(xw-px-12);
+      ctx.save(); ctx.strokeStyle=out?C.terra:C.olive; ctx.lineWidth=2.4; for(let k=0;k<3;k++){ ctx.globalAlpha=1-k*0.3; ctx.beginPath(); if(out) ctx.arc(x-k*7,yp,16,-0.6,0.6); else ctx.arc(x+k*7,yp,16,Math.PI-0.6,Math.PI+0.6); ctx.stroke(); } ctx.restore(); } }
+  else if(cp){ ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2; [0.3,0.5].forEach(f=>{ ctx.beginPath(); ctx.arc(px+12+f*(xw-px),yp-8,12,-0.6,0.6); ctx.stroke(); }); ctx.strokeStyle=C.olive; [0.6,0.8].forEach(f=>{ ctx.beginPath(); ctx.arc(px+12+f*(xw-px),yp+10,12,Math.PI-0.6,Math.PI+0.6); ctx.stroke(); }); ctx.restore(); }
+  const ya=gy+(cp?14:20); line(ctx,px,ya,xw,ya,C.ink,1.4); arrowHead(ctx,px,ya,Math.PI,C.ink,7); arrowHead(ctx,xw,ya,0,C.ink,7); text(ctx,"d"+(cp?"":` = ${o.d} m`),(px+xw)/2,ya-4,C.ink,F(12),"center");
+  if(!cp){ const bw=150, bx=8, by=8; ctx.fillStyle=C["surface-2"]; ctx.strokeStyle=C.line; ctx.lineWidth=1.5; ctx.beginPath(); ctx.roundRect(bx,by,bw,46,10); ctx.fill(); ctx.stroke();
+    text(ctx,o.method==="logger"?"datalogger":"stopwatch",bx+10,by+16,C.muted,F(11)); text(ctx,o.reading!=null? o.reading.toFixed(o.method==="logger"?4:2)+" s" : "— s",bx+10,by+38,C.ink,M(17)); }
+  else text(ctx,"there and back: 2d",8,14,C.ink,F(11));
+}
+// Oscilloscope trace. tb = ms per division (10 divisions across).
+function wave(kind,ph){ if(kind==="rich") return (Math.sin(ph)+0.5*Math.sin(2*ph)+0.3*Math.sin(3*ph)+0.15*Math.sin(5*ph))/1.45; if(kind==="noise") return (Math.sin(ph*1.7)+Math.sin(ph*3.31+1)+Math.sin(ph*7.13+2)+Math.sin(ph*11.7))/3; return Math.sin(ph); }
+function drawScope(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, tb=o.tb||1, x0=cp?4:10, x1=w-x0, y0=cp?(o.label?18:4):10, y1=h-(cp?4:24), dx=(x1-x0)/10, dy=(y1-y0)/8, mid=(y0+y1)/2, amp=(y1-y0)*0.46;
+  ctx.save(); ctx.strokeStyle=C.grid; ctx.lineWidth=1; for(let k=0;k<=10;k++){ ctx.beginPath(); ctx.moveTo(x0+k*dx,y0); ctx.lineTo(x0+k*dx,y1); ctx.stroke(); } for(let k=0;k<=8;k++){ ctx.beginPath(); ctx.moveTo(x0,y0+k*dy); ctx.lineTo(x1,y0+k*dy); ctx.stroke(); } ctx.restore();
+  line(ctx,x0,mid,x1,mid,C.line,1.4);
+  const T=tb*10/1000, trace=(f,A,kind,col,wd,dash)=>{ ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=wd; ctx.lineJoin="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath();
+    for(let x=x0;x<=x1;x+=0.5){ const tt=(x-x0)/(x1-x0)*T, y=mid-A*amp*wave(kind,2*Math.PI*f*tt+(o.ph||0)); x===x0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); ctx.restore(); };
+  if(o.ref) trace(o.ref.f,o.ref.A,"pure",C.olive,1.6,[5,4]);
+  trace(o.f,o.A,o.kind||"pure",o.col||C.terra,cp?2:2.6);
+  if(o.label) text(ctx,o.label,x0+4,13,C.ink,F(11));
+  if(!cp){ text(ctx,`${tb} ms / div`,x1,h-6,C.muted,M(11),"right");
+    const Tp=1000/o.f/tb*dx; if((o.kind||"pure")!=="noise" && Tp<(x1-x0)*0.9 && Tp>14){ const xa=x0+(0.25*1000/o.f)/tb*dx, ya=mid-o.A*amp-8; if(ya>y0+4){ line(ctx,xa,ya,xa+Tp,ya,C.ink,1.4); arrowHead(ctx,xa,ya,Math.PI,C.ink,7); arrowHead(ctx,xa+Tp,ya,0,C.ink,7); text(ctx,"T",xa+Tp/2,ya-4,C.ink,F(12),"center"); } }
+    text(ctx,"time →",x0,h-6,C.muted,F(11)); }
+}
+// Hearing ranges on a log scale, 1 Hz to 10 MHz
+function drawHearing(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const x0=8, x1=w-8, X=lf=>x0+lf/7*(x1-x0), by=h*0.3, bh=h*0.26;
+  const R=[[0,Math.log10(20),C.sage,"infra"],[Math.log10(20),Math.log10(20000),C.apricot,"audible"],[Math.log10(20000),7,C.blush,"ultra"]];
+  R.forEach(([a,b,col,l],k)=>{ ctx.save(); if(o.hi!=null&&o.hi!==k) ctx.globalAlpha=0.3; ctx.fillStyle=col; ctx.fillRect(X(a),by,X(b)-X(a),bh); ctx.restore(); text(ctx,l,(X(a)+X(b))/2,by+bh/2+1,C["band-ink"],F(10),"center","middle"); });
+  if(o.hi!=null){ const [a,b]=R[o.hi]; ctx.save(); ctx.strokeStyle=C.ink; ctx.lineWidth=2.5; ctx.strokeRect(X(a),by-1,X(b)-X(a),bh+2); ctx.restore(); }
+  [[0,"1 Hz"],[3,"1 kHz"],[6,"1 MHz"]].forEach(([lf,s])=>{ line(ctx,X(lf),by+bh,X(lf),by+bh+4,C.muted,1); text(ctx,s,X(lf),by+bh+15,C.muted,M(9),lf===0?"left":"center"); });
+  const MK=[[[1,"elephant"],[0.3,"quake"]],[[2.5,"voice"],[3.6,"piano top"]],[[4.7,"bat"],[6.7,"scan"]]][o.hi||0];
+  MK.forEach(([lf,s])=>{ const x=X(lf); line(ctx,x,by-10,x,by,C.ink,1.4); text(ctx,s,x,by-14,C.ink,F(10),"center"); });
+  text(ctx,"frequency (log scale) →",x1,h-4,C.muted,F(9),"right");
+}
+// Ultrasound pulse-echo: depth along x, echo trace below.
+const US = {
+  body:{ name:"Pregnancy scan", v:1540, dmax:0.13, tu:"μs", tk:1e6, du:"cm", dk:100,
+    layers:[[0,"gel + skin","cream"],[0.015,"fat","blush"],[0.03,"muscle","apricot"],[0.05,"fluid","sage"],[0.08,"skull","cream"],[0.0825,"baby","blush"],[0.11,"spine","olive"]],
+    echoes:[[0.015,0.45,"skin / fat"],[0.03,0.35,"fat / muscle"],[0.05,0.55,"uterus wall"],[0.08,0.9,"front of skull"],[0.0825,0.8,"back of skull bone"],[0.11,0.7,"spine"]] },
+  sea:{ name:"Sonar", v:1500, dmax:150, tu:"ms", tk:1e3, du:"m", dk:1,
+    layers:[[0,"sea water","sage"],[120,"sea bed","olive"]], echoes:[[42,0.45,"shoal of fish"],[120,1,"sea bed"]] },
+};
+function usEcho(mode,fMHz,d,R){ if(mode!=="body") return R; return R*Math.exp(-0.02*fMHz*2*d*100); }
+function drawUltra(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, U=US[o.mode], f=o.mode==="body"? o.f : 0.05, x0=cp?26:40, x1=w-10, hs=Math.round(h*(cp?0.52:0.5)), X=d=>x0+d/U.dmax*(x1-x0), t=o.t||0;
+  const iy0=cp?4:22, iy1=hs-4;
+  U.layers.forEach(([d,name,col],k)=>{ const xa=X(d), xb=k+1<U.layers.length? X(U.layers[k+1][0]) : x1; ctx.fillStyle=C[col]; ctx.globalAlpha=0.55; ctx.fillRect(xa,iy0,xb-xa,iy1-iy0); ctx.globalAlpha=1;
+    if(!cp && xb-xa>34) text(ctx,name,(xa+xb)/2,iy1-6,C["band-ink"],F(10),"center"); });
+  if(o.mode==="sea"){ [[0.26,0.4],[0.29,0.55],[0.3,0.3],[0.27,0.65]].forEach(([fx,fy])=>{ ctx.fillStyle=C.ink; ctx.beginPath(); ctx.ellipse(X(42)+(fx-0.28)*60,iy0+(iy1-iy0)*fy,6,3,0,0,7); ctx.fill(); }); }
+  ctx.fillStyle=C.ink; ctx.beginPath(); ctx.roundRect(x0-(cp?20:30),(iy0+iy1)/2-14,cp?18:26,28,5); ctx.fill();
+  if(!cp) text(ctx,o.mode==="body"?"probe":"ship",x0-17,iy0-6,C.muted,F(10),"center");
+  // pulse animation (slow motion)
+  const cyc=2.4, ps=(t%cyc)/cyc*2, yb=(iy0+iy1)/2;
+  if(ps<1){ const x=x0+ps*(x1-x0); ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(x,yb,4,0,7); ctx.fill(); }
+  U.echoes.forEach(([d,R])=>{ const back=ps-d/U.dmax; if(back>0 && back<d/U.dmax){ const x=X(d)-back*(x1-x0), a=usEcho(o.mode,f,d,R); ctx.save(); ctx.globalAlpha=Math.min(1,a*1.6+0.08); ctx.fillStyle=C.olive; ctx.beginPath(); ctx.arc(x,yb+8,3,0,7); ctx.fill(); ctx.restore(); } });
+  // trace
+  const ty0=hs+(cp?6:18), ty1=h-(cp?6:24), tbase=ty1, tamp=ty1-ty0-4, sig=o.mode==="body"? 4*U.v/(f*1e6) : 1.2; // drawn pulse width ≈ 4 wavelengths
+  line(ctx,x0,tbase,x1,tbase,C.muted,1.2);
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=cp?1.6:2; ctx.beginPath();
+  for(let x=x0;x<=x1;x+=0.5){ const d=(x-x0)/(x1-x0)*U.dmax; let a=Math.exp(-Math.pow(d/(sig*1.5),2)); U.echoes.forEach(([de,R])=>{ a+=usEcho(o.mode,f,de,R)*Math.exp(-Math.pow((d-de)/sig,2)); }); const y=tbase-Math.min(1,a)*tamp; x===x0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+  ctx.stroke(); ctx.restore();
+  if(!cp){ const tmax=2*U.dmax/U.v; for(let k=0;k<=4;k++){ const x=x0+k/4*(x1-x0); text(ctx,Math.round(tmax*k/4*U.tk),x,ty1+14,C.muted,M(10),k===0?"left":k===4?"right":"center"); }
+    text(ctx,`echo time (${U.tu})`,x0,ty0-4,C.ink,F(11));
+    if(o.cur!=null){ const x=x0+o.cur*(x1-x0); line(ctx,x,iy0,x,ty1,C.ink,1.6,[4,3]); } }
+}
+
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "medium", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible(); markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible(); markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3"]; const loState=store.get("s25-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s25-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s25-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  medium:{ vis:[["jar",{p:1,label:"Full of air: you hear the bell"}],["jar",{p:0,label:"Air pumped out: silence"}]], grid:"vis2", cap:"The bell keeps ringing, and you can still see it. Only the sound stops.",
+    keys:[["🔔","Sound is made by vibrating objects, and the vibration is passed on by particles."],["∅","No particles means no sound: sound can't cross a vacuum. Space is silent."],["💡","Light still crosses the empty jar, because light is an EM wave and needs no medium."]],
+    f:"sound needs a medium · light does not", mistake:"Saying the bell stops ringing. It still vibrates; the sound just has nothing to travel through." },
+  wave:{ vis:[["particles",{f:400,A:0.8,t:0.3,label:"compressions and rarefactions"}]], cap:"The red particle vibrates about its rest position (dashed line). The wave moves on; the particle stays put.",
+    keys:[["↔","Sound is a longitudinal wave: particles vibrate along the direction the wave travels."],["C","Compressions are regions of high pressure; rarefactions are regions of low pressure."],["λ","The wavelength is the distance from one compression to the next."]],
+    f:"v = fλ", mistake:"Thinking the air itself flows from the speaker to your ear. Only energy travels; each particle just vibrates." },
+  evidence:{ vis:[["interf",{f:700,d:1,y:0.2}]], cap:"Two speakers, one note. Loud and quiet spots along the line (right) show interference.",
+    keys:[["↩","Sound reflects: echoes. It refracts too, bending in warm and cold layers of air."],["⤴","Sound diffracts around corners and through doorways, so you hear people you can't see."],["≋","Two speakers give loud and quiet spots. Waves can cancel; streams of particles can't."]],
+    f:"quiet spot: path difference = ½λ, 1½λ …", mistake:"Saying sound travels in straight lines only. It diffracts, which is strong evidence it's a wave." },
+  speed:{ vis:[["echo",{d:120}]], cap:"The clap travels to the wall and back, so it covers 2d in time t.",
+    keys:[["v","About 340 m/s in air: much slower than light (3.0 × 10⁸ m/s)."],["↩","Echo method: v = 2d / t. Time many claps and average to cut reaction-time error."],["🔩","Sound is faster in liquids and solids, where particles are closer and more tightly linked."]],
+    f:"v = 2d / t   ·   v = fλ", mistake:"Using d instead of 2d. The echo has travelled there and back." },
+  pitch:{ vis:[["scope",{f:600,A:0.5,ref:{f:300,A:0.5},label:"higher pitch: more waves"}],["scope",{f:300,A:0.9,ref:{f:300,A:0.4},label:"louder: taller waves"}]], grid:"vis2", cap:"Dashed: the original note. Solid: a higher note (left) and a louder note (right).",
+    keys:[["🎵","Pitch depends on frequency. Higher frequency, higher pitch."],["🔊","Loudness depends on amplitude. Bigger amplitude, louder sound."],["👂","Humans hear about 20 Hz to 20 kHz. The top limit falls with age."]],
+    f:"pitch ↔ f   ·   loudness ↔ amplitude   ·   T = 1 / f", mistake:"Saying a louder sound has a higher frequency. Loudness and pitch are independent." },
+  ultra:{ vis:[["ultra",{mode:"body",f:5,t:0.9}]], cap:"A pulse goes in; each boundary sends back an echo. Later echoes come from deeper boundaries.",
+    keys:[["↑","Ultrasound is sound above 20 kHz. Scanners use about 2 MHz to 15 MHz."],["⏱","Depth from the echo time: d = vt / 2, with v ≈ 1540 m/s in soft tissue."],["✓","It's non-ionising, so it's safe for scanning unborn babies. Gel stops air reflecting it all."]],
+    f:"d = vt / 2   ·   λ = v / f", mistake:"Thinking ultrasound is a kind of electromagnetic wave. It's sound: a mechanical wave that needs a medium." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div class="${L.grid||""}" style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:var(--band-ink)">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  {f:200,A:0.3,kind:"pure",t:"Low and quiet",chips:[["200 Hz","neutral"],["small amplitude","neutral"]],use:["medium","A fridge humming"]},
+  {f:200,A:0.95,kind:"pure",t:"Low and loud",chips:[["200 Hz","neutral"],["big amplitude","alert"]],use:["speed","A bass drum"]},
+  {f:900,A:0.3,kind:"pure",t:"High and quiet",chips:[["900 Hz","real"],["small amplitude","neutral"]],use:["pitch","A whistle far away"]},
+  {f:900,A:0.95,kind:"pure",t:"High and loud",chips:[["900 Hz","real"],["big amplitude","alert"]],use:["ultra","A smoke alarm"]},
+  {f:330,A:0.7,kind:"rich",t:"Same note, richer shape",chips:[["330 Hz","neutral"],["overtones","real"]],use:["pitch","A guitar string: its quality"]},
+  {f:300,A:0.6,kind:"noise",t:"Noise",chips:[["no regular pattern","alert"]],use:["evidence","Traffic, wind, a hairdryer"]},
+];
+$("cases").innerHTML = CASES.map((c,k)=>`<div class="panel case"><canvas class="mini" data-case="${k}"></canvas><h3>${c.t}</h3><div class="chips">${chipsHTML(c.chips)}</div><div class="use">${svg(c.use[0])}${c.use[1]}</div></div>`).join("");
+const MEDIA = [["Vacuum","no particles",0],["Air at 0 °C","gas",331],["Air at 20 °C","gas",343],["Sea water","liquid",1500],["Soft tissue","body",1540],["Steel","solid",5900]];
+$("bars").innerHTML = MEDIA.map(([n,s,v])=>`<div class="barrow"><span><b>${n}</b><br><small style="color:var(--muted)">${s}</small></span><div class="track"><i style="width:${(v/6000*100).toFixed(1)}%;background:${v>3000?"var(--terra)":v>1000?"var(--apricot)":"var(--blush)"}"></i></div><span class="v">${v? "≈ "+v+" m/s" : "0: no sound"}</span></div>`).join("");
+const AROUND = [
+  ["baby","Pregnancy scans","Echoes from the baby build up a picture of its size, heart and organs. It's non-ionising, so it's safe.",[["Medicine","neutral"],["Non-ionising","real"]],"var(--blush)"],
+  ["heart","Doppler blood flow","The frequency shift of echoes from moving blood shows how fast it flows (see 2.7).",[["Medicine","neutral"]],"var(--apricot)"],
+  ["stone","Breaking kidney stones","Focused pulses shatter stones into pieces small enough to pass, with no surgery.",[["Medicine","neutral"]],"var(--sage)"],
+  ["boat","Sonar and fish finders","Ships time echoes from the sea bed and from shoals of fish to find their depth.",[["Technology","neutral"]],"var(--cream)"],
+  ["crack","Finding hidden cracks","Engineers send ultrasound into welds, rails and aircraft parts. An early echo means a crack.",[["Technology","neutral"]],"var(--blush)"],
+  ["sparkle","Ultrasonic cleaning","Ultrasound in a liquid shakes dirt off jewellery, glasses and dental tools.",[["Technology","neutral"]],"var(--sage)"],
+  ["car","Parking sensors","Sensors in the bumper time ultrasound echoes to warn how close the wall is.",[["Technology","neutral"]],"var(--apricot)"],
+  ["bat","Bats and dolphins","Echolocation: they hunt and find their way with ultrasound clicks and echoes.",[["Nature","neutral"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"medium",label:"Needs a medium",col:"var(--blush)",leaves:[["Bell jar","The sound fades as air is pumped out."],["Vacuum","No particles, so no sound."],["Light still passes","Light is EM and needs no medium."],["Solids too","Sound travels through solids and liquids."]]},
+  {id:"wave",label:"Longitudinal",col:"var(--apricot)",leaves:[["Compressions","High-pressure regions, particles close together."],["Rarefactions","Low-pressure regions, particles spread out."],["Vibrate in place","Particles vibrate; energy travels."],["v = fλ","Speed = frequency × wavelength."]]},
+  {id:"evidence",label:"Evidence of waves",col:"var(--sage)",leaves:[["Echoes","Sound reflects."],["Diffraction","Sound bends around corners."],["Interference","Loud and quiet spots from two speakers."]]},
+  {id:"speed",label:"Speed of sound",col:"var(--cream)",leaves:[["≈ 340 m/s","In air at room temperature."],["Echo method","v = 2d / t."],["Faster in solids","About 5900 m/s in steel."],["Lightning","You see the flash before the thunder."]]},
+  {id:"pitch",label:"Pitch & loudness",col:"var(--blush)",leaves:[["Pitch","Set by frequency."],["Loudness","Set by amplitude."],["Oscilloscope","Shows f and amplitude as a trace."],["20 Hz–20 kHz","The range of human hearing."]]},
+  {id:"ultra",label:"Ultrasound",col:"var(--sage)",leaves:[["> 20 kHz","Too high to hear."],["Scans","Echo times give depths: d = vt / 2."],["Sonar","Depth of the sea and fish."],["Safe","Non-ionising, unlike X-rays."]]},
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Sound</text><text x="${cx}" y="${cy+22}" text-anchor="middle">energy</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["medium","What is a mechanical wave?","A wave that needs a medium: the particles of the medium pass on the vibration."],
+  ["medium","Can sound travel through a vacuum? Why?","No. A vacuum has no particles to pass the vibration on."],
+  ["medium","Describe the bell jar experiment.","An electric bell rings in a sealed jar. As a vacuum pump removes the air, the sound gets quieter and almost stops."],
+  ["medium","In the bell jar, why can you still see the bell ringing?","Light is an electromagnetic wave and doesn't need a medium."],
+  ["medium","Why is it silent in space?","Space is (almost) a vacuum, so there are no particles to carry sound."],
+  ["wave","Is sound transverse or longitudinal?","Longitudinal: the particles vibrate parallel to the direction the wave travels."],
+  ["wave","What is a compression?","A region where the particles are squashed closer together: higher pressure."],
+  ["wave","What is a rarefaction?","A region where the particles are spread further apart: lower pressure."],
+  ["wave","What is the wavelength of a sound wave?","The distance between two neighbouring compressions (or rarefactions)."],
+  ["wave","Do air particles travel from a speaker to your ear?","No. Each particle vibrates about its rest position. Only the energy travels."],
+  ["evidence","Give three pieces of evidence that sound is a wave.","Any three: it reflects (echoes), refracts, diffracts around corners, and shows interference with two speakers."],
+  ["evidence","Why can you hear someone around a corner but not see them?","Sound waves (λ about 1 m) diffract a lot around a doorway; light (λ about 500 nm) hardly diffracts at all."],
+  ["evidence","What causes a quiet spot between two loudspeakers?","Destructive interference: the waves arrive out of step (path difference ½λ, 1½λ …) and cancel."],
+  ["speed","What is the speed of sound in air?","About 340 m/s at room temperature (331 m/s at 0 °C)."],
+  ["speed","How do you find the speed of sound using an echo?","Measure the distance d to a wall and the time t for the echo. v = 2d / t."],
+  ["speed","Why is v = 2d / t, not d / t, for an echo?","The sound travels to the wall and back, a distance of 2d."],
+  ["speed","Why do you see lightning before you hear thunder?","Light travels at 3.0 × 10⁸ m/s, almost a million times faster than sound."],
+  ["speed","Is sound faster in air or in steel?","In steel: about 5900 m/s compared with 340 m/s in air."],
+  ["speed","A 680 Hz note in air (v = 340 m/s). What is its wavelength?","λ = v / f = 340 / 680 = 0.50 m."],
+  ["pitch","What does the pitch of a sound depend on?","Its frequency. Higher frequency, higher pitch."],
+  ["pitch","What does the loudness of a sound depend on?","Mainly its amplitude. Bigger amplitude, louder sound."],
+  ["pitch","On an oscilloscope, how does a higher note look?","More waves across the screen (the waves are closer together)."],
+  ["pitch","On an oscilloscope, how does a louder note look?","Taller waves (bigger amplitude), same spacing."],
+  ["pitch","What is the range of human hearing?","About 20 Hz to 20 000 Hz (20 kHz)."],
+  ["pitch","What is the period of a 500 Hz note?","T = 1 / f = 1 / 500 = 0.002 s = 2 ms."],
+  ["ultra","What is ultrasound?","Sound with a frequency above 20 kHz, too high for humans to hear."],
+  ["ultra","How does an ultrasound scan find the depth of a boundary?","It times the echo of a pulse. Depth d = vt / 2, with v ≈ 1540 m/s in tissue."],
+  ["ultra","Why is ultrasound used for pregnancy scans instead of X-rays?","Ultrasound is non-ionising, so it doesn't damage the baby's cells."],
+  ["ultra","Why is gel put on the skin before a scan?","To remove air between the probe and the skin. Air would reflect almost all the ultrasound."],
+  ["ultra","Give three uses of ultrasound.","Any three: pregnancy scans, Doppler blood flow, breaking kidney stones, sonar, finding cracks in metal, cleaning, parking sensors."],
+];
+let fcKnown = store.get("s25-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s25-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s25-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s25-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["medium","Sound cannot travel through:",["Water","Steel","A vacuum","Air"],2,"Sound needs particles to pass on the vibration. A vacuum has none."],
+  ["medium","In the bell jar experiment, as the air is pumped out:",["The bell gets louder","The bell gets quieter but can still be seen ringing","The bell can no longer be seen","Nothing changes"],1,"Sound needs a medium; light doesn't. So you see the bell but hear less and less."],
+  ["medium","Sound travels fastest in:",["Air","Water","A vacuum","Steel"],3,"About 5900 m/s in steel, 1500 m/s in water, 340 m/s in air, and not at all in a vacuum."],
+  ["wave","Sound waves in air are:",["Transverse","Electromagnetic","Longitudinal","Stationary"],2,"The air particles vibrate along the direction the wave travels."],
+  ["wave","A compression is a region where the particles are:",["Closer together than normal","Further apart than normal","Missing","Not moving"],0,"Compressions are high-pressure regions; rarefactions are low-pressure regions."],
+  ["wave","As a sound wave passes, each air particle:",["Travels with the wave to your ear","Moves up and down","Vibrates back and forth about a fixed point","Stays completely still"],2,"The particles vibrate about their rest positions. Energy travels; the air doesn't."],
+  ["evidence","Which observation is evidence that sound is a wave?",["Sound can be loud","Two loudspeakers give loud and quiet spots","Sound comes from vibrating objects","Sound has a pitch"],1,"Interference (cancelling in quiet spots) happens only with waves."],
+  ["evidence","You can hear someone talking around a corner because sound:",["Is ionising","Travels faster than light","Diffracts","Travels only in straight lines"],2,"Sound wavelengths are similar in size to doorways, so sound spreads around them."],
+  ["speed","An echo from a cliff 170 m away returns after 1.0 s. The speed of sound is:",["170 m/s","85 m/s","680 m/s","340 m/s"],3,"v = 2d / t = 2 × 170 / 1.0 = 340 m/s."],
+  ["speed","A sound of frequency 680 Hz in air (v = 340 m/s) has a wavelength of:",["2.0 m","0.50 m","231 200 m","1.5 m"],1,"λ = v / f = 340 / 680 = 0.50 m."],
+  ["speed","You see lightning before you hear thunder because:",["Light travels much faster than sound","The thunder is made later","Thunder is quieter","Light has a higher frequency"],0,"Light: 3.0 × 10⁸ m/s. Sound: about 340 m/s."],
+  ["pitch","The pitch of a note depends on its:",["Amplitude","Speed","Frequency","Medium"],2,"Higher frequency, higher pitch."],
+  ["pitch","The loudness of a sound depends mainly on its:",["Frequency","Amplitude","Wavelength","Period"],1,"A bigger amplitude carries more energy and sounds louder."],
+  ["pitch","On an oscilloscope, a louder note of the same pitch shows:",["More waves on the screen","Fewer waves on the screen","Taller waves with the same spacing","Shorter waves closer together"],2,"Same frequency (same spacing), bigger amplitude (taller)."],
+  ["pitch","The range of human hearing is about:",["20 Hz to 20 kHz","2 Hz to 2 kHz","20 kHz to 20 MHz","200 Hz to 2000 Hz"],0,"Below 20 Hz is infrasound; above 20 kHz is ultrasound."],
+  ["ultra","Ultrasound is sound with a frequency:",["Below 20 Hz","Above 20 kHz","Between 20 Hz and 20 kHz","That travels faster than light"],1,"Too high for humans to hear."],
+  ["ultra","An ultrasound echo returns from a boundary 100 μs after the pulse (v = 1540 m/s). The boundary is:",["15.4 cm deep","3.9 cm deep","7.7 cm deep","1.54 m deep"],2,"d = vt / 2 = 1540 × 100 × 10⁻⁶ / 2 = 0.077 m = 7.7 cm."],
+  ["ultra","Ultrasound is used instead of X-rays to scan unborn babies because:",["It travels faster","It passes through bone better","It is cheaper to produce","It is non-ionising"],3,"Ultrasound doesn't ionise atoms, so it doesn't damage the baby's cells."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s25-best",null); if(best==null||pct>best) store.set("s25-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/[<>&"]/g,"")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Define","Give the exact meaning in one full, precise sentence.","Define a longitudinal wave."],
+  ["State","Give a short fact, law or value. No explanation needed.","State the range of human hearing."],
+  ["Examine","Look closely at evidence and say what it shows and how strongly.","Examine the evidence that sound is a mechanical wave."],
+  ["Explain","Say what happens and why, using the physics behind it.","Explain why the bell can be seen but not heard."],
+  ["Describe","Give the steps or features in a clear order.","Describe how to measure the speed of sound using an echo."],
+  ["Relate","Show how one thing is linked to another.","Relate the loudness of a sound to its amplitude."],
+  ["Calculate","Write the formula, substitute the numbers, give the answer with a unit.","Calculate the depth of the sea bed from the echo time."],
+  ["Investigate","Plan, collect data or use secondary sources, analyse it and draw a conclusion.","Investigate the use of ultrasound in medicine."],
+  ["Evaluate","Judge strengths and weaknesses, then reach a conclusion.","Evaluate the stopwatch method for timing an echo."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+
+// Calculation trainer
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+function parseNum(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,ch=>({"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-"})[ch]);
+  s=s.replace(/[x×*]10\^?/i,"e");
+  return parseFloat(s);
+}
+const PTYPES = {
+  lam:{ name:"Find λ", gen(){ const f=rnd(10,200)*10, lam=VS/f;
+    return { q:`A loudspeaker plays a note of frequency <b>${f} Hz</b>. Calculate its wavelength in air. (v = 340 m/s)`, ans:lam, unit:"m",
+      steps:["v = fλ  →  λ = v / f", `λ = 340 / ${f}`, `λ = ${s3(lam)} m`] }; } },
+  freq:{ name:"Find f", gen(){ const lam=rnd(5,300)/100, f=VS/lam;
+    return { q:`A sound wave in air has a wavelength of <b>${lam} m</b>. Calculate its frequency. (v = 340 m/s)`, ans:f, unit:"Hz",
+      steps:["v = fλ  →  f = v / λ", `f = 340 / ${lam}`, `f = ${s3(f)} Hz`] }; } },
+  period:{ name:"Period", gen(){ const f=rnd(4,80)*25, T=1000/f;
+    return { q:`A tuning fork vibrates at <b>${f} Hz</b>. Calculate the period of its vibration in milliseconds.`, ans:T, unit:"ms",
+      steps:["T = 1 / f", `T = 1 / ${f} = ${s3(T/1000)} s`, `T = ${s3(T)} ms`] }; } },
+  echo:{ name:"Echo: find v", gen(){ const d=rnd(10,40)*5, v=rnd(330,350), t=+(2*d/v).toFixed(2), vv=2*d/t;
+    return { q:`A student stands <b>${d} m</b> from a tall wall and claps. The echo is heard <b>${t} s</b> later. Calculate the speed of sound.`, ans:vv, unit:"m/s",
+      steps:["The sound goes there and back: distance = 2d", `v = 2d / t = 2 × ${d} / ${t}`, `v = ${s3(vv)} m/s`] }; } },
+  cliff:{ name:"Echo: find d", gen(){ const t=rnd(4,30)/10, d=VS*t/2;
+    return { q:`A walker shouts towards a cliff and hears the echo <b>${t} s</b> later. How far away is the cliff? (v = 340 m/s)`, ans:d, unit:"m",
+      steps:["d = vt / 2  (there and back)", `d = 340 × ${t} / 2`, `d = ${s3(d)} m`] }; } },
+  sonar:{ name:"Sonar depth", gen(){ const t=rnd(5,80)/100, d=1500*t/2;
+    return { q:`A ship's sonar pulse returns from the sea bed after <b>${t} s</b>. Calculate the depth of the sea. (v = 1500 m/s in sea water)`, ans:d, unit:"m",
+      steps:["d = vt / 2", `d = 1500 × ${t} / 2`, `d = ${s3(d)} m`] }; } },
+  scan:{ name:"Scan depth", gen(){ const t=rnd(20,150), d=1540*t*1e-6/2*100;
+    return { q:`In an ultrasound scan, an echo returns from a boundary <b>${t} μs</b> after the pulse. Calculate the depth of the boundary in cm. (v = 1540 m/s in soft tissue)`, ans:d, unit:"cm",
+      steps:[`t = ${t} μs = ${sci(t*1e-6,3)} s`, "d = vt / 2", `d = 1540 × ${sci(t*1e-6,3)} / 2 = ${s3(d/100)} m`, `d = ${s3(d)} cm`] }; } },
+  ulam:{ name:"Ultrasound λ", gen(){ const f=rnd(2,15), lam=1540/(f*1e6)*1000;
+    return { q:`A scanner uses ultrasound of frequency <b>${f} MHz</b>. Calculate its wavelength in soft tissue, in mm. (v = 1540 m/s)`, ans:lam, unit:"mm",
+      steps:[`f = ${f} MHz = ${f} × 10⁶ Hz`, "λ = v / f", `λ = 1540 / ${f} × 10⁶ = ${sci(lam/1000,3)} m`, `λ = ${s3(lam)} mm`] }; } },
+  thunder:{ name:"Thunder (extra)", gen(){ const t=rnd(10,120)/10, d=VS*t;
+    return { q:`You see a lightning flash and hear the thunder <b>${t} s</b> later. How far away was the lightning, in metres? (v = 340 m/s; the light arrives almost instantly)`, ans:d, unit:"m",
+      steps:["The light arrives almost at once, so the delay is the sound's travel time (one way)", `d = vt = 340 × ${t}`, `d = ${s3(d)} m`] }; } },
+};
+let pType="lam", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseNum($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 0.68, 340 or 3.1e-4 (that means 3.1 × 10⁻⁴).</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.abs(pCur.ans)*0.02;
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: echoes travel there and back (2d). Convert μs, ms, kHz and MHz first, and give the answer in the unit asked for.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Read the traces: two random traces, a question on pitch or loudness
+let pd = { q:null, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ const prop=Math.random()<0.5?"pitch":"loud", fs=[200,300,400,500,600], as=[0.3,0.5,0.7,0.9];
+  let A={f:pick(fs),A:pick(as)}, B={f:pick(fs),A:pick(as)}; if(Math.random()<0.2){ if(prop==="pitch") B.f=A.f; else B.A=A.A; }
+  const ans = prop==="pitch"? (A.f>B.f?"A":A.f<B.f?"B":"Same") : (A.A>B.A?"A":A.A<B.A?"B":"Same");
+  pd={...pd,q:{prop,A,B,ans},shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`Same timebase for both. <b>Which sound is ${prop==="pitch"?"higher pitched":"louder"}: A or B?</b>`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick A, The same or B first.</div>`; return; }
+  const q=pd.q, ok=pd.sel===q.ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true;
+  const why = q.prop==="pitch"? `Pitch depends on frequency: count the waves. A is ${q.A.f} Hz and B is ${q.B.f} Hz.` : `Loudness depends on amplitude: compare the heights. A has amplitude ${Math.round(q.A.A*100)}% and B ${Math.round(q.B.A*100)}%.`;
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${q.ans==="Same"?"The same.":q.ans+"."} ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Sound is a mechanical wave", intro:"A student sets up an electric bell inside a bell jar connected to a vacuum pump.",
+    parts:[["a","What is a mechanical wave?",3,"A wave that needs a medium (particles) to travel through (3)."],
+      ["b","Describe what the student hears and sees as the air is pumped out, and state the conclusion.",9,"The sound gets quieter and almost stops (3) · the hammer can still be seen hitting the bell (3) · conclusion: sound needs a medium / can't travel through a vacuum (3)."],
+      ["c","Why can the bell still be seen?",3,"Light is an electromagnetic wave and doesn't need a medium (3)."],
+      ["d","Sound is a longitudinal wave. Explain what this means, and draw a labelled diagram showing a compression, a rarefaction and one wavelength.",9,"Particles vibrate parallel to the direction the wave travels (3) · diagram with particles close together labelled compression and spread out labelled rarefaction (3) · wavelength marked from one compression to the next (3)."],
+      ["e","Give one other piece of evidence that sound is a wave.",3,"Any one: echoes (reflection) · diffraction around corners · interference: loud and quiet spots from two speakers · refraction (3)."],
+      ["f","Explain why sound travels faster in steel than in air.",3,"The particles in a solid are closer together and more strongly linked, so they pass the vibration on faster (3)."]] },
+  { title:"Experiment: the speed of sound by echo", intro:"A student stood at different distances d from a tall wall and timed the echo of a clap with a datalogger:",
+    table:[["d (m)",50,75,100,125,150],["t (s)",0.29,0.44,0.58,0.73,0.87]],
+    parts:[["a","Why does the sound travel a distance of 2d?",3,"It goes to the wall and back again (3)."],
+      ["b","Plot a graph of 2d against t and use it to find the speed of sound.",12,"2d values 100, 150, 200, 250, 300 m (3) · axes labelled with units (3) · points plotted and straight line through the origin (3) · slope = v ≈ 343 m/s (3)."],
+      ["c","Why would timing a single clap with a stopwatch give a poor result? Suggest one improvement.",6,"Reaction time (about 0.1–0.2 s) is large compared with t (3) · time many claps in rhythm with the echoes and divide, or use a datalogger / longer distance / repeat and average (3)."],
+      ["d","The accepted value on the day was 343 m/s. How close is the student's result?",3,"Within about 1%, which is a good agreement (3). Accept any sensible comparison using their value."],
+      ["e","A 512 Hz tuning fork is sounded on the same day. Calculate the wavelength of its sound.",6,"λ = v / f (3) · λ = 343 / 512 = 0.670 m (3)."]] },
+  { title:"Ultrasound in medicine", intro:"An ultrasound scanner sends short pulses of 5.0 MHz ultrasound into a patient's body. The speed of ultrasound in soft tissue is 1540 m/s.",
+    parts:[["a","What is ultrasound?",3,"Sound with a frequency above 20 kHz / above the range of human hearing (3)."],
+      ["b","An echo returns from a boundary 80 μs after the pulse is sent. Calculate the depth of the boundary.",6,"d = vt / 2 (3) · d = 1540 × 80 × 10⁻⁶ / 2 = 0.0616 m ≈ 6.2 cm (3)."],
+      ["c","Calculate the wavelength of the ultrasound in the tissue.",6,"λ = v / f (3) · λ = 1540 / 5.0 × 10⁶ = 3.1 × 10⁻⁴ m (0.31 mm) (3)."],
+      ["d","Why is gel spread on the skin before the scan?",3,"To remove the air between the probe and skin; air would reflect almost all of the ultrasound (3)."],
+      ["e","Give one reason why ultrasound, not X-rays, is used to scan unborn babies.",6,"Ultrasound is non-ionising (3) · so it doesn't damage cells/DNA, while X-rays could (3)."],
+      ["f","Using secondary sources, describe two other uses of ultrasound, one medical and one technological.",6,"Medical (3), e.g. Doppler blood flow, breaking kidney stones, scanning organs · technological (3), e.g. sonar, finding cracks in metal, cleaning, parking sensors."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p>${L.table?`<div class="tablewrap" style="border:0;max-height:none"><table>${L.table.map(r=>`<tr>${r.map((c,j)=>j?`<td>${typeof c==="number"&&r[0].startsWith("t")?c.toFixed(2):c}</td>`:`<th style="position:static">${c}</th>`).join("")}</tr>`).join("")}</table></div>`:""}</header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist and investigation skills
+const RAG = ["Explain why sound needs a medium","Describe the bell jar experiment and its conclusion","Describe sound as a longitudinal wave with compressions and rarefactions","Give evidence that sound is a wave (reflection, diffraction, interference)","Use v = fλ for sound","Describe how to measure the speed of sound with an echo","Use v = 2d / t for echoes","Relate pitch to frequency and loudness to amplitude","Read frequency and amplitude from an oscilloscope trace","State the range of human hearing and define ultrasound","Find a depth with d = vt / 2","Describe medical and technological uses of ultrasound"];
+const ragState=store.get("s25-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s25-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Plan a fair test","Name the independent (distance), dependent (echo time) and controlled variables.","Speed of sound lab"],["Collect primary data","Take readings at five or more distances over a good range, and repeat them.","Speed of sound lab"],["Record data properly","Use a table with quantities and units in the column headings.","Speed of sound lab"],["Plot a straight-line graph","Plot 2d against t and draw the line of best fit.","Speed of sound lab"],["Use the slope","The slope of 2d against t is the speed of sound.","Speed of sound lab"],["Compare methods","Compare a stopwatch with a datalogger and explain the difference.","Speed of sound lab"],["Observe carefully","Describe what you hear and what you see, separately.","Bell jar lab"],["Use secondary sources","Research uses of ultrasound and say where the information came from.","Ultrasound lab"]];
+const skState=store.get("s25-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s25-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+function playBtn(id,st){ $(id).addEventListener("click",()=>{ st.play=!st.play; $(id).setAttribute("aria-pressed",st.play); $(id).textContent=st.play?"Pause":"Play"; }); }
+let actx=null, osc=null, gain=null, oscKind="pure";
+function audioOn(){ try{ if(!actx){ actx=new (window.AudioContext||window.webkitAudioContext)(); osc=actx.createOscillator(); osc.type="sine"; gain=actx.createGain(); gain.gain.value=0; osc.connect(gain).connect(actx.destination); osc.start(); } actx.resume(); return true; }catch(e){ return false; } }
+function sndBtn(id,st){ $(id).addEventListener("click",()=>{ st.snd=!st.snd; if(st.snd && !audioOn()) st.snd=false; $(id).setAttribute("aria-pressed",st.snd); $(id).textContent=st.snd?"🔇 Sound off":"🔊 Sound on"; }); }
+// Bell jar
+const jr = { p:1, t:0, pump:0, snd:false };
+function jrUpd(){ $("jrP").value=Math.round(jr.p*100); $("jrPo").textContent=Math.round(jr.p*100)+"%"; jarC.redraw(); }
+$("jrP").addEventListener("input",e=>{ jr.p=+e.target.value/100; jr.pump=0; jrUpd(); });
+$("jrOut").addEventListener("click",()=>{ jr.pump=-1; }); $("jrIn").addEventListener("click",()=>{ jr.pump=1; });
+sndBtn("jrSnd",jr);
+// Particles
+const pt = { f:400, A:0.7, t:0, play:true, mark:true };
+function ptUpd(){ $("ptFo").textContent=pt.f+" Hz"; $("ptAo").textContent=Math.round(pt.A*100)+"%"; ptC.redraw(); }
+$("ptF").addEventListener("input",e=>{ pt.f=+e.target.value; ptUpd(); });
+$("ptA").addEventListener("input",e=>{ pt.A=+e.target.value; ptUpd(); });
+playBtn("ptPlay",pt);
+$("ptMark").addEventListener("click",()=>{ pt.mark=!pt.mark; $("ptMark").setAttribute("aria-pressed",pt.mark); $("ptMark").textContent=pt.mark?"Labels on":"Labels off"; ptC.redraw(); });
+// Interference
+const it = { f:700, d:1, y:0, t:0, snd:false, I:1 };
+function itUpd(){ $("itFo").textContent=it.f+" Hz"; $("itDo").textContent=it.d.toFixed(2)+" m"; $("itYo").textContent=(it.y>=0?"+":"")+it.y.toFixed(2)+" m"; itC.redraw(); }
+$("itY").addEventListener("input",e=>{ it.y=+e.target.value; itUpd(); });
+$("itF").addEventListener("input",e=>{ it.f=+e.target.value; itUpd(); });
+$("itD").addEventListener("input",e=>{ it.d=+e.target.value; itUpd(); });
+sndBtn("itSnd",it);
+// Echo experiment: hidden air temperature
+const ec = { d:100, method:"watch", data:[], reading:null, revealed:false, pt:null };
+function newDay(){ ec.temp=Math.round(Math.random()*30); ec.v=331+0.6*ec.temp; ec.data=[]; ec.reading=null; ec.revealed=false; }
+newDay();
+$("ecD").addEventListener("input",e=>{ ec.d=+e.target.value; ec.reading=null; ec.pt=null; $("ecDo").textContent=ec.d+" m"; ecC.redraw(); });
+(()=>{ const bs=[...$("ecM").querySelectorAll("button")]; bs.forEach(b=>b.addEventListener("click",()=>{ ec.method=b.dataset.v; pressGroup(bs,b); ec.reading=null; ecC.redraw(); })); })();
+$("ecRec").addEventListener("click",()=>{ const t=2*ec.d/ec.v, err= ec.method==="logger"? (Math.random()-.5)*0.002 : (Math.random()-.5)*0.24; const tm=Math.max(0.02,t+err);
+  ec.reading=tm; ec.pt=0; ec.data.push([ec.d,tm,ec.method]); ecTable(); });
+$("ecClear").addEventListener("click",()=>{ ec.data=[]; ec.reading=null; ecTable(); ecC.redraw(); });
+$("ecNew").addEventListener("click",()=>{ newDay(); ecTable(); ecC.redraw(); });
+$("ecReveal").addEventListener("click",()=>{ ec.revealed=!ec.revealed; ecTable(); });
+function ecTable(){
+  $("ecTable").innerHTML = ec.data.map(([d,t,m],k)=>`<tr><td>${d}</td><td>${2*d}</td><td>${t.toFixed(m==="logger"?4:2)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("ecEmpty").hidden = ec.data.length>0; if(ecGraph) ecGraph.redraw();
+}
+$("ecTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ ec.data.splice(+k,1); ecTable(); } });
+// Oscilloscope
+const sc = { f:440, A:0.5, tb:1, kind:"pure", snd:false };
+function scUpd(){ $("scFo").textContent=sc.f+" Hz"; $("scAo").textContent=Math.round(sc.A*100)+"%"; scC.redraw(); }
+$("scF").addEventListener("input",e=>{ sc.f=+e.target.value; scUpd(); });
+$("scA").addEventListener("input",e=>{ sc.A=+e.target.value; scUpd(); });
+(()=>{ const bs=[...$("scTB").querySelectorAll("button")]; bs.forEach(b=>b.addEventListener("click",()=>{ sc.tb=+b.dataset.v; pressGroup(bs,b); scUpd(); }));
+  const ks=[...$("scK").querySelectorAll("button[data-v]")]; ks.forEach(b=>b.addEventListener("click",()=>{ sc.kind=b.dataset.v; pressGroup(ks,b); scUpd(); })); })();
+sndBtn("scSnd",sc);
+// Ultrasound
+const us = { mode:"body", f:5, cur:0.5, t:0 };
+function usUpd(){ const U=US[us.mode], tmax=2*U.dmax/U.v, tt=us.cur*tmax; $("usTo").textContent=(tt*U.tk).toFixed(us.mode==="body"?1:0)+" "+U.tu; usC.redraw(); }
+$("usT").addEventListener("input",e=>{ us.cur=+e.target.value; usUpd(); });
+(()=>{ const ms=[...$("usMode").querySelectorAll("button")], fs=[...$("usF").querySelectorAll("button")];
+  ms.forEach(b=>b.addEventListener("click",()=>{ us.mode=b.dataset.v; pressGroup(ms,b); usUpd(); }));
+  fs.forEach(b=>b.addEventListener("click",()=>{ us.f=+b.dataset.v; pressGroup(fs,b); usUpd(); })); })();
+
+/* ================= CREATE CANVASES ================= */
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ ctx.fillStyle=p[2]==="logger"?C.terra:C.apricot; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); });
+}
+let ecGraph=null;
+const hero = makeCanvas($("heroCanvas"), 0.7, 220, s => drawParticles(s.ctx,s.w,s.h,{f:400,A:0.9,t:reduce?0:heroT,hero:true}), 420);
+const jarC = makeCanvas($("jarC"), 0.48, 280, s => { drawJar(s.ctx,s.w,s.h,{p:jr.p,t:jr.t});
+  const db=jarDB(jr.p); setReadout($("jrOut2"),[["Air left",Math.round(jr.p*100)+"%"],["Particles to carry sound",jr.p>0.6?"plenty":jr.p>0.1?"fewer":jr.p>0.005?"very few":"almost none"],["Sound you hear",db>0? "≈ "+Math.round(db)+" dB" : "silence"],["Can you see the bell?","yes, always"]]); }, 460);
+const ptC = makeCanvas($("ptC"), 0.55, 300, s => { drawParticles(s.ctx,s.w,s.h,{f:pt.f,A:pt.A,t:pt.t,mark:pt.mark});
+  setReadout($("ptOut"),[["Frequency",pt.f+" Hz"],["Wavelength λ = v / f",s3(VS/pt.f)+" m"],["Period T = 1 / f",s3(1000/pt.f)+" ms"],["Speed in air","340 m/s"],["Particle motion","back and forth, along the wave"]]); }, 500);
+const itC = makeCanvas($("itC"), 0.5, 260, s => { drawInterf(s.ctx,s.w,s.h,{f:it.f,d:it.d,y:it.y,t:it.t});
+  const r=itI(it.f,it.d,it.y), n=r.D/r.lam, fr=Math.abs(n-Math.round(n)); it.I=r.I;
+  setReadout($("itOut"),[["Wavelength λ",s3(r.lam)+" m"],["Distance to speaker 1",r.r1.toFixed(3)+" m"],["Distance to speaker 2",r.r2.toFixed(3)+" m"],["Path difference",Math.abs(r.D).toFixed(3)+" m = "+Math.abs(n).toFixed(2)+" λ"],["Loudness",Math.round(r.I*100)+"%"],["You hear",fr<0.12?"loud (in step)":fr>0.38?"quiet (cancelling)":"in between"]]); }, 440);
+const ecC = makeCanvas($("ecC"), 0.36, 220, s => drawEcho(s.ctx,s.w,s.h,{d:ec.d,pt:ec.pt,v:ec.v,method:ec.method,reading:ec.reading}), 340);
+ecGraph = makeCanvas($("ecGraph"), 0.72, 190, s => {
+  const pts=ec.data.map(([d,t,m])=>[t,2*d,m]), spread=pts.length? Math.max(...pts.map(p=>p[0]))-Math.min(...pts.map(p=>p[0])) : 0;
+  const fit = pts.length>=2 && spread>0.05 ? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,1.3],yr:[0,420],xl:"t (s)",yl:"2d (m)",fit});
+  const truth = ec.revealed? ` True value: v = <b>${ec.v.toFixed(1)} m/s</b> (air at ${ec.temp} °C).` : "";
+  if(!fit){ $("ecResult").innerHTML="Record readings at three or more different distances to draw the line. Light dots: stopwatch. Dark dots: datalogger."+truth; return; }
+  $("ecResult").innerHTML = `Slope = speed of sound = <b>${fit[0].toFixed(0)} m/s</b>. Intercept = ${fit[1].toFixed(1)} m (should be close to 0).`+truth;
+}, 300);
+ecTable();
+const scC = makeCanvas($("scC"), 0.5, 240, s => { drawScope(s.ctx,s.w,s.h,{f:sc.f,A:sc.A,tb:sc.tb,kind:sc.kind,ref:{f:440,A:0.5}});
+  const pitchW = sc.f<250?"low":sc.f<1000?"medium":"high", waves=sc.f*sc.tb*10/1000;
+  setReadout($("scOut"),[["Frequency",sc.f+" Hz"],["Period T",s3(1000/sc.f)+" ms"],["Waves on screen",waves.toFixed(1)],["Wavelength in air",s3(VS/sc.f)+" m"],["Pitch",pitchW+(sc.f>440?" (above concert A)":sc.f<440?" (below concert A)":" (concert A)")],["Loudness",sc.A<0.3?"quiet":sc.A<0.7?"medium":"loud"]]); }, 420);
+const usC = makeCanvas($("usC"), 0.58, 300, s => { drawUltra(s.ctx,s.w,s.h,{mode:us.mode,f:us.f,t:us.t,cur:us.cur});
+  const U=US[us.mode], tmax=2*U.dmax/U.v, tt=us.cur*tmax, d=U.v*tt/2, f=us.mode==="body"? us.f*1e6 : 50e3, lam=U.v/f;
+  const near=U.echoes.reduce((a,b)=>Math.abs(b[0]-d)<Math.abs(a[0]-d)?b:a), onEcho=Math.abs(near[0]-d)<U.dmax*0.015;
+  setReadout($("usOut"),[["Speed in "+(us.mode==="body"?"tissue":"sea water"),U.v+" m/s"],["Frequency",us.mode==="body"? us.f+" MHz" : "50 kHz"],["Wavelength",us.mode==="body"? (lam*1000).toFixed(2)+" mm" : (lam*100).toFixed(1)+" cm"],["Cursor time",(tt*U.tk).toFixed(us.mode==="body"?1:0)+" "+U.tu],["Depth d = vt / 2",(d*U.dk).toFixed(us.mode==="body"?1:0)+" "+U.du],["Echo here?",onEcho? near[2] : "move the cursor to a peak"]]);
+  $("usWork").innerHTML = `d = vt / 2 = ${U.v} × ${sci(tt,3)} / 2 = <b>${(d*U.dk).toFixed(us.mode==="body"?1:0)} ${U.du}</b>. ${us.mode==="body"? (us.f>=10? "High frequency: short wavelength gives sharp echoes, but deep echoes are weak." : us.f<=2? "Low frequency: reaches deep, but echoes are broad and blurry." : "A middle frequency: a balance of detail and depth.") : "Sonar uses lower frequencies, which travel far through water."}`; }, 480);
+predC = makeCanvas($("predC"), 0.6, 200, s => { const q=pd.q; if(!q) return; const {ctx,w,h}=s, hh=h/2-3; bg(ctx,w,h,C["surface-2"]);
+  ctx.save(); drawScope(ctx,w,hh,{f:q.A.f,A:q.A.A,tb:1,compact:true,label:"A",bgc:C.surface}); ctx.restore();
+  ctx.save(); ctx.translate(0,hh+6); drawScope(ctx,w,hh,{f:q.B.f,A:q.B.A,tb:1,compact:true,label:"B",col:C.olive,bgc:C.surface}); ctx.restore(); }, 320);
+pdNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    jar:s=>drawJar(s.ctx,s.w,s.h,{...o,compact:true,t:1}),
+    particles:s=>drawParticles(s.ctx,s.w,s.h,{...o,compact:true}),
+    interf:s=>drawInterf(s.ctx,s.w,s.h,{...o,compact:true}),
+    echo:s=>drawEcho(s.ctx,s.w,s.h,{...o,compact:true}),
+    scope:s=>drawScope(s.ctx,s.w,s.h,{...o,compact:true,tb:1}),
+    ultra:s=>drawUltra(s.ctx,s.w,s.h,{...o,compact:true}),
+  };
+  const ratio = {jar:0.9, particles:0.5, interf:0.6, echo:0.5, scope:0.7, ultra:0.62}[kind];
+  makeCanvas(el, ratio, 120, draws[kind], 380);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-case]").forEach(el=>{ const c=CASES[+el.dataset.case]; makeCanvas(el,0.55,120,s=>drawScope(s.ctx,s.w,s.h,{f:c.f,A:c.A,kind:c.kind,tb:1,compact:true,bgc:C["surface-2"]}),220); });
+document.querySelectorAll("canvas[data-mini=hear]").forEach(el=>makeCanvas(el,0.45,120,s=>drawHearing(s.ctx,s.w,s.h,{hi:+el.dataset.k,bgc:C["surface-2"]}),200));
+
+/* ================= LOOP / SOUND / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(view==="labs"){
+    if(lab==="medium"){ jr.t+=dt; if(jr.pump){ jr.p=Math.max(0,Math.min(1,jr.p+jr.pump*dt*(jr.pump<0? Math.max(0.05,jr.p)*0.6 : 0.5))); if(jr.p<=0.002&&jr.pump<0){ jr.p=0; jr.pump=0; } if(jr.p>=1&&jr.pump>0) jr.pump=0; $("jrP").value=Math.round(jr.p*100); $("jrPo").textContent=Math.round(jr.p*100)+"%"; } jarC.redraw(); }
+    if(lab==="wave" && pt.play && !reduce){ pt.t+=dt; ptC.redraw(); }
+    if(lab==="evidence" && !reduce){ it.t+=dt; itC.redraw(); }
+    if(lab==="speed" && ec.pt!=null){ ec.pt+=dt; if(ec.pt*ec.v>2*ec.d) ec.pt=null; ecC.redraw(); }
+    if(lab==="ultra" && !reduce){ us.t+=dt; usC.redraw(); }
+  }
+  if(actx){ let f=440, g=0, kind="pure";
+    if(view==="labs" && lab==="medium" && jr.snd){ f=880+Math.sin(now/30)*6; g=jr.p<=0.005? 0 : 0.18*Math.pow(10,(jarDB(jr.p)-75)/20); }
+    if(view==="labs" && lab==="evidence" && it.snd){ f=it.f; g=0.16*it.I; }
+    if(view==="labs" && lab==="pitch" && sc.snd){ f=sc.f; g=0.2*Math.pow(sc.A,1.6); kind=sc.kind==="rich"?"rich":"pure"; }
+    if(kind!==oscKind){ try{ if(kind==="rich") osc.setPeriodicWave(actx.createPeriodicWave(new Float32Array([0,0,0,0,0,0]),new Float32Array([0,1,0.5,0.3,0,0.15]))); else osc.type="sine"; }catch(e){} oscKind=kind; }
+    const t=actx.currentTime; osc.frequency.setTargetAtTime(f,t,0.02); gain.gain.setTargetAtTime(g,t,0.04); }
+  requestAnimationFrame(loop);
+})(performance.now());
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+jrUpd(); ptUpd(); itUpd(); scUpd(); usUpd(); $("ecDo").textContent=ec.d+" m";
+})();
+</script>

@@ -1,0 +1,1570 @@
+<title>Conocer a gente · Spanish Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.sh-card{display:grid;gap:8px;padding:16px;align-content:start}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card ul{margin:0;padding-left:18px;font-size:.88rem;color:var(--muted);display:grid;gap:3px}
+.fbbox{padding:0 16px 14px}
+.predopts .btns button{min-width:100px}
+.ctl button[disabled]{opacity:.5}
+</style>
+
+<style>
+.qt{font-family:var(--f-display);font-size:1.15rem;line-height:1.4;padding:12px 16px;border-left:4px solid var(--terra);background:var(--surface-2);border-radius:0 12px 12px 0}
+.qt small{display:block;font-family:var(--f-body);font-size:.82rem;color:var(--muted);margin-top:4px}
+.fbbox{padding:0 16px 14px}
+.esform{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;padding:14px 16px;border-top:1px solid var(--line)}
+.esform input[type=text],.esform select{width:100%;font:inherit;padding:8px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.chk{display:flex;flex-wrap:wrap;gap:6px}
+.chk label{display:flex;gap:5px;align-items:center;font-size:.85rem;border:1.5px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}
+.ptable{border-collapse:collapse;width:100%;font-size:.88rem}
+.ptable td{padding:3px 6px;border-bottom:1px solid var(--line)}
+.ptable td:first-child{color:var(--muted)}
+</style>
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 01-14.3 4.9M4 12a8 8 0 0114.3-4.9"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg></div>
+        <div style="min-width:0"><b>Conocer a gente</b><span>Leaving Cert Spanish · Unit I.1 · Meeting people</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html" class="on" aria-current="page">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Phrase bank</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <details open><summary>I · Basic communication</summary><ol><li class="here"><span class="mono">1.1</span>Meeting people</li><li><span class="mono">1.2</span>Making plans</li><li><span class="mono">1.3</span>Weather &amp; climate</li><li><span class="mono">1.4</span>Travel &amp; transport</li><li><span class="mono">1.5</span>Buying goods &amp; services</li><li><span class="mono">1.6</span>Emergencies</li><li><span class="mono">1.7</span>Permission &amp; persuasion</li><li><span class="mono">1.8</span>Feelings &amp; attitudes</li><li><span class="mono">1.9</span>Managing a conversation</li><li><span class="mono">1.10</span>Discussion &amp; opinions</li><li><span class="mono">1.11</span>Passing on messages</li></ol></details>
+      <details><summary>II · Language awareness</summary><ol><li><span class="mono">2.1</span>Learning about language</li><li><span class="mono">2.2</span>Exploring meaning</li><li><span class="mono">2.3</span>Language &amp; attitude</li></ol></details>
+      <details><summary>III · Cultural awareness</summary><ol><li><span class="mono">3.1</span>Present-day culture</li><li><span class="mono">3.2</span>Modern literary texts</li><li><span class="mono">3.3</span>Everyday life</li><li><span class="mono">3.4</span>Spanish-speaking world &amp; Ireland</li><li><span class="mono">3.5</span>Issues across cultures</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon. Units follow the syllabus's General Activities/Themes.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Unit I.1 · Basic communicative proficiency</span>
+          <h1 style="margin-top:12px">¡Hola! ¿Qué tal?<br>¿Cómo te llamas?<br><em>Encantado.</em></h1>
+          <p class="lede">Meeting people is where every conversation, and your oral exam, starts. Learn when to say tú or usted, ask the right questions, give your personal details, talk about your family, where you live and what you study, and use the little phrases that make you sound natural.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated speech bubbles with Spanish greetings"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Targets ticked</span><b id="stLO">0/16</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the Leaving Certificate Spanish syllabus</p><h2>Performance targets</h2></div><p style="font-size:.88rem">Unit I.1, quoted from the syllabus (scanned text tidied). Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list" id="loList"></ul>
+        <p class="result" style="margin-top:10px">Structures and grammar listed for this unit: formal and informal modes of address (tú, vosotros, Ud., Uds.); question forms (¿Cómo? ¿Cuándo? ¿Qué? ¿Dónde? ¿Cuánto?); inversion (¿Cómo estás tú?); prepositions at the beginning of questions (¿A qué hora? ¿En qué condiciones?); casual and respectful modes of expression.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Choose the right register, build questions, fill in your ficha, meet the family and interview Spanish students.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="registro">
+        <div class="labhead"><span class="pill t">¿Tú o usted?</span><p class="goal">Who are you talking to? Choose tú, usted, vosotros or ustedes, and see the verb change.</p></div>
+        <div class="panel sim">
+          <canvas id="rgC" aria-label="Grid: singular or plural, informal or formal, with the people you have placed"></canvas>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="rgQ"></div></div>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">You'd say…</span><div class="btns" id="rgB"><button data-a="tu">tú</button><button data-a="usted">usted</button><button data-a="vosotros">vosotros</button><button data-a="ustedes">ustedes</button></div></div></div>
+          <div class="readout" id="rgOut"></div>
+          <div class="fbbox" id="rgFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Place all twelve people. Which ones surprised you?</div><div class="try"><b>2</b>How does "¿Cómo estás?" change for each box?</div><div class="try"><b>3</b>In Latin America, which form replaces vosotros?</div></div>
+      </div>
+
+      <div class="lab" data-lab="preguntas" hidden>
+        <div class="labhead"><span class="pill t">Question wheel</span><p class="goal">Here's an answer. Which question word asks for it? Tap the wheel, then see the full question.</p></div>
+        <div class="panel sim">
+          <canvas id="qwC" aria-label="Wheel of twelve Spanish question words. Tap one."></canvas>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="qwQ"></div></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Answers</span><div class="btns"><button id="qwNext">Next answer</button></div></div></div>
+          <div class="readout" id="qwOut"></div>
+          <div class="fbbox" id="qwFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Get five right in a row. Watch the accents on every question word.</div><div class="try"><b>2</b>¿Cuál or ¿Qué? When do you use each?</div><div class="try"><b>3</b>Why does "¿A qué hora?" start with a preposition?</div></div>
+      </div>
+
+      <div class="lab" data-lab="datos" hidden>
+        <div class="labhead"><span class="pill t">Mi ficha</span><p class="goal">Fill in your details. Your ID card and a Spanish paragraph update live: watch numbers, agreement (irlandés/irlandesa) and verb forms.</p></div>
+        <div class="panel sim">
+          <canvas id="fiC" aria-label="Spanish ID card built from your details"></canvas>
+          <div class="esform">
+            <label>Nombre<input type="text" id="fiName" value="Aoife" maxlength="20"></label>
+            <div><span class="lbl" style="font-size:.82rem;color:var(--muted);font-weight:700">Soy…</span><div class="btns" id="fiG"><button data-g="m" aria-pressed="false">chico</button><button data-g="f" aria-pressed="true">chica</button></div></div>
+            <label>Edad <output id="fiAo">17</output><input type="range" id="fiAge" min="12" max="25" value="17"></label>
+            <label>Nacionalidad<select id="fiNat"></select></label>
+            <label>Vivo en<input type="text" id="fiTown" value="Limerick" maxlength="20"></label>
+            <label>Hermanos <output id="fiSo">2</output><input type="range" id="fiSib" min="0" max="5" value="2"></label>
+            <div style="grid-column:1/-1"><span class="lbl" style="font-size:.82rem;color:var(--muted);font-weight:700">Hablo…</span><div class="chk" id="fiLang"></div></div>
+          </div>
+          <div class="fbbox"><div class="qt" id="fiPara"></div></div>
+          <div class="readout" id="fiOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Set your age to 21. Why "veintiún años" and not "veintiuno años"?</div><div class="try"><b>2</b>Switch chico/chica. Which words change?</div><div class="try"><b>3</b>Learn this paragraph: it's the start of your oral exam.</div></div>
+      </div>
+
+      <div class="lab" data-lab="familia" hidden>
+        <div class="labhead"><span class="pill t">El árbol familiar</span><p class="goal">One person in the tree lights up. Who are they to you? Tap the right word.</p></div>
+        <div class="panel sim">
+          <canvas id="faC" aria-label="Family tree with grandparents, parents, aunt and uncle, siblings and cousins"></canvas>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">¿Quién es?</span><div class="btns" id="faB"></div></div></div>
+          <div class="readout" id="faOut"></div>
+          <div class="fbbox" id="faFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Get every person right. Which pairs only differ by -o / -a?</div><div class="try"><b>2</b>What does "mis padres" mean? And "mis hermanos"?</div><div class="try"><b>3</b>Describe this family in three Spanish sentences.</div></div>
+      </div>
+
+      <div class="lab" data-lab="estudios" hidden>
+        <div class="labhead"><span class="pill t">Collect &amp; fit</span><p class="goal">Interview Spanish students about study and part-time work. Read each answer, pick the right number, and build a graph of study hours against work hours.</p></div>
+        <div class="panel sim">
+          <canvas id="esC" aria-label="Scatter graph of study hours against work hours with a line of best fit"></canvas>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="esQ"></div></div>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl" id="esAsk">¿Cuántas horas trabaja a la semana?</span><div class="btns" id="esB"></div></div>
+            <div class="ctl"><span class="lbl">Survey</span><div class="btns"><button class="primary" id="esNext">Next interview</button><button id="esClr">Clear data</button></div></div>
+          </div>
+          <div class="readout" id="esOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Interview eight students. Is the trend up or down?</div><div class="try"><b>2</b>Say your own answer: "Estudio … horas a la semana y trabajo …"</div><div class="try"><b>3</b>Which number words caught you out (e.g. quince vs cincuenta)?</div></div>
+      </div>
+
+      <div class="lab" data-lab="cortesia" hidden>
+        <div class="labhead"><span class="pill t">¿Qué dices?</span><p class="goal">A situation appears. Choose what you'd say. Watch the register: friend or stranger, tú or usted?</p></div>
+        <div class="panel sim">
+          <canvas id="coC" aria-label="Two people talking with a speech bubble showing your phrase"></canvas>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="coQ"></div></div>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">You say…</span><div class="btns" id="coB"></div></div></div>
+          <div class="readout" id="coOut"></div>
+          <div class="fbbox" id="coFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Do all twelve situations. Which phrases use usted?</div><div class="try"><b>2</b>"Es que…" introduces an excuse. Make up your own.</div><div class="try"><b>3</b>Enhorabuena or felicidades: what's the difference?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of meeting people in Spanish"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>Your first conversation</h2></div><p>Five moves in a first meeting, with the Spanish for each.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three pictures</p><h2>Register, questions, family</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="reg"></canvas><h3>Four ways to say "you"</h3><p>Singular or plural, informal or formal.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="wheel"></canvas><h3>Question words</h3><p>Every one has an accent, and every question opens with ¿.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="tree"></canvas><h3>La familia</h3><p>Masculine -o, feminine -a: tío/tía, primo/prima, hermano/hermana.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">The Spanish-speaking world</p><h2>Where Spanish is spoken</h2></div><p>Approximate numbers of native speakers in the five biggest Spanish-speaking countries (millions, rounded).</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Culture tips</p><h2>Meeting people in Spain and Latin America</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+<!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How Spanish is assessed, what this unit means for the oral, and practice with feedback.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Higher Level: speaking 25%, listening 20%, reading 30%, writing 25%">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="91.1 364.4" transform="rotate(-90 80 80)"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--apricot)" stroke-width="26" stroke-dasharray="72.9 364.4" stroke-dashoffset="-91.1" transform="rotate(-90 80 80)"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26" stroke-dasharray="109.3 364.4" stroke-dashoffset="-164" transform="rotate(-90 80 80)"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--olive)" stroke-width="26" stroke-dasharray="91.1 364.4" stroke-dashoffset="-273.3" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">4 skills</text><text x="80" y="96" text-anchor="middle" class="dn2">Higher Level</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Speaking · 25%</b><p>Oral: general conversation (you may discuss a literary work) and a role-play. 15 minutes.</p></div></div>
+            <div><i style="background:var(--apricot)"></i><div><b>Listening · 20%</b><p>Recorded conversations, announcements and radio; answer in English or Irish.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Reading · 30%</b><p>Signs, letters, articles and literary texts.</p></div></div>
+            <div><i style="background:var(--olive)"></i><div><b>Writing · 25%</b><p>Expressing feelings, giving information, describing, explaining. (Ordinary Level: 20 / 25 / 40 / 15.)</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this unit</h3>
+          <ol class="tips">
+            <li>The oral almost always starts here: have <b>polished answers</b> about you, your family, your home area and your school.</li>
+            <li>Address the examiner as <b>usted</b> unless told otherwise: "¿Puede repetir, por favor?"</li>
+            <li>Extend every answer: <b>fact + detail + opinion</b>. "Tengo dos hermanos. Mi hermano mayor estudia en Dublín. Nos llevamos muy bien."</li>
+            <li>Learn <b>numbers and dates</b> perfectly: ages, phone numbers and times are tested in the aural.</li>
+            <li>Make <b>adjectives agree</b>: irlandés/irlandesa, simpático/simpática.</li>
+            <li>Every question opens with <b>¿</b> and every question word has an <b>accent</b>: ¿dónde?, ¿cómo?, ¿qué?</li>
+            <li>In written tasks, use the right <b>register</b>: "Querido/a…" and tú for a friend; "Estimado/a señor/a…" and usted for a formal letter.</li>
+            <li>Check the SEC for the current exam arrangements. Questions here are practice questions, not official SEC papers.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Instruction words</h2></div><p>Spanish instructions you'll meet on the paper. Meanings are plain-English summaries.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Verbs, numbers and agreement</p><h2>Grammar trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" placeholder="Escribe aquí" aria-label="Your answer" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="primary" id="paCheck">Check</button><button id="paShow">Show answer</button><button id="paNext">New question</button></div>
+          <div class="btns" id="accKeys" style="margin-top:6px"></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Who's being addressed?</h2></div></div>
+          <canvas id="predC" aria-label="Register grid: the right box lights up after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns"><button data-a="tu">tú</button><button data-a="usted">usted</button><button data-a="vosotros">vosotros</button><button data-a="ustedes">ustedes</button></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next sentence</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+<div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Exam skills</p><h2>Oral and written skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Habits that earn marks in the oral and written papers. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Key Spanish words and phrases for this unit, with their English meaning.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Busca: usted, hermano, ¿dónde?…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= PHRASE BANK ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Phrase bank</h2></div><p>Verb tables, question words and key phrases for meeting people, on one page.</p></div>
+      <div class="sheet" id="pbank"></div>
+      <footer>
+        <p>Based on Unit I.1 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/spanish/" target="_blank" rel="noopener">Leaving Certificate Spanish Syllabus</a> (Department of Education, common modern-languages framework). Performance targets are quoted from the syllabus. Dialogues, people and survey data are invented for practice; speaker numbers are approximate.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("es-theme","auto"), font = store.get("es-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("es-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("es-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  registro:'<circle cx="8" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M3 20a5 5 0 0110 0M12 20a5 5 0 0110 0"/>',
+  preguntas:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/>',
+  datos:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M6 16a3 3 0 015 0M14 10h4M14 14h4"/>',
+  familia:'<circle cx="12" cy="5" r="2"/><circle cx="6" cy="13" r="2"/><circle cx="18" cy="13" r="2"/><path d="M12 7v3M6 10h12M6 10v1M18 10v1M6 15v4M18 15v4"/>',
+  estudios:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>',
+  cortesia:'<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>',
+  kiss:'<circle cx="8" cy="10" r="4"/><circle cx="16" cy="10" r="4"/><path d="M6 20c2-3 10-3 12 0"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/>',
+  hand:'<path d="M7 11V6a1.5 1.5 0 013 0v4M10 10V4.5a1.5 1.5 0 013 0V10M13 10V5.5a1.5 1.5 0 013 0V12M16 9a1.5 1.5 0 013 0v4a7 7 0 01-7 7h-1a6 6 0 01-5-3l-2-4a1.5 1.5 0 012.5-1.5L7 13"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"registro", name:"Tú, usted & greetings", short:"Greetings, goodbyes and the four ways to say \"you\": tú, usted, vosotros, ustedes.", tint:"var(--blush)"},
+  {id:"preguntas", name:"Asking questions", short:"Question words with accents, ¿…?, inversion and prepositions first.", tint:"var(--apricot)"},
+  {id:"datos", name:"Personal details", short:"Name, age, nationality, address, phone number and languages.", tint:"var(--sage)"},
+  {id:"familia", name:"Family & home", short:"Family words, describing people, and your home.", tint:"var(--cream)"},
+  {id:"estudios", name:"Where I live, study & work", short:"Your area, your school subjects and part-time jobs.", tint:"var(--blush)"},
+  {id:"cortesia", name:"Social phrases", short:"Introducing people, asking after them, wishes, congratulations, compliments, apologies and excuses.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+const LO = [
+  ["datos","Giving and seeking personal details, e.g. name, address, nationality, telephone number"],
+  ["datos","Asking what languages someone speaks"],
+  ["datos","Stating what languages you speak"],
+  ["familia","Discussing family and home"],
+  ["estudios","Asking about and describing the general nature of the region or locality in which someone lives"],
+  ["estudios","Enquiring about and describing studies or work"],
+  ["cortesia","Introducing a third party"],
+  ["cortesia","Asking after someone"],
+  ["cortesia","Wishing someone well"],
+  ["cortesia","Congratulating someone"],
+  ["cortesia","Making compliments"],
+  ["cortesia","Apologising"],
+  ["cortesia","Making excuses"],
+  ["registro","Developing an awareness of appropriateness of register"],
+  ["preguntas","Developing correct usage of question forms, appropriate replies, and interrogatives, including tone, ¿…? accents and punctuation"],
+  ["registro","Awareness of the conditioning of language by social context"],
+];
+const LO_HEAD = {datos:"Performance target",familia:"Performance target",estudios:"Performance target",cortesia:"Performance target",registro:"Linguistic skill",preguntas:"Linguistic skill"};
+
+/* ---------- glossary: [Spanish, English, note, topic] ---------- */
+const GLOSS = [
+  ["hola","hello","The everyday greeting, any time of day.","registro"],
+  ["buenos días","good morning","Until lunchtime (about 2 pm in Spain).","registro"],
+  ["buenas tardes","good afternoon / evening","From lunch until it gets dark.","registro"],
+  ["buenas noches","good evening / good night","Used both as a greeting and when going to bed.","registro"],
+  ["adiós","goodbye","Also hasta luego (see you later), hasta mañana (see you tomorrow), chao (informal).","registro"],
+  ["¿Qué tal?","how are things?","Informal greeting. Answer: bien, muy bien, regular, fatal.","registro"],
+  ["encantado / encantada","pleased to meet you","Agrees with the speaker: a girl says encantada. Also mucho gusto.","registro"],
+  ["tú","you (one friend)","Informal singular. ¿Cómo estás?","registro"],
+  ["usted","you (one person, formal)","Formal singular, often written Ud. Takes the él/ella verb form: ¿Cómo está usted?","registro"],
+  ["vosotros / vosotras","you (several friends)","Informal plural, used in Spain. ¿Cómo estáis?","registro"],
+  ["ustedes","you (several, formal; all plural in Latin America)","Written Uds. Takes the ellos verb form: ¿Cómo están?","registro"],
+  ["registro","register","How formal or informal your language is.","registro"],
+  ["¿Cómo?","how?","¿Cómo te llamas? ¿Cómo estás?","preguntas"],
+  ["¿Qué?","what? / which?","Before a noun: ¿Qué idiomas hablas?","preguntas"],
+  ["¿Cuál?","which? / what?","Before es/son: ¿Cuál es tu número de teléfono?","preguntas"],
+  ["¿Dónde?","where?","¿Dónde vives? ¿De dónde eres? (where from?)","preguntas"],
+  ["¿Cuándo?","when?","¿Cuándo es tu cumpleaños?","preguntas"],
+  ["¿Cuánto / cuántos?","how much / how many?","Agrees: ¿Cuántos años? ¿Cuántas horas?","preguntas"],
+  ["¿Quién?","who?","¿Quién es? Plural: ¿Quiénes son?","preguntas"],
+  ["¿Por qué?","why?","Answer with porque (because): one word, no accent.","preguntas"],
+  ["tilde","written accent","The mark on á é í ó ú. Every question word has one.","preguntas"],
+  ["¿ ¡","opening marks","Spanish questions and exclamations open with an upside-down mark.","preguntas"],
+  ["me llamo","my name is","From llamarse: me llamo, te llamas, se llama…","datos"],
+  ["tengo … años","I am … years old","Age uses tener (to have), not ser.","datos"],
+  ["soy irlandés / irlandesa","I'm Irish","Nationalities agree with the person and take no capital letter.","datos"],
+  ["hablo","I speak","From hablar: hablo inglés, irlandés y un poco de español.","datos"],
+  ["vivo en","I live in","From vivir. Vivo en una casa / un piso.","datos"],
+  ["la dirección","address","Mi dirección es…","datos"],
+  ["el número de teléfono","phone number","Read in pairs or single digits: cero, ocho, siete…","datos"],
+  ["el cumpleaños","birthday","Mi cumpleaños es el tres de mayo.","datos"],
+  ["concordancia","agreement","Adjectives match the noun in gender and number: simpático/simpática/simpáticos.","datos"],
+  ["los padres","parents","Mis padres = my parents (not \"my fathers\").","familia"],
+  ["los hermanos","brothers and sisters / brothers","The masculine plural covers a mixed group.","familia"],
+  ["hijo único / hija única","only child","Soy hija única.","familia"],
+  ["el abuelo / la abuela","grandfather / grandmother","Los abuelos = grandparents.","familia"],
+  ["el tío / la tía","uncle / aunt","Also, informally, \"guy\" in Spain: ¿Qué tal, tío?","familia"],
+  ["el primo / la prima","cousin","Mis primos viven en Cork.","familia"],
+  ["mayor / menor","older / younger","Mi hermano mayor, mi hermana menor.","familia"],
+  ["llevarse bien con","to get on well with","Me llevo muy bien con mi hermana.","familia"],
+  ["el barrio","neighbourhood","Mi barrio es tranquilo.","estudios"],
+  ["el pueblo / la ciudad","village, town / city","Vivo en un pueblo en el sur de Irlanda.","estudios"],
+  ["la asignatura","school subject","Mi asignatura favorita es la historia.","estudios"],
+  ["el instituto / el colegio","secondary school","Estoy en sexto año en el instituto.","estudios"],
+  ["el trabajo a tiempo parcial","part-time job","Trabajo los sábados en un supermercado.","estudios"],
+  ["presentar","to introduce","Te presento a… (informal) / Le presento a… (formal).","cortesia"],
+  ["¡Enhorabuena!","congratulations!","For an achievement: passing an exam, a new job.","cortesia"],
+  ["¡Felicidades!","congratulations / happy birthday","For celebrations: birthdays, weddings.","cortesia"],
+  ["¡Que te mejores!","get well soon!","Que + subjunctive expresses a wish.","cortesia"],
+  ["¡Mucha suerte!","good luck!","Also ¡Que tengas suerte!","cortesia"],
+  ["perdón / perdona / perdone","sorry / excuse me","Perdona (tú), perdone (usted).","cortesia"],
+  ["lo siento","I'm sorry","Lo siento mucho = I'm very sorry.","cortesia"],
+  ["es que…","it's just that…","Introduces an excuse: Es que tengo que estudiar.","cortesia"],
+  ["¡Qué …!","how …! / what a …!","For compliments: ¡Qué bonito! ¡Qué chaqueta más bonita!","cortesia"],
+].map(([t,aka,d,topic])=>({t,aka,d,topic,id:"g-"+t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-")+"-"+t.length}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["usted","usted"],["vosotros","vosotros / vosotras"],["ustedes","ustedes"],["register","registro"],["agreement","concordancia"],["accent","tilde"]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rr(ctx,x,y,w,h,r){ if(w<0){ x+=w; w=-w; } if(h<0){ y+=h; h=-h; } r=Math.max(0,Math.min(r,h/2,w/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function arrowHead(ctx,x,y,dx,dy,col,s=8){ ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x+dx*s,y+dy*s); ctx.lineTo(x-dx*s*0.6-dy*s*0.7,y-dy*s*0.6+dx*s*0.7); ctx.lineTo(x-dx*s*0.6+dy*s*0.7,y-dy*s*0.6-dx*s*0.7); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const nf = (x,d=0) => { const s=(Math.round(x*10**d)/10**d).toFixed(d); const [i,f]=s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f?"."+f:""); };
+const eur = x => "€"+nf(x, Math.abs(x-Math.round(x))>0.004?2:0);
+const niceStep = (range,n) => { const r=range/Math.max(1,n), p=10**Math.floor(Math.log10(r)), m=r/p; return (m<=1?1:m<=2?2:m<=5?5:10)*p; };
+const tick = v => String(+v.toFixed(6));
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+// Axes: returns mapping functions. o: x0,x1,y0,y1,xl,yl,compact
+function frame(ctx,w,h,o){
+  const cp=o.compact, L=cp?36:50, R=12, T=cp?12:16, B=cp?24:34, fs=cp?9:11;
+  const X=v=>L+(v-o.x0)/(o.x1-o.x0)*(w-L-R), Y=v=>h-B-(v-o.y0)/(o.y1-o.y0)*(h-B-T);
+  const xs=o.xt||niceStep(o.x1-o.x0, Math.max(3,Math.floor((w-L)/70))), ys=o.yt||niceStep(o.y1-o.y0, Math.max(3,Math.floor((h-B)/45)));
+  for(let v=Math.ceil(o.x0/xs)*xs; v<=o.x1+1e-9; v+=xs){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,tick(v),X(v),h-B+(cp?11:14),C.muted,M(fs),"center"); }
+  for(let v=Math.ceil(o.y0/ys)*ys; v<=o.y1+1e-9; v+=ys){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,tick(v),L-5,Y(v)+3,C.muted,M(fs),"right"); }
+  const y0=Y(Math.max(o.y0,Math.min(o.y1,0)));
+  line(ctx,L,y0,w-R,y0,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(o.xl) text(ctx,o.xl,w-R,h-B+(cp?22:30),C.muted,F(cp?10:12),"right");
+  if(o.yl) text(ctx,o.yl,L+6,T+(cp?10:12),C.muted,F(cp?10:12),"left");
+  return {X,Y,L,R,T,B};
+}
+function curve(ctx,f,x0,x1,X,Y,col,lw=2.5,dash,clip){ ctx.save(); if(clip){ ctx.beginPath(); ctx.rect(clip[0],clip[1],clip[2],clip[3]); ctx.clip(); } ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); const n=120; for(let i=0;i<=n;i++){ const x=x0+(x1-x0)*i/n, y=f(x); if(i) ctx.lineTo(X(x),Y(y)); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore(); }
+
+/* ================= MODELS + DRAWINGS ================= */
+function pointerTap(el,fn){ el.addEventListener("pointerdown",e=>{ const r=el.getBoundingClientRect(); fn(e.clientX-r.left,e.clientY-r.top); }); }
+const pick=a=>a[Math.floor(Math.random()*a.length)], shuffle=a=>{ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+// Spanish numbers 0-100. before=true gives the form before a masculine noun (un año, veintiún años)
+const UNITS = "cero uno dos tres cuatro cinco seis siete ocho nueve diez once doce trece catorce quince dieciséis diecisiete dieciocho diecinueve veinte veintiuno veintidós veintitrés veinticuatro veinticinco veintiséis veintisiete veintiocho veintinueve".split(" ");
+const TENS = {30:"treinta",40:"cuarenta",50:"cincuenta",60:"sesenta",70:"setenta",80:"ochenta",90:"noventa"};
+function numES(n,before){ let s; if(n<30) s=UNITS[n]; else if(n===100) s="cien"; else { const t=Math.floor(n/10)*10, u=n%10; s=TENS[t]+(u?" y "+UNITS[u]:""); }
+  if(before){ if(s==="veintiuno") s="veintiún"; else if(s.endsWith("uno")) s=s.slice(0,-3)+"un"; } return s; }
+// Register
+const REGS = [["tu","tú","informal, one person","¿Cómo estás?","¿De dónde eres?"],["usted","usted","formal, one person","¿Cómo está?","¿De dónde es?"],["vosotros","vosotros","informal, several (Spain)","¿Cómo estáis?","¿De dónde sois?"],["ustedes","ustedes","formal, several (all plural in Latin America)","¿Cómo están?","¿De dónde son?"]];
+const PEOPLE = [
+  ["Tu mejor amigo, Pablo","tu","He's a friend your age."],["La directora del instituto","usted","Someone in authority: be respectful."],["Tu abuela","tu","In Spain most people use tú with family, even grandparents."],["Un policía en la calle","usted","A stranger and an official."],
+  ["Tus dos primas","vosotros","Several people you know well (vosotras for an all-female group)."],["Dos señores mayores en el tren","ustedes","Several older strangers."],["Una compañera de clase","tu","Someone your own age."],["La médica en el hospital","usted","A professional you don't know."],
+  ["Tu equipo de fútbol","vosotros","A group of friends."],["Los padres de tu amigo, la primera vez","ustedes","Adults you're meeting for the first time: start formal."],["Un niño pequeño perdido","tu","Adults use tú with children."],["Tu jefe en el trabajo de verano","usted","Your boss, at least until they say \"tutéame\"."],
+];
+function drawRegister(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, L=cp?22:70, T=cp?20:30, cw=(w-L-10)/2, ch=(h-T-10)/2;
+  text(ctx,"one person",L+cw/2,T-8,C.muted,F(cp?10:12),"center"); text(ctx,"several",L+cw*1.5,T-8,C.muted,F(cp?10:12),"center");
+  if(!cp){ text(ctx,"informal",L-8,T+ch/2,C.muted,F(12),"right"); text(ctx,"formal",L-8,T+ch*1.5,C.muted,F(12),"right"); }
+  const pos={tu:[0,0],vosotros:[1,0],usted:[0,1],ustedes:[1,1]}, cols={tu:"blush",vosotros:"apricot",usted:"sage",ustedes:"cream"};
+  REGS.forEach(([k,lab,desc,ej])=>{ const [cx,cy]=pos[k], x=L+cx*cw, y=T+cy*ch, hit=o.hl===k;
+    rr(ctx,x+4,y+4,cw-8,ch-8,14); ctx.fillStyle=C[cols[k]]; ctx.fill(); ctx.lineWidth=hit?4:1.5; ctx.strokeStyle=hit?C.terra:C.line; ctx.stroke();
+    text(ctx,lab,x+cw/2,y+(cp?22:32),"#3b2b21",F(cp?14:20,800),"center"); if(!cp) text(ctx,ej,x+cw/2,y+54,"#3b2b21",M(13),"center");
+    const items=(o.placed||[]).filter(p=>p.k===k); items.slice(-4).forEach((p,j)=>text(ctx,(p.ok?"✓ ":"✗ ")+p.n,x+cw/2,y+(cp?40:78)+j*(cp?12:17),"#3b2b21",F(cp?9:11),"center")); });
+}
+// Question wheel
+const QW = ["¿Cómo?","¿Cuántos?","¿Dónde?","¿De dónde?","¿Cuándo?","¿Qué?","¿Cuál?","¿Por qué?","¿Quién?","¿Con quién?","¿A qué hora?","¿En qué?"];
+const QA = [
+  ["Me llamo Aoife.","¿Cómo?","¿Cómo te llamas?"],["Tengo diecisiete años.","¿Cuántos?","¿Cuántos años tienes?"],["Vivo en Galway.","¿Dónde?","¿Dónde vives?"],["Soy de Irlanda.","¿De dónde?","¿De dónde eres?"],
+  ["Mi cumpleaños es el tres de mayo.","¿Cuándo?","¿Cuándo es tu cumpleaños?"],["Hablo inglés, irlandés y español.","¿Qué?","¿Qué idiomas hablas?"],["Tengo dos hermanos.","¿Cuántos?","¿Cuántos hermanos tienes?"],["Mi asignatura favorita es la biología.","¿Cuál?","¿Cuál es tu asignatura favorita?"],
+  ["Estudio español porque me encanta viajar.","¿Por qué?","¿Por qué estudias español?"],["Vivo con mis padres y mi hermana.","¿Con quién?","¿Con quién vives?"],["Llego al instituto a las ocho y media.","¿A qué hora?","¿A qué hora llegas al instituto?"],["Mi madre trabaja en un hospital: es enfermera.","¿En qué?","¿En qué trabaja tu madre?"],
+  ["Estoy muy bien, gracias.","¿Cómo?","¿Cómo estás?"],["Es mi primo Daniel.","¿Quién?","¿Quién es?"],["Mi número de teléfono es el ochenta y siete, doce, treinta y cuatro…","¿Cuál?","¿Cuál es tu número de teléfono?"],
+];
+function drawWheel(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, cx=w/2, cy=h/2, R=Math.min(w,h)/2-8, r0=R*0.34, n=QW.length, cols=["blush","apricot","sage","cream"], P=[];
+  QW.forEach((q,i)=>{ const a0=-Math.PI/2+i*2*Math.PI/n, a1=a0+2*Math.PI/n, sel=o.sel===q, good=o.ans===q;
+    ctx.beginPath(); ctx.moveTo(cx+Math.cos(a0)*r0,cy+Math.sin(a0)*r0); ctx.arc(cx,cy,R,a0,a1); ctx.arc(cx,cy,r0,a1,a0,true); ctx.closePath();
+    ctx.fillStyle= good? C.olive : sel? C.terra : C[cols[i%4]]; ctx.fill(); ctx.strokeStyle=C.surface; ctx.lineWidth=2; ctx.stroke();
+    const am=(a0+a1)/2, tr=(R+r0)/2+R*0.02; P.push(am); text(ctx,q,cx+Math.cos(am)*tr,cy+Math.sin(am)*tr+4,(good||sel)?(C["on-accent"]||"#fff"):"#3b2b21",F(cp?8:Math.max(9,Math.min(13,R/15))),"center"); });
+  circle(ctx,cx,cy,r0-4,C.surface,C.line,1.5); text(ctx,"¿ … ?",cx,cy+6,C.terra,F(cp?14:22,800),"center");
+  return {cx,cy,R,r0,n};
+}
+// Family tree
+const FAM = [
+  ["Antonio","abuelo",.3,.08],["Rosa","abuela",.7,.08],
+  ["Javier","padre",.12,.42],["Lucía","madre",.37,.42],["Elena","tía",.63,.42],["Miguel","tío",.88,.42],
+  ["Diego","hermano",.05,.82],["Yo","yo",.2,.82],["Marta","hermana",.35,.82],["Pablo","primo",.7,.82],["Sara","prima",.88,.82],
+];
+const FAM_E = [[0,1,"m"],[2,3,"m"],[4,5,"m"]];
+function drawTree(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, px=cp?22:44, py=cp?18:30, P=FAM.map(f=>[px+f[2]*(w-2*px), py+f[3]*(h-2*py-14)]), R=cp?11:20;
+  const mid=(a,b)=>[(P[a][0]+P[b][0])/2,P[a][1]];
+  FAM_E.forEach(([a,b])=>line(ctx,P[a][0],P[a][1],P[b][0],P[b][1],C.olive,cp?2:3));
+  const kids=(couple,ch)=>{ const [mx,my]=mid(...couple), yb=(my+P[ch[0]][1])/2; line(ctx,mx,my,mx,yb,C.olive,cp?1.5:2.5); line(ctx,Math.min(...ch.map(c=>P[c][0]),mx),yb,Math.max(...ch.map(c=>P[c][0]),mx),yb,C.olive,cp?1.5:2.5); ch.forEach(c=>line(ctx,P[c][0],yb,P[c][0],P[c][1],C.olive,cp?1.5:2.5)); };
+  kids([0,1],[3,4]); kids([2,3],[6,7,8]); kids([4,5],[9,10]);
+  FAM.forEach((f,i)=>{ const [x,y]=P[i], hl=o.hl===i, me=f[1]==="yo"; circle(ctx,x,y,R,me?C.terra:hl?C.apricot:C.sage,hl?C.terra:C.surface,hl?4:2);
+    text(ctx,me?"YO":f[0][0],x,y+1,me?(C["on-accent"]||"#fff"):"#3b2b21",F(cp?10:15,800),"center","middle");
+    text(ctx, o.reveal||me ? (me?"yo":f[0]+(o.words?` (${f[1]})`:"")) : f[0], x, y+R+(cp?10:15), C.ink, F(cp?8:11), "center"); });
+  return P;
+}
+// Study vs work survey
+function drawSurvey(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const pts=o.pts||[], fr=frame(ctx,w,h,{x0:0,x1:30,y0:0,y1:24,xl:"horas de estudio",yl:"horas de trabajo",compact:o.compact,xt:5,yt:4});
+  const f=fitLine(pts); if(f) line(ctx,fr.X(0),fr.Y(f.c),fr.X(30),fr.Y(f.c+f.m*30),C.terra,2.5,[7,5]);
+  pts.forEach(([x,y],i)=>circle(ctx,fr.X(x),fr.Y(y),o.compact?3.5:5,i===pts.length-1?C.apricot:C.surface,C.ink,2));
+}
+function fitLine(pts){ if(pts.length<2) return null; const n=pts.length, mx=pts.reduce((a,p)=>a+p[0],0)/n, my=pts.reduce((a,p)=>a+p[1],0)/n; let sxy=0,sxx=0; pts.forEach(([x,y])=>{ sxy+=(x-mx)*(y-my); sxx+=(x-mx)**2; }); if(!sxx) return null; const m=sxy/sxx; return {m,c:my-m*mx}; }
+// Conversation scene
+function figure(ctx,x,y,s,col){ ctx.save(); ctx.translate(x,y); ctx.scale(s,s); ctx.fillStyle=col; ctx.beginPath(); ctx.arc(0,-46,13,0,7); ctx.fill(); rr(ctx,-16,-30,32,44,12); ctx.fill(); ctx.fillRect(-12,10,9,26); ctx.fillRect(3,10,9,26); ctx.restore(); }
+function drawScene(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, s=cp?0.7:1.1, yb=h-(cp?14:22);
+  line(ctx,10,yb+2,w-10,yb+2,C.line,2);
+  figure(ctx,w*0.2,yb-36*s,s,C.terra); figure(ctx,w*0.8,yb-36*s,s*(o.small?0.75:1),o.formal?C.olive:C.apricot);
+  if(!cp) text(ctx,"tú",w*0.2,yb+18,C.muted,F(12),"center"); if(!cp && o.who) text(ctx,o.who,w*0.8,yb+18,C.muted,F(12),"center");
+  const msg=o.say||"…", bx=w*0.12, by=cp?8:16, bw=w*0.76, bh=cp?40:64;
+  rr(ctx,bx,by,bw,bh,16); ctx.fillStyle=o.ok==null?C.surface:o.ok?C.sage:C.blush; ctx.fill(); ctx.strokeStyle=C.line; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(w*0.2,by+bh); ctx.lineTo(w*0.24,by+bh); ctx.lineTo(w*0.21,by+bh+(cp?10:16)); ctx.closePath(); ctx.fillStyle=o.ok==null?C.surface:o.ok?C.sage:C.blush; ctx.fill();
+  ctx.font=F(cp?11:17); let fs=cp?11:17; while(ctx.measureText(msg).width>bw-24 && fs>8){ fs--; ctx.font=F(fs); }
+  text(ctx,msg,w/2,by+bh/2+fs/3,"#3b2b21",F(fs),"center");
+  if(o.formal!=null){ const tag=o.formal?"formal · usted":"informal · tú"; text(ctx,tag,w*0.8,by+bh+(cp?16:28),C.muted,F(cp?9:12),"center"); }
+}
+
+/* ================= ROUTER ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "registro", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+$("loList").innerHTML = LO.map(([t,s],i)=>`<li><label><input type="checkbox" id="lo${i}"><span class="mono">${i+1}</span><span>${s} <small style="color:var(--muted)">· ${LO_HEAD[t]}</small></span></label></li>`).join("");
+const loState=store.get("es11-lo",{});
+LO.forEach((x,i)=>{ const id="lo"+i; $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("es11-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=LO.filter((x,i)=>$("lo"+i).checked).length; $("stLO").textContent=`${lo}/${LO.length}`; $("stLOb").style.width=(lo/LO.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("es11-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  registro:{ vis:[["reg",{hl:"usted"}]], cap:"Four ways to say \"you\". Usted and ustedes take the same verb endings as él and ellos.",
+    keys:[["👋","Greet by time of day: buenos días, buenas tardes, buenas noches; or just ¡hola! ¿Qué tal?"],["tú","Tú for friends, family and young people; usted for adults you don't know, officials and examiners."],["2+","Plural: vosotros (friends, Spain) and ustedes (formal; in Latin America, everyone)."]],
+    f:"¿Cómo estás? · ¿Cómo está usted? · ¿Cómo estáis? · ¿Cómo están ustedes?", mistake:"Using tú with the examiner or in a formal letter. Usted shows respect, and the register is part of the marks." },
+  preguntas:{ vis:[["wheel",{ans:"¿Dónde?"}]], cap:"Twelve question words. All carry an accent, and the question opens with ¿.",
+    keys:[["¿","Every question opens with ¿ and closes with ?. Exclamations work the same way: ¡Hola!"],["´","Question words always have an accent: ¿qué?, ¿cómo?, ¿dónde?, ¿cuándo?, ¿quién?, ¿cuál?"],["↔","Inversion puts the subject after the verb (¿Cómo estás tú?); prepositions go first (¿A qué hora? ¿Con quién?)."]],
+    f:"¿ + (preposition) + question word + verb + (subject)?", mistake:"Writing \"Donde vives?\" Without the accent and the opening ¿, it isn't a correct question." },
+  datos:{ vis:[["card",{}]], cap:"Your ficha in Spanish: name, age, nationality, home and languages.",
+    keys:[["🎂","Age uses tener: Tengo diecisiete años (not \"soy diecisiete\")."],["🇮🇪","Nationalities agree and have no capital: soy irlandés (boy), soy irlandesa (girl)."],["☎","Say phone numbers in pairs or single digits, and learn numbers to 100 perfectly."]],
+    f:"Me llamo… · Tengo … años · Soy … · Vivo en … · Hablo …", mistake:"\"Soy 17 años.\" In Spanish you have years: tengo 17 años." },
+  familia:{ vis:[["tree",{reveal:true,words:true}]], cap:"La familia de Yo: padres, hermanos, abuelos, tíos y primos.",
+    keys:[["♂♀","Most family words change -o / -a: hermano/hermana, tío/tía, primo/prima, abuelo/abuela."],["+","The masculine plural covers mixed groups: mis padres (my parents), mis hermanos (my brothers and sisters)."],["💬","Add detail: Es simpático. Se llama Diego. Me llevo bien con él."]],
+    f:"Tengo un hermano y dos hermanas · Soy hijo único / hija única", mistake:"\"Mis padres\" means my parents, not my fathers. For family members, use the masculine plural for mixed groups." },
+  estudios:{ vis:[["survey",{pts:[[8,16],[12,12],[15,10],[18,7],[22,5],[25,2]]}]], cap:"Survey data (invented): the more hours students study, the fewer they work.",
+    keys:[["🏘","Describe your area: Vivo en un pueblo / una ciudad / el campo, en el norte / sur / este / oeste de Irlanda."],["📚","School: Estoy en sexto año. Estudio siete asignaturas. Mi asignatura favorita es…"],["💼","Work: Trabajo los sábados en una tienda. Gano diez euros por hora."]],
+    f:"Estudio … horas a la semana y trabajo … horas", mistake:"Forgetting the article with subjects: \"Mi asignatura favorita es la historia\", not \"es historia\"." },
+  cortesia:{ vis:[["scene",{say:"¡Enhorabuena por el examen!",ok:true,formal:false,who:"amiga"}]], cap:"Congratulating a friend: informal, warm and short.",
+    keys:[["🤝","Introduce: Te presento a mi amiga Clara (tú) · Le presento a… (usted). Reply: Encantado/a, mucho gusto."],["🎉","Wish and congratulate: ¡Enhorabuena! ¡Felicidades! ¡Que te mejores! ¡Mucha suerte!"],["🙏","Apologise and excuse: Lo siento. Perdona / perdone. Es que perdí el autobús."]],
+    f:"Lo siento, es que… · ¡Qué … tan bonito!", mistake:"Using ¡Felicidades! for an exam result. For an achievement, say ¡Enhorabuena!" },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  ["registro","1 · Greet","var(--blush)","¡Hola! Buenos días. ¿Qué tal?"],
+  ["datos","2 · Introduce yourself","var(--apricot)","Me llamo Aoife. Soy irlandesa y tengo diecisiete años."],
+  ["preguntas","3 · Ask back","var(--sage)","¿Y tú? ¿Cómo te llamas? ¿De dónde eres?"],
+  ["familia","4 · Share a detail","var(--cream)","Vivo en Limerick con mis padres y mi hermano."],
+  ["cortesia","5 · Close politely","var(--blush)","Encantada de conocerte. ¡Hasta luego!"],
+];
+$("cases").innerHTML = CASES.map(([i,n,tn,d])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${n}</h3></div><p style="font-family:var(--f-display);font-size:1.05rem">${d}</p></div>`).join("");
+(()=>{ const B=[["México",130],["Colombia",52],["España",48],["Argentina",45],["Estados Unidos",42]], mx=130;
+  $("bars").innerHTML = B.map(([n,v],i)=>`<div class="barrow"><span><b>${n}</b></span><div class="track"><i style="width:${(v/mx*100).toFixed(1)}%;background:var(--${["terra","apricot","sage","blush","olive"][i]})"></i></div><span class="v">~${v} m</span></div>`).join("") + `<p class="result">Approximate native speakers, rounded (the US figure counts native speakers only). Spain has only about a tenth of the world's Spanish speakers, so learn both vosotros and ustedes.</p>`; })();
+const AROUND = [
+  ["kiss","Dos besos","In Spain, friends and family usually greet with two kisses on the cheek (right then left). In business, shake hands.",[["Spain","neutral"],["Informal","real"]],"var(--blush)"],
+  ["clock","Buenas tardes at 7 pm?","Spanish days run late: lunch at 2–3 pm, dinner at 9–10 pm. Buenas tardes lasts until dark.",[["Greetings","neutral"]],"var(--apricot)"],
+  ["hand","Two surnames","Spanish speakers have two surnames: the father's first, then the mother's. Gabriel García Márquez.",[["Personal details","real"]],"var(--sage)"],
+  ["globe","Ustedes everywhere","In Latin America and the Canaries, ustedes is the only plural \"you\", friendly or formal.",[["Register","real"],["Latin America","neutral"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+// Phrase bank
+const VERBS = [["ser (to be)",["soy","eres","es","somos","sois","son"]],["estar (to be)",["estoy","estás","está","estamos","estáis","están"]],["tener (to have)",["tengo","tienes","tiene","tenemos","tenéis","tienen"]],["llamarse (to be called)",["me llamo","te llamas","se llama","nos llamamos","os llamáis","se llaman"]],["vivir (to live)",["vivo","vives","vive","vivimos","vivís","viven"]],["hablar (to speak)",["hablo","hablas","habla","hablamos","habláis","hablan"]]];
+const PRON = ["yo","tú","él / ella / usted","nosotros/as","vosotros/as","ellos / ellas / ustedes"];
+$("pbank").innerHTML = VERBS.map(([v,f])=>`<div class="panel fcell"><span class="pill">Verb</span><span class="big">${v}</span><table class="ptable">${f.map((x,i)=>`<tr><td>${PRON[i]}</td><td><b>${x}</b></td></tr>`).join("")}</table></div>`).join("")
+  + `<div class="panel fcell"><span class="pill a">Questions</span><span class="big">${QW.join(" ")}</span><dl><dt>Remember</dt><dd>¿ at the start, accent on the question word</dd></dl></div>`
+  + `<div class="panel fcell"><span class="pill a">Me presento</span><span class="big">Me llamo… · Tengo … años</span><dl><dt>Soy</dt><dd>irlandés / irlandesa · de Cork</dd><dt>Vivo</dt><dd>en un pueblo / una ciudad</dd><dt>Hablo</dt><dd>inglés, irlandés y español</dd></dl></div>`
+  + `<div class="panel fcell"><span class="pill a">Familia</span><span class="big">padre · madre · hermano/a · abuelo/a · tío/a · primo/a</span><dl><dt>Mixed plural</dt><dd>mis padres, mis hermanos, mis abuelos</dd></dl></div>`
+  + `<div class="panel fcell"><span class="pill a">Cortesía</span><span class="big">¡Enhorabuena! · ¡Felicidades! · ¡Que te mejores! · Lo siento, es que…</span><dl><dt>Presentar</dt><dd>Te presento a… / Le presento a…</dd></dl></div>`
+  + `<div class="panel fcell"><span class="pill a">Números</span><span class="big">16 dieciséis · 21 veintiuno · 22 veintidós</span><dl><dt>Tens</dt><dd>treinta, cuarenta, cincuenta, sesenta, setenta, ochenta, noventa, cien</dd><dt>Before a noun</dt><dd>un año, veintiún años, treinta y un años</dd></dl></div>`;
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"registro",label:"Registro",col:"var(--blush)",leaves:[["tú","One friend."],["usted","One, formal."],["vosotros","Several friends."],["ustedes","Several, formal."]]},
+  {id:"preguntas",label:"Preguntas",col:"var(--apricot)",leaves:[["¿ … ?","Opening mark."],["Tildes","Accent on every question word."],["Inversion","¿Cómo estás tú?"],["Prepositions","¿A qué hora?"]]},
+  {id:"datos",label:"Mis datos",col:"var(--sage)",leaves:[["Nombre","Me llamo…"],["Edad","Tengo … años."],["Nacionalidad","Soy irlandés/a."],["Idiomas","Hablo…"]]},
+  {id:"familia",label:"Familia",col:"var(--cream)",leaves:[["-o / -a","tío, tía."],["Mixed plural","mis padres."],["Detail","Es simpático."]]},
+  {id:"estudios",label:"Estudios",col:"var(--blush)",leaves:[["Mi barrio","Vivo en…"],["Asignaturas","Mi favorita es…"],["Trabajo","Trabajo los sábados."]]},
+  {id:"cortesia",label:"Cortesía",col:"var(--sage)",leaves:[["Presentar","Te / le presento a…"],["Desear","¡Que te mejores!"],["Felicitar","¡Enhorabuena!"],["Disculparse","Lo siento, es que…"]]},
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Conocer</text><text x="${cx}" y="${cy+22}" text-anchor="middle">a gente</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["registro","How do you say \"How are you?\" to a friend, and to the examiner?","¿Cómo estás? (tú) · ¿Cómo está usted? (usted)."],
+  ["registro","When do you use vosotros?","Talking to several friends or family members, in Spain."],
+  ["registro","Which verb form does usted take?","The third person (él/ella): usted es, usted tiene, usted vive."],
+  ["registro","\"Pleased to meet you\" (said by a girl)?","Encantada. (A boy says encantado; anyone can say mucho gusto.)"],
+  ["registro","Good evening / good night?","Buenas noches."],
+  ["preguntas","What punctuation does a Spanish question need?","An opening ¿ and a closing ?."],
+  ["preguntas","\"Where are you from?\"","¿De dónde eres?"],
+  ["preguntas","\"How old are you?\"","¿Cuántos años tienes?"],
+  ["preguntas","¿Qué or ¿Cuál with \"What's your phone number?\"","¿Cuál es tu número de teléfono? (¿Cuál? before es.)"],
+  ["preguntas","Por qué vs porque?","¿Por qué? = why? (two words, accent) · porque = because."],
+  ["datos","\"I'm 17.\"","Tengo diecisiete años."],
+  ["datos","\"She is Irish.\"","Es irlandesa. (No capital letter; feminine ending.)"],
+  ["datos","\"I speak English, Irish and a little Spanish.\"","Hablo inglés, irlandés y un poco de español."],
+  ["datos","21 years old?","Veintiún años (uno → un before a masculine noun)."],
+  ["datos","Spell out 16 and 22.","Dieciséis, veintidós (both with accents)."],
+  ["familia","My parents?","Mis padres."],
+  ["familia","\"I'm an only child\" (girl)?","Soy hija única."],
+  ["familia","My cousin (girl) / my uncle?","Mi prima / mi tío."],
+  ["familia","\"I get on well with my brother.\"","Me llevo bien con mi hermano."],
+  ["estudios","\"I live in a village in the south of Ireland.\"","Vivo en un pueblo en el sur de Irlanda."],
+  ["estudios","\"My favourite subject is history.\"","Mi asignatura favorita es la historia."],
+  ["estudios","\"I work on Saturdays in a shop.\"","Trabajo los sábados en una tienda."],
+  ["cortesia","Introduce your friend Clara to your teacher.","Le presento a mi amiga Clara."],
+  ["cortesia","Congratulate a friend on passing an exam.","¡Enhorabuena!"],
+  ["cortesia","\"Get well soon!\"","¡Que te mejores!"],
+  ["cortesia","Apologise for being late and give an excuse.","Siento llegar tarde. Es que perdí el autobús."],
+  ["cortesia","Compliment a friend's jacket.","¡Qué chaqueta más bonita!"],
+];
+let fcKnown = store.get("es11-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter(c=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("es11-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("es11-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("es11-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["registro","Which form do you use with your school principal?",["tú","usted","vosotros","tío"],1,"Usted for adults in authority whom you don't know well."],
+  ["registro","\"¿Cómo estáis?\" is addressed to:",["one friend","one stranger","several friends","several strangers"],2,"-áis is the vosotros ending: several people you know well (in Spain)."],
+  ["registro","In Latin America, talking to several friends, you use:",["vosotros","ustedes","usted","tú"],1,"Ustedes is the only plural \"you\" in Latin America."],
+  ["preguntas","Which question is written correctly?",["Donde vives?","¿Dónde vives?","¿Donde vives?","Dónde vives?"],1,"It needs the opening ¿ and the accent on dónde."],
+  ["preguntas","The answer is \"Tengo dos hermanos.\" The question was:",["¿Cuántos hermanos tienes?","¿Cómo son tus hermanos?","¿Dónde viven tus hermanos?","¿Quién es tu hermano?"],0,"¿Cuántos? asks how many."],
+  ["preguntas","\"¿___ es tu asignatura favorita?\"",["Qué","Cuál","Cuánto","Quién"],1,"Use ¿Cuál? before es when choosing from a set."],
+  ["datos","\"I am seventeen\" is:",["Soy diecisiete años.","Tengo diecisiete años.","Estoy diecisiete años.","Hay diecisiete años."],1,"Age uses tener."],
+  ["datos","A girl from Ireland says:",["Soy Irlandesa.","Soy irlandés.","Soy irlandesa.","Estoy irlandesa."],2,"Nationalities agree with the person and have no capital letter."],
+  ["datos","How do you write 21 in \"21 years\"?",["veintiuno años","veintiún años","veinte y uno años","veintiuna años"],1,"Uno shortens to un before a masculine noun: veintiún años."],
+  ["familia","\"Mis padres\" means:",["my fathers","my parents","my relatives","my grandparents"],1,"The masculine plural covers a mixed pair."],
+  ["familia","Your mother's sister is your:",["prima","sobrina","tía","abuela"],2,"Tía = aunt."],
+  ["estudios","\"Mi asignatura favorita es ___ historia.\"",["el","la","una","—"],1,"Subjects take the article: la historia."],
+  ["estudios","\"Trabajo los sábados\" means:",["I worked on Saturday","I work on Saturdays","I will work on Saturday","I don't work on Saturdays"],1,"Los sábados = on Saturdays (every Saturday)."],
+  ["cortesia","Your friend got great results. You say:",["¡Que te mejores!","¡Lo siento!","¡Enhorabuena!","¡Buen provecho!"],2,"Enhorabuena congratulates an achievement."],
+  ["cortesia","To introduce someone to an older stranger:",["Te presento a…","Le presento a…","Os presento a…","Me presento a…"],1,"Le for usted (formal singular)."],
+  ["cortesia","\"Es que tengo que estudiar\" is:",["a compliment","an excuse","a greeting","congratulations"],1,"Es que… introduces an explanation or excuse."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("es11-best",null); if(best==null||pct>best) store.set("es11-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[A-Za-z]/.test(g.t[0]) ? g.t[0].toUpperCase() : "#";
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/</g,"&lt;")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Contesta en inglés","Answer in English (listening and reading questions are usually answered in English or Irish).","Contesta en inglés a las preguntas."],
+  ["Lee el texto","Read the text.","Lee el texto y contesta a las preguntas."],
+  ["Escucha","Listen.","Escucha la conversación."],
+  ["Escribe","Write.","Escribe un correo electrónico a tu amigo."],
+  ["unas 90 palabras","about 90 words: stay close to the limit.","Escribe unas 90 palabras."],
+  ["Busca / encuentra","Find (a word or phrase in the text).","Busca en el texto una palabra que significa…"],
+  ["Explica","Explain.","Explica por qué…"],
+  ["Menciona","Mention / name.","Menciona dos cosas que…"],
+  ["Rellena","Fill in.","Rellena la ficha."],
+  ["Verdadero o falso","True or false.","¿Verdadero o falso?"],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("");
+
+// Grammar trainer (typed answers; accents checked)
+const PERS = [["yo",0],["tú",1],["él",2],["ella",2],["usted",2],["nosotros",3],["vosotros",4],["ellos",5],["ustedes",5]];
+const NATS = [["Irish","irlandés","irlandesa","irlandeses","irlandesas"],["Spanish","español","española","españoles","españolas"],["English","inglés","inglesa","ingleses","inglesas"],["French","francés","francesa","franceses","francesas"],["Polish","polaco","polaca","polacos","polacas"],["Brazilian","brasileño","brasileña","brasileños","brasileñas"]];
+const strip = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[¿?¡!.,]/g,"").replace(/\s+/g," ").trim();
+const clean = s => s.toLowerCase().replace(/[¿?¡!.,]/g,"").replace(/\s+/g," ").trim();
+const PTYPES = {
+  verb:{ name:"Present tense", gen(){ const [v,forms]=pick(VERBS), [p,i]=pick(PERS), inf=v.split(" ")[0], ans=forms[i];
+      return { q:`Write the present tense of <b>${inf}</b> for <b>${p}</b>.`, ans:[ans], steps:[`${inf}: ${forms.join(", ")}`,`${p} → <b>${ans}</b>${i===2&&p==="usted"?" (usted takes the él/ella form)":""}${i===5&&p==="ustedes"?" (ustedes takes the ellos form)":""}`] }; } },
+  num:{ name:"Numbers", gen(){ const n=pick([rnd(11,29),rnd(11,29),rnd(30,99),rnd(30,99),100,16,21,22,26]);
+      return { q:`Write <b>${n}</b> in Spanish words.`, ans:[numES(n)], steps:[n<30?`11-29 are single words: ${numES(n)}`:n===100?"100 = cien":`${Math.floor(n/10)*10} = ${TENS[Math.floor(n/10)*10]}${n%10?`, then "y" ${UNITS[n%10]}`:""}`,`<b>${numES(n)}</b>`] }; } },
+  age:{ name:"Age", gen(){ const n=rnd(12,45), who=pick([["Tengo","I am"],["Mi hermano tiene","My brother is"],["Mi madre tiene","My mother is"]]);
+      return { q:`Translate: <b>${who[1]} ${n} years old.</b> Start: "${who[0]} …"`, ans:[`${who[0]} ${numES(n,true)} años`.toLowerCase()], steps:[`Age uses tener + number + años`,`${n} before a masculine noun: ${numES(n,true)}`,`<b>${who[0]} ${numES(n,true)} años.</b>`] }; } },
+  nat:{ name:"Nationality", gen(){ const N=pick(NATS), who=pick([["Soy (girl)",2],["Soy (boy)",1],["Mis amigas son",4],["Mis padres son",3]]);
+      return { q:`Complete with the right form of <b>${N[0]}</b>: "${who[0]} ___."`, ans:[N[who[1]]], steps:[`masculine ${N[1]} · feminine ${N[2]} · plural ${N[3]} / ${N[4]}`,`No capital letter. Answer: <b>${N[who[1]]}</b>`] }; } },
+  qw:{ name:"Question words", gen(){ const q=pick(QA);
+      return { q:`Answer: <b>"${q[0]}"</b> Write the question word (with ¿ ? and accent).`, ans:[q[1]], steps:[`Full question: <b>${q[2]}</b>`] }; } },
+};
+let pType="verb", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+$("accKeys").innerHTML = ["á","é","í","ó","ú","ñ","ü","¿","¡"].map(c=>`<button data-c="${c}" style="min-width:38px">${c}</button>`).join("");
+$("accKeys").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const el=$("paIn"), s=el.selectionStart??el.value.length; el.value=el.value.slice(0,s)+b.dataset.c+el.value.slice(el.selectionEnd??s); el.focus(); el.setSelectionRange(s+1,s+1); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paIn").value=""; $("paFb").innerHTML=""; document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{ const v=$("paIn").value; if(!v.trim()){ $("paFb").innerHTML=`<div class="fb no">Type your answer first.</div>`; return; }
+  const exact=pCur.ans.some(a=>clean(a)===clean(v)), close=!exact && pCur.ans.some(a=>strip(a)===strip(v)), needQ=pType==="qw" && exact && !/^¿.*\?$/.test(v.trim());
+  if(!pDone){ pTried++; if(exact&&!needQ) pRight++; pDone=true; }
+  $("paFb").innerHTML = exact&&!needQ? `<div class="fb ok"><b style="color:var(--good)">¡Correcto!</b>${pSteps()}</div>` : exact&&needQ? `<div class="fb no"><b style="color:var(--bad)">Almost.</b> Right word, but a Spanish question needs ¿ at the start and ? at the end.${pSteps()}</div>` : close? `<div class="fb no"><b style="color:var(--bad)">Almost.</b> Check the accents: <b>${pCur.ans[0]}</b>. Accents count in the exam.</div>` : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Try again or show the answer.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; });
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Answer</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Who's being addressed? drill
+const PRED = [["¿Cómo te llamas?","tu"],["¿Cómo se llama usted?","usted"],["¿De dónde sois?","vosotros"],["¿Dónde viven ustedes?","ustedes"],["¿Tienes hermanos?","tu"],["¿Tiene usted hijos?","usted"],["¿Habláis inglés?","vosotros"],["¿Qué estudian ustedes?","ustedes"],["Encantado de conocerle.","usted"],["¿Qué tal estáis?","vosotros"],["¿Qué tal, tío?","tu"],["Siéntese, por favor.","usted"],["Perdona, ¿tienes hora?","tu"],["Perdone, ¿sabe dónde está la estación?","usted"],["Os presento a mi amiga.","vosotros"],["¿Son ustedes los padres de Marta?","ustedes"]];
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>"${PRED[k][0]}"</b> Who is the speaker talking to?`; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{ if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick one first.</div>`; return; }
+  const ans=PRED[pd.k][1], R=REGS.find(r=>r[0]===ans), ok=pd.sel===ans; pd.streak=ok?pd.streak+1:0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Correcto!":"Not quite."}</b> ${R[1]}: ${R[2]}. Look at the verb or pronoun (${R[3]}).${ok?` Streak: ${pd.streak} 🔥`:""}</div>`; });
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions (practice, marks illustrative)
+const LONGQ = [
+  { title:"Written production: a first email", intro:"Escribe un correo electrónico (unas 90 palabras) a tu nuevo amigo / nueva amiga por correspondencia en España. Write in Spanish; the marks shown are illustrative.",
+    parts:[["a","Preséntate: tu nombre, tu edad, tu nacionalidad y dónde vives.",8,"Content (4): all four details. Language (4): tener for age, agreement of nationality, correct present tense. <i>Me llamo Ciara, tengo diecisiete años y soy irlandesa. Vivo en un pueblo cerca de Sligo, en el oeste de Irlanda.</i>"],
+      ["b","Describe a tu familia y tu casa.",8,"Content (4): at least two family members with a detail, and the home. Language (4): possessives, -o/-a agreement, llevarse bien. <i>Vivo con mis padres y mi hermano menor, Liam. Es muy gracioso y nos llevamos bien. Nuestra casa es pequeña pero tiene un jardín bonito.</i>"],
+      ["c","Habla de tus estudios y de tu trabajo a tiempo parcial (si tienes).",8,"Content (4): year, subjects, favourite subject with a reason, work. Language (4): article with subjects, porque, days and times. <i>Estoy en sexto año. Mi asignatura favorita es la biología porque me interesa la naturaleza. Los sábados trabajo en una cafetería.</i>"],
+      ["d","Haz dos preguntas a tu amigo/a y termina el correo.",6,"Two correct questions with ¿ ? and accents (4), informal closing (2). <i>¿Cuántos hermanos tienes? ¿Qué te gusta hacer los fines de semana? ¡Escríbeme pronto! Un abrazo, Ciara</i>"]] },
+  { title:"The oral: general conversation", intro:"The conversation usually opens with questions on this unit. Prepare a full answer to each, then compare with the guide. Marks are illustrative.",
+    parts:[["a","¿Cómo te llamas y cuántos años tienes? ¿Cuándo es tu cumpleaños?",6,"Full sentences, correct numbers and date. <i>Me llamo Seán y tengo diecisiete años. Mi cumpleaños es el doce de septiembre, así que soy uno de los mayores de mi clase.</i> Add a detail to show range."],
+      ["b","Háblame de tu familia.",10,"Number and names, one or two descriptions, relationships, an opinion. <i>Somos cinco en mi familia: mis padres, mis dos hermanas y yo. Mi hermana mayor estudia medicina en Galway. Me llevo muy bien con ella, aunque a veces discutimos.</i>"],
+      ["c","¿Cómo es tu barrio / tu pueblo?",10,"Location, what there is, what you like or don't like. <i>Vivo en un pueblo pequeño en el sur de Irlanda. Es tranquilo y hay un parque bonito, pero no hay mucho para los jóvenes.</i>"],
+      ["d","¿Qué asignaturas estudias? ¿Cuál es tu favorita y por qué?",10,"List, favourite with a reason, a contrast. <i>Estudio siete asignaturas. Mi favorita es el español porque me encanta hablar con gente de otros países. No me gusta nada la física.</i>"],
+      ["e","¿Tienes un trabajo a tiempo parcial?",8,"Where, when, an opinion; or why not. <i>Sí, trabajo los sábados en un supermercado. Es un poco aburrido, pero gano dinero para mis vacaciones.</i> Examiners reward natural, extended answers over memorised speeches."]] },
+  { title:"Reading comprehension", intro:"Lee el texto y contesta en inglés. (Invented text, marks illustrative.) — \"¡Hola! Me llamo Lucía Romero y tengo dieciséis años. Soy de Sevilla, en el sur de España, pero ahora vivo en Madrid con mi madre y mi abuela. Tengo un hermano mayor, Álvaro, que estudia en Valencia. Hablo español, inglés y un poco de francés. Estoy en cuarto de la ESO y mi asignatura favorita es la música. Los domingos trabajo en la panadería de mi tía. ¡Me encantaría visitar Irlanda!\"",
+    parts:[["a","How old is Lucía and where is she from?",4,"16 (2); from Seville, in the south of Spain (2)."],
+      ["b","Who does she live with now, and where?",6,"With her mother and her grandmother (4), in Madrid (2)."],
+      ["c","Give two details about her brother.",4,"He's older (2); he studies in Valencia (2). His name is Álvaro (accept)."],
+      ["d","What languages does she speak?",4,"Spanish, English and a little French (all three for full marks)."],
+      ["e","What does she do on Sundays?",4,"She works in her aunt's bakery (2 + 2)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist (red / amber / green)
+const RAG = ["Greet people at any time of day","Choose tú, usted, vosotros or ustedes","Ask and answer ¿Cómo te llamas? / ¿Cuántos años tienes? / ¿De dónde eres?","Write questions with ¿ ? and accents","Give personal details: name, age, nationality, address, phone","Say numbers 0-100 and dates","Make nationalities agree","Describe my family with details","Describe where I live","Talk about my studies and favourite subject","Talk about a part-time job","Introduce someone formally and informally","Congratulate, wish well and compliment","Apologise and make an excuse"];
+const ragState=store.get("es11-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("es11-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Extend answers","Fact + detail + opinion in every oral answer.","Mi ficha lab"],["Ask back","In conversation, ask questions too: ¿Y tú?","Question wheel lab"],["Register","Match tú/usted to the person and the task.","¿Tú o usted? lab"],["Numbers","Hear and say ages, phone numbers and times without hesitating.","Collect & fit lab"],["Accuracy","Accents, ¿ ¡, and agreement in every written answer.","Grammar trainer"],["Natural phrases","Use set phrases: Es que…, ¡Qué…!, Me llevo bien con…","¿Qué dices? lab"]];
+const skState=store.get("es11-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("es11-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+// Register sorter
+const rg = {order:[], i:0, placed:[]};
+function rgNew(){ rg.order=shuffle(PEOPLE.map((p,i)=>i)); rg.i=0; rg.placed=[]; $("rgFb").innerHTML=""; rgUpd(); }
+function rgUpd(){ const done=rg.i>=rg.order.length, p=done?null:PEOPLE[rg.order[rg.i]], ok=rg.placed.filter(x=>x.ok).length;
+  $("rgQ").innerHTML = done? `¡Terminado! ${ok} of ${PEOPLE.length} correct. <button id="rgAgain" class="primary" style="margin-left:8px">Play again</button>` : `${p[0]}<small>Person ${rg.i+1} of ${PEOPLE.length}</small>`;
+  if(done) $("rgAgain").addEventListener("click",rgNew);
+  const last=rg.placed[rg.placed.length-1], R= last? REGS.find(r=>r[0]===last.k) : null;
+  setReadout($("rgOut"),[["Placed",`${rg.placed.length} of ${PEOPLE.length}`],["Correct",ok],["Last choice",R?`${R[1]}: ${R[3]} ${R[4]}`:"–"]]);
+  if(rgC) rgC.redraw(); }
+$("rgB").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||rg.i>=rg.order.length) return; const p=PEOPLE[rg.order[rg.i]], ok=b.dataset.a===p[1], R=REGS.find(r=>r[0]===p[1]);
+  rg.placed.push({k:b.dataset.a,ok,n:p[0].replace(/^(Tu|Tus|La|El|Un|Una|Los|Dos) /,"").slice(0,16)});
+  $("rgFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Bien!":"Not quite."}</b> ${p[0]} → <b>${R[1]}</b>. ${p[2]}</div>`; rg.i++; rgUpd(); });
+// Question wheel
+const qw = {k:0, sel:null, done:false, streak:0, right:0, tried:0, geo:null};
+function qwNew(){ let k; do{ k=Math.floor(Math.random()*QA.length); }while(k===qw.k && QA.length>1); qw.k=k; qw.sel=null; qw.done=false; $("qwFb").innerHTML=""; qwUpd(); }
+function qwUpd(){ const q=QA[qw.k]; $("qwQ").innerHTML=`"${q[0]}"<small>Which question word asks for this answer?</small>`;
+  setReadout($("qwOut"),[["Score",`${qw.right} / ${qw.tried}`],["Streak",qw.streak],["Full question",qw.done?q[2]:"…"]]); if(qwC) qwC.redraw(); }
+$("qwNext").addEventListener("click",qwNew);
+// Ficha
+const fi = {name:"Aoife", g:"f", age:17, nat:0, town:"Limerick", sib:2, langs:["inglés","irlandés","español"]};
+const LANGS = ["inglés","irlandés","español","francés","alemán","polaco","portugués","italiano"];
+const NAT_SEL = [["irlandés","irlandesa"],["español","española"],["inglés","inglesa"],["francés","francesa"],["polaco","polaca"],["nigeriano","nigeriana"],["brasileño","brasileña"],["estadounidense","estadounidense"]];
+$("fiNat").innerHTML = NAT_SEL.map((n,i)=>`<option value="${i}">${n[0]} / ${n[1]}</option>`).join("");
+$("fiLang").innerHTML = LANGS.map(l=>`<label><input type="checkbox" value="${l}" ${fi.langs.includes(l)?"checked":""}>${l}</label>`).join("");
+const listES = a => a.length<=1? (a[0]||"") : a.slice(0,-1).join(", ")+(/^(i|hi)/.test(a[a.length-1])?" e ":" y ")+a[a.length-1];
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function fiPara(){ const nat=NAT_SEL[fi.nat][fi.g==="f"?1:0], sib=fi.sib===0?(fi.g==="f"?"Soy hija única.":"Soy hijo único."):fi.sib===1?"Tengo un hermano.":`Tengo ${numES(fi.sib)} hermanos.`;
+  return `Me llamo ${fi.name||"…"}. Tengo ${numES(fi.age,true)} años y soy ${nat}. Vivo en ${fi.town||"…"}. ${sib} Hablo ${listES(fi.langs)||"…"}.`; }
+function fiUpd(){ $("fiAo").textContent=fi.age; $("fiSo").textContent=fi.sib; pressGroup([...$("fiG").children],[...$("fiG").children].find(b=>b.dataset.g===fi.g));
+  $("fiPara").innerHTML = esc(fiPara())+`<small>Your opening for the oral and for a first email.</small>`;
+  setReadout($("fiOut"),[["Age in words",`${fi.age} → ${numES(fi.age)} (${numES(fi.age,true)} años)`],["Agreement",`soy ${NAT_SEL[fi.nat][fi.g==="f"?1:0]} (${fi.g==="f"?"feminine":"masculine"})`],["Ask someone else","¿Cómo te llamas? ¿Cuántos años tienes? ¿De dónde eres? ¿Qué idiomas hablas?"]]);
+  if(fiC) fiC.redraw(); }
+$("fiName").addEventListener("input",e=>{ fi.name=e.target.value.trim(); fiUpd(); });
+$("fiTown").addEventListener("input",e=>{ fi.town=e.target.value.trim(); fiUpd(); });
+$("fiAge").addEventListener("input",e=>{ fi.age=+e.target.value; fiUpd(); });
+$("fiSib").addEventListener("input",e=>{ fi.sib=+e.target.value; fiUpd(); });
+$("fiNat").addEventListener("change",e=>{ fi.nat=+e.target.value; fiUpd(); });
+$("fiG").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; fi.g=b.dataset.g; fiUpd(); });
+$("fiLang").addEventListener("change",()=>{ fi.langs=[...$("fiLang").querySelectorAll("input:checked")].map(x=>x.value); fiUpd(); });
+function drawCard(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, d=o.d||fi, x=cp?10:24, y=cp?10:20, cw=w-2*x, ch=h-2*y;
+  rr(ctx,x,y,cw,ch,16); ctx.fillStyle=C.cream; ctx.fill(); ctx.strokeStyle=C.terra; ctx.lineWidth=2; ctx.stroke();
+  rr(ctx,x,y,cw,cp?22:34,16); ctx.fillStyle=C.terra; ctx.fill(); ctx.fillRect(x,y+(cp?12:18),cw,cp?10:16);
+  text(ctx,"FICHA PERSONAL",x+14,y+(cp?15:23),C["on-accent"]||"#fff",F(cp?10:14,800),"left");
+  const ph=Math.min(ch*0.55,cw*0.25); rr(ctx,x+14,y+(cp?32:50),ph*0.8,ph,10); ctx.fillStyle=C.sage; ctx.fill(); circle(ctx,x+14+ph*0.4,y+(cp?32:50)+ph*0.38,ph*0.18,C.surface); rr(ctx,x+14+ph*0.15,y+(cp?32:50)+ph*0.62,ph*0.5,ph*0.3,ph*0.15); ctx.fillStyle=C.surface; ctx.fill();
+  const fx=x+28+ph*0.8, rows=[["Nombre",d.name||"…"],["Edad",`${numES(d.age,true)} años`],["Nacionalidad",NAT_SEL[d.nat][d.g==="f"?1:0]],["Vivo en",d.town||"…"],["Idiomas",listES(d.langs)||"…"]], rh=(ch-(cp?34:56))/rows.length;
+  rows.forEach(([k,v],i)=>{ const ry=y+(cp?32:50)+i*rh; text(ctx,k,fx,ry+(cp?9:13),"#7a6555",F(cp?8:11),"left"); ctx.font=F(cp?11:16,800); let s=v; while(ctx.measureText(s).width>x+cw-fx-12 && s.length>3) s=s.slice(0,-2); if(s!==v) s=s.slice(0,-1)+"…"; text(ctx,s,fx,ry+(cp?21:32),"#3b2b21",F(cp?11:16,800),"left"); });
+}
+// Family quiz
+const fa = {k:-1, done:false, right:0, tried:0, seen:new Set()};
+const FAM_WORDS = ["abuelo","abuela","padre","madre","tío","tía","hermano","hermana","primo","prima"];
+$("faB").innerHTML = FAM_WORDS.map(w=>`<button data-w="${w}">${w}</button>`).join("");
+function faNew(){ const pool=FAM.map((f,i)=>i).filter(i=>FAM[i][1]!=="yo"&&i!==fa.k); fa.k=pick(pool); fa.done=false; $("faFb").innerHTML=""; faUpd(); }
+function faUpd(){ const f=FAM[fa.k]; setReadout($("faOut"),[["Who is lit up?",`${f[0]}${fa.done?` · es mi ${f[1]}`:""}`],["Score",`${fa.right} / ${fa.tried}`],["People found",`${fa.seen.size} of 10`]]); if(faC) faC.redraw(); }
+$("faB").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; if(fa.done){ faNew(); return; } const f=FAM[fa.k], ok=b.dataset.w===f[1]; fa.tried++; if(ok){ fa.right++; fa.seen.add(fa.k); } fa.done=true;
+  const ex={abuelo:"el padre de mi madre",abuela:"la madre de mi madre",padre:"mi padre",madre:"mi madre",tía:"la hermana de mi madre",tío:"el marido de mi tía",hermano:"el hijo de mis padres",hermana:"la hija de mis padres",primo:"el hijo de mi tía",prima:"la hija de mi tía"}[f[1]];
+  $("faFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Correcto!":"No."}</b> ${f[0]} es mi <b>${f[1]}</b> (${ex}). Tap any word for the next person.</div>`; faUpd(); });
+// Survey
+const sv = {pts:[], cur:null, answered:false};
+function svGen(){ const h=rnd(6,28), w=Math.max(0,Math.min(20,Math.round(20-0.65*h+rnd(-3,3)))), name=pick(["Lucía","Hugo","Martina","Pablo","Sofía","Daniel","Valeria","Álex","Carmen","Mateo"]);
+  const work = w===0? "no trabajo" : `trabajo ${numES(w,false)==="uno"?"una hora":numES(w).replace(/uno$/,"una")+" horas"} los fines de semana`;
+  const say = `${name}: «Estudio ${numES(h).replace(/uno$/,"una")} horas a la semana y ${work}.»`;
+  const opts = shuffle([...new Set([w, Math.max(0,w+rnd(1,4)), Math.max(0,w-rnd(1,4)), (w+10)%21])]).slice(0,4); if(!opts.includes(w)) opts[0]=w;
+  return {h,w,say,opts:shuffle(opts)}; }
+function svNew(){ sv.cur=svGen(); sv.answered=false; svUpd(); }
+function svUpd(){ const c=sv.cur; $("esQ").innerHTML=`${c.say}<small>Read the answer, then choose the number of work hours.</small>`;
+  $("esB").innerHTML = c.opts.map(o=>`<button data-o="${o}" ${sv.answered?"disabled":""} class="${sv.answered&&o===c.w?"on":""}">${o}</button>`).join("");
+  const f=fitLine(sv.pts); setReadout($("esOut"),[["Students interviewed",sv.pts.length],["Line of best fit",f?`trabajo = ${nf(f.m,2)} × estudio + ${nf(f.c,1)}`:"interview two or more"],["In words",f?(f.m<0?`Each extra hour of study ≈ ${nf(-f.m,1)} fewer hours of work.`:"More study, more work? Collect more data."):"–"]]);
+  if(esC) esC.redraw(); }
+$("esB").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||sv.answered) return; const ok=+b.dataset.o===sv.cur.w; sv.answered=true; sv.pts.push([sv.cur.h,sv.cur.w]);
+  svUpd(); $("esQ").innerHTML+=`<div class="fb ${ok?"ok":"no"}" style="margin-top:8px"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Correcto!":"No."}</b> Estudia ${sv.cur.h} horas y trabaja ${sv.cur.w}. Point added to the graph.</div>`; });
+$("esNext").addEventListener("click",svNew);
+$("esClr").addEventListener("click",()=>{ sv.pts=[]; svNew(); });
+// Cortesia
+const SIT = [
+  ["Your friend Marta has just passed her driving test.","amiga",false,["¡Enhorabuena, Marta!","¡Que te mejores, Marta!","Lo siento, Marta."],0,"Enhorabuena congratulates an achievement."],
+  ["Your friend is in bed with the flu.","amigo",false,["¡Buen viaje!","¡Que te mejores!","¡Enhorabuena!"],1,"Que te mejores = get well soon."],
+  ["You bump into an older lady in a shop.","señora",true,["Perdona, tía.","Perdone, señora.","¡Felicidades, señora!"],1,"Perdone is the usted form."],
+  ["You arrive late to your Spanish class.","profesor",true,["¡Hola, tío!","Siento llegar tarde. Es que perdí el autobús.","¡Que aproveche!"],1,"Apology plus an excuse with es que."],
+  ["Introduce your friend Clara to your mother.","madre",false,["Mamá, te presento a mi amiga Clara.","Mamá, le presento a mi amiga Clara.","Clara, ¿cómo te llamas?"],0,"You use tú with your mother: te presento a…"],
+  ["Introduce your friend Seán to the school principal.","directora",true,["Te presento a Seán.","Le presento a mi amigo Seán.","Os presento a Seán."],1,"Le presento for usted."],
+  ["It's your cousin's birthday.","primo",false,["¡Feliz cumpleaños!","¡Enhorabuena por el examen!","¡Lo siento mucho!"],0,"Feliz cumpleaños (or ¡Felicidades!)."],
+  ["Your friend is wearing a great new jacket.","amiga",false,["¡Qué chaqueta más bonita!","¿Cuánto cuesta?","¡Qué pena!"],0,"¡Qué + noun + más + adjective! is a natural compliment."],
+  ["You meet your friend's mother and ask how she is.","señora",true,["¿Qué tal, tía?","¿Cómo está usted, señora?","¿Cómo estás, mujer?"],1,"Use usted with an adult you don't know well."],
+  ["Your friend has a big exam tomorrow.","amigo",false,["¡Mucha suerte en el examen!","¡Que descanses!","¡Felicidades!"],0,"¡Mucha suerte! = good luck."],
+  ["A friend tells you his grandmother has died.","amigo",false,["¡Qué guay!","Lo siento mucho.","¡Enhorabuena!"],1,"Lo siento mucho expresses sympathy."],
+  ["Your friends invite you out, but you have to study.","amigos",false,["Vale, ¡vamos!","Lo siento, no puedo. Es que tengo que estudiar.","Perdone, señores."],1,"Apologise, then excuse yourself with es que…"],
+];
+const co = {order:[], i:0, pick:null, right:0};
+function coNew(){ co.order=shuffle(SIT.map((s,i)=>i)); co.i=0; co.pick=null; co.right=0; coUpd(); }
+function coUpd(){ const done=co.i>=SIT.length; if(done){ $("coQ").innerHTML=`¡Terminado! ${co.right} of ${SIT.length} correct. <button class="primary" id="coAgain" style="margin-left:8px">Again</button>`; $("coAgain").addEventListener("click",coNew); $("coB").innerHTML=""; setReadout($("coOut"),[["Score",`${co.right} / ${SIT.length}`]]); if(coC) coC.redraw(); return; }
+  const s=SIT[co.order[co.i]]; $("coQ").innerHTML=`${s[0]}<small>Situation ${co.i+1} of ${SIT.length}</small>`;
+  $("coB").innerHTML = s[3].map((o,i)=>`<button data-i="${i}" ${co.pick!=null?"disabled":""} class="${co.pick!=null&&i===s[4]?"on":""}">${o}</button>`).join("") + (co.pick!=null?`<button class="primary" id="coNext">Next →</button>`:"");
+  if(co.pick!=null) $("coNext").addEventListener("click",()=>{ co.i++; co.pick=null; $("coFb").innerHTML=""; coUpd(); });
+  setReadout($("coOut"),[["Score",`${co.right} / ${co.i+(co.pick!=null?1:0)}`],["Register",s[2]?"formal (usted)":"informal (tú)"]]); if(coC) coC.redraw(); }
+$("coB").addEventListener("click",e=>{ const b=e.target.closest("button[data-i]"); if(!b||co.pick!=null) return; const s=SIT[co.order[co.i]]; co.pick=+b.dataset.i; const ok=co.pick===s[4]; if(ok) co.right++;
+  $("coFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Muy bien!":"Not quite."}</b> "${s[3][s[4]]}" ${s[5]}</div>`; coUpd(); });
+
+/* ================= CREATE CANVASES ================= */
+let rgC=null, qwC=null, fiC=null, faC=null, esC=null, coC=null;
+const HERO = ["¡Hola!","¿Qué tal?","¿Cómo te llamas?","Me llamo Aoife.","¡Encantada!","¿De dónde eres?","Soy de Cork."];
+const hero = makeCanvas($("heroCanvas"), 0.75, 240, s => { const k=Math.floor((reduce?0:heroT)/1.6)%HERO.length; drawScene(s.ctx,s.w,s.h,{say:HERO[k],formal:null}); }, 440);
+rgC = makeCanvas($("rgC"), 0.5, 260, s => drawRegister(s.ctx,s.w,s.h,{placed:rg.placed,hl:rg.placed.length?rg.placed[rg.placed.length-1].k:null}), 420);
+qwC = makeCanvas($("qwC"), 0.62, 300, s => { qw.geo=drawWheel(s.ctx,s.w,s.h,{sel:qw.sel,ans:qw.done?QA[qw.k][1]:null}); }, 460);
+pointerTap($("qwC"),(x,y)=>{ const g=qw.geo; if(!g||qw.done) return; const dx=x-g.cx, dy=y-g.cy, r=Math.hypot(dx,dy); if(r<g.r0||r>g.R) return; let a=Math.atan2(dy,dx)+Math.PI/2; if(a<0) a+=2*Math.PI; const i=Math.floor(a/(2*Math.PI/g.n))%g.n;
+  qw.sel=QW[i]; qw.done=true; qw.tried++; const q=QA[qw.k], ok=qw.sel===q[1]; if(ok){ qw.right++; qw.streak++; } else qw.streak=0;
+  $("qwFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Correcto!":"Not quite."}</b> ${q[1]} → <b>${q[2]}</b> Press "Next answer".</div>`; qwUpd(); });
+fiC = makeCanvas($("fiC"), 0.42, 220, s => drawCard(s.ctx,s.w,s.h,{}), 360);
+faC = makeCanvas($("faC"), 0.55, 280, s => drawTree(s.ctx,s.w,s.h,{hl:fa.k,reveal:true,words:false}), 460);
+esC = makeCanvas($("esC"), 0.5, 260, s => drawSurvey(s.ctx,s.w,s.h,{pts:sv.pts}), 420);
+coC = makeCanvas($("coC"), 0.42, 220, s => { if(co.i>=SIT.length) return drawScene(s.ctx,s.w,s.h,{say:"¡Terminado!",ok:true}); const st=SIT[co.order[co.i]]; drawScene(s.ctx,s.w,s.h,{say:co.pick==null?"…":st[3][co.pick],ok:co.pick==null?null:co.pick===st[4],formal:st[2],who:st[1],small:false}); }, 360);
+predC = makeCanvas($("predC"), 0.6, 210, s => drawRegister(s.ctx,s.w,s.h,{compact:true,bgc:C["surface-2"],hl:pd.shown&&pd.k>=0?PRED[pd.k][1]:null}), 320);
+pdNew();
+const MINI = {
+  reg:(s,o)=>drawRegister(s.ctx,s.w,s.h,{...o,compact:true}),
+  wheel:(s,o)=>drawWheel(s.ctx,s.w,s.h,{...o,compact:true}),
+  card:(s,o)=>drawCard(s.ctx,s.w,s.h,{...o,compact:true,d:{name:"Aoife",g:"f",age:17,nat:0,town:"Limerick",langs:["inglés","irlandés","español"]}}),
+  tree:(s,o)=>drawTree(s.ctx,s.w,s.h,{...o,compact:true}),
+  survey:(s,o)=>drawSurvey(s.ctx,s.w,s.h,{...o,compact:true}),
+  scene:(s,o)=>drawScene(s.ctx,s.w,s.h,{...o,compact:true}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, kind==="card"?0.5:0.62, 150, s=>MINI[kind](s,o), 380); });
+const INFO = { reg:["reg",{hl:"tu"}], wheel:["wheel",{ans:"¿Qué?"}], tree:["tree",{reveal:true,words:true}] };
+document.querySelectorAll("canvas[data-mini]").forEach(el=>{ const [k,o]=INFO[el.dataset.mini]; makeCanvas(el,0.7,160,s=>MINI[k](s,{...o,bgc:C["surface-2"]})); });
+rgNew(); qwNew(); fiUpd(); faNew(); svNew(); coNew();
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>
+

@@ -1,0 +1,1622 @@
+<title>Superposition Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<style>
+:root{--band-ink:#3b2b21}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--surface)}
+.xlink:hover{border-color:var(--terra)}
+.working.wrap{white-space:normal;font-family:var(--f-body);font-size:.9rem}
+.spec-bullets{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+</style>
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2.5-6 5-6 7.5 0s5 6 7.5 0 3.5-4 5-2"/><path d="M2 12c2.5 6 5 6 7.5 0s5-6 7.5 0 3.5 4 5 2" opacity=".5"/></svg></div>
+        <div style="min-width:0"><b>Superposition</b><span>Leaving Cert Physics · Strand 2 · Section 2.6</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details open><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="here"><span class="mono">2.6</span>Superposition</li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 2 · Section 2.6 · Principle of superposition</span>
+          <h1 style="margin-top:12px">Two waves meet.<br>They <em>add up</em>.<br>The string sings.</h1>
+          <p class="lede">When waves overlap, their displacements add. Send two waves along a string in opposite directions and you get a stationary wave: nodes that never move, loops that do, and the harmonics that make music.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Two waves travelling in opposite directions along a string adding up to a stationary wave"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/3</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">2.6.1</span><span>model standing waves on a stretched string</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">2.6.2</span><span>verify the model for a particular string using primary and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">2.6.3</span><span>verify the relationship between the length of a string and the frequency of a standing wave using secondary data</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">Students learn about:</p>
+        <ul class="spec-bullets"><li>stationary waves in strings as resulting from the interference of two waves along the same string moving in opposite directions</li><li>common terms used to describe stationary waves: nodes, antinodes, harmonics and the fundamental frequency</li></ul>
+        <p class="result" style="margin-top:10px">Stationary and standing wave mean the same thing. Travelling waves (v = fλ) are section 2.2; sound interference was met in <a href="s2-5-sound-energy.html">2.5</a>.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Collide pulses, build stationary waves, pluck harmonics and tune a sonometer. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="super">
+        <div class="labhead"><span class="pill t">Pulses on a rope</span><p class="goal">Two pulses travel towards each other along a rope. Set their heights, then watch what happens when they overlap.</p></div>
+        <div class="panel sim">
+          <canvas id="puC" aria-label="Two pulses on a rope moving towards each other, with their sum drawn in a thick line"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="puA1">Pulse 1 height (from the left) <output id="puA1o">+2.4 cm</output></label><input type="range" id="puA1" min="-1" max="1" step="0.1" value="0.8"></div>
+            <div class="ctl"><label for="puA2">Pulse 2 height (from the right) <output id="puA2o">+2.4 cm</output></label><input type="range" id="puA2" min="-1" max="1" step="0.1" value="0.8"></div>
+            <div class="ctl"><label for="puP">Time <output id="puPo">0%</output></label><input type="range" id="puP" min="0" max="1" step="0.005" value="0"></div>
+            <div class="ctl"><span class="lbl">Animation</span><div class="btns"><button id="puPlay" aria-pressed="false">Play</button><button id="puMeet">Jump to meeting</button><button id="puComp" aria-pressed="true">Dashed pulses on</button></div></div>
+          </div>
+          <div class="readout" id="puOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Make both pulses +2.4 cm. How high is the rope when they meet?</div><div class="try"><b>2</b>Make pulse 2 −2.4 cm. What does the rope look like at the meeting moment?</div><div class="try"><b>3</b>Let the animation finish. Are the pulses changed after they pass?</div></div>
+      </div>
+
+      <div class="lab" data-lab="stand" hidden>
+        <div class="labhead"><span class="pill t">Two waves, one string</span><p class="goal">A wave travels right (terracotta) and an identical wave travels left (olive). The thick line is their sum. Turn each wave on and off.</p></div>
+        <div class="panel sim">
+          <canvas id="stC" aria-label="Two travelling waves in opposite directions and their sum, a stationary wave"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="stN">Wavelength: loops between the ends <output id="stNo">3</output></label><input type="range" id="stN" min="1" max="5" step="1" value="3"></div>
+            <div class="ctl"><span class="lbl">Waves</span><div class="btns"><button id="stR" aria-pressed="true">Wave going right</button><button id="stL" aria-pressed="true">Wave going left</button><button id="stComp" aria-pressed="true">Show dashed waves</button></div></div>
+            <div class="ctl"><span class="lbl">Animation (slowed right down)</span><div class="btns"><button id="stPlay" aria-pressed="true">Pause</button><button id="stStep">Step ⅛ period</button></div></div>
+          </div>
+          <div class="readout" id="stOut"></div>
+        </div>
+        <p class="result">On a real string you only send one wave. It reflects at the fixed end and comes back: that reflected wave is the second one.</p>
+        <div class="tries"><div class="try"><b>1</b>Pause when the two dashed waves line up exactly. How big is the sum?</div><div class="try"><b>2</b>Step on a quarter period. Why is the string flat for an instant?</div><div class="try"><b>3</b>Turn off one wave. Does the pattern now move along the string?</div></div>
+      </div>
+
+      <div class="lab" data-lab="nodes" hidden>
+        <div class="labhead"><span class="pill t">Find the nodes</span><p class="goal">A 1.20 m string vibrates in a stationary wave. Slide the marker along it and watch how far that point moves.</p></div>
+        <div class="panel sim">
+          <canvas id="ndC" aria-label="A stationary wave with nodes and antinodes labelled and a movable marker"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="ndN">Number of loops <output id="ndNo">3</output></label><input type="range" id="ndN" min="1" max="6" step="1" value="3"></div>
+            <div class="ctl"><label for="ndX">Marker: distance from the left end <output id="ndXo">0.20 m</output></label><input type="range" id="ndX" min="0" max="1.2" step="0.01" value="0.2"></div>
+            <div class="ctl"><span class="lbl">View</span><div class="btns"><button id="ndPlay" aria-pressed="true">Pause</button><button id="ndEnv" aria-pressed="true">Blur (strobe) on</button><button id="ndMarks" aria-pressed="true">N / A labels on</button></div></div>
+          </div>
+          <div class="readout" id="ndOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Put the marker on a node. How far does that point move?</div><div class="try"><b>2</b>Measure from one node to the next. How does that compare with λ?</div><div class="try"><b>3</b>Watch two points in the same loop. Do they move up at the same time?</div></div>
+      </div>
+
+      <div class="lab" data-lab="harm" hidden>
+        <div class="labhead"><span class="pill t">Harmonics</span><p class="goal">A 0.65 m guitar string can vibrate with 1, 2, 3 … loops. Pick a harmonic, see its pattern and hear its note.</p></div>
+        <div class="panel sim">
+          <canvas id="hmC" aria-label="A string vibrating in the chosen harmonic"></canvas>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Harmonic n</span><div class="btns" id="hmN"><button data-v="1" aria-pressed="true">1st</button><button data-v="2">2nd</button><button data-v="3">3rd</button><button data-v="4">4th</button><button data-v="5">5th</button><button data-v="6">6th</button></div></div>
+            <div class="ctl"><label for="hmF">Fundamental frequency f₁ <output id="hmFo">110 Hz</output></label><input type="range" id="hmF" min="55" max="220" step="1" value="110"></div>
+            <div class="ctl"><span class="lbl">Sound</span><div class="btns"><button id="hmSnd" aria-pressed="false">🔊 Sound on</button></div></div>
+          </div>
+          <div class="readout" id="hmOut"></div>
+        </div>
+        <p class="result">Keep the volume low. Each step up a harmonic adds one more f₁ to the frequency: 110, 220, 330, 440 Hz …</p>
+        <div class="tries"><div class="try"><b>1</b>Count the nodes in the 4th harmonic, including the ends.</div><div class="try"><b>2</b>Go from the 1st to the 2nd harmonic. What happens to λ and to f?</div><div class="try"><b>3</b>Is f × λ the same for every harmonic? What does that number mean?</div></div>
+      </div>
+
+      <div class="lab" data-lab="model" hidden>
+        <div class="labhead"><span class="pill t">Sonometer model</span><p class="goal">A vibration generator drives a wire stretched over two bridges. Change the length, tension and wire, then sweep the driving frequency to find resonance.</p></div>
+        <div class="panel sim">
+          <canvas id="soC" aria-label="A sonometer: a wire over two bridges on a wooden box with a mass hanging over a pulley"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="soL">Length between bridges L <output id="soLo">0.50 m</output></label><input type="range" id="soL" min="0.2" max="1" step="0.01" value="0.5"></div>
+            <div class="ctl"><label for="soT">Tension T <output id="soTo">40 N</output></label><input type="range" id="soT" min="10" max="120" step="1" value="40"></div>
+            <div class="ctl"><span class="lbl">Wire (mass per metre μ)</span><div class="btns" id="soW"><button data-v="0.5">Nylon 0.5 g/m</button><button data-v="1" aria-pressed="true">Thin steel 1.0 g/m</button><button data-v="2">Thick steel 2.0 g/m</button><button data-v="4">Brass 4.0 g/m</button></div></div>
+            <div class="ctl"><label for="soF">Driving frequency <output id="soFo">150 Hz</output></label><input type="range" id="soF" min="20" max="1200" step="1" value="150"></div>
+            <div class="ctl"><span class="lbl">Shortcuts</span><div class="btns"><button id="soGo">Set to f₁</button><button id="soGo2">Set to 2f₁</button><button id="soSnd" aria-pressed="false">🔊 Sound on</button></div></div>
+          </div>
+          <div class="readout" id="soOut"></div>
+          <div class="working wrap" id="soWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Halve the length. What happens to f₁?</div><div class="try"><b>2</b>Change the tension from 30 N to 120 N. By what factor does f₁ change?</div><div class="try"><b>3</b>Drive it at 2f₁. Why does the paper rider stay on?</div></div>
+      </div>
+
+      <div class="lab" data-lab="exp" hidden>
+        <div class="labhead"><span class="pill t">Experiment</span><p class="goal">Verify f ∝ 1/L. Strike a tuning fork, rest its stem on the box and move the bridge until the paper rider jumps off. Record L for each fork, then plot f against 1/L.</p></div>
+        <div class="panel sim">
+          <canvas id="exC" aria-label="A sonometer with a tuning fork and a paper rider on the wire"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Tuning fork</span><div class="btns" id="exF"><button data-v="256" aria-pressed="true">256 Hz</button><button data-v="288">288 Hz</button><button data-v="320">320 Hz</button><button data-v="341.3">341.3 Hz</button><button data-v="384">384 Hz</button><button data-v="426.7">426.7 Hz</button><button data-v="480">480 Hz</button><button data-v="512">512 Hz</button></div></div>
+            <div class="ctl" style="grid-column:1/-1"><label for="exL">Move the bridge: length L <output id="exLo">0.800 m</output></label><input type="range" id="exL" min="0.15" max="1" step="0.001" value="0.8"></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="exRec">Record L</button><button id="exClear">Clear</button><button id="exNew">New wire</button><button id="exReveal">Reveal answer</button></div></div>
+          </div>
+          <div class="readout" id="exOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>f (Hz)</th><th>L (m)</th><th>1/L (m⁻¹)</th><th></th></tr></thead><tbody id="exTable"></tbody></table><div class="empty" id="exEmpty">No readings yet. Find resonance with five or more forks.</div></div>
+            <div class="graphbox"><canvas id="exGraph" aria-label="Graph of frequency f against 1/L"></canvas><p class="result" id="exResult"></p></div>
+          </div>
+        </div>
+        <p class="result">The tension is fixed at 49 N (a 5.0 kg mass on the hanger). Each "new wire" has a hidden mass per metre μ for you to find from your graph.</p>
+        <div class="tries"><div class="try"><b>1</b>Why plot f against 1/L, not against L?</div><div class="try"><b>2</b>Use the slope to find the wave speed v, then μ = T / v².</div><div class="try"><b>3</b>Near resonance the rider wobbles before it jumps. How does that limit your accuracy?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of superposition and stationary waves"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Harmonics · LO 2.6.1</p><h2>Six harmonics on one guitar string</h2></div><p>The A string of a guitar: L = 0.65 m and f₁ = 110 Hz. Each pattern is one harmonic.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">The principle of superposition</p><h2>When pulses meet</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="pulse" data-k="0"></canvas><h3>Crest meets crest</h3><p>Constructive: the displacements add to make one bigger pulse.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="pulse" data-k="1"></canvas><h3>Crest meets trough</h3><p>Destructive: equal and opposite pulses cancel for an instant.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="pulse" data-k="2"></canvas><h3>After they meet</h3><p>Each pulse carries on unchanged, as if the other was never there.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Secondary data · LO 2.6.3</p><h2>Frets on a guitar: shorter string, higher note</h2></div><p>Pressing a fret shortens the vibrating length of the A string. Look at the last column: f × L stays the same, so f ∝ 1/L.</p></div>
+        <div class="bars" id="bars"></div>
+        <p class="result" id="fretNote" style="margin-top:12px"></p>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Where you meet it</p><h2>Superposition and stationary waves around you</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Write the formula first, then substitute, then the answer <b>with its unit</b>.</li>
+            <li>Superposition: the resultant displacement is the <b>sum</b> of the individual displacements (signs matter).</li>
+            <li>Stationary wave = two identical waves travelling in <b>opposite directions</b> along the same string.</li>
+            <li>Node to node = <b>λ/2</b>. Two loops make one wavelength.</li>
+            <li>Count loops for the harmonic number: <b>n loops, n + 1 nodes, n antinodes</b>, λ = 2L/n.</li>
+            <li>Convert to SI first: g/m × 10⁻³ = kg/m, cm × 10⁻² = m.</li>
+            <li>f ∝ 1/L, f ∝ √T, f ∝ 1/√μ. Quadruple T to double f.</li>
+            <li>Sonometer graph: plot <b>f against 1/L</b> for a straight line through the origin.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The verb tells you what the examiner wants. The learning outcomes for this section use model and verify.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="text" placeholder="e.g. 0.68 or 3.1e-4" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Count the loops</h2></div></div>
+          <canvas id="predC" aria-label="A string of length L vibrating in a stationary wave"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" data-g="0"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next string</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: node, harmonic, tension, sonometer…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>Stationary waves on a string fixed at both ends. Lengths in metres, mass per unit length in kg/m.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Superposition</span><span class="big">y = y₁ + y₂</span><dl><dt>y</dt><dd>resultant displacement</dd><dt>y₁, y₂</dt><dd>displacements of each wave (with signs)</dd></dl><div class="ex">+3 cm and −1 cm meet: y = +2 cm</div></div>
+        <div class="panel fcell"><span class="pill">Wave equation</span><span class="big">v = fλ</span><dl><dt>v</dt><dd>wave speed on the string, m/s</dd><dt>f</dt><dd>frequency, Hz</dd><dt>λ</dt><dd>wavelength, m</dd></dl><div class="ex">f = 200 Hz, λ = 0.80 m: v = 160 m/s</div></div>
+        <div class="panel fcell"><span class="pill">Node spacing</span><span class="big">node to node = λ / 2</span><dl><dt>node to antinode</dt><dd>λ / 4</dd></dl><div class="ex">Nodes 25 cm apart: λ = 50 cm</div></div>
+        <div class="panel fcell"><span class="pill">Harmonics</span><span class="big">λₙ = 2L / n</span><dl><dt>n</dt><dd>harmonic number = number of loops</dd><dt>L</dt><dd>length between the fixed ends</dd></dl><div class="ex">L = 0.60 m, 3rd harmonic: λ = 0.40 m</div></div>
+        <div class="panel fcell"><span class="pill">Harmonics</span><span class="big">fₙ = n f₁</span><dl><dt>f₁</dt><dd>fundamental frequency (1st harmonic)</dd></dl><div class="ex">f₁ = 110 Hz: f₄ = 440 Hz</div></div>
+        <div class="panel fcell"><span class="pill">Wave speed on a string</span><span class="big">v = √(T / μ)</span><dl><dt>T</dt><dd>tension, N</dd><dt>μ</dt><dd>mass per unit length, kg/m</dd></dl><div class="ex">T = 40 N, μ = 1.0 × 10⁻³ kg/m: v = 200 m/s</div></div>
+        <div class="panel fcell"><span class="pill">Fundamental frequency</span><span class="big">f = (1 / 2L) √(T / μ)</span><dl><dt>f ∝ 1 / L</dt><dd>T and μ fixed</dd><dt>f ∝ √T</dt><dd>L and μ fixed</dd><dt>f ∝ 1 / √μ</dt><dd>L and T fixed</dd></dl><div class="ex">L = 0.50 m, T = 40 N, μ = 1.0 g/m: f = 200 Hz</div></div>
+        <div class="panel fcell"><span class="pill a">Extra</span><span class="big">μ = m / l</span><dl><dt>m</dt><dd>mass of a piece of the wire</dd><dt>l</dt><dd>length of that piece</dd></dl><div class="ex">2.0 g of wire, 2.5 m long: μ = 8.0 × 10⁻⁴ kg/m</div></div>
+      </div>
+      <footer>
+        <p>Built on section 2.6 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes are quoted from the specification. Experiment data is simulated with small random errors. Guitar fret data uses equal-temperament values for an A string of length 0.65 m.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent","--band-ink"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  super:'<path d="M2 16h4c2 0 2-8 4-8s2 8 4 8h8"/><path d="M2 16h8" opacity=".4"/>',
+  stand:'<path d="M3 12c3-7 6-7 9 0s6 7 9 0"/><path d="M3 12c3 7 6 7 9 0s6-7 9 0" opacity=".5"/>',
+  nodes:'<path d="M3 12c3-7 6-7 9 0s6 7 9 0"/><circle cx="3" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="21" cy="12" r="1.6"/>',
+  harm:'<path d="M3 6c4.5-3 13.5-3 18 0"/><path d="M3 12c2.2-3 6.8-3 9 0s6.8 3 9 0"/><path d="M3 18c1.5-2.5 4.5-2.5 6 0s4.5 2.5 6 0 4.5-2.5 6 0"/>',
+  model:'<rect x="2" y="14" width="17" height="5" rx="1"/><path d="M5 14l1.5-3 1.5 3M15 14l1.5-3 1.5 3"/><path d="M3 11h18v6"/><rect x="19" y="17" width="4" height="4"/>',
+  exp:'<path d="M8 3v8a4 4 0 008 0V3"/><path d="M12 15v6M9 21h6"/>',
+  guitar:'<path d="M14 10l6-6M18 2l4 4"/><path d="M9.5 9.5a4 4 0 00-5.6 1.1c-1.8 2.6-.6 5.3 1.6 7.4s4.8 3.4 7.4 1.6a4 4 0 001.1-5.6 3 3 0 00-4.5-4.5z"/><circle cx="9" cy="15" r="1.5"/>',
+  violin:'<path d="M12 2v6M10 2h4"/><path d="M9 8h6c0 2-1.5 2.5-1.5 4s2.5 1.5 2.5 4.5a4 4 0 01-8 0c0-3 2.5-3 2.5-4.5S9 10 9 8z"/><path d="M4 20L20 6" opacity=".6"/>',
+  piano:'<rect x="2" y="5" width="20" height="14" rx="1"/><path d="M7 5v14M12 5v14M17 5v14"/><path d="M5 5v8M10 5v8M15 5v8M20 5v8" stroke-width="3"/>',
+  flute:'<path d="M2 15l18-8 2 3-18 8z"/><circle cx="9" cy="13" r=".8"/><circle cx="12" cy="11.7" r=".8"/><circle cx="15" cy="10.4" r=".8"/>',
+  phones:'<path d="M4 15v-3a8 8 0 0116 0v3"/><rect x="2" y="14" width="5" height="7" rx="2"/><rect x="17" y="14" width="5" height="7" rx="2"/>',
+  micro:'<rect x="2" y="5" width="20" height="14" rx="2"/><rect x="5" y="8" width="11" height="8" rx="1"/><path d="M19 9v1M19 13v1"/>',
+  bridge:'<path d="M2 18h20M4 18v-6M20 18v-6M2 12c4-6 16-6 20 0"/><path d="M8 18v-7M12 18v-8M16 18v-7"/>',
+  rope:'<path d="M2 14c2 0 3-6 5-6s3 6 5 6 3-4 5-4 3 4 5 4"/><circle cx="2" cy="14" r="1.4"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"super", name:"Superposition", short:"Where waves overlap, their displacements add.", tint:"var(--blush)"},
+  {id:"stand", name:"Stationary waves", short:"Two waves in opposite directions make a pattern that stays put.", tint:"var(--apricot)"},
+  {id:"nodes", name:"Nodes & antinodes", short:"Points that never move, and points that move the most.", tint:"var(--sage)"},
+  {id:"harm", name:"Harmonics", short:"The fundamental and its whole-number multiples.", tint:"var(--cream)"},
+  {id:"model", name:"Modelling a string", short:"f depends on length, tension and mass per metre.", tint:"var(--blush)"},
+  {id:"exp", name:"Verifying f ∝ 1/L", short:"Sonometer experiment and secondary data.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary ---------- */
+const GLOSS = [
+  ["Principle of superposition","","When two or more waves meet, the resultant displacement at any point is the sum of the displacements of the individual waves.","super","y = y₁ + y₂"],
+  ["Superposition","","Waves overlapping and adding together. The waves pass through each other unchanged.","super"],
+  ["Displacement","y","How far a point on the string is from its rest position, with a sign: up is +, down is −.","super"],
+  ["Resultant","","The total displacement when waves overlap: the sum of the individual displacements.","super"],
+  ["Pulse","","A single short disturbance travelling along a string or rope.","super"],
+  ["Interference","","The effect produced when two or more waves superpose, giving bigger or smaller displacements.","super"],
+  ["Constructive interference","","Waves meeting in step (crest on crest) add to give a bigger displacement.","super"],
+  ["Destructive interference","","Waves meeting out of step (crest on trough) cancel, fully or partly.","super"],
+  ["In phase","","Two waves in step: their crests line up. They interfere constructively.","super"],
+  ["Out of phase","antiphase","Two waves exactly out of step: crests line up with troughs. They interfere destructively.","super"],
+  ["Phase","","Where a point is in its cycle of vibration.","super"],
+  ["Travelling wave","progressive wave","A wave that moves through a medium and carries energy from place to place.","stand"],
+  ["Stationary wave","standing wave","A wave pattern that does not move along the medium, made when two identical waves travelling in opposite directions superpose.","stand"],
+  ["Reflection","","A wave bouncing back at a boundary. On a string the wave reflects at each fixed end.","stand"],
+  ["Fixed end","","An end of a string that can't move, such as a bridge or clamp. It is always a node.","stand"],
+  ["Amplitude","A","The maximum displacement of a point from its rest position. In a stationary wave it varies along the string.","stand"],
+  ["Wavelength","λ","The length of one complete wave. In a stationary wave it is twice the distance between neighbouring nodes.","stand","λ = v / f"],
+  ["Frequency","f","The number of vibrations per second. Unit: hertz (Hz).","stand","f = v / λ"],
+  ["Hertz","Hz","The unit of frequency: one vibration per second.","stand"],
+  ["Wave speed","v","How fast a travelling wave moves along the string, in m/s.","stand","v = fλ"],
+  ["Node","N","A point on a stationary wave where the amplitude is zero: it never moves.","nodes"],
+  ["Antinode","A","A point on a stationary wave where the amplitude is a maximum, halfway between two nodes.","nodes"],
+  ["Loop","segment","The part of a stationary wave between two neighbouring nodes. Its length is λ/2.","nodes"],
+  ["Envelope","","The outline traced by the string as it vibrates fast: what you see as a blur.","nodes"],
+  ["Stroboscope","strobe","A flashing light. At the right flash rate a vibrating string seems to stand still.","nodes"],
+  ["Fundamental frequency","f₁, f₀","The lowest frequency at which a string can form a stationary wave: one loop, λ = 2L.","harm","f₁ = v / 2L"],
+  ["Harmonic","","A frequency that is a whole-number multiple of the fundamental frequency.","harm","fₙ = n f₁"],
+  ["First harmonic","","Another name for the fundamental: one loop on the string.","harm"],
+  ["Second harmonic","","Twice the fundamental frequency: two loops, λ = L.","harm","f₂ = 2f₁"],
+  ["Overtone","","Any frequency above the fundamental. The 2nd harmonic is the 1st overtone.","harm"],
+  ["Harmonic number","n","The number of loops in the pattern on a string fixed at both ends.","harm","λₙ = 2L / n"],
+  ["Quality","timbre","What makes the same note sound different on different instruments: the mix of harmonics.","harm"],
+  ["Pitch","","How high or low a note sounds. It depends on frequency.","harm"],
+  ["Tension","T","The pulling force stretching the string, in newtons.","model","v = √(T / μ)"],
+  ["Mass per unit length","μ","The mass of one metre of the string, in kg/m. Greek letter mu.","model","μ = m / l"],
+  ["Length","L","The vibrating length of the string, between the fixed ends or bridges.","model","f ∝ 1 / L"],
+  ["Newton","N","The unit of force. A 1 kg mass hangs with a weight of about 9.8 N.","model"],
+  ["Inverse proportion","∝ 1/x","When one quantity doubles, the other halves. f ∝ 1/L.","model"],
+  ["Laws of a stretched string","","f ∝ 1/L, f ∝ √T and f ∝ 1/√μ, combined in f = (1/2L)√(T/μ).","model","f = (1 / 2L) √(T / μ)"],
+  ["Resonance","","A large vibration produced when something is driven at its natural frequency.","model"],
+  ["Natural frequency","","A frequency at which an object vibrates by itself after being disturbed. A string has a set of them: its harmonics.","model"],
+  ["Forced vibration","","A vibration caused by a driving force at the driver's frequency.","model"],
+  ["Vibration generator","","A device driven by a signal generator that shakes a string at a chosen frequency.","model"],
+  ["Sonometer","","A hollow wooden box with a wire stretched over two movable bridges, used to study vibrating strings.","exp"],
+  ["Bridge","","A wedge under the wire that fixes one end of the vibrating length. It is a node.","exp"],
+  ["Paper rider","","A small folded piece of paper on the middle of the wire. It jumps off at resonance.","exp"],
+  ["Tuning fork","","A metal fork that vibrates at one fixed frequency, stamped on it (e.g. 256 Hz).","exp"],
+  ["Primary data","","Data you collect yourself, such as your own lengths and frequencies.","exp"],
+  ["Secondary data","","Data collected by someone else, such as published fret lengths or textbook values.","exp"],
+  ["Slope","","How steep a straight-line graph is: rise ÷ run. For f against 1/L it equals v/2.","exp","slope = v / 2"],
+  ["Origin","","The point (0, 0) on a graph. A line through it shows direct proportion.","exp"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["principle of superposition","Principle of superposition"],["displacements","Displacement"],["constructive","Constructive interference"],["destructive","Destructive interference"],["stationary wave","Stationary wave"],["nodes","Node"],["antinodes","Antinode"],["fundamental frequency","Fundamental frequency"],["harmonics","Harmonic"],["tension","Tension"],["mass per metre","Mass per unit length"],["resonance","Resonance"],["paper rider","Paper rider"],["tuning fork","Tuning fork"],["reflects","Reflection"],["timbre","Quality"],["in phase","In phase"]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function dimArrow(ctx,xa,xb,y,label,col){ line(ctx,xa,y,xb,y,col,1.4); arrowHead(ctx,xa,y,Math.PI,col,7); arrowHead(ctx,xb,y,0,col,7); line(ctx,xa,y-5,xa,y+5,col,1.2); line(ctx,xb,y-5,xb,y+5,col,1.2); if(label) text(ctx,label,(xa+xb)/2,y-5,col,F(12),"center"); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const s3 = x => (+x.toPrecision(3)).toString();
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
+const sup = n => String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(x,d=3){ if(x===0) return "0"; let e=Math.floor(Math.log10(Math.abs(x))), ms=(x/Math.pow(10,e)).toFixed(d-1);
+  if(Math.abs(+ms)>=10){ e++; ms=(x/Math.pow(10,e)).toFixed(d-1); } return e===0? ms : `${ms} × 10${sup(e)}`; }
+function curve(ctx,x0,x1,fn,col,wd,dash){ ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=wd; ctx.lineJoin="round"; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); for(let x=x0;x<=x1+0.01;x+=1){ const y=fn(x); x===x0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); ctx.restore(); }
+const LAMS = ["","2L","L","2L/3","L/2","2L/5","L/3","2L/7","L/4"];
+const ORD = n => n+(n===1?"st":n===2?"nd":n===3?"rd":"th");
+
+/* ================= MODELS + DRAWINGS ================= */
+// Two pulses on a rope. p = time 0..1; a1, a2 = heights -1..1 (1 = 3 cm). Positions as fractions of the rope.
+const PU_S = 0.06, PU_CM = 3;
+const puC1 = p => 0.12+0.76*p, puC2 = p => 0.88-0.76*p;
+const puY = (u,p,a1,a2) => a1*Math.exp(-Math.pow((u-puC1(p))/PU_S,2)) + a2*Math.exp(-Math.pow((u-puC2(p))/PU_S,2));
+function drawPulses(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, p=o.p, x0=cp?8:20, x1=w-(cp?8:20), top=o.label?18:0, mid=top+(h-top)*0.56, A=(h-top)*(cp?0.3:0.3), Lx=x1-x0;
+  const U=x=>(x-x0)/Lx, c1=x0+puC1(p)*Lx, c2=x0+puC2(p)*Lx;
+  line(ctx,x0,mid,x1,mid,C.line,1.2,[4,4]);
+  ctx.fillStyle=C.muted; ctx.beginPath(); ctx.arc(x0,mid,3,0,7); ctx.arc(x1,mid,3,0,7); ctx.fill();
+  if(o.comp!==false){
+    curve(ctx,x0,x1,x=>mid-o.a1*A*Math.exp(-Math.pow((U(x)-puC1(p))/PU_S,2)),C.terra,cp?1.4:2,[5,4]);
+    curve(ctx,x0,x1,x=>mid-o.a2*A*Math.exp(-Math.pow((U(x)-puC2(p))/PU_S,2)),C.olive,cp?1.4:2,[5,4]); }
+  curve(ctx,x0,x1,x=>mid-puY(U(x),p,o.a1,o.a2)*A,C.ink,cp?2.2:3);
+  const ay=top+(cp?10:22);
+  if(c2-c1>PU_S*Lx*2.4){ arrow(ctx,c1-14,ay,c1+14,ay,C.terra,1.8); arrow(ctx,c2+14,ay,c2-14,ay,C.olive,1.8); }
+  else if(c1-c2>PU_S*Lx*2.4){ arrow(ctx,c1-14,ay,c1+14,ay,C.terra,1.8); arrow(ctx,c2+14,ay,c2-14,ay,C.olive,1.8); }
+  if(o.label) text(ctx,o.label,8,13,C.ink,F(11));
+  if(!cp){ text(ctx,"— pulse 1",x0,h-8,C.terra,F(11)); text(ctx,"— pulse 2",x0+80,h-8,C.olive,F(11)); text(ctx,"— rope (sum)",x0+160,h-8,C.ink,F(11)); }
+}
+// Stationary wave on a string fixed at both ends. n loops; t = phase (rad).
+function drawStanding(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||o.hero, n=o.n||1, t=o.t||0;
+  const x0=cp?14:30, x1=w-(cp?14:30), top=o.label?18:0, bot=o.dimL?22:(cp?0:22), mid=top+(h-top-bot)/2, Hh=(h-top-bot)/2-(cp?10:22), a=Hh*0.45, L=x1-x0, k=n*Math.PI/L;
+  const R=o.R!==false, Lw=o.Lw!==false;
+  const yR=u=>a*Math.sin(k*u-t), yL=u=>a*Math.sin(k*u+t), sum=u=>(R?yR(u):0)+(Lw?yL(u):0);
+  line(ctx,x0,mid,x1,mid,C.line,1.2,[4,4]);
+  if(o.env){ ctx.save(); ctx.fillStyle=C.apricot; ctx.globalAlpha=0.25; ctx.beginPath(); for(let x=x0;x<=x1;x++) { const y=mid-2*a*Math.sin(k*(x-x0)); x===x0?ctx.moveTo(x,y):ctx.lineTo(x,y); } for(let x=x1;x>=x0;x--) ctx.lineTo(x,mid+2*a*Math.sin(k*(x-x0))); ctx.closePath(); ctx.fill(); ctx.restore(); }
+  if(o.comp){ if(R) curve(ctx,x0,x1,x=>mid-yR(x-x0),C.terra,cp?1.4:2,[6,4]); if(Lw) curve(ctx,x0,x1,x=>mid-yL(x-x0),C.olive,cp?1.4:2,[6,4]); }
+  if(o.still) curve(ctx,x0,x1,x=>mid-2*a*Math.sin(k*(x-x0)),C.ink,cp?2:2.6);
+  else curve(ctx,x0,x1,x=>mid-sum(x-x0),C.ink,cp?2.2:3);
+  ctx.fillStyle=C.muted; ctx.fillRect(x0-6,mid-14,6,28); ctx.fillRect(x1,mid-14,6,28);
+  if(o.marks){ for(let m=0;m<=n;m++){ const x=x0+m*L/n; ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(x,mid,cp?3:4.5,0,7); ctx.fill(); text(ctx,"N",x+(m===0?7:m===n?-7:0),mid+(cp?14:22),C.terra,F(cp?10:13),"center"); }
+    for(let m=0;m<n;m++){ const x=x0+(m+0.5)*L/n; text(ctx,"A",x,mid-2*a-(cp?4:8),C["olive-ink"],F(cp?10:13),"center"); } }
+  if(o.cur!=null){ const x=x0+o.cur*L, y=mid-sum(x-x0); line(ctx,x,top+2,x,h-bot-2,C.ink,1.2,[3,3]); ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(x,y,6,0,7); ctx.fill(); ctx.strokeStyle=C.surface; ctx.lineWidth=2; ctx.stroke(); }
+  if(o.dimL) dimArrow(ctx,x0,x1,h-8,o.dimL,C.ink);
+  if(o.label) text(ctx,o.label,8,13,C.ink,F(11));
+  if(o.legend && !cp){ text(ctx,"- - going right",x0,h-6,C.terra,F(11)); text(ctx,"- - going left",x0+108,h-6,C.olive,F(11)); text(ctx,"— sum",x0+210,h-6,C.ink,F(11)); }
+}
+// Sonometer. L in m (bridge separation, max 1 m), n harmonic, amp 0..1, t phase, jump = rider off.
+function drawSono(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, t=o.t||0, top=o.label?18:0;
+  const bx0=cp?8:16, bx1=w-(cp?34:66), by=top+(h-top)*(cp?0.58:0.55), bh=(h-top)*(cp?0.18:0.16), wy=by-(cp?11:17);
+  const xa=bx0+(cp?16:28), span=(bx1-(cp?10:18))-xa, xb=xa+Math.min(1,o.L)*span, Amax=cp?8:Math.min(40,(wy-top)*0.55);
+  // bench line + box
+  line(ctx,0,by+bh,w,by+bh,C.olive,2);
+  ctx.save(); ctx.fillStyle=C.blush; ctx.strokeStyle=C["terra-ink"]; ctx.lineWidth=1.5; ctx.beginPath(); ctx.roundRect(bx0,by,bx1-bx0,bh,5); ctx.fill(); ctx.stroke(); ctx.restore();
+  ctx.fillStyle=C["band-ink"]; ctx.globalAlpha=0.35; ctx.beginPath(); ctx.ellipse((bx0+bx1)/2,by+bh/2,cp?6:10,bh*0.28,0,0,7); ctx.fill(); ctx.globalAlpha=1;
+  if(!cp){ for(let k=0;k<=10;k++){ const x=xa+k/10*span; line(ctx,x,by,x,by+(k%5===0?7:4),C["band-ink"],1); } }
+  // bridges
+  [xa,xb].forEach(x=>{ ctx.fillStyle=C["olive-ink"]; ctx.beginPath(); ctx.moveTo(x-(cp?4:6),by); ctx.lineTo(x,wy); ctx.lineTo(x+(cp?4:6),by); ctx.closePath(); ctx.fill(); });
+  // peg + fixed wire parts
+  const px=bx1+(cp?12:22), pr=cp?5:8, my=by+bh+(cp?4:8);
+  ctx.fillStyle=C.ink; ctx.fillRect(bx0+2,wy-3,5,6);
+  line(ctx,bx0+5,wy,xa,wy,C.ink,1.6); line(ctx,xb,wy,px,wy-pr+pr,C.ink,1.6);
+  ctx.save(); ctx.strokeStyle=C.muted; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(px,wy+pr,pr,0,7); ctx.stroke(); ctx.restore();
+  line(ctx,px+pr,wy+pr,px+pr,my,C.ink,1.6);
+  const mw=cp?14:24, mh=cp?14:24; ctx.fillStyle=C.olive; ctx.fillRect(px+pr-mw/2,my,mw,mh);
+  if(!cp && o.T!=null) text(ctx,`T = ${o.T} N`,px+pr,my+mh+14,C.ink,F(11),"center");
+  // vibrating part
+  const n=o.n||1, ph=Math.cos(t), A=(o.amp||0)*Amax, ys=x=>wy-A*Math.sin(n*Math.PI*(x-xa)/(xb-xa))*ph;
+  if(A>2){ ctx.save(); ctx.fillStyle=C.apricot; ctx.globalAlpha=0.28; ctx.beginPath(); for(let x=xa;x<=xb;x++){ const y=wy-A*Math.sin(n*Math.PI*(x-xa)/(xb-xa)); x===xa?ctx.moveTo(x,y):ctx.lineTo(x,y);} for(let x=xb;x>=xa;x--) ctx.lineTo(x,wy+A*Math.sin(n*Math.PI*(x-xa)/(xb-xa))); ctx.closePath(); ctx.fill(); ctx.restore(); }
+  curve(ctx,xa,xb,ys,C.terra,cp?1.8:2.4);
+  // paper rider
+  const xr=(xa+xb)/2;
+  ctx.fillStyle=C.warn;
+  if(!o.jump){ const yr=ys(xr); ctx.beginPath(); ctx.moveTo(xr-(cp?4:6),yr+(cp?5:8)); ctx.lineTo(xr,yr); ctx.lineTo(xr+(cp?4:6),yr+(cp?5:8)); ctx.closePath(); ctx.fill(); }
+  else { const fx=xr+(cp?10:18); ctx.beginPath(); ctx.moveTo(fx-(cp?5:8),by); ctx.lineTo(fx+(cp?1:2),by-(cp?4:6)); ctx.lineTo(fx+(cp?5:8),by); ctx.closePath(); ctx.fill(); if(!cp) text(ctx,"rider jumped off!",xr,wy-Amax-10,C.bad,F(12),"center"); }
+  // tuning fork icon
+  if(o.fork){ const fx=bx0+(cp?10:20), fy=top+(cp?6:10), fh=cp?22:34; ctx.save(); ctx.strokeStyle=C.muted; ctx.lineWidth=cp?2:3; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(fx,fy); ctx.lineTo(fx,fy+fh*0.6); ctx.quadraticCurveTo(fx,fy+fh*0.8,fx+5,fy+fh*0.8); ctx.quadraticCurveTo(fx+10,fy+fh*0.8,fx+10,fy+fh*0.6); ctx.lineTo(fx+10,fy); ctx.moveTo(fx+5,fy+fh*0.8); ctx.lineTo(fx+5,fy+fh); ctx.stroke(); ctx.restore();
+    text(ctx,`${o.fork} Hz`,fx+16,fy+(cp?12:16),C.ink,F(cp?10:12)); }
+  if(!cp){ dimArrow(ctx,xa,xb,by+bh+20,`L = ${o.L.toFixed(o.Ld||2)} m`,C.ink); if(o.info) text(ctx,o.info,w-8,top+16,C.muted,F(12),"right"); }
+  if(o.label) text(ctx,o.label,8,13,C.ink,F(11));
+}
+// Resonance response of a string driven at f (harmonics of f1). Returns the best harmonic and a 0..1 response.
+function soResp(f,f1){ let best={n:1,r:0}; for(let n=1;n<=12;n++){ const r=1/(1+Math.pow((f-n*f1)/(0.012*n*f1),2)); if(r>best.r) best={n,r}; } return best; }
+
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "super", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible(); markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible(); markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3"]; const loState=store.get("s26-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s26-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s26-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  super:{ vis:[["pulses",{p:0.5,a1:0.8,a2:0.8,label:"crest + crest: bigger"}],["pulses",{p:0.5,a1:0.8,a2:-0.8,label:"crest + trough: cancel"}]], grid:"vis2", cap:"The dashed lines are the two pulses. The thick line is the rope: their sum.",
+    keys:[["+","Principle of superposition: where waves overlap, the resultant displacement is the sum of the individual displacements."],["↑↑","Crest meets crest: constructive interference, a bigger displacement."],["↑↓","Crest meets an equal trough: destructive interference. The rope is flat for an instant."]],
+    f:"y = y₁ + y₂", mistake:"Thinking the pulses bounce off or destroy each other. They pass straight through and carry on unchanged." },
+  stand:{ vis:[["standing",{n:3,t:0.7,comp:true}]], cap:"Dashed: a wave going right and an identical wave going left. Thick: their sum, a stationary wave.",
+    keys:[["⇄","A stationary wave forms when two identical waves travel in opposite directions along the same string and superpose."],["↩","On a string fixed at both ends, the second wave is the first one after it reflects at the end."],["⏸","The pattern doesn't travel along the string, so no energy is carried along it. The energy stays in the loops."]],
+    f:"wave going right + wave going left = stationary wave", mistake:"Calling it a wave that has stopped. Every point except the nodes is still vibrating up and down." },
+  nodes:{ vis:[["standing",{n:3,env:true,marks:true,still:true}]], cap:"N: nodes, which never move. A: antinodes, which move the most. The blur is the envelope.",
+    keys:[["N","Nodes are points of zero amplitude. A fixed end is always a node."],["A","Antinodes are points of maximum amplitude, halfway between nodes."],["½λ","Node to next node = λ/2. Node to next antinode = λ/4."]],
+    f:"node to node = λ / 2", mistake:"Measuring node to node and calling it λ. One loop is only half a wavelength." },
+  harm:{ vis:[["standing",{n:1,env:true,still:true,label:"1st harmonic (fundamental): λ = 2L"}],["standing",{n:2,env:true,still:true,label:"2nd harmonic: λ = L, f = 2f₁"}]], grid:"vis2", cap:"Each harmonic has one more loop. Same string, same wave speed, so f goes up as λ goes down.",
+    keys:[["f₁","The fundamental frequency is the lowest one: one loop, so λ = 2L."],["×n","Harmonics are whole-number multiples of the fundamental: fₙ = n f₁, with n loops and λ = 2L/n."],["🎸","A plucked string vibrates in several harmonics at once. The mix gives each instrument its timbre."]],
+    f:"λₙ = 2L / n   ·   fₙ = n f₁", mistake:"Saying the 2nd harmonic has 2 nodes. It has 2 loops, so 3 nodes counting both ends." },
+  model:{ vis:[["sono",{L:0.6,n:1,amp:0.9,T:40}]], cap:"The bridges are nodes. The mass over the pulley sets the tension.",
+    keys:[["L","Shorter string, higher frequency: f ∝ 1/L (tension and wire kept the same)."],["T","More tension, higher frequency: f ∝ √T. Four times the tension doubles f."],["μ","Heavier wire (more mass per metre), lower frequency: f ∝ 1/√μ."]],
+    f:"f = (1 / 2L) √(T / μ)", mistake:"Thinking double the tension gives double the frequency. f ∝ √T, so f rises by √2 ≈ 1.41." },
+  exp:{ vis:[["sono",{L:0.5,n:1,amp:1,jump:true,fork:256}]], cap:"At resonance the wire vibrates strongly and throws the paper rider off.",
+    keys:[["🔔","Strike a tuning fork, rest its stem on the box and move the bridge until the paper rider jumps: resonance."],["📏","Measure L between the bridges. Repeat for five or more forks."],["📈","Plot f against 1/L. A straight line through the origin verifies f ∝ 1/L. Slope = v/2."]],
+    f:"slope of f against 1/L = v / 2", mistake:"Plotting f against L and expecting a straight line. f ∝ 1/L gives a curve, so plot f against 1/L." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div class="${L.grid||""}" style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:var(--band-ink)">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const GL = 0.65, GF1 = 110;
+const CASES = [1,2,3,4,5,6].map(n=>({n, t: n===1? "1st harmonic: the fundamental" : `${ORD(n)} harmonic`, chips:[[`f = ${n*GF1} Hz`,"real"],[`λ = ${s3(2*GL/n)} m`,"neutral"],[`${n+1} nodes`,"neutral"]], use: n===1? ["harm","The note you hear most: A2"] : ["harm",`${n} loops · ${n-1}${n-1===1?"st":n-1===2?"nd":n-1===3?"rd":"th"} overtone`] }));
+$("cases").innerHTML = CASES.map((c,k)=>`<div class="panel case"><canvas class="mini" data-case="${k}"></canvas><h3>${c.t}</h3><div class="chips">${chipsHTML(c.chips)}</div><div class="use">${svg(c.use[0])}${c.use[1]}</div></div>`).join("");
+const FRETS = [0,3,5,7,12].map(k=>({k, L:GL*Math.pow(2,-k/12), f:GF1*Math.pow(2,k/12)}));
+$("bars").innerHTML = FRETS.map(r=>`<div class="barrow"><span><b>${r.k===0?"Open string":"Fret "+r.k}</b><br><small style="color:var(--muted)">L = ${r.L.toFixed(3)} m</small></span><div class="track"><i style="width:${(r.L/GL*100).toFixed(1)}%;background:${r.k===0?"var(--blush)":r.k<7?"var(--apricot)":"var(--terra)"}"></i></div><span class="v">${r.f.toFixed(1)} Hz · f × L = ${(r.f*r.L).toFixed(1)}</span></div>`).join("");
+$("fretNote").innerHTML = `f × L = 71.5 Hz m for every fret, so f ∝ 1/L. Fret 12 halves the length and doubles the frequency (one octave up). The wave speed on this string is v = 2f₁L = 2 × 110 × 0.65 = <b>143 m/s</b>.`;
+const AROUND = [
+  ["guitar","Guitars and harps","Each string is fixed at both ends. Pressing a fret shortens L and raises the note; tuning pegs change the tension.",[["Stationary waves","real"],["f ∝ 1/L","neutral"]],"var(--blush)"],
+  ["violin","Violins and cellos","The bow keeps the string vibrating. Thick, heavy strings (big μ) play the low notes.",[["f ∝ 1/√μ","neutral"]],"var(--apricot)"],
+  ["piano","Pianos","Hammers strike tight steel strings. Bass strings are long and wrapped in copper to add mass per metre.",[["f ∝ √T","neutral"]],"var(--sage)"],
+  ["flute","Flutes and organ pipes","Sound waves reflect inside the tube and form stationary waves in the air column.",[["Sound (2.5)","neutral"]],"var(--cream)"],
+  ["phones","Noise-cancelling headphones","A microphone hears the noise and the speaker adds an equal and opposite wave. Destructive interference cancels it.",[["Superposition","real"]],"var(--blush)"],
+  ["micro","Microwave ovens","Microwaves form a stationary wave inside. The turntable moves food through the hot antinodes and cold nodes.",[["EM waves (2.4)","neutral"]],"var(--sage)"],
+  ["bridge","Bridges and buildings","Engineers make sure wind, traffic or footsteps can't drive a structure at one of its natural frequencies.",[["Resonance","alert"]],"var(--apricot)"],
+  ["rope","A rope or slinky in class","Shake one end steadily with the other end fixed. At the right frequencies loops appear and stand still.",[["Try it","real"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"super",label:"Superposition",col:"var(--blush)",leaves:[["Displacements add","y = y₁ + y₂, with signs."],["Constructive","Crest on crest: bigger."],["Destructive","Crest on trough: cancel."],["Pass through","Waves carry on unchanged."]]},
+  {id:"stand",label:"Stationary waves",col:"var(--apricot)",leaves:[["Two waves","Identical, opposite directions."],["Reflection","The end reflects the wave back."],["No energy flow","The pattern stays put."],["Not stopped","Points still vibrate."]]},
+  {id:"nodes",label:"Nodes & antinodes",col:"var(--sage)",leaves:[["Node","Zero amplitude, never moves."],["Antinode","Maximum amplitude."],["λ/2","Node to node."],["Fixed ends","Always nodes."]]},
+  {id:"harm",label:"Harmonics",col:"var(--cream)",leaves:[["Fundamental","Lowest frequency, one loop, λ = 2L."],["fₙ = n f₁","Whole-number multiples."],["λₙ = 2L/n","n loops on the string."],["Timbre","The mix of harmonics."]]},
+  {id:"model",label:"Model of a string",col:"var(--blush)",leaves:[["f ∝ 1/L","Shorter, higher."],["f ∝ √T","Tighter, higher."],["f ∝ 1/√μ","Heavier, lower."],["v = √(T/μ)","Wave speed on the string."]]},
+  {id:"exp",label:"Verify f ∝ 1/L",col:"var(--sage)",leaves:[["Sonometer","Wire over two bridges."],["Paper rider","Jumps at resonance."],["f vs 1/L","Straight line through 0."],["Guitar frets","Secondary data: f × L constant."]]},
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Super-</text><text x="${cx}" y="${cy+22}" text-anchor="middle">position</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["super","State the principle of superposition.","When two or more waves meet, the resultant displacement at any point is the sum of the individual displacements."],
+  ["super","What happens when a crest meets a crest?","Constructive interference: the displacements add to give a bigger crest."],
+  ["super","What happens when a crest meets an equal trough?","Destructive interference: they cancel and the rope is flat for an instant."],
+  ["super","What happens to two pulses after they pass through each other?","They carry on unchanged, as if they had never met."],
+  ["super","What does 'in phase' mean?","Two waves are in step: crests line up with crests."],
+  ["stand","How is a stationary wave formed?","Two identical waves (same frequency, amplitude and speed) travel in opposite directions along the same string and superpose."],
+  ["stand","On a guitar string, where does the second wave come from?","The first wave reflects at the fixed end and travels back along the string."],
+  ["stand","Does a stationary wave carry energy along the string?","No. The pattern doesn't travel, so energy stays in the loops."],
+  ["stand","Give two differences between a stationary wave and a travelling wave.","Stationary: has nodes, carries no energy along, amplitude changes along the string. Travelling: carries energy, every point has the same amplitude."],
+  ["stand","How do the points within one loop move?","All up together and down together (in phase), but with different amplitudes."],
+  ["nodes","What is a node?","A point on a stationary wave with zero amplitude: it never moves."],
+  ["nodes","What is an antinode?","A point on a stationary wave with maximum amplitude."],
+  ["nodes","What is the distance between neighbouring nodes?","Half a wavelength: λ/2."],
+  ["nodes","What is the distance from a node to the next antinode?","A quarter of a wavelength: λ/4."],
+  ["nodes","Nodes on a string are 20 cm apart. What is λ?","λ = 2 × 20 = 40 cm."],
+  ["nodes","Why is there always a node at each end of a guitar string?","The ends are fixed, so they can't move."],
+  ["harm","What is the fundamental frequency?","The lowest frequency at which a string forms a stationary wave: one loop, λ = 2L."],
+  ["harm","What is a harmonic?","A frequency that is a whole-number multiple of the fundamental: fₙ = n f₁."],
+  ["harm","The fundamental is 196 Hz. What is the 3rd harmonic?","f₃ = 3 × 196 = 588 Hz."],
+  ["harm","How many loops, nodes and antinodes in the 4th harmonic?","4 loops, 5 nodes (including the ends) and 4 antinodes."],
+  ["harm","What is the wavelength of the nth harmonic on a string of length L?","λₙ = 2L / n."],
+  ["harm","What is an overtone?","Any frequency above the fundamental. The 2nd harmonic is the 1st overtone."],
+  ["model","How does the fundamental frequency depend on the length?","f ∝ 1/L: halve the length, double the frequency."],
+  ["model","How does f depend on the tension?","f ∝ √T: four times the tension doubles the frequency."],
+  ["model","How does f depend on the mass per unit length?","f ∝ 1/√μ: a heavier wire gives a lower note."],
+  ["model","Write the formula for the fundamental frequency of a stretched string.","f = (1 / 2L) √(T / μ)"],
+  ["model","What is mass per unit length?","The mass of one metre of the string: μ = m / l, in kg/m."],
+  ["exp","How do you know the sonometer wire is resonating with the fork?","The paper rider in the middle of the wire vibrates and jumps off."],
+  ["exp","Which graph verifies f ∝ 1/L?","f against 1/L: a straight line through the origin."],
+  ["exp","What does the slope of f against 1/L give?","Slope = v/2 = ½√(T/μ). So v = 2 × slope."],
+  ["exp","Why rest the stem of the fork on the sonometer box?","The box passes the vibration to the wire (and makes the sound louder)."],
+];
+let fcKnown = store.get("s26-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s26-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s26-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s26-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["super","When two waves meet at a point, the resultant displacement is:",["The larger of the two displacements","The sum of the two displacements","Always zero","The product of the two displacements"],1,"Principle of superposition: the displacements add, taking signs into account."],
+  ["super","A pulse of +3 cm meets a pulse of −3 cm on a rope. At the instant they overlap exactly, the displacement there is:",["+6 cm","−6 cm","0 cm","+3 cm"],2,"(+3) + (−3) = 0. Destructive interference: the rope is flat for an instant."],
+  ["super","After two pulses pass through each other, they:",["Both disappear","Bounce back the way they came","Carry on unchanged","Join into one pulse"],2,"Waves pass through each other. Superposition only happens while they overlap."],
+  ["stand","A stationary wave on a string is formed by:",["One wave travelling along the string","Two identical waves travelling in opposite directions","Two waves travelling in the same direction","A wave slowing down until it stops"],1,"Two identical waves moving in opposite directions superpose to give the stationary pattern."],
+  ["stand","On a guitar string, the second wave needed for a stationary wave comes from:",["The air around the string","Reflection at the fixed end","The player's other hand","The sound box"],1,"The wave reflects at each fixed end and travels back along the string."],
+  ["stand","Which statement about a stationary wave is true?",["It carries energy along the string","Every point has the same amplitude","It has points that never move","Its pattern moves at the wave speed"],2,"Nodes never move. The pattern stays put and doesn't carry energy along the string."],
+  ["nodes","A node is a point on a stationary wave with:",["Maximum amplitude","Zero amplitude","The highest frequency","The longest wavelength"],1,"Nodes never move. Antinodes have the maximum amplitude."],
+  ["nodes","The distance between two neighbouring nodes is:",["λ/4","λ/2","λ","2λ"],1,"One loop is half a wavelength."],
+  ["nodes","Neighbouring nodes on a string are 15 cm apart. The wavelength is:",["7.5 cm","15 cm","30 cm","60 cm"],2,"λ = 2 × 15 = 30 cm."],
+  ["harm","The fundamental frequency of a string is:",["Its highest possible frequency","The lowest frequency at which it forms a stationary wave","Any frequency it is driven at","The frequency of the 2nd harmonic"],1,"The fundamental (1st harmonic) has one loop and λ = 2L."],
+  ["harm","A string has a fundamental frequency of 200 Hz. Its 3rd harmonic is:",["67 Hz","203 Hz","400 Hz","600 Hz"],3,"fₙ = n f₁ = 3 × 200 = 600 Hz."],
+  ["harm","A string 0.60 m long vibrates in its 3rd harmonic. The wavelength is:",["0.20 m","0.40 m","0.60 m","1.80 m"],1,"λ = 2L / n = 2 × 0.60 / 3 = 0.40 m."],
+  ["harm","Including both ends, the number of nodes in the 4th harmonic is:",["3","4","5","8"],2,"n loops have n + 1 nodes: 4 + 1 = 5."],
+  ["model","The length of a vibrating string is halved (same tension and wire). Its fundamental frequency:",["Halves","Stays the same","Doubles","Quadruples"],2,"f ∝ 1/L, so halving L doubles f."],
+  ["model","The tension in a string is made four times bigger. Its fundamental frequency:",["Doubles","Quadruples","Halves","Rises by 16 times"],0,"f ∝ √T and √4 = 2."],
+  ["model","Compared with a thin wire, a thick heavy wire of the same length and tension has:",["A higher frequency","A lower frequency","The same frequency","No fundamental frequency"],1,"Bigger μ gives a lower frequency: f ∝ 1/√μ."],
+  ["model","A wire has tension 40 N and mass per unit length 1.0 × 10⁻³ kg/m. Its length between the bridges is 0.50 m. Its fundamental frequency is:",["100 Hz","200 Hz","400 Hz","20 Hz"],1,"v = √(40 / 0.001) = 200 m/s. f = v / 2L = 200 / 1.0 = 200 Hz."],
+  ["exp","In the sonometer experiment, resonance is detected when:",["The tuning fork stops","The paper rider jumps off the wire","The bridges move","The mass falls off"],1,"The wire vibrates strongly at resonance and throws off the paper rider."],
+  ["exp","To verify f ∝ 1/L you should plot:",["f against L","f against L²","f against 1/L","L against T"],2,"f against 1/L gives a straight line through the origin if f ∝ 1/L."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s26-best",null); if(best==null||pct>best) store.set("s26-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/[<>&"]/g,"")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Define","Give the exact meaning in one full, precise sentence.","Define a node."],
+  ["State","Give a short fact, law or value. No explanation needed.","State the principle of superposition."],
+  ["Model","Use a diagram, equation or simulation to represent how something behaves, and use it to predict.","Model the standing waves on a stretched string."],
+  ["Verify","Use data to show that a relationship or model is correct, and say how well it fits.","Verify that f ∝ 1/L using a sonometer."],
+  ["Explain","Say what happens and why, using the physics behind it.","Explain how a stationary wave forms on a guitar string."],
+  ["Describe","Give the steps or features in a clear order.","Describe how to find the resonant length for a tuning fork."],
+  ["Draw","Make a clear labelled diagram.","Draw the 3rd harmonic and label the nodes and antinodes."],
+  ["Calculate","Write the formula, substitute the numbers, give the answer with a unit.","Calculate the fundamental frequency of the wire."],
+  ["Evaluate","Judge strengths and weaknesses, then reach a conclusion.","Evaluate the paper-rider method of detecting resonance."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+
+// Calculation trainer
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+function parseNum(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,ch=>({"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-"})[ch]);
+  s=s.replace(/[x×*]10\^?/i,"e");
+  return parseFloat(s);
+}
+const MUS=[0.5,0.8,1.0,1.2,1.5,2.0,2.5,4.0];
+const PTYPES = {
+  node:{ name:"λ from nodes", gen(){ const d=rnd(5,60), lam=2*d;
+    return { q:`Neighbouring nodes on a vibrating string are <b>${d} cm</b> apart. Calculate the wavelength.`, ans:lam, unit:"cm",
+      steps:["node to node = λ / 2  →  λ = 2 × (node spacing)", `λ = 2 × ${d}`, `λ = ${lam} cm`] }; } },
+  lamn:{ name:"λ of a harmonic", gen(){ const L=rnd(30,120)/100, n=rnd(1,6), lam=2*L/n;
+    return { q:`A string of length <b>${L.toFixed(2)} m</b> vibrates in its <b>${ORD(n)} harmonic</b>. Calculate the wavelength.`, ans:lam, unit:"m",
+      steps:[`${ORD(n)} harmonic: ${n} loop${n>1?"s":""}, so λ = 2L / n`, `λ = 2 × ${L.toFixed(2)} / ${n}`, `λ = ${s3(lam)} m`] }; } },
+  fn:{ name:"fₙ = n f₁", gen(){ const f1=rnd(50,400), n=rnd(2,8), f=n*f1;
+    return { q:`A string has a fundamental frequency of <b>${f1} Hz</b>. Calculate the frequency of its <b>${ORD(n)} harmonic</b>.`, ans:f, unit:"Hz",
+      steps:["fₙ = n f₁", `f${n<10?"₀₁₂₃₄₅₆₇₈₉"[n]:n} = ${n} × ${f1}`, `f = ${f} Hz`] }; } },
+  fv:{ name:"f₁ from v", gen(){ const L=rnd(30,100)/100, v=rnd(10,40)*10, f=v/(2*L);
+    return { q:`Waves travel at <b>${v} m/s</b> along a string of length <b>${L.toFixed(2)} m</b> fixed at both ends. Calculate its fundamental frequency.`, ans:f, unit:"Hz",
+      steps:["Fundamental: one loop, so λ = 2L", `λ = 2 × ${L.toFixed(2)} = ${s3(2*L)} m`, `f = v / λ = ${v} / ${s3(2*L)}`, `f = ${s3(f)} Hz`] }; } },
+  speed:{ name:"v = √(T/μ)", gen(){ const T=rnd(10,150), mu=pick(MUS), v=Math.sqrt(T/(mu*1e-3));
+    return { q:`A wire is under a tension of <b>${T} N</b>. Its mass per unit length is <b>${mu.toFixed(1)} g/m</b>. Calculate the speed of waves on the wire.`, ans:v, unit:"m/s",
+      steps:[`μ = ${mu.toFixed(1)} g/m = ${sci(mu*1e-3,2)} kg/m`, "v = √(T / μ)", `v = √(${T} / ${sci(mu*1e-3,2)}) = √${s3(T/(mu*1e-3))}`, `v = ${s3(v)} m/s`] }; } },
+  full:{ name:"f = (1/2L)√(T/μ)", gen(){ const L=rnd(25,100)/100, T=rnd(20,120), mu=pick(MUS), f=Math.sqrt(T/(mu*1e-3))/(2*L);
+    return { q:`A sonometer wire is <b>${L.toFixed(2)} m</b> long between the bridges, under a tension of <b>${T} N</b>, with mass per unit length <b>${mu.toFixed(1)} g/m</b>. Calculate its fundamental frequency.`, ans:f, unit:"Hz",
+      steps:[`μ = ${sci(mu*1e-3,2)} kg/m`, "f = (1 / 2L) √(T / μ)", `√(${T} / ${sci(mu*1e-3,2)}) = ${s3(Math.sqrt(T/(mu*1e-3)))} m/s`, `f = ${s3(Math.sqrt(T/(mu*1e-3)))} / (2 × ${L.toFixed(2)})`, `f = ${s3(f)} Hz`] }; } },
+  tension:{ name:"Find T", gen(){ const f=rnd(10,50)*10, L=rnd(30,80)/100, mu=pick(MUS), T=4*L*L*f*f*mu*1e-3;
+    return { q:`A wire of mass per unit length <b>${mu.toFixed(1)} g/m</b> has a fundamental frequency of <b>${f} Hz</b> when <b>${L.toFixed(2)} m</b> long. Calculate the tension.`, ans:T, unit:"N",
+      steps:["f = (1 / 2L) √(T / μ)  →  T = 4L²f²μ", `T = 4 × ${L.toFixed(2)}² × ${f}² × ${sci(mu*1e-3,2)}`, `T = ${s3(T)} N`] }; } },
+  lratio:{ name:"New length", gen(){ const f1=rnd(20,50)*10, L1=rnd(40,90)/100, L2=rnd(20,80)/100, f2=f1*L1/L2;
+    return { q:`A wire <b>${L1.toFixed(2)} m</b> long has a fundamental frequency of <b>${f1} Hz</b>. The bridge is moved so the length is <b>${L2.toFixed(2)} m</b> (same tension). Calculate the new frequency.`, ans:f2, unit:"Hz",
+      steps:["f ∝ 1/L, so f₁L₁ = f₂L₂", `f₂ = ${f1} × ${L1.toFixed(2)} / ${L2.toFixed(2)}`, `f₂ = ${s3(f2)} Hz`] }; } },
+  tratio:{ name:"New tension", gen(){ const f1=rnd(10,40)*10, k=pick([4,9,2,0.25,16]), f2=f1*Math.sqrt(k);
+    const kTxt = k===0.25? "reduced to a quarter" : k===2? "doubled" : `multiplied by ${k}`;
+    return { q:`A string has a fundamental frequency of <b>${f1} Hz</b>. Its tension is <b>${kTxt}</b> (same length and wire). Calculate the new frequency.`, ans:f2, unit:"Hz",
+      steps:["f ∝ √T", `f₂ = f₁ × √${k} = ${f1} × ${s3(Math.sqrt(k))}`, `f₂ = ${s3(f2)} Hz`] }; } },
+};
+let pType="node", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseNum($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 0.68, 340 or 3.1e-4 (that means 3.1 × 10⁻⁴).</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.abs(pCur.ans)*0.02;
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: node to node is λ/2, λ = 2L/n, and μ must be in kg/m (g/m × 10⁻³). Give the answer in the unit asked for.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Count the loops drill
+let pd = { q:null, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ const n=rnd(1,6), kind=pick(["harm","nodes","anti","lam"]);
+  let ans, opts, ask;
+  if(kind==="harm"){ ask="Which harmonic is this?"; ans=ORD(n); opts=[n-1,n,n+1].map(x=>x<1?n+2:x).map(ORD); }
+  else if(kind==="nodes"){ ask="How many nodes are there, counting both ends?"; ans=String(n+1); opts=[n,n+1,n+2].map(String); }
+  else if(kind==="anti"){ ask="How many antinodes are there?"; ans=String(n); opts=[n,n+1,n===1?3:n-1].map(String); }
+  else { ask="What is the wavelength, in terms of L?"; ans=LAMS[n]; opts=[LAMS[n],LAMS[n+1],n>1?LAMS[n-1]:LAMS[n+2]]; }
+  opts=[...new Set(opts)]; for(let i=opts.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [opts[i],opts[j]]=[opts[j],opts[i]]; }
+  pd={...pd,q:{n,kind,ans},shown:false,sel:null};
+  $("predOpts").querySelector(".btns").innerHTML = opts.map(o=>`<button data-a="${o}">${o}</button>`).join("");
+  $("predFb").innerHTML="";
+  $("predQ").innerHTML=`The string is fixed at both ends. <b>${ask}</b>`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const q=pd.q, ok=pd.sel===q.ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true;
+  const why = `There ${q.n===1?"is 1 loop":"are "+q.n+" loops"}, so this is the ${ORD(q.n)} harmonic: ${q.n+1} nodes, ${q.n} antinode${q.n>1?"s":""} and λ = 2L/${q.n} = ${LAMS[q.n]}.`;
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> Answer: ${q.ans}. ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Superposition and stationary waves", intro:"A student fixes one end of a long rope to a wall and shakes the other end up and down at a steady frequency. At certain frequencies a stationary wave forms.",
+    parts:[["a","State the principle of superposition.",6,"When two (or more) waves meet (3) · the resultant displacement is the sum of the individual displacements (3)."],
+      ["b","Explain how the stationary wave forms on the rope.",6,"The wave reflects at the wall (3) · the incident and reflected waves, travelling in opposite directions, superpose / interfere (3)."],
+      ["c","Distinguish between a node and an antinode.",6,"Node: a point of zero amplitude / no movement (3) · antinode: a point of maximum amplitude (3)."],
+      ["d","The rope shows 4 loops. Neighbouring nodes are 0.75 m apart. Calculate the wavelength.",6,"Node to node = λ/2 (3) · λ = 2 × 0.75 = 1.5 m (3)."],
+      ["e","The student shakes the rope at 2.0 Hz. Calculate the speed of the waves on the rope.",6,"v = fλ (3) · v = 2.0 × 1.5 = 3.0 m/s (3)."],
+      ["f","Give one way in which a stationary wave differs from a travelling wave.",3,"Any one: has nodes · doesn't carry energy along the rope · amplitude varies from point to point · pattern doesn't move (3)."]] },
+  { title:"Experiment: frequency and length of a stretched wire", intro:"A student used a sonometer with the tension kept at 49 N. For each tuning fork, the bridge was moved until a paper rider on the wire jumped off. The lengths were:",
+    table:[["f (Hz)","256","320","384","426.7","512"],["L (m)","0.502","0.399","0.335","0.300","0.249"]],
+    parts:[["a","Draw a labelled diagram of the apparatus.",6,"Sonometer box with wire over two bridges (3) · tension set by masses over a pulley (or a spring balance), tuning fork and paper rider shown (3)."],
+      ["b","How did the student know the wire was vibrating at the frequency of the fork?",3,"The paper rider vibrated and jumped off / fell off: resonance (3)."],
+      ["c","Calculate 1/L for each length and plot a graph of f against 1/L.",12,"1/L: 1.99, 2.51, 2.99, 3.33, 4.02 m⁻¹ (3) · axes labelled with units (3) · points plotted correctly (3) · straight line through the origin (3)."],
+      ["d","Explain how the graph verifies the relationship between f and L.",3,"A straight line through the origin shows f ∝ 1/L (3)."],
+      ["e","Use the slope of the graph to find the speed of the waves on the wire, and hence its mass per unit length.",9,"Slope ≈ 128 Hz m (3) · slope = v/2, so v ≈ 256 m/s (3) · μ = T / v² = 49 / 256² ≈ 7.5 × 10⁻⁴ kg/m (3)."],
+      ["f","Give one precaution to improve the accuracy of the results.",3,"Any one: use a small paper rider in the middle of the wire · approach resonance from both sides and average · measure L from bridge to bridge carefully · strike the fork on a rubber pad (3)."]] },
+  { title:"Secondary data: the guitar string", intro:"A guitar A string is 0.650 m long between its fixed ends and has a fundamental frequency of 110 Hz. Pressing frets shortens the vibrating length. Published values (secondary data) are:",
+    table:[["Fret","open","3","5","7","12"],["L (m)","0.650","0.547","0.487","0.434","0.325"],["f (Hz)","110.0","130.8","146.8","164.8","220.0"]],
+    parts:[["a","Define the fundamental frequency.",3,"The lowest frequency at which the string forms a stationary wave / vibrates with one loop (3)."],
+      ["b","Use the data to verify that the frequency is inversely proportional to the length.",9,"Calculate f × L for each: 71.5 Hz m every time (6) · constant, so f ∝ 1/L (3). (Or a graph of f against 1/L that is a straight line through the origin.)"],
+      ["c","Calculate the speed of the waves on the string.",6,"Fundamental: λ = 2L = 1.30 m (3) · v = fλ = 110 × 1.30 = 143 m/s (3)."],
+      ["d","The string has a mass per unit length of 4.0 × 10⁻³ kg/m. Calculate its tension.",6,"v = √(T/μ) → T = μv² (3) · T = 4.0 × 10⁻³ × 143² ≈ 82 N (3)."],
+      ["e","Draw the 3rd harmonic on the open string and calculate its frequency.",6,"Diagram with 3 loops, 4 nodes (including ends) and 3 antinodes (3) · f₃ = 3 × 110 = 330 Hz (3)."],
+      ["f","Explain why the string sounds different from a flute playing the same note.",3,"Each instrument produces a different mix of harmonics (overtones), so the timbre / quality is different (3)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p>${L.table?`<div class="tablewrap" style="border:0;max-height:none"><table>${L.table.map(r=>`<tr>${r.map((c,j)=>j?`<td>${c}</td>`:`<th style="position:static">${c}</th>`).join("")}</tr>`).join("")}</table></div>`:""}</header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist and investigation skills
+const RAG = ["State the principle of superposition","Add pulse displacements, taking signs into account","Explain how a stationary wave forms on a string","Define node and antinode","Use node to node = λ/2","Draw the first few harmonics and label N and A","Define the fundamental frequency and harmonics","Use λₙ = 2L/n and fₙ = n f₁","State how f depends on L, T and μ","Use f = (1/2L)√(T/μ) and v = √(T/μ)","Describe the sonometer experiment and the paper rider","Verify f ∝ 1/L with a graph of f against 1/L"];
+const ragState=store.get("s26-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s26-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Plan a fair test","Name the independent (fork frequency), dependent (resonant length) and controlled (tension, wire) variables.","Verifying f ∝ 1/L lab"],["Collect primary data","Find the resonant length for five or more forks over a good range.","Verifying f ∝ 1/L lab"],["Record data properly","Use a table with quantities and units in the column headings, including a 1/L column.","Verifying f ∝ 1/L lab"],["Linearise a graph","Plot f against 1/L so a proportional relationship gives a straight line.","Verifying f ∝ 1/L lab"],["Use the slope","Slope = v/2; then μ = T / v².","Verifying f ∝ 1/L lab"],["Model a system","Change one variable at a time in the model and predict the effect before you look.","Modelling a string lab"],["Observe carefully","Count loops and nodes, and look for where the string doesn't move.","Nodes & antinodes lab"],["Use secondary data","Test f ∝ 1/L with published guitar fret lengths and say where the data came from.","Infographics"]];
+const skState=store.get("s26-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s26-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+function playBtn(id,st){ $(id).addEventListener("click",()=>{ st.play=!st.play; $(id).setAttribute("aria-pressed",st.play); $(id).textContent=st.play?"Pause":"Play"; }); }
+function toggleBtn(id,st,key,on,off,after){ $(id).addEventListener("click",()=>{ st[key]=!st[key]; $(id).setAttribute("aria-pressed",st[key]); if(on) $(id).textContent=st[key]?on:off; if(after) after(); }); }
+let actx=null, osc=null, gain=null;
+function audioOn(){ try{ if(!actx){ actx=new (window.AudioContext||window.webkitAudioContext)(); osc=actx.createOscillator(); osc.type="sine"; gain=actx.createGain(); gain.gain.value=0; osc.connect(gain).connect(actx.destination); osc.start(); } actx.resume(); return true; }catch(e){ return false; } }
+function sndBtn(id,st){ $(id).addEventListener("click",()=>{ st.snd=!st.snd; if(st.snd && !audioOn()) st.snd=false; $(id).setAttribute("aria-pressed",st.snd); $(id).textContent=st.snd?"🔇 Sound off":"🔊 Sound on"; }); }
+// Pulses
+const pu = { a1:0.8, a2:0.8, p:0, play:false, comp:true };
+const cm = a => (a>=0?"+":"−")+Math.abs(a*PU_CM).toFixed(1)+" cm";
+function puUpd(){ $("puA1o").textContent=cm(pu.a1); $("puA2o").textContent=cm(pu.a2); $("puP").value=pu.p; $("puPo").textContent=Math.round(pu.p*100)+"%"; puC.redraw(); }
+$("puA1").addEventListener("input",e=>{ pu.a1=+e.target.value; puUpd(); });
+$("puA2").addEventListener("input",e=>{ pu.a2=+e.target.value; puUpd(); });
+$("puP").addEventListener("input",e=>{ pu.p=+e.target.value; puUpd(); });
+$("puPlay").addEventListener("click",()=>{ pu.play=!pu.play; if(pu.play && pu.p>=1) pu.p=0; $("puPlay").setAttribute("aria-pressed",pu.play); $("puPlay").textContent=pu.play?"Pause":"Play"; });
+$("puMeet").addEventListener("click",()=>{ pu.p=0.5; pu.play=false; $("puPlay").setAttribute("aria-pressed","false"); $("puPlay").textContent="Play"; puUpd(); });
+toggleBtn("puComp",pu,"comp","Dashed pulses on","Dashed pulses off",()=>puC.redraw());
+// Stationary from two waves
+const st = { n:3, t:0, play:true, R:true, Lw:true, comp:true };
+function stUpd(){ $("stNo").textContent=st.n; stC.redraw(); }
+$("stN").addEventListener("input",e=>{ st.n=+e.target.value; stUpd(); });
+toggleBtn("stR",st,"R",null,null,()=>stC.redraw());
+toggleBtn("stL",st,"Lw",null,null,()=>stC.redraw());
+toggleBtn("stComp",st,"comp",null,null,()=>stC.redraw());
+playBtn("stPlay",st);
+$("stStep").addEventListener("click",()=>{ st.play=false; $("stPlay").setAttribute("aria-pressed","false"); $("stPlay").textContent="Play"; st.t=Math.round(st.t/(Math.PI/4))*(Math.PI/4)+Math.PI/4; stC.redraw(); });
+// Nodes
+const ND_L=1.2;
+const nd = { n:3, x:0.2, t:0, play:true, env:true, marks:true };
+function ndUpd(){ $("ndNo").textContent=nd.n; $("ndXo").textContent=nd.x.toFixed(2)+" m"; ndC.redraw(); }
+$("ndN").addEventListener("input",e=>{ nd.n=+e.target.value; ndUpd(); });
+$("ndX").addEventListener("input",e=>{ nd.x=+e.target.value; ndUpd(); });
+playBtn("ndPlay",nd);
+toggleBtn("ndEnv",nd,"env","Blur (strobe) on","Blur (strobe) off",()=>ndC.redraw());
+toggleBtn("ndMarks",nd,"marks","N / A labels on","N / A labels off",()=>ndC.redraw());
+// Harmonics
+const HM_L=0.65;
+const hm = { n:1, f1:110, t:0, snd:false };
+function hmUpd(){ $("hmFo").textContent=hm.f1+" Hz"; hmC.redraw(); }
+$("hmF").addEventListener("input",e=>{ hm.f1=+e.target.value; hmUpd(); });
+(()=>{ const bs=[...$("hmN").querySelectorAll("button")]; bs.forEach(b=>b.addEventListener("click",()=>{ hm.n=+b.dataset.v; pressGroup(bs,b); hmUpd(); })); })();
+sndBtn("hmSnd",hm);
+// Sonometer model
+const so = { L:0.5, T:40, mu:1, f:150, t:0, snd:false, resp:{n:1,r:0} };
+const soF1 = () => Math.sqrt(so.T/(so.mu*1e-3))/(2*so.L);
+function soUpd(){ $("soLo").textContent=so.L.toFixed(2)+" m"; $("soTo").textContent=so.T+" N"; $("soFo").textContent=so.f+" Hz"; $("soF").value=so.f; soC.redraw(); }
+$("soL").addEventListener("input",e=>{ so.L=+e.target.value; soUpd(); });
+$("soT").addEventListener("input",e=>{ so.T=+e.target.value; soUpd(); });
+$("soF").addEventListener("input",e=>{ so.f=+e.target.value; soUpd(); });
+(()=>{ const bs=[...$("soW").querySelectorAll("button")]; bs.forEach(b=>b.addEventListener("click",()=>{ so.mu=+b.dataset.v; pressGroup(bs,b); soUpd(); })); })();
+$("soGo").addEventListener("click",()=>{ so.f=Math.min(1200,Math.max(20,Math.round(soF1()))); soUpd(); });
+$("soGo2").addEventListener("click",()=>{ so.f=Math.min(1200,Math.max(20,Math.round(2*soF1()))); soUpd(); });
+sndBtn("soSnd",so);
+// Experiment: hidden mass per unit length, T = 49 N
+const EX_T = 49;
+const ex = { f:256, L:0.8, t:0, data:[], revealed:false, msg:"" };
+function exNewWire(){ ex.mu=pick([0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.4]); ex.v=Math.sqrt(EX_T/(ex.mu*1e-3)); ex.data=[]; ex.revealed=false; ex.msg=""; }
+exNewWire();
+const exF1 = () => ex.v/(2*ex.L);
+const exR = () => 1/(1+Math.pow((exF1()-ex.f)/(0.012*ex.f),2));
+function exUpd(){ $("exLo").textContent=ex.L.toFixed(3)+" m"; $("exL").value=ex.L; exC.redraw(); }
+$("exL").addEventListener("input",e=>{ ex.L=+e.target.value; ex.msg=""; exUpd(); });
+(()=>{ const bs=[...$("exF").querySelectorAll("button")]; bs.forEach(b=>b.addEventListener("click",()=>{ ex.f=+b.dataset.v; ex.msg=""; pressGroup(bs,b); exUpd(); })); })();
+$("exRec").addEventListener("click",()=>{
+  if(exR()<0.5){ ex.msg="The rider hasn't jumped yet. Move the bridge until it does, then record."; exC.redraw(); return; }
+  const Lm=Math.round((ex.L+(Math.random()-0.5)*0.004)*1000)/1000;
+  ex.data=ex.data.filter(d=>d[0]!==ex.f); ex.data.push([ex.f,Lm]); ex.data.sort((a,b)=>a[0]-b[0]); ex.msg=`Recorded: ${ex.f} Hz at L = ${Lm.toFixed(3)} m.`; exTable(); exC.redraw(); });
+$("exClear").addEventListener("click",()=>{ ex.data=[]; ex.msg=""; exTable(); });
+$("exNew").addEventListener("click",()=>{ exNewWire(); exTable(); exC.redraw(); });
+$("exReveal").addEventListener("click",()=>{ ex.revealed=!ex.revealed; exTable(); });
+function exTable(){
+  $("exTable").innerHTML = ex.data.map(([f,L],k)=>`<tr><td>${f}</td><td>${L.toFixed(3)}</td><td>${(1/L).toFixed(2)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("exEmpty").hidden = ex.data.length>0; if(exGraph) exGraph.redraw();
+}
+$("exTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ ex.data.splice(+k,1); exTable(); } });
+
+/* ================= CREATE CANVASES ================= */
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); });
+}
+let exGraph=null;
+const hero = makeCanvas($("heroCanvas"), 0.7, 220, s => drawStanding(s.ctx,s.w,s.h,{n:3,t:reduce?0.7:heroT*1.6,comp:true,hero:true}), 420);
+const puC = makeCanvas($("puC"), 0.42, 240, s => { drawPulses(s.ctx,s.w,s.h,{p:pu.p,a1:pu.a1,a2:pu.a2,comp:pu.comp});
+  const y1=pu.a1*Math.exp(-Math.pow((0.5-puC1(pu.p))/PU_S,2)), y2=pu.a2*Math.exp(-Math.pow((0.5-puC2(pu.p))/PU_S,2));
+  let mx=0; for(let u=0;u<=1;u+=0.002){ const y=puY(u,pu.p,pu.a1,pu.a2); if(Math.abs(y)>Math.abs(mx)) mx=y; }
+  const over=Math.abs(puC1(pu.p)-puC2(pu.p))<PU_S*2.4;
+  const kind=!over?"no overlap yet" : pu.a1*pu.a2>0?"constructive (they add)" : pu.a1*pu.a2<0? (Math.abs(pu.a1+pu.a2)<0.05?"destructive (they cancel)":"destructive (partly cancel)") : "only one pulse";
+  setReadout($("puOut"),[["Pulse 1 at the centre",(y1*PU_CM).toFixed(1)+" cm"],["Pulse 2 at the centre",(y2*PU_CM).toFixed(1)+" cm"],["Rope at the centre = sum",((y1+y2)*PU_CM).toFixed(1)+" cm"],["Biggest displacement on the rope",(mx*PU_CM).toFixed(1)+" cm"],["Interference",kind]]); }, 380);
+const stC = makeCanvas($("stC"), 0.5, 260, s => { drawStanding(s.ctx,s.w,s.h,{n:st.n,t:st.t,comp:st.comp,R:st.R,Lw:st.Lw,legend:true});
+  const c=Math.cos(st.t), both=st.R&&st.Lw, ph=((st.t/(2*Math.PI))%1+1)%1;
+  setReadout($("stOut"),[["Waves on",both?"both":st.R?"right only":st.Lw?"left only":"none"],["Time","t = "+(ph).toFixed(3)+" T"],["The two waves are",!both?"–":Math.abs(c)>0.92?"in step: they add":Math.abs(c)<0.08?"out of step: they cancel":"partly in step"],["Biggest displacement now",both? Math.round(Math.abs(c)*100)+"% of maximum" : "100% (a travelling wave)"],["Pattern",both?"stays put: stationary":st.R||st.Lw?"moves along: travelling":"flat"],["Nodes (incl. ends)",both? String(st.n+1) : "none"]]); }, 440);
+const ndC = makeCanvas($("ndC"), 0.45, 240, s => { drawStanding(s.ctx,s.w,s.h,{n:nd.n,t:nd.t,env:nd.env,marks:nd.marks,cur:nd.x/ND_L,dimL:"L = 1.20 m"});
+  const lam=2*ND_L/nd.n, amp=Math.abs(Math.sin(nd.n*Math.PI*nd.x/ND_L)), dn=Math.min(...Array.from({length:nd.n+1},(_,m)=>Math.abs(nd.x-m*ND_L/nd.n)));
+  setReadout($("ndOut"),[["Wavelength",s3(lam)+" m"],["Node to node",s3(lam/2)+" m"],["Marker position",nd.x.toFixed(2)+" m"],["Amplitude here",Math.round(amp*100)+"% of the maximum"],["This point is",amp<0.04?"a node: it never moves":amp>0.985?"an antinode: it moves the most":"between a node and an antinode"],["Distance to nearest node",dn.toFixed(2)+" m = "+(dn/lam).toFixed(2)+" λ"]]); }, 400);
+const hmC = makeCanvas($("hmC"), 0.42, 240, s => { drawStanding(s.ctx,s.w,s.h,{n:hm.n,t:hm.t,env:true,marks:true,dimL:"L = 0.65 m",label:hm.n===1?"1st harmonic: the fundamental":`${ORD(hm.n)} harmonic (${ORD(hm.n-1)} overtone)`});
+  const lam=2*HM_L/hm.n, f=hm.n*hm.f1;
+  setReadout($("hmOut"),[["Harmonic n",String(hm.n)],["Frequency",f+" Hz"],["Wavelength λₙ = 2L / n",s3(lam)+" m"],["Wave speed",s3(f*lam)+" m/s"],["Nodes (incl. ends)",String(hm.n+1)],["Antinodes",String(hm.n)]]); }, 380);
+const soC = makeCanvas($("soC"), 0.45, 260, s => { const f1=soF1(); so.resp=soResp(so.f,f1); const r=so.resp;
+  drawSono(s.ctx,s.w,s.h,{L:so.L,n:r.n,amp:Math.max(0.04,r.r),t:so.t,jump:r.r>0.5&&r.n%2===1,T:so.T,info:`driving at ${so.f} Hz`});
+  const v=Math.sqrt(so.T/(so.mu*1e-3));
+  setReadout($("soOut"),[["Wave speed on the wire",s3(v)+" m/s"],["Fundamental f₁",s3(f1)+" Hz"],["2nd and 3rd harmonics",s3(2*f1)+" Hz, "+s3(3*f1)+" Hz"],["Driving frequency",so.f+" Hz"],["Response",r.r>0.5?`resonance: ${ORD(r.n)} harmonic`:r.r>0.1?`close to the ${ORD(r.n)} harmonic`:"small, forced vibration"],["Paper rider",r.r>0.5&&r.n%2===1?"jumps off":r.r>0.5?"stays on (node in the middle)":"stays on"]]);
+  $("soWork").innerHTML = `f₁ = (1 / 2L) √(T / μ) = (1 / (2 × ${so.L.toFixed(2)})) × √(${so.T} / ${sci(so.mu*1e-3,2)}) = (1 / ${(2*so.L).toFixed(2)}) × ${s3(v)} = <b>${s3(f1)} Hz</b>`; }, 440);
+const exC = makeCanvas($("exC"), 0.42, 250, s => { const r=exR();
+  drawSono(s.ctx,s.w,s.h,{L:ex.L,Ld:3,n:1,amp:Math.max(0.02,r),t:ex.t,jump:r>0.5,T:EX_T,fork:ex.f});
+  setReadout($("exOut"),[["Tuning fork",ex.f+" Hz"],["Length L",ex.L.toFixed(3)+" m"],["Tension",EX_T+" N"],["Wire",r>0.5?"resonating!":r>0.15?"wobbling: you're close":"barely moving"],["Readings",ex.data.length+(ex.msg?" · "+ex.msg:"")]]); }, 400);
+exGraph = makeCanvas($("exGraph"), 0.72, 190, s => {
+  const pts=ex.data.map(([f,L])=>[1/L,f]), spread=pts.length? Math.max(...pts.map(p=>p[0]))-Math.min(...pts.map(p=>p[0])) : 0;
+  const fit = pts.length>=2 && spread>0.2 ? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,7],yr:[0,550],xl:"1/L (m⁻¹)",yl:"f (Hz)",fit});
+  const truth = ex.revealed? ` True value: μ = <b>${ex.mu.toFixed(1)} g/m</b> (v = ${ex.v.toFixed(0)} m/s).` : "";
+  if(!fit){ $("exResult").innerHTML="Record resonant lengths for three or more forks to draw the line."+truth; return; }
+  const v=2*fit[0], mu=EX_T/(v*v);
+  $("exResult").innerHTML = `Slope = <b>${fit[0].toFixed(1)} Hz m</b> = v / 2, so v = <b>${v.toFixed(0)} m/s</b> and μ = T / v² = ${EX_T} / ${v.toFixed(0)}² = <b>${sci(mu,2)} kg/m</b>. Intercept = ${fit[1].toFixed(1)} Hz (should be close to 0).`+truth;
+}, 300);
+exTable();
+predC = makeCanvas($("predC"), 0.45, 170, s => { const q=pd.q; if(!q) return; drawStanding(s.ctx,s.w,s.h,{n:q.n,env:true,still:true,dimL:"L",bgc:C["surface-2"]}); }, 260);
+pdNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    pulses:s=>drawPulses(s.ctx,s.w,s.h,{...o,compact:true}),
+    standing:s=>drawStanding(s.ctx,s.w,s.h,{...o,compact:true}),
+    sono:s=>drawSono(s.ctx,s.w,s.h,{...o,compact:true}),
+  };
+  const ratio = {pulses:0.55, standing:0.5, sono:0.5}[kind];
+  makeCanvas(el, ratio, 120, draws[kind], 340);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-case]").forEach(el=>{ const c=CASES[+el.dataset.case]; makeCanvas(el,0.5,110,s=>drawStanding(s.ctx,s.w,s.h,{n:c.n,env:true,still:true,marks:true,compact:true,bgc:C["surface-2"]}),200); });
+const PULSE_MINI=[{p:0.5,a1:0.7,a2:0.7},{p:0.5,a1:0.7,a2:-0.7},{p:0.9,a1:0.7,a2:-0.7}];
+document.querySelectorAll("canvas[data-mini=pulse]").forEach(el=>makeCanvas(el,0.5,110,s=>drawPulses(s.ctx,s.w,s.h,{...PULSE_MINI[+el.dataset.k],compact:true,bgc:C["surface-2"]}),200));
+
+/* ================= LOOP / SOUND / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(view==="labs"){
+    if(lab==="super" && pu.play){ pu.p+=dt*0.18; if(pu.p>=1){ pu.p=1; pu.play=false; $("puPlay").setAttribute("aria-pressed","false"); $("puPlay").textContent="Play"; } puUpd(); }
+    if(lab==="stand" && st.play && !reduce){ st.t+=dt*1.4; stC.redraw(); }
+    if(lab==="nodes" && nd.play && !reduce){ nd.t+=dt*3; ndC.redraw(); }
+    if(lab==="harm" && !reduce){ hm.t+=dt*(2+hm.n); hmC.redraw(); }
+    if(lab==="model" && !reduce){ so.t+=dt*9; soC.redraw(); }
+    if(lab==="exp" && !reduce){ ex.t+=dt*9; exC.redraw(); }
+  }
+  if(actx){ let f=440, g=0;
+    if(view==="labs" && lab==="harm" && hm.snd){ f=hm.n*hm.f1; g=0.15; }
+    if(view==="labs" && lab==="model" && so.snd){ f=so.f; g=0.03+0.14*so.resp.r; }
+    const t=actx.currentTime; osc.frequency.setTargetAtTime(f,t,0.02); gain.gain.setTargetAtTime(g,t,0.04); }
+  requestAnimationFrame(loop);
+})(performance.now());
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+puUpd(); stUpd(); ndUpd(); hmUpd(); soUpd(); exUpd();
+})();
+</script>

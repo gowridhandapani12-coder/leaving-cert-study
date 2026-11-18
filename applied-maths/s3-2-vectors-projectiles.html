@@ -1,0 +1,1538 @@
+<title>Vectors &amp; Projectiles Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.sh-card{display:grid;gap:8px;padding:16px;align-content:start}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card ul{margin:0;padding-left:18px;font-size:.88rem;color:var(--muted);display:grid;gap:3px}
+.fbbox{padding:0 16px 14px}
+.predopts .btns button{min-width:100px}
+.ctl button[disabled]{opacity:.5}
+</style>
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 01-14.3 4.9M4 12a8 8 0 0114.3-4.9"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg></div>
+        <div style="min-width:0"><b>Vectors &amp; Projectiles</b><span>Leaving Cert Applied Maths · Strand 3 · 3.2</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html" class="on" aria-current="page">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <details><summary>1 · Mathematical modelling</summary><ol><li class="link"><a href="s1-1-mathematical-modelling.html"><span class="mono">1.1</span>The modelling cycle</a></li></ol></details>
+      <details><summary>2 · Networks &amp; graphs</summary><ol><li class="link"><a href="s2-1-networks.html"><span class="mono">2.1</span>Networks &amp; terminology</a></li><li><span class="mono">2.2</span>Matrices &amp; adjacency</li><li><span class="mono">2.3</span>Minimum spanning trees</li><li><span class="mono">2.4</span>Shortest paths &amp; dynamic programming</li><li><span class="mono">2.5</span>Comparing algorithms</li><li><span class="mono">2.6</span>Project scheduling</li></ol></details>
+      <details open><summary>3 · The physical world</summary><ol><li><span class="mono">3.1</span>Motion in a straight line</li><li class="here"><span class="mono">3.2</span>Vectors &amp; projectiles</li><li><span class="mono">3.3</span>Forces &amp; Newton's laws</li><li><span class="mono">3.4</span>Momentum &amp; collisions</li><li><span class="mono">3.5</span>Friction, connected masses &amp; drag</li><li><span class="mono">3.6</span>Work &amp; energy</li><li><span class="mono">3.7</span>Circular motion</li><li><span class="mono">3.8</span>Dimensional analysis</li></ol></details>
+      <details><summary>4 · A changing world</summary><ol><li><span class="mono">4.1</span>Recurrence relations</li><li><span class="mono">4.2</span>Difference equations</li><li><span class="mono">4.3</span>Differential equations</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon. Section numbers are this course's, grouped from the spec's headings.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 3 · Modelling the physical world</span>
+          <h1 style="margin-top:12px">Size and direction.<br>Across and up.<br><em>Then gravity wins.</em></h1>
+          <p class="lede">Vectors describe anything with a size and a direction: displacement, velocity, acceleration, force. Split them into i and j parts, add them, multiply them, differentiate them, and use them to predict exactly where a ball will land.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated projectile with its velocity vector and its horizontal and vertical components"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/7</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Students should be able to… Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list" id="loList"></ul>
+        <p class="result" style="margin-top:10px">Students learn about: particle motion in 2D · elementary vector algebra (addition, adding 2 successive displacements or velocity vectors; scalar multiplication; dot product) · elementary vector calculus · projectile motion: time of flight, maximum height, maximum range, horizontal planes. Forces and Newton's laws get their own page (3.3); here you use them for gravity only. This page uses g = 9.8 m/s² and ignores air resistance.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Drag vectors, launch projectiles, collect data. Every result updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="vectors">
+        <div class="labhead"><span class="pill t">Drag the vector</span><p class="goal">Drag the tip of the displacement vector. Watch its i and j components, its magnitude and its direction change.</p></div>
+        <div class="panel sim">
+          <canvas id="vcC" aria-label="Grid with a vector from the origin. Drag its tip."></canvas>
+          <div class="readout" id="vcOut"></div>
+          <div class="working" id="vcWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Make a vector of magnitude 5 that isn't along an axis.</div><div class="try"><b>2</b>Make −3i + 3j. What's its direction? Which quadrant?</div><div class="try"><b>3</b>Make (5, 90°) in polar form. Write it in i, j form.</div></div>
+      </div>
+
+      <div class="lab" data-lab="add" hidden>
+        <div class="labhead"><span class="pill t">Add &amp; scale</span><p class="goal">Two successive displacements: a, then b. Drag either tip and see the resultant a + b. Use the slider to scale a.</p></div>
+        <div class="panel sim">
+          <canvas id="adC" aria-label="Vector a from the origin, vector b from the tip of a, and the resultant. Drag the tips."></canvas>
+          <div class="controls"><div class="ctl"><label for="adK">Scalar k (multiplies a) <output id="adKo">1</output></label><input type="range" id="adK" min="-2" max="3" step="0.5" value="1"></div></div>
+          <div class="readout" id="adOut"></div>
+          <div class="working" id="adWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Walk 6 east then 8 north (a = 6i, b = 8j). How far are you from the start?</div><div class="try"><b>2</b>Set k = −1. What does −a look like?</div><div class="try"><b>3</b>Make a + b = 0. What's true about b?</div></div>
+      </div>
+
+      <div class="lab" data-lab="dot" hidden>
+        <div class="labhead"><span class="pill t">Dot product</span><p class="goal">Drag the tips of a and b. The dot product a·b is a single number: see how it depends on the angle between them.</p></div>
+        <div class="panel sim">
+          <canvas id="dtC" aria-label="Two vectors from the origin with the angle between them. Drag their tips."></canvas>
+          <div class="readout" id="dtOut"></div>
+          <div class="working" id="dtWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Make a·b = 0. What's the angle?</div><div class="try"><b>2</b>Make a·b negative. What's true about the angle?</div><div class="try"><b>3</b>Point a and b the same way. Compare a·b with |a||b|.</div></div>
+      </div>
+
+      <div class="lab" data-lab="calculus" hidden>
+        <div class="labhead"><span class="pill t">r → v → a</span><p class="goal">A particle follows r(t). Move through time and watch the velocity (the derivative of r) and acceleration (the derivative of v) as arrows.</p></div>
+        <div class="panel sim">
+          <canvas id="clC" aria-label="Path of a particle with its position, velocity and acceleration vectors"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Motion</span><div class="btns" id="clP"></div></div>
+            <div class="ctl"><label for="clT">Time t <output id="clTo">1.00 s</output></label><input type="range" id="clT" min="0" max="1" step="0.001" value="0.3"></div>
+          </div>
+          <div class="readout" id="clOut"></div>
+          <div class="working" id="clWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Projectile: at what time is v horizontal? What's v·a then?</div><div class="try"><b>2</b>Circle: which way does a point? Compare a with r.</div><div class="try"><b>3</b>Curve: a is constant. Is the path a straight line? Why not?</div></div>
+      </div>
+
+      <div class="lab" data-lab="projectile" hidden>
+        <div class="labhead"><span class="pill t">Launcher</span><p class="goal">Set the launch speed and angle, then launch. Try to land on the flag. Watch the velocity vector: the horizontal part never changes.</p></div>
+        <div class="panel sim">
+          <canvas id="prC" aria-label="Projectile path with the ball, its velocity vector, the maximum height and the range"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="prU">Launch speed u <output id="prUo">20 m/s</output></label><input type="range" id="prU" min="5" max="30" step="0.5" value="20"></div>
+            <div class="ctl"><label for="prA">Angle θ <output id="prAo">40°</output></label><input type="range" id="prA" min="5" max="85" step="1" value="40"></div>
+            <div class="ctl"><span class="lbl">Flight</span><div class="btns"><button class="primary" id="prGo">Launch</button><button id="prTarget">New target</button></div></div>
+          </div>
+          <div class="readout" id="prOut"></div>
+          <div class="working" id="prWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Hit the flag at two different angles with the same speed. How are the angles related?</div><div class="try"><b>2</b>Double u. What happens to the range? To the time of flight?</div><div class="try"><b>3</b>Pause at the top (watch the readout). What's v<sub>y</sub> there?</div></div>
+      </div>
+
+      <div class="lab" data-lab="range" hidden>
+        <div class="labhead"><span class="pill t">Collect &amp; fit</span><p class="goal">A ball launcher fires at an unknown speed. Fire it at different angles, record the range, and plot range against sin 2θ to find the launch speed.</p></div>
+        <div class="panel sim">
+          <canvas id="rgC" aria-label="Paths of the recorded shots from the launcher"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="rgA">Angle θ <output id="rgAo">30°</output></label><input type="range" id="rgA" min="5" max="85" step="5" value="30"></div>
+            <div class="ctl"><span class="lbl">Experiment</span><div class="btns"><button class="primary" id="rgRec">Fire &amp; record</button><button id="rgNew">New launcher</button></div></div>
+          </div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>θ (°)</th><th>sin 2θ</th><th>Range R (m)</th></tr></thead><tbody id="rgTable"></tbody></table></div>
+            <div class="graphbox"><canvas id="rgG" aria-label="Graph of range against sin 2θ with a line of best fit through the origin"></canvas><p class="result" id="rgResult"></p></div>
+          </div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Record at least five angles. Is the graph a straight line through the origin?</div><div class="try"><b>2</b>The gradient is u² ÷ g. Use it to work out u.</div><div class="try"><b>3</b>Which angle gave the longest range? Do 30° and 60° match?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of vectors and projectiles"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>Vector or scalar?</h2></div><p>Every vector has a scalar partner that drops the direction.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three pictures of vectors</p><h2>Add, compare, launch</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="add"></canvas><h3>Nose to tail</h3><p>6i then 8j: the resultant 6i + 8j has magnitude 10.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="dot"></canvas><h3>Dot product</h3><p>a·b = |a||b| cos θ. Perpendicular vectors give zero.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="proj"></canvas><h3>Projectile</h3><p>Horizontal velocity stays the same; vertical velocity falls by 9.8 m/s every second.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">R = u² sin 2θ ÷ g</p><h2>Range at each angle (u = 20 m/s)</h2></div><p>Same speed, different angles, flat ground, no air resistance.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Where you'll see this</p><h2>Vectors in action</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+<!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How Applied Maths is assessed, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+<div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 80% written exam, 20% modelling project">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="291.5 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">80 / 20</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 80%</b><p>Higher or Ordinary level, 2½ hours, set by the SEC. Covers the three contextual strands (networks, the physical world, a changing world), with modelling throughout.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Modelling project · 20%</b><p>A written report solving a real problem from a brief the SEC issues each year. Done in 6th year; the same brief for both levels, with a differentiated marking scheme. Sent to the SEC for marking.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this topic</h3>
+          <ol class="tips">
+            <li>Write vectors with <b>i and j</b> and keep the parts separate: add i parts to i parts, j parts to j parts.</li>
+            <li>For a direction, <b>draw a sketch</b> first so you know the quadrant, then use tan⁻¹.</li>
+            <li>For a projectile, <b>resolve u</b> into u cos θ (across) and u sin θ (up) before anything else.</li>
+            <li>Horizontal: constant velocity. Vertical: constant acceleration −g. Use <b>v = u + at</b> and <b>s = ut + ½at²</b> on each part.</li>
+            <li>At the <b>top</b>, the vertical velocity is zero. On landing (horizontal plane), the vertical displacement is zero.</li>
+            <li>To find the angle between vectors, use <b>a·b = |a||b| cos θ</b>. a·b = 0 means perpendicular.</li>
+            <li>Differentiate r to get v, and v to get a. Integrate the other way, and use the <b>starting values</b> to find the constants.</li>
+            <li>State your <b>assumptions</b> (particle, no air resistance, g constant) and give units. Past papers are on examinations.ie; the questions here are practice only.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Action verbs</h2></div><p>Verbs used in this strand's learning outcomes and in exam questions. The meanings are plain-English summaries, not official definitions.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Vectors and projectiles</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which goes further?</h2></div></div>
+          <canvas id="predC" aria-label="Two projectile paths appear after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns"><button data-a="0">A goes further</button><button data-a="1">B goes further</button><button data-a="2">Same range</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next pair</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+<div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">20% of your grade</p><h2>Modelling project skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">What the spec's assessment criteria reward at a high level. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Precise words earn marks in "define" and "explain" questions.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: magnitude, dot product, range…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>Vectors and projectiles on one page. g = 9.8 m/s², no air resistance, horizontal ground.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Components</span><span class="big">v = a i + b j</span><dl><dt>i, j</dt><dd>unit vectors along x and y</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Magnitude</span><span class="big">|v| = √(a² + b²)</span><div class="ex">|3i + 4j| = 5</div></div>
+        <div class="panel fcell"><span class="pill a">Direction</span><span class="big">θ = tan⁻¹(b ÷ a)</span><dl><dt>Check</dt><dd>the quadrant with a sketch</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Polar form</span><span class="big">(r, θ) ⇄ r cos θ i + r sin θ j</span><div class="ex">(10, 30°) = 8.66i + 5j</div></div>
+        <div class="panel fcell"><span class="pill">Algebra</span><span class="big">(a₁i + a₂j) + (b₁i + b₂j) = (a₁+b₁)i + (a₂+b₂)j</span><dl><dt>Scalar</dt><dd>k(a₁i + a₂j) = ka₁i + ka₂j</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Dot product</span><span class="big">a·b = a₁b₁ + a₂b₂ = |a||b| cos θ</span><dl><dt>a·b = 0</dt><dd>perpendicular</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Calculus</span><span class="big">v = dr/dt · a = dv/dt</span><dl><dt>Back</dt><dd>v = ∫a dt, r = ∫v dt (+ constants)</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Projectile</span><span class="big">r = (u cos θ)t i + (u sin θ t − ½gt²) j</span><dl><dt>v</dt><dd>u cos θ i + (u sin θ − gt) j</dd><dt>a</dt><dd>−g j</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Time of flight</span><span class="big">T = 2u sin θ ÷ g</span><div class="ex">u = 20, θ = 30°: T = 2.04 s</div></div>
+        <div class="panel fcell"><span class="pill a">Max height</span><span class="big">H = u² sin²θ ÷ 2g</span><div class="ex">u = 20, θ = 30°: H = 5.10 m</div></div>
+        <div class="panel fcell"><span class="pill a">Range</span><span class="big">R = u² sin 2θ ÷ g</span><dl><dt>Max</dt><dd>u² ÷ g at θ = 45°; θ and 90° − θ give the same R</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Kinematics</span><span class="big">v = u + at · s = ut + ½at² · v² = u² + 2as</span><dl><dt>Use</dt><dd>on each component separately</dd></dl></div>
+      </div>
+      <footer>
+        <p>Built on Strand 3 (Mathematically modelling the physical world) of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/applied-mathematics/" target="_blank" rel="noopener">Leaving Certificate Applied Mathematics Specification</a> (NCCA, 2019; first examined 2023). Learning outcomes are quoted from the specification. Scenarios and data are illustrative.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("am-theme","auto"), font = store.get("am-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("am-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("am-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  vectors:'<path d="M4 20L19 5M19 5h-7M19 5v7"/>',
+  add:'<path d="M3 19l8-8M11 11l9 3M3 19l17-5"/><path d="M17 12l3 2-3 2"/>',
+  dot:'<path d="M4 20L20 20M4 20L14 6"/><path d="M9 20a5 5 0 00-2-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',
+  calculus:'<path d="M3 18c4 0 5-12 9-12s5 12 9 12"/><path d="M12 6h6M16 4l2 2-2 2"/>',
+  projectile:'<path d="M3 20c4-14 14-14 18 0"/><circle cx="12" cy="9.5" r="1.8"/>',
+  range:'<path d="M3 20h18M3 20c3-9 9-9 12 0M3 20c2-14 9-14 9 0"/>',
+  ball:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/>',
+  plane:'<path d="M2 13l20-6-6 13-3-5z"/><path d="M13 15l-4 4"/>',
+  sat:'<circle cx="12" cy="12" r="3"/><path d="M4 4l4 4M20 20l-4-4M4 20l4-4M20 4l-4 4"/>',
+  water:'<path d="M12 3s6 7 6 11a6 6 0 01-12 0c0-4 6-11 6-11z"/>',
+  boat:'<path d="M3 16h18l-3 4H6zM12 4v12M12 4l6 9h-6"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"vectors", name:"Vectors & components", short:"Displacement as a vector; i and j components; magnitude, direction and polar form.", tint:"var(--blush)"},
+  {id:"add", name:"Adding & scaling", short:"Successive displacements nose to tail, the resultant, and multiplying by a scalar.", tint:"var(--apricot)"},
+  {id:"dot", name:"The dot product", short:"a·b as a number: components, angles and perpendicular vectors.", tint:"var(--sage)"},
+  {id:"calculus", name:"Vector calculus", short:"Differentiate r to get v and a; integrate back with starting values.", tint:"var(--cream)"},
+  {id:"projectile", name:"Projectile motion", short:"Resolve the launch velocity; across at constant speed, up and down with −g.", tint:"var(--blush)"},
+  {id:"range", name:"Time, height & range", short:"Time of flight, maximum height and range on horizontal ground; the 45° maximum.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+const LO = [
+  ["vectors","represent displacement as a vector"],
+  ["add","apply and interpret vector algebra"],
+  ["vectors","represent vectors in terms of components along unit vectors in 2 fixed orthogonal directions and in polar form"],
+  ["dot","calculate and interpret the dot product of vectors"],
+  ["calculus","transform the function describing one quantity (displacement, velocity, acceleration represented as vectors) into functions describing the other two quantities using algebra and/or calculus"],
+  ["projectile","represent and apply Newton's laws in vector form"],
+  ["range","solve constant acceleration projectile motion problems involving displacement, velocity and time"],
+];
+const LO_HEAD = {vectors:"Particle motion in 2D",add:"Elementary vector algebra",dot:"Elementary vector algebra",calculus:"Elementary vector calculus",projectile:"Particle motion in 2D (more in 3.3)",range:"Projectile motion"};
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Vector","","A quantity with both magnitude (size) and direction, e.g. displacement, velocity, acceleration, force.","vectors"],
+  ["Scalar","","A quantity with magnitude only, e.g. distance, speed, time, mass.","vectors"],
+  ["Displacement","","The change in position: how far and in which direction from the start. A vector.","vectors"],
+  ["Distance","","How far you travel, whatever the direction. A scalar.","vectors"],
+  ["Magnitude","modulus, |v|","The size of a vector.","vectors","|a i + b j| = √(a² + b²)"],
+  ["Direction","","The angle a vector makes, usually measured anticlockwise from the positive x-axis (the i direction).","vectors","θ = tan⁻¹(b ÷ a), check the quadrant"],
+  ["i","unit vector","The unit vector (length 1) along the positive x-axis.","vectors"],
+  ["j","unit vector","The unit vector (length 1) along the positive y-axis, perpendicular to i.","vectors"],
+  ["Unit vector","","A vector of magnitude 1. Divide a vector by its magnitude to get one in the same direction.","vectors"],
+  ["Component","","The part of a vector along one direction. a i + b j has i-component a and j-component b.","vectors"],
+  ["Orthogonal","","At right angles. i and j are orthogonal.","vectors"],
+  ["Polar form","","Writing a vector as (magnitude, angle), e.g. (10, 30°).","vectors","(r, θ) = r cos θ i + r sin θ j"],
+  ["Position vector","r","The displacement of a point from the origin.","vectors"],
+  ["Resolve","","Split a vector into perpendicular components, e.g. u cos θ and u sin θ.","vectors"],
+  ["Resultant","","The single vector equal to the sum of two or more vectors.","add"],
+  ["Nose to tail","triangle rule","To add vectors, draw the second starting at the tip of the first. The resultant goes from the first tail to the last tip.","add"],
+  ["Scalar multiplication","","Multiplying a vector by a number k: each component is multiplied by k. k < 0 reverses the direction.","add","k(a i + b j) = ka i + kb j"],
+  ["Zero vector","0","The vector with magnitude 0: 0i + 0j.","add"],
+  ["Equal vectors","","Vectors with the same magnitude and the same direction, wherever they are drawn.","add"],
+  ["Negative vector","−a","A vector with the same magnitude as a, pointing the opposite way.","add"],
+  ["Relative velocity","","The velocity of one object as seen from another: v_A − v_B. (Uses vector subtraction.)","add"],
+  ["Dot product","scalar product","A number made from two vectors.","dot","a·b = a₁b₁ + a₂b₂ = |a||b| cos θ"],
+  ["Angle between vectors","","Found from cos θ = a·b ÷ (|a||b|).","dot"],
+  ["Perpendicular","","At 90°. Two non-zero vectors are perpendicular when their dot product is 0.","dot"],
+  ["Projection","","The component of one vector in the direction of another: a·b ÷ |a|.","dot"],
+  ["Work done","","Force times displacement in the direction of the force: W = F·s (a dot product). More in 3.6.","dot"],
+  ["Velocity","v","The rate of change of displacement: v = dr/dt. A vector.","calculus"],
+  ["Speed","","The magnitude of velocity, |v|. A scalar.","calculus"],
+  ["Acceleration","a","The rate of change of velocity: a = dv/dt. A vector.","calculus"],
+  ["Differentiate","","Find a rate of change. For vectors, differentiate each component.","calculus","d/dt (f(t) i + g(t) j) = f′(t) i + g′(t) j"],
+  ["Integrate","","Reverse differentiation, adding a constant vector found from the starting values.","calculus"],
+  ["Initial conditions","","The values at t = 0 (e.g. starting position and velocity) used to find integration constants.","calculus"],
+  ["Projectile","","An object moving through the air under gravity only (in this model).","projectile"],
+  ["Particle model","","Treating the object as a point with mass: no size, no spin.","projectile"],
+  ["Air resistance","drag","The force from the air opposing motion. Ignored in the basic projectile model.","projectile"],
+  ["g","","Acceleration due to gravity, 9.8 m/s² downwards: a = −g j.","projectile"],
+  ["Launch angle","angle of projection, θ","The angle the initial velocity makes with the horizontal.","projectile"],
+  ["Trajectory","","The path of a projectile: a parabola when air resistance is ignored.","projectile"],
+  ["Newton's second law (vector form)","","F = ma, with F and a as vectors. For a projectile F = −mg j, so a = −g j.","projectile"],
+  ["Time of flight","T","How long a projectile is in the air. On horizontal ground, when the vertical displacement returns to 0.","range","T = 2u sin θ ÷ g"],
+  ["Maximum height","H","The greatest height reached, when the vertical velocity is 0.","range","H = u² sin²θ ÷ 2g"],
+  ["Range","R","The horizontal distance travelled before landing on the same horizontal plane.","range","R = u² sin 2θ ÷ g"],
+  ["Maximum range","","The greatest range for a given speed, u² ÷ g, at θ = 45°.","range"],
+  ["Complementary angles","","Angles that add to 90°. On flat ground they give the same range.","range"],
+  ["Horizontal plane","","Flat ground at the launch height. The spec's projectile problems use horizontal planes.","range"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+t.length}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["magnitude","Magnitude"],["components","Component"],["polar form","Polar form"],["resultant","Resultant"],["scalar","Scalar"],["dot product","Dot product"],["perpendicular","Perpendicular"],["velocity","Velocity"],["acceleration","Acceleration"],["differentiate","Differentiate"],["integrate","Integrate"],["resolve","Resolve"],["time of flight","Time of flight"],["maximum height","Maximum height"],["range","Range"],["trajectory","Trajectory"],["displacement","Displacement"]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rr(ctx,x,y,w,h,r){ r=Math.min(r,h/2,w/2); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function arrowHead(ctx,x,y,dx,dy,col,s=8){ ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x+dx*s,y+dy*s); ctx.lineTo(x-dx*s*0.6-dy*s*0.7,y-dy*s*0.6+dx*s*0.7); ctx.lineTo(x-dx*s*0.6+dy*s*0.7,y-dy*s*0.6-dx*s*0.7); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const nf = (x,d=0) => { const s=(Math.round(x*10**d)/10**d).toFixed(d); const [i,f]=s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f?"."+f:""); };
+const eur = x => "€"+nf(x, Math.abs(x-Math.round(x))>0.004?2:0);
+const niceStep = (range,n) => { const r=range/Math.max(1,n), p=10**Math.floor(Math.log10(r)), m=r/p; return (m<=1?1:m<=2?2:m<=5?5:10)*p; };
+const tick = v => String(+v.toFixed(6));
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+// Axes: returns mapping functions. o: x0,x1,y0,y1,xl,yl,compact
+function frame(ctx,w,h,o){
+  const cp=o.compact, L=cp?36:50, R=12, T=cp?12:16, B=cp?24:34, fs=cp?9:11;
+  const X=v=>L+(v-o.x0)/(o.x1-o.x0)*(w-L-R), Y=v=>h-B-(v-o.y0)/(o.y1-o.y0)*(h-B-T);
+  const xs=o.xt||niceStep(o.x1-o.x0, Math.max(3,Math.floor((w-L)/70))), ys=o.yt||niceStep(o.y1-o.y0, Math.max(3,Math.floor((h-B)/45)));
+  for(let v=Math.ceil(o.x0/xs)*xs; v<=o.x1+1e-9; v+=xs){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,tick(v),X(v),h-B+(cp?11:14),C.muted,M(fs),"center"); }
+  for(let v=Math.ceil(o.y0/ys)*ys; v<=o.y1+1e-9; v+=ys){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,tick(v),L-5,Y(v)+3,C.muted,M(fs),"right"); }
+  const y0=Y(Math.max(o.y0,Math.min(o.y1,0)));
+  line(ctx,L,y0,w-R,y0,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(o.xl) text(ctx,o.xl,w-R,h-B+(cp?22:30),C.muted,F(cp?10:12),"right");
+  if(o.yl) text(ctx,o.yl,L+6,T+(cp?10:12),C.muted,F(cp?10:12),"left");
+  return {X,Y,L,R,T,B};
+}
+function curve(ctx,f,x0,x1,X,Y,col,lw=2.5,dash,clip){ ctx.save(); if(clip){ ctx.beginPath(); ctx.rect(clip[0],clip[1],clip[2],clip[3]); ctx.clip(); } ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); const n=120; for(let i=0;i<=n;i++){ const x=x0+(x1-x0)*i/n, y=f(x); if(i) ctx.lineTo(X(x),Y(y)); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore(); }
+
+/* ================= MODELS + DRAWINGS ================= */
+const G = 9.8, DEG = Math.PI/180;
+const mag = v => Math.hypot(v[0],v[1]);
+const angDeg = v => { let a=Math.atan2(v[1],v[0])/DEG; if(a<0) a+=360; return a; };
+const mn = x => String(x).replace("-","−");
+const vstr = (v,d=0) => { const f=x=>{ const s=nf(Math.abs(x),d); return s==="1"?"":s; }; return `${v[0]<0?"−":""}${f(v[0])}i ${v[1]<0?"−":"+"} ${f(v[1])}j`; };
+function drag(el, fn){ let down=false; const pos=e=>{ const r=el.getBoundingClientRect(); return [e.clientX-r.left, e.clientY-r.top]; };
+  el.addEventListener("pointerdown",e=>{ down=true; el.setPointerCapture(e.pointerId); fn(...pos(e),true); });
+  el.addEventListener("pointermove",e=>{ if(down) fn(...pos(e),false); });
+  el.addEventListener("pointerup",()=>down=false); el.addEventListener("pointercancel",()=>down=false); }
+// Equal-scale plane with grid. box = [x0,x1,y0,y1]
+function plane(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, pad=cp?14:22, [x0,x1,y0,y1]=o.box;
+  const s=Math.min((w-2*pad)/(x1-x0),(h-2*pad)/(y1-y0)), cx=w/2-(x0+x1)/2*s, cy=h/2+(y0+y1)/2*s;
+  const X=x=>cx+x*s, Y=y=>cy-y*s, st=o.step||1;
+  const vx0=-cx/s, vx1=(w-cx)/s, vy0=(cy-h)/s, vy1=cy/s;
+  for(let x=Math.ceil(vx0/st)*st; x<=vx1; x+=st) line(ctx,X(x),0,X(x),h,C.grid,1);
+  for(let y=Math.ceil(vy0/st)*st; y<=vy1; y+=st) line(ctx,0,Y(y),w,Y(y),C.grid,1);
+  line(ctx,0,Y(0),w,Y(0),C.muted,1.5); line(ctx,X(0),0,X(0),h,C.muted,1.5);
+  if(!cp){ for(let x=Math.ceil(vx0/st)*st; x<=vx1; x+=st) if(Math.abs(x)>1e-9) text(ctx,tick(x),X(x),Y(0)+13,C.muted,M(10),"center");
+    for(let y=Math.ceil(vy0/st)*st; y<=vy1; y+=st) if(Math.abs(y)>1e-9) text(ctx,tick(y),X(0)-5,Y(y)+4,C.muted,M(10),"right"); }
+  return {X,Y,s,inv:(px,py)=>[(px-cx)/s,(cy-py)/s]};
+}
+function arrow(ctx,x0,y0,x1,y1,col,lw=3,label,dash){ const dx=x1-x0, dy=y1-y0, L=Math.hypot(dx,dy); if(L<2) return; const ux=dx/L, uy=dy/L, hs=Math.min(11,4+lw*2);
+  line(ctx,x0,y0,x1-ux*hs*0.6,y1-uy*hs*0.6,col,lw,dash); arrowHead(ctx,x1-ux*hs*0.4,y1-uy*hs*0.4,ux,uy,col,hs);
+  if(label) text(ctx,label,x1+ux*10+(uy>0?8:-8)*0,y1+uy*10-6,col,F(13,800),"center"); }
+// 1. A vector and its components
+function drawVec(ctx,w,h,o){ const m=plane(ctx,w,h,{box:[-8,8,-6,6],...o}), v=o.v, {X,Y}=m;
+  line(ctx,X(0),Y(0),X(v[0]),Y(0),C.olive,2.5,[6,5]); line(ctx,X(v[0]),Y(0),X(v[0]),Y(v[1]),C.olive,2.5,[6,5]);
+  if(!o.compact){ text(ctx,`${nf(v[0])}i`,X(v[0]/2),Y(0)+(v[1]>=0?18:-8),C["olive-ink"]||C.olive,F(12),"center"); text(ctx,`${nf(v[1])}j`,X(v[0])+(v[0]>=0?8:-8),Y(v[1]/2)+4,C["olive-ink"]||C.olive,F(12),v[0]>=0?"left":"right"); }
+  if(mag(v)>0.5){ const a=angDeg(v)*DEG, r=Math.min(34,mag(v)*m.s*0.35); ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=1.8; ctx.beginPath(); ctx.arc(X(0),Y(0),r,0,-a,true); ctx.stroke(); ctx.restore(); }
+  arrow(ctx,X(0),Y(0),X(v[0]),Y(v[1]),C.terra,o.compact?2.5:3.5);
+  if(!o.compact) circle(ctx,X(v[0]),Y(v[1]),8,null,C.terra,2);
+  return m; }
+// 2. Adding: k·a then b, nose to tail
+function drawAdd(ctx,w,h,o){ const m=plane(ctx,w,h,{box:[-6,14,-6,12],step:2,...o}), {X,Y}=m, k=o.k??1, a=o.a, b=o.b, ka=[k*a[0],k*a[1]], R=[ka[0]+b[0],ka[1]+b[1]];
+  if(k!==1) arrow(ctx,X(0),Y(0),X(a[0]),Y(a[1]),C.line,2,null,[5,5]);
+  arrow(ctx,X(0),Y(0),X(R[0]),Y(R[1]),C.ink,o.compact?2.5:3.5,o.compact?null:"a+b");
+  arrow(ctx,X(0),Y(0),X(ka[0]),Y(ka[1]),C.terra,o.compact?2.5:3.5,o.compact?null:(k===1?"a":k+"a"));
+  arrow(ctx,X(ka[0]),Y(ka[1]),X(R[0]),Y(R[1]),C.olive,o.compact?2.5:3.5,o.compact?null:"b");
+  if(!o.compact){ circle(ctx,X(ka[0]),Y(ka[1]),8,null,C.terra,2); circle(ctx,X(R[0]),Y(R[1]),8,null,C.ink,2); }
+  return m; }
+// 3. Dot product
+function drawDot(ctx,w,h,o){ const m=plane(ctx,w,h,{box:[-7,7,-6,7],...o}), {X,Y}=m, a=o.a, b=o.b;
+  if(mag(a)>0.1&&mag(b)>0.1){ const p=(a[0]*b[0]+a[1]*b[1])/(mag(a)**2), f=[p*a[0],p*a[1]];
+    line(ctx,X(b[0]),Y(b[1]),X(f[0]),Y(f[1]),C.muted,1.5,[4,4]); line(ctx,X(0),Y(0),X(f[0]),Y(f[1]),C.apricot,6);
+    const a1=angDeg(a)*DEG, b1=angDeg(b)*DEG; let s0=a1, e0=b1; let d=e0-s0; if(d>Math.PI) d-=2*Math.PI; if(d<-Math.PI) d+=2*Math.PI;
+    ctx.save(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.8; ctx.beginPath(); ctx.arc(X(0),Y(0),26,-s0,-(s0+d),d>0); ctx.stroke(); ctx.restore(); }
+  arrow(ctx,X(0),Y(0),X(a[0]),Y(a[1]),C.terra,o.compact?2.5:3.5,o.compact?null:"a");
+  arrow(ctx,X(0),Y(0),X(b[0]),Y(b[1]),C.olive,o.compact?2.5:3.5,o.compact?null:"b");
+  if(!o.compact){ circle(ctx,X(a[0]),Y(a[1]),8,null,C.terra,2); circle(ctx,X(b[0]),Y(b[1]),8,null,C.olive,2); }
+  return m; }
+// 4. Vector calculus presets
+const CALC = [
+  {n:"Projectile", r:t=>[10*t,15*t-4.9*t*t], v:t=>[10,15-9.8*t], a:()=>[0,-9.8], t1:3.06, rs:"r = 10t i + (15t − 4.9t²) j", vs:"v = 10 i + (15 − 9.8t) j", as:"a = −9.8 j", box:[-2,32,-4,15], step:5, k:0.35},
+  {n:"Circle", r:t=>[4*Math.cos(t),4*Math.sin(t)], v:t=>[-4*Math.sin(t),4*Math.cos(t)], a:t=>[-4*Math.cos(t),-4*Math.sin(t)], t1:6.28, rs:"r = 4 cos t i + 4 sin t j", vs:"v = −4 sin t i + 4 cos t j", as:"a = −4 cos t i − 4 sin t j = −r", box:[-6.5,6.5,-5.5,5.5], step:1, k:0.5},
+  {n:"Curve", r:t=>[t*t,2*t], v:t=>[2*t,2], a:()=>[2,0], t1:3, rs:"r = t² i + 2t j", vs:"v = 2t i + 2 j", as:"a = 2 i", box:[-1,11,-1,7.5], step:1, k:0.5},
+];
+function drawCalc(ctx,w,h,o){ const P=CALC[o.p], m=plane(ctx,w,h,{box:P.box,step:P.step,compact:o.compact,bgc:o.bgc}), {X,Y}=m, t=o.t;
+  ctx.save(); ctx.strokeStyle=C.blush; ctx.lineWidth=o.compact?2.5:3.5; ctx.beginPath(); for(let i=0;i<=160;i++){ const [x,y]=P.r(P.t1*i/160); if(i) ctx.lineTo(X(x),Y(y)); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore();
+  const r=P.r(t), v=P.v(t), a=P.a(t);
+  arrow(ctx,X(0),Y(0),X(r[0]),Y(r[1]),C.muted,2,o.compact?null:"r",[5,4]);
+  arrow(ctx,X(r[0]),Y(r[1]),X(r[0]+v[0]*P.k),Y(r[1]+v[1]*P.k),C.terra,o.compact?2.5:3.5,o.compact?null:"v");
+  arrow(ctx,X(r[0]),Y(r[1]),X(r[0]+a[0]*P.k),Y(r[1]+a[1]*P.k),C.olive,o.compact?2.5:3.5,o.compact?null:"a");
+  circle(ctx,X(r[0]),Y(r[1]),o.compact?5:7,C.apricot,C.terra,2); }
+// 5. Projectiles on horizontal ground
+function projStats(u,th){ const r=th*DEG, ux=u*Math.cos(r), uy=u*Math.sin(r), T=2*uy/G, H=uy*uy/(2*G), R=ux*T; return {ux,uy,T,H,R}; }
+function drawProj(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, shots=o.shots, st=shots.map(s=>projStats(s.u,s.th));
+  const Xm=Math.max(10,o.xmax||0,...st.map(s=>s.R),o.target!=null?o.target+3:0)*1.06, Ym=Math.max(3,o.ymax||0,...st.map(s=>s.H))*1.18;
+  const L=cp?32:46, Rr=12, T=cp?12:16, B=cp?24:32, s=Math.min((w-L-Rr)/Xm,(h-T-B)/Ym), X=x=>L+x*s, Y=y=>h-B-y*s;
+  const xs=niceStep(Xm,Math.max(3,Math.floor((w-L)/70))), ytop=(h-T-B)/s, ys=niceStep(ytop,Math.max(2,Math.floor((h-B)/50)));
+  for(let x=xs;x<=(w-L-Rr)/s+1e-9;x+=xs){ line(ctx,X(x),T,X(x),h-B,C.grid,1); text(ctx,tick(x),X(x),h-B+(cp?11:14),C.muted,M(cp?9:11),"center"); }
+  for(let y=ys;y<=ytop+1e-9;y+=ys){ line(ctx,L,Y(y),w-Rr,Y(y),C.grid,1); text(ctx,tick(y),L-5,Y(y)+3,C.muted,M(cp?9:11),"right"); }
+  line(ctx,L,Y(0),w-Rr,Y(0),C.olive,3); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(!cp){ text(ctx,"x (m)",w-Rr,h-B+28,C.muted,F(12),"right"); text(ctx,"y (m)",L+6,T+12,C.muted,F(12),"left"); }
+  if(o.target!=null){ const fx=X(o.target); line(ctx,fx,Y(0),fx,Y(0)-(cp?22:32),C.ink,2); ctx.fillStyle=C.bad; ctx.beginPath(); ctx.moveTo(fx,Y(0)-(cp?22:32)); ctx.lineTo(fx+(cp?12:16),Y(0)-(cp?17:26)); ctx.lineTo(fx,Y(0)-(cp?12:20)); ctx.fill(); }
+  shots.forEach((sh,i)=>{ const p=st[i]; ctx.save(); ctx.strokeStyle=sh.col||C.terra; ctx.lineWidth=sh.lw||(cp?2.2:3); if(sh.dash) ctx.setLineDash([6,5]); ctx.beginPath();
+    for(let k=0;k<=80;k++){ const t=p.T*k/80; const x=p.ux*t, y=p.uy*t-0.5*G*t*t; if(k) ctx.lineTo(X(x),Y(Math.max(0,y))); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore(); });
+  const p=st[0];
+  if(o.marks){ line(ctx,X(p.R/2),Y(0),X(p.R/2),Y(p.H),C.muted,1.5,[4,4]); text(ctx,`H = ${nf(p.H,2)} m`,X(p.R/2)+6,Y(p.H)-6,C.ink,F(cp?10:12),"left");
+    text(ctx,`R = ${nf(p.R,2)} m`,X(p.R),Y(0)-8,C.ink,F(cp?10:12),p.R*s>w-L-90?"right":"left"); }
+  if(o.t!=null){ const t=Math.min(o.t,p.T), x=p.ux*t, y=p.uy*t-0.5*G*t*t, vy=p.uy-G*t, k=Math.min(cp?40:70,w*0.14)/shots[0].u;
+    const bx=X(x), by=Y(Math.max(0,y));
+    if(o.comps!==false){ arrow(ctx,bx,by,bx+p.ux*k,by,C.olive,2,cp?null:"vx",[4,3]); arrow(ctx,bx,by,bx,by-vy*k,C.olive,2,cp?null:"vy",[4,3]); }
+    arrow(ctx,bx,by,bx+p.ux*k,by-vy*k,C.ink,cp?2.2:3,cp?null:"v");
+    circle(ctx,bx,by,cp?5:8,C.apricot,C.terra,2); }
+}
+
+/* ================= ROUTER ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "vectors", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+$("loList").innerHTML = LO.map(([t,s],i)=>`<li><label><input type="checkbox" id="lo${i}"><span class="mono">${i+1}</span><span>${s} <small style="color:var(--muted)">· ${LO_HEAD[t]}</small></span></label></li>`).join("");
+const loState=store.get("am32-lo",{});
+LO.forEach((x,i)=>{ const id="lo"+i; $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("am32-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=LO.filter((x,i)=>$("lo"+i).checked).length; $("stLO").textContent=`${lo}/${LO.length}`; $("stLOb").style.width=(lo/LO.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("am32-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  vectors:{ vis:[["vec",{v:[4,3]}]], cap:"4i + 3j: 4 across, 3 up. Magnitude 5, direction 36.9° above the i direction.",
+    keys:[["→","A vector has magnitude and direction. Displacement says how far and which way from the start."],["i j","Write vectors in components: a i + b j, where i and j are unit vectors along x and y."],["(r,θ)","Polar form (magnitude, angle): |v| = √(a² + b²), θ = tan⁻¹(b ÷ a), checking the quadrant."]],
+    f:"a i + b j ⇄ (√(a²+b²), tan⁻¹(b/a))", mistake:"Using tan⁻¹(b ÷ a) without a sketch. −3i + 3j points at 135°, not −45°." },
+  add:{ vis:[["add",{a:[6,0],b:[0,8]}]], cap:"6i then 8j, nose to tail. The resultant 6i + 8j has magnitude 10.",
+    keys:[["+","Add vectors nose to tail, or just add the i parts and the j parts separately."],["Σ","The resultant of successive displacements goes from the very start to the very end."],["×k","Multiplying by a scalar k stretches the vector; k < 0 reverses it."]],
+    f:"(a₁i + a₂j) + (b₁i + b₂j) = (a₁+b₁)i + (a₂+b₂)j", mistake:"Adding magnitudes. 6 km east plus 8 km north is 10 km from the start, not 14 km." },
+  dot:{ vis:[["dot",{a:[5,1],b:[2,4]}]], cap:"The shaded part is the projection of b onto a. a·b = 5×2 + 1×4 = 14.",
+    keys:[["·","The dot product of two vectors is a number (a scalar): a·b = a₁b₁ + a₂b₂."],["cos","Also a·b = |a||b| cos θ, so you can find the angle between two vectors."],["⊥","a·b = 0 means perpendicular (for non-zero vectors); a·b < 0 means the angle is obtuse."]],
+    f:"cos θ = a·b ÷ (|a||b|)", mistake:"Writing the dot product as a vector, like 12i − 10j. It's one number: 12 − 10 = 2." },
+  calculus:{ vis:[["calc",{p:0,t:0.6}]], cap:"Projectile r(t): v (terracotta) is tangent to the path; a (olive) is −9.8 j all the time.",
+    keys:[["d/dt","Differentiate each component: v = dr/dt, a = dv/dt."],["∫","Go back by integrating, then use the starting values to find the constants."],["‖","v is always tangent to the path; |v| is the speed."]],
+    f:"r → (d/dt) → v → (d/dt) → a", mistake:"Forgetting the constant when integrating. v = ∫a dt + c, and c is the velocity at t = 0." },
+  projectile:{ vis:[["proj",{shots:[{u:20,th:50}],t:1.2}]], cap:"Mid-flight: the horizontal part of v stays 12.9 m/s; the vertical part falls by 9.8 m/s every second.",
+    keys:[["↗","Resolve the launch velocity: u cos θ across, u sin θ up."],["→","Across: no force, so constant velocity: x = (u cos θ)t."],["↓","Up/down: a = −g (Newton's 2nd law with F = −mg j): y = (u sin θ)t − ½gt²."]],
+    f:"r = (u cos θ)t i + ((u sin θ)t − ½gt²) j", mistake:"Using the full speed u in both directions. Always resolve u first." },
+  range:{ vis:[["proj",{shots:[{u:20,th:45},{u:20,th:30,col:"#9d9a80",dash:true},{u:20,th:60,col:"#9d9a80",dash:true}],marks:true}]], cap:"u = 20 m/s: 45° goes furthest (40.8 m). 30° and 60° land at the same spot.",
+    keys:[["T","Time of flight: set y = 0 → T = 2u sin θ ÷ g."],["H","Maximum height: vertical velocity is 0 → H = u² sin²θ ÷ 2g."],["R","Range = (u cos θ)T = u² sin 2θ ÷ g; greatest at 45°."]],
+    f:"T = 2u sin θ/g · H = u² sin²θ/2g · R = u² sin 2θ/g", mistake:"Using these formulas when landing at a different height. They only work on a horizontal plane." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  ["vectors","Displacement vs distance","var(--blush)",["Displacement: 3 km north-east of home (vector)","Distance: 5 km walked (scalar)"]],
+  ["projectile","Velocity vs speed","var(--apricot)",["Velocity: 20 m/s at 30° (vector)","Speed: 20 m/s (scalar)"]],
+  ["calculus","Acceleration","var(--sage)",["Always a vector: 9.8 m/s² downwards","Can change direction without changing speed (circle)"]],
+  ["add","Force vs mass","var(--cream)",["Force: 50 N upwards (vector)","Mass: 5 kg (scalar)"]],
+  ["dot","Work and energy","var(--blush)",["Work = F·s: a dot product","So work is a scalar, measured in joules"]],
+];
+$("cases").innerHTML = CASES.map(([i,n,tn,rows])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${n}</h3></div><ul>${rows.map(r=>`<li>${r}</li>`).join("")}</ul></div>`).join("");
+(()=>{ const A=[15,30,45,60,75], R=A.map(a=>projStats(20,a).R), mx=Math.max(...R);
+  $("bars").innerHTML = A.map((a,i)=>`<div class="barrow"><span><b>${a}°</b></span><div class="track"><i style="width:${(R[i]/mx*100).toFixed(1)}%;background:var(--${a===45?"terra":["apricot","sage","terra","sage","apricot"][i]})"></i></div><span class="v">${nf(R[i],1)} m</span></div>`).join("") + `<p class="result">45° gives the maximum, u² ÷ g = 400 ÷ 9.8 ≈ 40.8 m. Pairs that add to 90° (15° and 75°, 30° and 60°) give equal ranges, because sin 2θ = sin(180° − 2θ).</p>`; })();
+const AROUND = [
+  ["ball","A free from the 45","A GAA free or a basketball shot is a projectile. Players pick a lower, faster or a higher, slower path to the same spot: complementary angles.",[["Range","neutral"],["Air resistance","alert"]],"var(--blush)"],
+  ["plane","Flying in a crosswind","A pilot's velocity relative to the air plus the wind's velocity gives the velocity over the ground: vector addition.",[["Resultant","real"],["Components","neutral"]],"var(--apricot)"],
+  ["boat","Crossing a river","Point the boat upstream at the right angle and the current's vector cancels your sideways drift.",[["Vector algebra","real"]],"var(--sage)"],
+  ["water","Fountains and hoses","Each drop of water is a projectile. Change the angle of the nozzle and the parabola changes shape.",[["Trajectory","neutral"],["45°","real"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"vectors",label:"Vectors",col:"var(--blush)",leaves:[["Magnitude","√(a² + b²)"],["Direction","tan⁻¹(b/a), check quadrant."],["i and j","Unit vectors along x, y."],["Polar form","(r, θ)"]]},
+  {id:"add",label:"Algebra",col:"var(--apricot)",leaves:[["Add","Nose to tail; add components."],["Resultant","Start to finish."],["Scalar ×","Stretch or reverse."]]},
+  {id:"dot",label:"Dot product",col:"var(--sage)",leaves:[["Components","a₁b₁ + a₂b₂"],["Angle","|a||b| cos θ"],["Zero","Perpendicular."],["Scalar","The answer is a number."]]},
+  {id:"calculus",label:"Calculus",col:"var(--cream)",leaves:[["v = dr/dt","Differentiate each part."],["a = dv/dt","Differentiate again."],["Integrate","Use starting values."]]},
+  {id:"projectile",label:"Projectiles",col:"var(--blush)",leaves:[["Resolve u","u cos θ, u sin θ"],["Across","Constant velocity."],["Vertical","a = −g"],["Assume","Particle, no air resistance."]]},
+  {id:"range",label:"T, H, R",col:"var(--sage)",leaves:[["Time","2u sin θ/g"],["Height","u² sin²θ/2g"],["Range","u² sin 2θ/g"],["45°","Maximum range."]]},
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Vectors &amp;</text><text x="${cx}" y="${cy+22}" text-anchor="middle">projectiles</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["vectors","Vector vs scalar?","A vector has magnitude and direction (displacement, velocity, force). A scalar has magnitude only (distance, speed, mass)."],
+  ["vectors","What are i and j?","Unit vectors (length 1) along the positive x and y directions."],
+  ["vectors","Magnitude of a i + b j?","√(a² + b²)."],
+  ["vectors","Direction of −3i + 3j?","135° (second quadrant). tan⁻¹(3 ÷ −3) alone would wrongly give −45°."],
+  ["vectors","Write (10, 30°) in i, j form.","10 cos 30° i + 10 sin 30° j = 8.66i + 5j."],
+  ["add","How do you add vectors in component form?","Add the i parts together and the j parts together."],
+  ["add","6 km east then 8 km north. Displacement?","6i + 8j km: magnitude 10 km, at 53.1° to the east direction."],
+  ["add","What does multiplying a vector by −2 do?","Doubles its magnitude and reverses its direction."],
+  ["add","What is a resultant?","The single vector equal to the sum of two or more vectors: from the first tail to the last tip."],
+  ["dot","Dot product in components?","a·b = a₁b₁ + a₂b₂."],
+  ["dot","Dot product with angles?","a·b = |a||b| cos θ, where θ is the angle between them."],
+  ["dot","What does a·b = 0 tell you?","The vectors are perpendicular (if neither is zero)."],
+  ["dot","(2i + 3j)·(4i − j) = ?","8 − 3 = 5."],
+  ["calculus","How do you get v from r?","Differentiate each component with respect to t: v = dr/dt."],
+  ["calculus","r = 3t² i + 4t j. Find v and a.","v = 6t i + 4 j; a = 6 i."],
+  ["calculus","How do you get r from a?","Integrate twice, using the starting velocity and position to find the constants."],
+  ["calculus","Which way does the velocity vector point?","Along the tangent to the path, in the direction of motion."],
+  ["projectile","Projectile assumptions?","Particle, no air resistance, constant g = 9.8 m/s², (here) horizontal ground."],
+  ["projectile","Horizontal and vertical components of u?","u cos θ across, u sin θ up."],
+  ["projectile","What happens to the horizontal velocity?","Nothing: no horizontal force, so it stays u cos θ."],
+  ["projectile","Velocity at the top?","Horizontal: v = u cos θ i, because the vertical part is 0."],
+  ["projectile","Acceleration of a projectile in vector form?","a = −g j = −9.8 j m/s²."],
+  ["range","Time of flight on horizontal ground?","T = 2u sin θ ÷ g."],
+  ["range","Maximum height?","H = u² sin²θ ÷ 2g."],
+  ["range","Range?","R = u² sin 2θ ÷ g, greatest (u² ÷ g) at θ = 45°."],
+  ["range","Which angle has the same range as 20°?","70° (complementary angles give equal ranges)."],
+];
+let fcKnown = store.get("am32-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter(c=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("am32-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("am32-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("am32-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["vectors","Which is a vector quantity?",["Speed","Distance","Displacement","Time"],2,"Displacement has a direction; the others don't."],
+  ["vectors","|3i − 4j| =",["−1","7","5","25"],2,"√(3² + (−4)²) = √25 = 5."],
+  ["vectors","In polar form, 2i + 2j is:",["(2, 45°)","(2√2, 45°)","(4, 45°)","(2√2, 90°)"],1,"Magnitude √(4 + 4) = 2√2; angle tan⁻¹(2 ÷ 2) = 45°."],
+  ["add","You walk 6 km east, then 8 km north. Your displacement has magnitude:",["14 km","2 km","10 km","48 km"],2,"√(6² + 8²) = 10 km. 14 km is the distance walked, not the displacement."],
+  ["add","If a = 2i + j, then 3a =",["6i + 3j","5i + 4j","6i + j","2i + 3j"],0,"Multiply each component by 3."],
+  ["add","(2i + 5j) + (4i − 3j) =",["6i + 2j","6i + 8j","−2i + 8j","8i − 15j"],0,"Add i parts: 2 + 4 = 6. Add j parts: 5 − 3 = 2."],
+  ["dot","(3i + 2j)·(4i − 5j) =",["12i − 10j","2","22","−2"],1,"3×4 + 2×(−5) = 12 − 10 = 2. The dot product is a number, not a vector."],
+  ["dot","If a·b = 0 and neither vector is zero, the vectors are:",["parallel","perpendicular","equal","opposite"],1,"cos θ = 0, so θ = 90°."],
+  ["dot","The dot product of two vectors is:",["a vector","a scalar","always positive","a unit vector"],1,"It's a single number, and it's negative when the angle is obtuse."],
+  ["calculus","If r = 3t² i + 4t j, then v =",["6t i + 4 j","3t i + 4 j","6 i","t³ i + 2t² j"],0,"Differentiate each component: d(3t²)/dt = 6t, d(4t)/dt = 4."],
+  ["calculus","Acceleration is found from velocity by:",["integrating","differentiating","multiplying by t","taking the dot product"],1,"a = dv/dt."],
+  ["projectile","At the top of its flight, a projectile's velocity is:",["zero","vertical","horizontal","equal to its launch velocity"],2,"The vertical part is 0 at the top; the horizontal part u cos θ remains."],
+  ["projectile","Ignoring air resistance, the horizontal component of a projectile's velocity:",["increases","decreases","stays constant","becomes zero at the top"],2,"No horizontal force acts, so there's no horizontal acceleration."],
+  ["range","T = 2u sin θ ÷ g. For u = 19.6 m/s at 30°, T =",["1 s","2 s","4 s","0.5 s"],1,"2 × 19.6 × 0.5 ÷ 9.8 = 2 s."],
+  ["range","For a fixed launch speed on horizontal ground, the range is greatest at:",["30°","45°","60°","90°"],1,"R = u² sin 2θ ÷ g is greatest when sin 2θ = 1, so 2θ = 90°."],
+  ["range","With the same speed, which angle gives the same range as 25°?",["50°","65°","75°","No other angle"],1,"25° + 65° = 90°, and complementary angles give equal ranges."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("am32-best",null); if(best==null||pct>best) store.set("am32-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[A-Za-z]/.test(g.t[0]) ? g.t[0].toUpperCase() : "#";
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/</g,"&lt;")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Represent","Show in another form, e.g. as a vector diagram or in i, j form.","Represent the displacement as a vector."],
+  ["Apply","Use a rule or method in a given situation.","Apply vector algebra to find the resultant."],
+  ["Interpret","Explain what a result means in the context.","Interpret the sign of the dot product."],
+  ["Calculate","Work out a numerical answer, showing the working.","Calculate the angle between a and b."],
+  ["Transform","Change one function into another, e.g. r into v by differentiating.","Transform r(t) into v(t) and a(t)."],
+  ["Resolve","Split a vector into perpendicular components.","Resolve the initial velocity."],
+  ["Solve","Work out the unknowns, showing your method.","Solve for the time of flight."],
+  ["Show that","Prove a given result step by step; the answer is given, so the working earns the marks.","Show that the range is u² sin 2θ ÷ g."],
+  ["Hence","Use the previous answer to do the next part.","Hence find the maximum range."],
+  ["Find","Work out, showing the method.","Find the maximum height reached."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("");
+
+// Calculation trainer
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+const nz=(a,b)=>{ let x; do{ x=rnd(a,b); }while(x===0); return x; };
+const PTYPES = {
+  mag:{ name:"Magnitude", gen(){ const a=nz(-12,12), b=nz(-12,12), m=Math.hypot(a,b);
+      return { q:`Find the magnitude of the vector <b>${vstr([a,b])}</b>, to two decimal places.`, ans:m, unit:"units",
+        steps:[`|v| = √(a² + b²)`,`= √(${a}² + ${b}²) = √${a*a+b*b}`,`= ${m.toFixed(2)}`] }; } },
+  polar:{ name:"Polar → i, j", gen(){ const r=rnd(4,30), th=pick([20,25,30,35,40,50,55,60,65,70]), x=r*Math.cos(th*DEG), y=r*Math.sin(th*DEG), askX=Math.random()<0.5;
+      return { q:`A velocity is <b>(${r} m/s, ${th}°)</b> in polar form (angle measured from i). Find its ${askX?"i":"j"}-component, to two decimal places.`, ans:askX?x:y, unit:"m/s",
+        steps:[`v = r cos θ i + r sin θ j`,`i-component = ${r} cos ${th}° = ${x.toFixed(2)}`,`j-component = ${r} sin ${th}° = ${y.toFixed(2)}`,`v = ${x.toFixed(2)}i + ${y.toFixed(2)}j m/s`] }; } },
+  comb:{ name:"Vector algebra", gen(){ const a=[nz(-6,6),nz(-6,6)], b=[nz(-6,6),nz(-6,6)], k=pick([2,3,-2]), R=[k*a[0]+b[0],k*a[1]+b[1]], m=Math.hypot(...R);
+      return { q:`a = <b>${vstr(a)}</b> and b = <b>${vstr(b)}</b>. Find |${k}a + b|, to two decimal places.`, ans:m, unit:"units",
+        steps:[`${k}a = ${vstr([k*a[0],k*a[1]])}`,`${k}a + b = ${vstr(R)}`,`|${k}a + b| = √(${R[0]}² + ${R[1]}²) = √${R[0]**2+R[1]**2} = ${m.toFixed(2)}`] }; } },
+  dotp:{ name:"Dot product", gen(){ const a=[nz(-8,8),nz(-8,8)], b=[nz(-8,8),nz(-8,8)], d=a[0]*b[0]+a[1]*b[1];
+      return { q:`Find (<b>${vstr(a)}</b>)·(<b>${vstr(b)}</b>).`, ans:d, unit:"",
+        steps:[`a·b = a₁b₁ + a₂b₂`,`= (${mn(a[0])})(${mn(b[0])}) + (${mn(a[1])})(${mn(b[1])})`,`= ${mn(a[0]*b[0])} + ${mn(a[1]*b[1])} = ${mn(d)}`].concat(d===0?["0: the vectors are perpendicular."]:[]) }; } },
+  angle:{ name:"Angle between", gen(){ let a,b; do{ a=[nz(-7,7),nz(-7,7)]; b=[nz(-7,7),nz(-7,7)]; }while(Math.abs(a[0]*b[1]-a[1]*b[0])<1);
+      const d=a[0]*b[0]+a[1]*b[1], ma=Math.hypot(...a), mb=Math.hypot(...b), th=Math.acos(d/(ma*mb))/DEG;
+      return { q:`Find the angle between <b>${vstr(a)}</b> and <b>${vstr(b)}</b>, in degrees to one decimal place.`, ans:th, unit:"°",
+        steps:[`a·b = ${mn(a[0]*b[0])} + ${mn(a[1]*b[1])} = ${mn(d)}`,`|a| = √${a[0]**2+a[1]**2} = ${ma.toFixed(4)}, |b| = √${b[0]**2+b[1]**2} = ${mb.toFixed(4)}`,`cos θ = ${d} ÷ (${ma.toFixed(4)} × ${mb.toFixed(4)}) = ${(d/(ma*mb)).toFixed(4)}`,`θ = ${th.toFixed(1)}°`] }; } },
+  vel:{ name:"Speed from r(t)", gen(){ const p=rnd(1,5), q=rnd(2,12), c=pick([0,1,2]), t=rnd(1,4), vx=2*p*t, vy=q-2*c*t, s=Math.hypot(vx,vy);
+      const rj = c? `(${q}t − ${c===1?"":c}t²)` : `${q}t`;
+      return { q:`A particle has position <b>r = ${p}t² i + ${rj} j</b> m at time t s. Find its speed when t = ${t}, to two decimal places.`, ans:s, unit:"m/s",
+        steps:[`v = dr/dt = ${2*p}t i + ${c?`(${q} − ${2*c}t)`:q} j`,`At t = ${t}: v = ${vx}i ${vy<0?"−":"+"} ${Math.abs(vy)}j`,`speed = √(${vx}² + ${vy}²) = ${s.toFixed(2)} m/s`] }; } },
+  tof:{ name:"Time of flight", gen(){ const u=rnd(8,30), th=pick([20,25,30,35,40,45,50,55,60,65,70]), p=projStats(u,th);
+      return { q:`A ball is projected from horizontal ground at <b>${u} m/s</b> at <b>${th}°</b> to the horizontal. Find the time of flight, to two decimal places. (g = 9.8 m/s²)`, ans:p.T, unit:"s",
+        steps:[`Vertical: u sin θ = ${u} sin ${th}° = ${p.uy.toFixed(3)} m/s`,`y = 0 when (u sin θ)t − 4.9t² = 0 → t = 2u sin θ ÷ g`,`T = 2 × ${p.uy.toFixed(3)} ÷ 9.8 = ${p.T.toFixed(2)} s`] }; } },
+  hmax:{ name:"Maximum height", gen(){ const u=rnd(8,30), th=pick([20,30,40,45,50,60,70,75]), p=projStats(u,th);
+      return { q:`A ball is projected from horizontal ground at <b>${u} m/s</b> at <b>${th}°</b>. Find the maximum height, to two decimal places. (g = 9.8 m/s²)`, ans:p.H, unit:"m",
+        steps:[`Vertical: u sin θ = ${p.uy.toFixed(3)} m/s`,`At the top v_y = 0: 0 = (u sin θ)² − 2gH`,`H = ${p.uy.toFixed(3)}² ÷ 19.6 = ${p.H.toFixed(2)} m`] }; } },
+  rng:{ name:"Range", gen(){ const u=rnd(8,30), th=pick([15,20,30,35,40,45,50,60,70]), p=projStats(u,th);
+      return { q:`A ball is projected from horizontal ground at <b>${u} m/s</b> at <b>${th}°</b>. Find its range, to two decimal places. (g = 9.8 m/s²)`, ans:p.R, unit:"m",
+        steps:[`R = u² sin 2θ ÷ g`,`= ${u}² × sin ${2*th}° ÷ 9.8`,`= ${u*u} × ${Math.sin(2*th*DEG).toFixed(4)} ÷ 9.8 = ${p.R.toFixed(2)} m`,`(Check: (u cos θ) × T = ${p.ux.toFixed(3)} × ${p.T.toFixed(3)})`] }; } },
+};
+let pType="mag", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const raw=$("paIn").value.replace(/[^\d.,\-]/g,"").replace(/,(?=\d{3}(\D|$))/g,"").replace(",",".");
+  const x=parseFloat(raw);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 12.5 or 66.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(0.051, Math.abs(pCur.ans)*0.005);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Write the model first, check your units (m³ → L, s → h), and round only at the end. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Which goes further? Two angles, same speed
+let pd = { k:null, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdGen(){ const u=pick([15,20,25]); let a,b; do{ a=pick([10,15,20,25,30,35,40,45,50,55,60,65,70,75,80]); b=pick([10,15,20,25,30,35,40,45,50,55,60,65,70,75,80]); }while(a===b);
+  const Ra=projStats(u,a).R, Rb=projStats(u,b).R; return {u,a,b,Ra,Rb,ans: Math.abs(Ra-Rb)<1e-6? 2 : Ra>Rb? 0 : 1}; }
+function pdNew(){ pd={...pd,k:pdGen(),shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`Both are launched at <b>${pd.k.u} m/s</b> from flat ground. <b>A: ${pd.k.a}°</b>, <b>B: ${pd.k.b}°</b>. Which lands further away?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=+b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const g=pd.k, ok=pd.sel===g.ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  const why = g.ans===2? `${g.a}° + ${g.b}° = 90°: complementary angles give the same range (${nf(g.Ra,1)} m).` : `R = u² sin 2θ ÷ g: sin ${2*g.a}° = ${Math.sin(2*g.a*DEG).toFixed(3)}, sin ${2*g.b}° = ${Math.sin(2*g.b*DEG).toFixed(3)}. A lands at ${nf(g.Ra,1)} m, B at ${nf(g.Rb,1)} m. The angle closer to 45° goes further.`;
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Vector algebra", intro:"a = 3i + 4j and b = 5i − 12j.",
+    parts:[["a","Find |a| and |b|.",6,"|a| = √(9 + 16) = 5 (3). |b| = √(25 + 144) = 13 (3)."],
+      ["b","Find a + b and 2a − b, and find |a + b|.",10,"a + b = 8i − 8j (3). 2a − b = 6i + 8j − 5i + 12j = i + 20j (4). |a + b| = √128 = 8√2 ≈ 11.31 (3)."],
+      ["c","Find a·b and hence the angle between a and b, to one decimal place.",12,"a·b = 15 − 48 = −33 (4). cos θ = −33 ÷ (5 × 13) = −0.5077 (4). θ = 120.5° (4). Negative dot product → obtuse angle."],
+      ["d","Find the value of k for which a + kb is perpendicular to a.",12,"(a + kb)·a = 0 (3) → a·a + k(a·b) = 0 (3) → 25 − 33k = 0 (3) → k = 25/33 ≈ 0.758 (3)."]] },
+  { title:"A kick from the ground", intro:"A ball is kicked from horizontal ground with a speed of 20 m/s at 30° to the horizontal. Take g = 9.8 m/s² and ignore air resistance.",
+    parts:[["a","Resolve the initial velocity into horizontal and vertical components.",6,"u cos 30° = 17.32 m/s (3); u sin 30° = 10 m/s (3)."],
+      ["b","Find the time of flight.",8,"y = 10t − 4.9t² = 0 (4) → t = 10 ÷ 4.9 = 2.04 s (4)."],
+      ["c","Find the maximum height.",8,"v_y = 0 at the top: 0 = 10² − 2(9.8)H (4) → H = 100 ÷ 19.6 = 5.10 m (4)."],
+      ["d","Find the range.",6,"R = 17.32 × 2.041 = 35.35 m (6). (Or u² sin 60° ÷ g.)"],
+      ["e","Find the velocity of the ball after 1.5 s as a vector, and its speed and direction.",12,"v = 17.32i + (10 − 9.8 × 1.5)j = 17.32i − 4.7j (5). Speed = √(17.32² + 4.7²) = 17.95 m/s (4). Direction: tan⁻¹(4.7 ÷ 17.32) = 15.2° below the horizontal (3)."],
+      ["f","State two assumptions in this model.",4,"Any two × 2: particle; no air resistance; g constant; ground is horizontal; ball starts at ground level."]] },
+  { title:"From position to acceleration", intro:"A particle moves so that its position vector at time t seconds is r = 4t i + (12t − 4.9t²) j metres.",
+    parts:[["a","Find the velocity v and the acceleration a of the particle.",8,"v = dr/dt = 4i + (12 − 9.8t)j (5). a = dv/dt = −9.8j (3)."],
+      ["b","Find when the particle is at its highest point, and its height then.",10,"v_y = 0: 12 − 9.8t = 0 → t = 1.22 s (5). y = 12(1.224) − 4.9(1.224)² = 7.35 m (5)."],
+      ["c","Find the speed of the particle when t = 2.",8,"v = 4i − 7.6j (4). Speed = √(16 + 57.76) = 8.59 m/s (4)."],
+      ["d","Show that v·a = 0 at the highest point, and interpret this.",8,"v·a = (4)(0) + (12 − 9.8t)(−9.8) = −9.8(12 − 9.8t) (3), which is 0 when t = 1.22 (2). Velocity is perpendicular to acceleration: the particle moves horizontally at the top (3)."],
+      ["e","Starting from a = −9.8j, with r = 0 and v = 4i + 12j at t = 0, derive the expression for r.",10,"v = ∫a dt = −9.8t j + c (3); c = 4i + 12j (2). r = ∫v dt = 4t i + (12t − 4.9t²) j + d (3); d = 0 (2)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist (red / amber / green)
+const RAG = ["Distinguish vectors and scalars","Write a vector in i, j form","Find magnitude and direction (with the right quadrant)","Convert between polar and i, j form","Add vectors and multiply by a scalar","Find the resultant of successive displacements","Calculate a dot product","Find the angle between two vectors","Use a·b = 0 for perpendicular vectors","Differentiate r(t) to find v(t) and a(t)","Integrate a(t) using starting values","Resolve a launch velocity","Find time of flight, maximum height and range","Find a projectile's velocity vector at time t"];
+const ragState=store.get("am32-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("am32-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Simplify","Treat the object as a particle; say what you ignore (air resistance, spin).","Launcher lab"],["Choose axes","Pick i and j directions and an origin, and state them.","Drag the vector lab"],["Collect data","Measure range at several angles, with repeats.","Collect & fit lab"],["Linearise","Plot R against sin 2θ to get a straight line.","Collect & fit lab"],["Use the gradient","Turn the gradient (u² ÷ g) back into a launch speed.","Collect & fit lab"],["Evaluate","Compare predictions with measurements; explain the gaps (drag, launch height).","Launcher lab"]];
+const skState=store.get("am32-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("am32-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+const snap = v => Math.round(v);
+// Vectors
+const vc = {v:[4,3], m:null};
+function vcUpd(){ const v=vc.v, m=mag(v), a=angDeg(v);
+  setReadout($("vcOut"),[["i, j form",vstr(v)],["Magnitude |v|",nf(m,2)],["Direction",m?`${nf(a,1)}°`:"–"],["Polar form",m?`(${nf(m,2)}, ${nf(a,1)}°)`:"–"]]);
+  $("vcWork").innerHTML = m? `<b>|v|</b> = √(${v[0]}² + ${v[1]}²) = √${v[0]**2+v[1]**2} = ${nf(m,2)} · <b>θ</b>: tan⁻¹(${Math.abs(v[1])} ÷ ${Math.abs(v[0])}) = ${nf(Math.atan2(Math.abs(v[1]),Math.abs(v[0]))/DEG,1)}°, then use the quadrant → ${nf(a,1)}°` : "Drag the tip away from the origin.";
+  if(vcC) vcC.redraw(); }
+// Add
+const ad = {a:[5,2], b:[2,6], k:1, m:null, h:null};
+function adUpd(){ const ka=[ad.k*ad.a[0],ad.k*ad.a[1]], R=[ka[0]+ad.b[0],ka[1]+ad.b[1]];
+  $("adKo").textContent=ad.k;
+  setReadout($("adOut"),[["a",vstr(ad.a)],["b",vstr(ad.b)],[ad.k===1?"a + b":`${ad.k}a + b`,vstr(R)],["|resultant|",nf(mag(R),2)],["Direction",mag(R)?`${nf(angDeg(R),1)}°`:"–"]]);
+  $("adWork").innerHTML = `<b>i parts:</b> ${ka[0]} + ${ad.b[0]} = ${R[0]} · <b>j parts:</b> ${ka[1]} + ${ad.b[1]} = ${R[1]} · |a| + |b| = ${nf(mag(ka)+mag(ad.b),2)} ≥ |resultant|`;
+  if(adC) adC.redraw(); }
+$("adK").addEventListener("input",e=>{ ad.k=+e.target.value; adUpd(); });
+// Dot
+const dt = {a:[5,1], b:[2,4], m:null, h:null};
+function dtUpd(){ const a=dt.a, b=dt.b, d=a[0]*b[0]+a[1]*b[1], ma=mag(a), mb=mag(b), th= ma&&mb? Math.acos(Math.max(-1,Math.min(1,d/(ma*mb))))/DEG : null;
+  setReadout($("dtOut"),[["a · b",d],["|a| |b|",nf(ma*mb,2)],["Angle θ",th==null?"–":`${nf(th,1)}°`],["Verdict",d===0&&ma&&mb?"Perpendicular":d>0?"Acute angle (a·b > 0)":d<0?"Obtuse angle (a·b < 0)":"–"]]);
+  $("dtWork").innerHTML = `<b>a·b</b> = (${a[0]})(${b[0]}) + (${a[1]})(${b[1]}) = ${d}${th!=null?` · cos θ = ${d} ÷ ${nf(ma*mb,3)} = ${nf(d/(ma*mb),3)}`:""}`;
+  if(dtC) dtC.redraw(); }
+// Calculus
+const cl = {p:0, f:0.3};
+$("clP").innerHTML = CALC.map((c,k)=>`<button data-k="${k}" aria-pressed="${k===0}">${c.n}</button>`).join("");
+$("clP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; cl.p=+b.dataset.k; pressGroup([...$("clP").children],b); clUpd(); });
+$("clT").addEventListener("input",e=>{ cl.f=+e.target.value; clUpd(); });
+function clUpd(){ const P=CALC[cl.p], t=cl.f*P.t1, r=P.r(t), v=P.v(t), a=P.a(t), d=v[0]*a[0]+v[1]*a[1];
+  $("clTo").textContent=`${nf(t,2)} s`;
+  setReadout($("clOut"),[["r",vstr(r,2)],["v",vstr(v,2)],["Speed |v|",`${nf(mag(v),2)} m/s`],["a",vstr(a,2)],["v · a",nf(d,2)]]);
+  $("clWork").innerHTML = `<b>${P.rs}</b> → differentiate → <b>${P.vs}</b> → differentiate → <b>${P.as}</b>`;
+  if(clC) clC.redraw(); }
+// Launcher
+const pr = {u:20, th:40, t:null, target:30, run:0};
+function prUpd(){ const p=projStats(pr.u,pr.th); $("prUo").textContent=`${pr.u} m/s`; $("prAo").textContent=`${pr.th}°`;
+  const t=pr.t==null? null : Math.min(pr.t,p.T), vy= t==null? null : p.uy-G*t, miss=p.R-pr.target;
+  setReadout($("prOut"),[["Time of flight T",`${nf(p.T,2)} s`],["Max height H",`${nf(p.H,2)} m`],["Range R",`${nf(p.R,2)} m`],["Flag at",`${pr.target} m · ${Math.abs(miss)<1?"HIT! 🎯":miss>0?`${nf(miss,1)} m long`:`${nf(-miss,1)} m short`}`],["At t",t==null?"press Launch":`${nf(t,2)} s: v = ${nf(p.ux,2)}i ${vy<0?"−":"+"} ${nf(Math.abs(vy),2)}j`]]);
+  $("prWork").innerHTML = `<b>Resolve:</b> u cos θ = ${nf(p.ux,2)} m/s, u sin θ = ${nf(p.uy,2)} m/s · T = 2(${nf(p.uy,2)}) ÷ 9.8 = ${nf(p.T,2)} s · R = ${nf(p.ux,2)} × ${nf(p.T,2)} = ${nf(p.R,2)} m`;
+  if(prC) prC.redraw(); }
+$("prU").addEventListener("input",e=>{ pr.u=+e.target.value; pr.t=null; prUpd(); });
+$("prA").addEventListener("input",e=>{ pr.th=+e.target.value; pr.t=null; prUpd(); });
+$("prTarget").addEventListener("click",()=>{ pr.target=10+Math.floor(Math.random()*61); pr.t=null; prUpd(); });
+$("prGo").addEventListener("click",()=>{ const run=++pr.run, T=projStats(pr.u,pr.th).T, t0=performance.now();
+  if(reduce){ pr.t=T; return prUpd(); }
+  (function step(now){ if(run!==pr.run) return; pr.t=Math.min(T,(now-t0)/1000*Math.max(1,T/3)); prUpd(); if(pr.t<T) requestAnimationFrame(step); })(t0); });
+// Range data
+const rg = {u:0, th:30, rows:[]};
+function rgNew(){ rg.u=+(12+Math.random()*8).toFixed(1); rg.rows=[]; rgUpd(); }
+function rgFit(){ if(rg.rows.length<2) return null; let sxy=0,sxx=0; rg.rows.forEach(r=>{ sxy+=r.s*r.R; sxx+=r.s*r.s; }); if(!sxx) return null; const m=sxy/sxx; return {m, u:Math.sqrt(m*G)}; }
+function rgUpd(){ $("rgAo").textContent=`${rg.th}°`;
+  $("rgTable").innerHTML = rg.rows.map(r=>`<tr><td>${r.th}</td><td>${r.s.toFixed(3)}</td><td>${nf(r.R,1)}</td></tr>`).join("") || `<tr><td colspan="3">No data yet. Choose an angle and fire.</td></tr>`;
+  const f=rgFit(); $("rgResult").innerHTML = f? `Line through origin: <b>R = ${nf(f.m,2)} × sin 2θ</b>. Gradient = u² ÷ g, so u = √(${nf(f.m,2)} × 9.8) ≈ <b>${nf(f.u,1)} m/s</b>.` : "Record at least two angles to fit a line.";
+  if(rgC){ rgC.redraw(); rgG.redraw(); } }
+$("rgA").addEventListener("input",e=>{ rg.th=+e.target.value; rgUpd(); });
+$("rgRec").addEventListener("click",()=>{ const s=Math.sin(2*rg.th*DEG), R=projStats(rg.u,rg.th).R*(1+(Math.random()-0.5)*0.05); rg.rows.push({th:rg.th,s,R:+R.toFixed(1)}); rgUpd(); });
+$("rgNew").addEventListener("click",rgNew);
+rg.u=+(12+Math.random()*8).toFixed(1);
+
+/* ================= CREATE CANVASES ================= */
+let vcC=null, adC=null, dtC=null, clC=null, prC=null, rgC=null, rgG=null;
+const nearest = (pts,x,y) => { let b=0,bd=1e9; pts.forEach((p,i)=>{ const d=Math.hypot(p[0]-x,p[1]-y); if(d<bd){ bd=d; b=i; } }); return b; };
+const clampV = (v,lim) => [Math.max(-lim[0],Math.min(lim[0],v[0])),Math.max(-lim[1],Math.min(lim[1],v[1]))];
+const hero = makeCanvas($("heroCanvas"), 0.75, 240, s => { const T=projStats(22,55).T, t=reduce?T*0.35:(heroT*0.9)%(T+0.8); drawProj(s.ctx,s.w,s.h,{shots:[{u:22,th:55}],t:Math.min(t,T),xmax:48}); }, 440);
+vcC = makeCanvas($("vcC"), 0.6, 300, s => { vc.m=drawVec(s.ctx,s.w,s.h,{v:vc.v}); }, 480);
+drag($("vcC"),(x,y)=>{ const [a,b]=vc.m.inv(x,y); vc.v=clampV([snap(a),snap(b)],[9,7]); vcUpd(); });
+adC = makeCanvas($("adC"), 0.6, 300, s => { ad.m=drawAdd(s.ctx,s.w,s.h,ad); }, 480);
+drag($("adC"),(x,y,start)=>{ const p=ad.m.inv(x,y), ka=[ad.k*ad.a[0],ad.k*ad.a[1]], R=[ka[0]+ad.b[0],ka[1]+ad.b[1]];
+  if(start) ad.h = nearest([ka,R],p[0],p[1]);
+  const q=[snap(p[0]),snap(p[1])];
+  if(ad.h===0){ if(ad.k!==0){ const R0=R; ad.a=[Math.round(q[0]/ad.k),Math.round(q[1]/ad.k)]; const nka=[ad.k*ad.a[0],ad.k*ad.a[1]]; ad.b=[R0[0]-nka[0],R0[1]-nka[1]]; } }
+  else ad.b=[q[0]-ka[0],q[1]-ka[1]];
+  adUpd(); });
+dtC = makeCanvas($("dtC"), 0.6, 300, s => { dt.m=drawDot(s.ctx,s.w,s.h,dt); }, 480);
+drag($("dtC"),(x,y,start)=>{ const p=dt.m.inv(x,y); if(start) dt.h=nearest([dt.a,dt.b],p[0],p[1]); const q=clampV([snap(p[0]),snap(p[1])],[7,6]); if(dt.h===0) dt.a=q; else dt.b=q; dtUpd(); });
+clC = makeCanvas($("clC"), 0.6, 300, s => drawCalc(s.ctx,s.w,s.h,{p:cl.p,t:cl.f*CALC[cl.p].t1}), 480);
+prC = makeCanvas($("prC"), 0.55, 280, s => drawProj(s.ctx,s.w,s.h,{shots:[{u:pr.u,th:pr.th}],t:pr.t,target:pr.target,marks:true,xmax:72,ymax:12}), 480);
+rgC = makeCanvas($("rgC"), 0.42, 220, s => drawProj(s.ctx,s.w,s.h,{shots: rg.rows.length? rg.rows.map((r,i)=>({u:rg.u,th:r.th,col:i===rg.rows.length-1?C.terra:C.olive,lw:i===rg.rows.length-1?3:1.5})) : [{u:rg.u,th:rg.th,col:C.line,dash:true}], xmax:42, ymax:20}), 380);
+rgG = makeCanvas($("rgG"), 0.7, 200, s => { bg(s.ctx,s.w,s.h); const ym=Math.max(20,...rg.rows.map(r=>r.R))*1.1, fr=frame(s.ctx,s.w,s.h,{x0:0,x1:1,y0:0,y1:ym,xl:"sin 2θ",yl:"R (m)",compact:true,xt:0.2}), f=rgFit();
+  if(f) line(s.ctx,fr.X(0),fr.Y(0),fr.X(1),fr.Y(f.m),C.terra,2.5); rg.rows.forEach(r=>circle(s.ctx,fr.X(r.s),fr.Y(r.R),4,C.surface,C.ink,2)); }, 320);
+predC = makeCanvas($("predC"), 0.6, 210, s => { const g=pd.k||pdGen(); drawProj(s.ctx,s.w,s.h,{compact:true,bgc:C["surface-2"],shots: pd.shown? [{u:g.u,th:g.a,col:C.terra},{u:g.u,th:g.b,col:C.olive,dash:true}] : [{u:g.u,th:45,col:"transparent"}], xmax:projStats(g.u,45).R});
+  if(pd.shown){ text(s.ctx,`A ${g.a}°`,s.w-12,20,C.terra,F(12),"right"); text(s.ctx,`B ${g.b}° (dashed)`,s.w-12,36,C.olive,F(12),"right"); } }, 320);
+pdNew();
+const MINI = {
+  vec:(s,o)=>drawVec(s.ctx,s.w,s.h,{...o,compact:true}),
+  add:(s,o)=>drawAdd(s.ctx,s.w,s.h,{...o,compact:true}),
+  dot:(s,o)=>drawDot(s.ctx,s.w,s.h,{...o,compact:true}),
+  calc:(s,o)=>drawCalc(s.ctx,s.w,s.h,{...o,compact:true}),
+  proj:(s,o)=>drawProj(s.ctx,s.w,s.h,{...o,compact:true,shots:o.shots.map(x=>({...x,col:x.col==="#9d9a80"?C.olive:x.col}))}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, 0.62, 150, s=>MINI[kind](s,o), 380); });
+const INFO = { add:["add",{a:[6,0],b:[0,8]}], dot:["dot",{a:[5,1],b:[-1,5]}], proj:["proj",{shots:[{u:20,th:50}],t:1.6}] };
+document.querySelectorAll("canvas[data-mini]").forEach(el=>{ const [k,o]=INFO[el.dataset.mini]; makeCanvas(el,0.7,160,s=>MINI[k](s,{...o,bgc:C["surface-2"]})); });
+vcUpd(); adUpd(); dtUpd(); clUpd(); prUpd(); rgUpd();
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>
+

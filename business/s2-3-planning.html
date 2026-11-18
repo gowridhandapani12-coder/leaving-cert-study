@@ -1,0 +1,1629 @@
+<title>Business Planning</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.sh-card{display:grid;gap:8px;padding:16px}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card p b{color:var(--terra)}
+.fbbox{padding:0 16px 14px}
+.offers{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 14px}
+.predopts .btns button{min-width:110px}
+.qmvb{display:flex;flex-wrap:wrap;gap:5px}
+.qmvb button{font-size:.78rem;padding:5px 9px}
+.qmvb button[aria-pressed="false"]{opacity:.7;text-decoration:line-through}
+.srt .row .ctl{flex:0 1 170px}
+</style>
+
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 018 8M20 12l-2.5-2M20 12l2-2.5"/><circle cx="12" cy="12" r="2.5"/></svg></div>
+        <div style="min-width:0"><b>Business Planning</b><span>Leaving Cert Business · Strand 2 · Topic 3</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html" class="on" aria-current="page">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Cheat sheet</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>U · Investigating Business</summary><ol><li><span class="mono">U</span>Research skills (all year)</li></ol></details>
+      <details><summary>1 · Business Environment</summary><ol><li class="link"><a href="s1-1-stakeholders.html"><span class="mono">1.1</span>Key stakeholders</a></li><li class="link"><a href="s1-2-forms-of-business.html"><span class="mono">1.2</span>Forms of business &amp; governance</a></li><li class="link"><a href="s1-3-economy.html"><span class="mono">1.3</span>Business &amp; the economy</a></li><li class="link"><a href="s1-4-policy.html"><span class="mono">1.4</span>National &amp; EU policy</a></li><li class="link"><a href="s1-5-global.html"><span class="mono">1.5</span>Irish business globally</a></li><li><span class="mono">1.6</span>Applying my learning</li></ol></details>
+      <details open><summary>2 · Understanding Enterprise</summary><ol><li class="link"><a href="s2-1-enterprise.html"><span class="mono">2.1</span>Enterprise</a></li><li class="link"><a href="s2-2-ideas.html"><span class="mono">2.2</span>Idea development</a></li><li class="here"><span class="mono">2.3</span>Business planning</li><li class="link"><a href="s2-4-target-market.html"><span class="mono">2.4</span>The target market</a></li><li class="link"><a href="s2-5-operations-finance.html"><span class="mono">2.5</span>Operations &amp; finance</a></li><li class="link"><a href="s2-6-growth.html"><span class="mono">2.6</span>Growth &amp; expansion</a></li><li><span class="mono">2.7</span>Managing risk</li><li><span class="mono">2.8</span>Applying my learning</li></ol></details>
+      <details><summary>3 · Leading in Business</summary><ol><li><span class="mono">3.1</span>Leading an organisation</li><li><span class="mono">3.2</span>Leading people</li><li><span class="mono">3.3</span>Communication</li><li><span class="mono">3.4</span>Planning</li><li><span class="mono">3.5</span>Applying my learning</li></ol></details>
+      <details><summary>4 · Informed Decisions</summary><ol><li><span class="mono">4.1</span>Informed consumer</li><li><span class="mono">4.2</span>Informed financial decisions</li><li><span class="mono">4.3</span>Informed employee</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 2 · Understanding enterprise</span>
+          <h1 style="margin-top:12px">Write the plan.<br>Map the model.<br><em>Capture the value.</em></h1>
+          <p class="lede">A business plan shows where a business is going and how it will get there. At its heart is the business model: how the business creates value for customers, delivers it, and captures some of it as income. Learn the plan's functions, plan with ethics and sustainability in mind, fill in a business model canvas and compare traditional and digital models.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="A business model canvas with its nine blocks lighting up in turn"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/7</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">2.3.1</span><span>appreciate the importance of having a business plan and outline the key functions of a business plan.</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">2.3.2</span><span>outline the importance of ethics and sustainability when planning in business.</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">2.3.3</span><span>explain what is meant by a business model and appreciate its role within the business plan.</span></label></li>
+          <li><label><input type="checkbox" id="lo4"><span class="mono">2.3.4</span><span>identify the key elements of the business model canvas and outline the role of business models in successful enterprises.</span></label></li>
+          <li><label><input type="checkbox" id="lo5"><span class="mono">2.3.5</span><span>identify and compare the most common business models.</span></label></li>
+          <li><label><input type="checkbox" id="lo6"><span class="mono">2.3.6</span><span>outline how digital technology is a driver of change in business.</span></label></li>
+          <li><label><input type="checkbox" id="lo7"><span class="mono">2.3.7</span><span>identify and compare a number of technology-driven business models and outline the key characteristics of each model.</span></label></li>
+        </ul>
+        <div class="result" style="margin-top:10px"><p><b>Students learn about:</b></p>
+          <ul style="margin:6px 0 0 18px;display:grid;gap:4px">
+            <li>the importance of a coherent business plan at different stages of business development and how it supports business start-up, operations, funding and development, and the need to consider both ethical and sustainability factors.</li>
+            <li>the role of business models* in generating income and creating, delivering, and capturing value for both the enterprise and its customers.</li>
+            <li>the importance of the business model and the elements of the business model canvas*.</li>
+            <li>a range of business models including retail, manufacturing, subscription, franchise, and affiliate.</li>
+            <li>the digital economy including marketplace, subscription, crowdfunding and advertising-supported models; the similarities and differences when compared to non-digital business models, and how businesses have adapted to or developed based on the digital economy and other internal or external drivers.</li>
+          </ul>
+          <p style="margin-top:8px"><b>*Business model</b>, from the specification's glossary: "A business model is an element within the business plan which outlines how a company will operate, create, deliver, and capture value in economic, social, and cultural contexts."</p>
+          <p style="margin-top:6px"><b>*Business model canvas</b>: "A business model canvas is a tool used to map out a business model and includes the key partners, activities and resources, the value proposition (why the customer would choose the product/service), customers, customer relations and channels, costs, and revenues."</p></div>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Put a business plan together, plan a café with ethics and sustainability in mind, follow value from creation to capture, build a business model canvas, compare five common models and run four digital ones.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="plan">
+        <div class="labhead"><span class="pill t">Build the business plan</span><p class="goal">Each piece of information belongs in one section of the plan. Sort them, then pick a reader to see which sections they care about most and what the plan does for them.</p></div>
+        <div class="panel sim">
+          <canvas id="plC" aria-label="A business plan document with six sections filling up as you sort, and the sections a chosen reader cares about highlighted"></canvas>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Who is reading?</span><div class="btns" id="plRd"></div></div></div>
+          <div class="working wrap" id="plWork"></div>
+          <div class="srt" id="plList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="plReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="plOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Which section would a bank manager read first? Why?</div><div class="try"><b>2</b>How is a plan useful once the business is already open?</div><div class="try"><b>3</b>Why should the plan be updated as the business grows?</div></div>
+      </div>
+
+      <div class="lab" data-lab="ethics" hidden>
+        <div class="labhead"><span class="pill t">Plan with ethics and sustainability</span><p class="goal">You are writing the plan for a campus coffee cart (illustrative figures). Make five planning decisions. Watch profit, people and planet: the "triple bottom line".</p></div>
+        <div class="panel sim">
+          <canvas id="etC" aria-label="Three bars for profit, people and planet that change with your planning decisions"></canvas>
+          <div class="srt" id="etList"></div>
+          <div class="readout" id="etOut"></div>
+          <div class="working wrap" id="etWork"></div>
+        </div>
+        <p class="result">Illustrative: forecast profit before these choices is €30 000 a year. People and planet scores are a simple model to compare choices, not an official rating.</p>
+        <div class="tries"><div class="try"><b>1</b>Make every cheapest choice. What might it cost the business later?</div><div class="try"><b>2</b>Which choice actually earns money back while helping the planet?</div><div class="try"><b>3</b>Is there a mix that keeps profit above €20 000 and scores well on people and planet?</div></div>
+      </div>
+
+      <div class="lab" data-lab="model" hidden>
+        <div class="labhead"><span class="pill t">Create, deliver, capture</span><p class="goal">A business model explains how a business creates value for customers, delivers it to them and captures value back as income. Pick a business and sort its activities.</p></div>
+        <div class="panel sim">
+          <canvas id="mdC" aria-label="Three linked boxes, create, deliver and capture value, filling up as you sort"></canvas>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Business</span><div class="btns" id="mdBiz"></div></div></div>
+          <div class="working wrap" id="mdDesc"></div>
+          <div class="srt" id="mdList"></div>
+          <div class="readout" id="mdOut"></div>
+        </div>
+        <p class="result">Businesses here are illustrative examples.</p>
+        <div class="tries"><div class="try"><b>1</b>Which part of the model generates the income?</div><div class="try"><b>2</b>Can a business create great value but still fail? What would be missing?</div><div class="try"><b>3</b>Why is the business model at the centre of the business plan?</div></div>
+      </div>
+
+      <div class="lab" data-lab="canvas" hidden>
+        <div class="labhead"><span class="pill t">Build a business model canvas</span><p class="goal">The business model canvas maps a whole business model on one page in nine blocks. Place each sticky note for "Bean There", an illustrative campus coffee cart, in the right block.</p></div>
+        <div class="panel sim">
+          <canvas id="cvC" aria-label="The nine-block business model canvas with sticky notes placed in it"></canvas>
+          <div class="working wrap" id="cvNote"></div>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Which block?</span><div class="btns" id="cvBtns"></div></div>
+            <div class="ctl"><div class="btns"><button id="cvReset">Start again</button></div></div></div>
+          <div class="readout" id="cvOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Why is the value proposition in the middle of the canvas?</div><div class="try"><b>2</b>Which blocks are about the customer side? Which are about running the business?</div><div class="try"><b>3</b>Change one block, e.g. sell online only. Which other blocks change too?</div></div>
+      </div>
+
+      <div class="lab" data-lab="types" hidden>
+        <div class="labhead"><span class="pill t">Five common business models</span><p class="goal">Retail, manufacturing, subscription, franchise and affiliate models earn money in different ways. Pick one, follow the money and change the numbers. Then sort real-life examples.</p></div>
+        <div class="panel sim">
+          <canvas id="tyC" aria-label="A money-flow diagram for the chosen business model with the income worked out"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Model</span><div class="btns" id="tyM"></div></div>
+            <div class="ctl"><label for="tyA"><span id="tyAl">A</span> <output id="tyAo"></output></label><input type="range" id="tyA"></div>
+            <div class="ctl"><label for="tyB"><span id="tyBl">B</span> <output id="tyBo"></output></label><input type="range" id="tyB"></div>
+          </div>
+          <div class="readout" id="tyOut"></div>
+          <div class="working wrap" id="tyWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Which model is it?</h3></div>
+          <div class="srt" id="twList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="twReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="twOut"></div>
+        </div>
+        <p class="result">Figures are illustrative.</p>
+        <div class="tries"><div class="try"><b>1</b>Why do businesses like subscription income so much?</div><div class="try"><b>2</b>Who carries the risk in a franchise: the franchisor or the franchisee?</div><div class="try"><b>3</b>An affiliate holds no stock. What does it need instead?</div></div>
+      </div>
+
+      <div class="lab" data-lab="digital" hidden>
+        <div class="labhead"><span class="pill t">Technology-driven business models</span><p class="goal">Digital technology lets a business reach millions of customers at almost no extra cost. Run four digital models (marketplace, subscription, crowdfunding and advertising-supported) and compare each with its non-digital cousin.</p></div>
+        <div class="panel sim">
+          <canvas id="dgC" aria-label="A money-flow diagram for the chosen digital model, with its non-digital equivalent"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Model</span><div class="btns" id="dgM"></div></div>
+            <div class="ctl"><label for="dgA"><span id="dgAl">A</span> <output id="dgAo"></output></label><input type="range" id="dgA"></div>
+            <div class="ctl"><label for="dgB"><span id="dgBl">B</span> <output id="dgBo"></output></label><input type="range" id="dgB"></div>
+          </div>
+          <div class="readout" id="dgOut"></div>
+          <div class="working wrap" id="dgWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Which digital model?</h3></div>
+          <div class="srt" id="ddList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="ddReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="ddOut"></div>
+        </div>
+        <p class="result">Figures are illustrative.</p>
+        <div class="tries"><div class="try"><b>1</b>A marketplace owns no stock. How does it make money, and what does it need lots of?</div><div class="try"><b>2</b>Crowdfunding: what happens to an all-or-nothing campaign that reaches 95% of its target?</div><div class="try"><b>3</b>"If it's free, you're the product." What does this mean for advertising-supported apps?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of business planning"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it · LO 2.3.5 and 2.3.7</p><h2>Business models in the real world</h2></div><p>Well-known businesses and the models they use, in general terms. Check a current source before using one in your own work.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>Plan, canvas, bottom line</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="doc"></canvas><h3>Six sections, one plan</h3><p>Summary, business, market, operations, people and finance. Readers jump to the parts they need.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="bmc"></canvas><h3>Nine blocks, one page</h3><p>The value proposition sits in the middle, with the customer side on the right and the business side on the left.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="tbl"></canvas><h3>Profit, people, planet</h3><p>Ethical and sustainable plans look at more than profit, and often win customers, staff and funding because of it.</p></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">LO 2.3.6 and 2.3.7 · Compare</p><h2>Digital models and their non-digital cousins</h2></div><p>Similar ideas, very different reach and costs.</p></div>
+      <div class="cases" id="impacts"></div>
+
+      <div class="head"><div><p class="eyebrow">In Ireland</p><h2>Help with planning</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% Business Alive Investigative Study">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>Higher or Ordinary level, set by the SEC. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Business Alive Investigative Study · 40%</b><p>An investigation based on a common brief from the SEC. The same brief for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Functions of a business plan: give <b>start-up, funding, operations and development</b>, and say who uses the plan for each.</li>
+            <li>"Appreciate the importance" questions want <b>benefits</b>: clear goals, finance, a benchmark to measure against, spotting problems early.</li>
+            <li>For ethics and sustainability, give a <b>specific planning decision</b> (suppliers, pay, packaging, energy) and its benefit to the business.</li>
+            <li>Learn the spec's definition: a business model shows how a company will <b>operate, create, deliver and capture value</b>.</li>
+            <li>Name all <b>nine blocks</b> of the canvas, with the <b>value proposition</b> in the centre.</li>
+            <li>"Compare" means <b>similarities and differences</b>: write about both, ideally in a table.</li>
+            <li>Digital models: <b>marketplace, subscription, crowdfunding, advertising-supported</b>. For each say who pays, for what, and what it needs (users, data, trust).</li>
+            <li>Show the <b>formula and working</b> for numbers: commission = sales × %, monthly revenue = subscribers × fee.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Action verbs</h2></div><p>Meanings summarised from the specification's glossary of action verbs, which will be aligned with the exam's command words.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Business and financial literacy</p><h2>Numbers trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which business model?</h2></div></div>
+          <canvas id="predC" aria-label="The business model, shown after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns" data-g="0"><button data-a="ret">Retail</button><button data-a="man">Manufacturing</button><button data-a="sub">Subscription</button><button data-a="fra">Franchise</button><button data-a="aff">Affiliate</button><button data-a="mkt">Marketplace</button><button data-a="cro">Crowdfunding</button><button data-a="adv">Advertising-supported</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Skills the Business Alive Investigative Study rewards (from the Investigating Business strand). Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term in this chapter. Learn the definitions: "define" and "outline" questions reward precise wording.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: canvas, franchise, value…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= CHEAT SHEET ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Cheat sheet</h2></div><p>The whole chapter on one page, plus the numbers you might meet in a business model question.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Business plan sections</span><span class="big">Executive summary · the business · market and marketing · operations · management and staff · finance</span></div>
+        <div class="panel fcell"><span class="pill">Functions (LO 2.3.1)</span><span class="big">Start-up · funding · operations · development</span><dl><dt>Start-up</dt><dd>goals, direction, find problems early</dd><dt>Funding</dt><dd>convince banks, investors, grant bodies</dd><dt>Operations</dt><dd>benchmark to control and measure</dd><dt>Development</dt><dd>plan growth; update the plan</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Ethics and sustainability</span><span class="big">Profit · people · planet</span><dl><dt>Plan for</dt><dd>fair pay, ethical suppliers, packaging, energy, waste</dd><dt>Why</dt><dd>reputation, customers, staff, grants, the law</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Business model (spec)</span><span class="big">How a company will operate, create, deliver and capture value</span><dl><dt>Create</dt><dd>make something customers value</dd><dt>Deliver</dt><dd>get it to them</dd><dt>Capture</dt><dd>earn income from it</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Business model canvas</span><span class="big">Key partners · key activities · key resources · value proposition · customer relationships · channels · customer segments · cost structure · revenue streams</span></div>
+        <div class="panel fcell"><span class="pill">Five common models</span><span class="big">Retail · manufacturing · subscription · franchise · affiliate</span></div>
+        <div class="panel fcell"><span class="pill">Four digital models</span><span class="big">Marketplace · subscription · crowdfunding · advertising-supported</span><dl><dt>Drivers</dt><dd>internet, smartphones, online payments, data, cloud</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Commission = sales × rate %</span><div class="ex">€80 000 × 12% = €9 600</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Monthly recurring revenue = subscribers × monthly fee</span><div class="ex">2 000 × €9.99 = €19 980</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Mark-up % = profit ÷ cost × 100</span><div class="ex">€15 on a €60 cost = 25%</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Ad revenue = impressions ÷ 1000 × CPM</span><div class="ex">2 000 000 ÷ 1000 × €4 = €8 000</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">% funded = pledged ÷ target × 100</span><div class="ex">€18 000 ÷ €20 000 = 90%</div></div>
+      </div>
+      <footer>
+        <p>Built on Strand 2, topic 3 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/business/" target="_blank" rel="noopener">Leaving Certificate Business Specification</a> (NCCA, for introduction September 2025). Learning outcomes and the definitions of business model and business model canvas are quoted from the specification. Cases, scores and euro figures are illustrative unless stated.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("bs-theme","auto"), font = store.get("bs-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("bs-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("bs-font",font); applyFont(); });
+
+
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  plan:'<path d="M6 2h9l4 4v16H6z"/><path d="M14 2v5h5M9 11h7M9 15h7M9 19h4"/>',
+  ethics:'<path d="M12 21C7 17 3 13 3 8.5A4.5 4.5 0 0112 6a4.5 4.5 0 019 2.5C21 13 17 17 12 21z"/><path d="M9 11l2 2 4-4"/>',
+  model:'<circle cx="5" cy="12" r="3"/><circle cx="19" cy="12" r="3"/><path d="M8 12h8M13 9l3 3-3 3"/><path d="M12 3v3M12 18v3"/>',
+  canvas:'<rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 15h20M6 3v12M10 3v12M14 3v12M18 3v12M12 15v6"/>',
+  types:'<path d="M3 9l2-5h14l2 5"/><path d="M4 9v11h16V9"/><path d="M3 9h18M9 20v-6h6v6"/>',
+  digital:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/><path d="M9 8l2 2 4-4"/>',
+  tv:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 21h8M9 2l3 4 3-4"/>',
+  burger:'<path d="M4 10a8 5 0 0116 0z"/><path d="M3 13h18M4 16h16a0 0 0 01-1 3H5a0 0 0 01-1-3z"/>',
+  link:'<path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/>',
+  rocket:'<path d="M12 2c3 3 4 7 3 11h-6c-1-4 0-8 3-11z"/><path d="M9 13l-3 4h4M15 13l3 4h-4M12 17v4"/>',
+  shop:'<path d="M3 9l2-5h14l2 5"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/>',
+  music:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+  gov:'<path d="M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M12 3l9 5H3z"/>',
+  euro:'<path d="M17 6a7 7 0 100 12"/><path d="M4 10h9M4 14h9"/>',
+  bank:'<path d="M3 10h18L12 4z"/><path d="M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18"/>',
+  leaf:'<path d="M5 20c0-9 6-15 15-15 0 9-6 15-15 15z"/><path d="M5 20l8-8"/>',
+  people:'<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0112 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20a5 5 0 016-4.8"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"plan", name:"The business plan", short:"Six sections and four functions: start-up, funding, operations and development.", tint:"var(--blush)"},
+  {id:"ethics", name:"Ethics and sustainability", short:"Plan for people and planet as well as profit, and see why it pays.", tint:"var(--sage)"},
+  {id:"model", name:"What is a business model?", short:"How a business creates, delivers and captures value, at the heart of the plan.", tint:"var(--apricot)"},
+  {id:"canvas", name:"The business model canvas", short:"Nine blocks on one page, with the value proposition in the middle.", tint:"var(--cream)"},
+  {id:"types", name:"Common business models", short:"Retail, manufacturing, subscription, franchise and affiliate: who pays whom, and for what.", tint:"var(--blush)"},
+  {id:"digital", name:"Digital business models", short:"Marketplace, subscription, crowdfunding and advertising-supported: technology drives change.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Business plan","","A written document that sets out a business's goals and how it will achieve them: its product, market, operations, people and finances.","plan"],
+  ["Executive summary","","A short overview at the start of a business plan. Written last, read first: it must persuade the reader to read on.","plan"],
+  ["Mission statement","","A short statement of a business's purpose and values.","plan"],
+  ["Objectives","goals","Specific targets the business aims to reach, ideally SMART: specific, measurable, achievable, realistic and time-bound.","plan"],
+  ["Cash-flow forecast","","A prediction of money coming in and going out each month. Banks look at it to see if a loan can be repaid.","plan"],
+  ["Projected profit and loss","","A forecast of sales, costs and profit for the coming year(s), included in the finance section of the plan.","plan"],
+  ["Benchmark","","A standard to measure performance against. Actual results are compared with the plan's targets.","plan"],
+  ["Start-up","","The early stage of a business. The plan sets direction and helps spot problems before money is committed.","plan"],
+  ["Funding","finance","Money to start or grow the business. Banks, investors and grant bodies usually ask to see a business plan.","plan"],
+  ["Stakeholder","","Anyone with an interest in the business, e.g. owners, staff, customers, lenders, suppliers, the community.","plan"],
+  ["Coherent plan","","A plan whose parts fit together: the marketing, operations and finance sections all support the same goals.","plan"],
+  ["Ethics","business ethics","Moral principles that guide behaviour: doing what is right and fair, not just what is legal or profitable.","ethics"],
+  ["Sustainability","","Meeting the needs of today without harming the ability of future generations to meet their needs.","ethics"],
+  ["Triple bottom line","profit, people, planet","Measuring a business on its social and environmental results as well as its profit.","ethics"],
+  ["Fairtrade","","A certification that farmers and workers in developing countries get a fair minimum price and better conditions.","ethics"],
+  ["Circular economy","","From the spec: a model of production and consumption which extends the life cycle of products, reduces waste, and creates further value.","ethics"],
+  ["Corporate social responsibility","CSR","A business's voluntary actions to have a positive effect on society and the environment.","ethics"],
+  ["Greenwashing","","Making misleading claims that a product or business is more environmentally friendly than it is.","ethics"],
+  ["Living wage","","A wage high enough to cover a basic but decent standard of living, usually above the minimum wage.","ethics"],
+  ["Business model","","From the spec: an element within the business plan which outlines how a company will operate, create, deliver, and capture value in economic, social, and cultural contexts.","model"],
+  ["Value","","What a product or service is worth to the customer: the problem it solves or the need it meets.","model"],
+  ["Create value","","Make a product or service that customers want and will pay for.","model"],
+  ["Deliver value","","Get the product or service to the customer: channels, distribution, service.","model"],
+  ["Capture value","","Turn the value into income for the business, e.g. sales, fees, subscriptions or commission.","model"],
+  ["Revenue","income","Money a business earns from its activities, mainly from sales.","model"],
+  ["Business model canvas","BMC","From the spec: a tool used to map out a business model, including key partners, activities and resources, the value proposition, customers, customer relations and channels, costs, and revenues.","canvas"],
+  ["Value proposition","","Why the customer would choose this product or service: the benefits it offers and the problem it solves.","canvas"],
+  ["Customer segments","","The groups of people or organisations the business aims to serve.","canvas"],
+  ["Channels","","How the business reaches its customers and delivers the value proposition: shops, websites, apps, delivery.","canvas"],
+  ["Customer relationships","","The type of relationship the business builds with each segment: personal service, self-service, loyalty schemes, communities.","canvas"],
+  ["Revenue streams","","The ways the business earns money from each customer segment.","canvas"],
+  ["Key resources","","The most important assets needed to make the model work: physical, human, financial or intellectual.","canvas"],
+  ["Key activities","","The most important things the business must do to deliver its value proposition.","canvas"],
+  ["Key partners","","Suppliers and other businesses the business relies on.","canvas"],
+  ["Cost structure","","All the main costs of running the business model.","canvas"],
+  ["Retail model","","Buying goods from producers or wholesalers and selling them to consumers at a mark-up.","types"],
+  ["Manufacturing model","","Turning raw materials and components into finished products to sell to other businesses or consumers.","types"],
+  ["Subscription model","","Customers pay a regular fee (e.g. monthly) for continued access to a product or service.","types"],
+  ["Franchise","","A business (franchisor) lets another (franchisee) use its brand and system in return for a fee and usually a royalty on sales.","types"],
+  ["Franchisor","","The business that owns the brand and system and sells franchises.","types"],
+  ["Franchisee","","The person or business that buys the right to run a franchise outlet.","types"],
+  ["Royalty","","A regular payment, often a percentage of sales, made by a franchisee to the franchisor.","types","royalty = sales × rate %"],
+  ["Affiliate model","","A business earns a commission for sending customers to another business's products, e.g. through links on a website.","types","commission = sales × rate %"],
+  ["Mark-up","","Profit added to the cost price, as a percentage of cost.","types","mark-up % = profit ÷ cost × 100"],
+  ["Recurring revenue","","Income that repeats regularly, such as monthly subscriptions. It makes cash flow easier to predict.","types"],
+  ["Churn rate","","The percentage of subscribers who cancel in a period.","types"],
+  ["Digital economy","","Economic activity based on digital technology: online selling, apps, platforms and data.","digital"],
+  ["Marketplace model","platform","An online platform that brings buyers and sellers together and charges a commission or fee on each sale.","digital"],
+  ["Crowdfunding","","Raising money for a project from a large number of people, usually online. Rewards-based, equity or donation.","digital"],
+  ["All-or-nothing funding","","A crowdfunding rule where the project gets the money only if it reaches its target.","digital"],
+  ["Advertising-supported model","","A free product or service paid for by advertisers who want to reach its users.","digital"],
+  ["Freemium","","A basic version is free (often with adverts) and users pay for a premium version.","digital"],
+  ["CPM","cost per mille","The price an advertiser pays per 1000 ad impressions.","digital","revenue = impressions ÷ 1000 × CPM"],
+  ["Network effect","","A service becomes more valuable as more people use it, e.g. a marketplace with more buyers attracts more sellers.","digital"],
+  ["Driver of change","","A force that makes businesses change, e.g. new technology, competition, customer expectations, the law.","digital"],
+  ["Disintermediation","cutting out the middleman","Producers selling directly to customers online, without a wholesaler or retailer.","digital"],
+];
+GLOSS.forEach((g,i)=>{ GLOSS[i]={t:g[0],aka:g[1],d:g[2],topic:g[3],f:g[4],id:"g-"+g[0].toLowerCase().replace(/[^a-z0-9]+/g,"-")}; });
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["business plan","Business plan"],["executive summary","Executive summary"],["cash-flow forecast","Cash-flow forecast"],["benchmark","Benchmark"],["sustainab","Sustainability"],["triple bottom line","Triple bottom line"],["Fairtrade","Fairtrade"],["circular economy","Circular economy"],["value proposition","Value proposition"],["customer segments","Customer segments"],["channels","Channels"],["revenue streams","Revenue streams"],["key partners","Key partners"],["cost structure","Cost structure"],["franchise","Franchise"],["royalty","Royalty"],["affiliate","Affiliate model"],["subscription","Subscription model"],["marketplace","Marketplace model"],["crowdfunding","Crowdfunding"],["freemium","Freemium"],["network effect","Network effect"],["mark-up","Mark-up"],["recurring revenue","Recurring revenue"],["capture","Capture value"]];
+
+
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function arrow(ctx,x1,y1,x2,y2,col,w=3,dash){ line(ctx,x1,y1,x2,y2,col,w,dash); const a=Math.atan2(y2-y1,x2-x1), s=8+w; ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-s*Math.cos(a-0.45),y2-s*Math.sin(a-0.45)); ctx.lineTo(x2-s*Math.cos(a+0.45),y2-s*Math.sin(a+0.45)); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const n0 = x => Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const eur = x => "€"+n0(x);
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+function wrapText(ctx,str,maxW){ const words=str.split(" "), out=[]; let cur=""; words.forEach(wd=>{ const t=cur?cur+" "+wd:wd; if(ctx.measureText(t).width>maxW && cur){ out.push(cur); cur=wd; } else cur=t; }); if(cur) out.push(cur); return out; }
+const f2 = x => x.toFixed(2);
+// box with centred (wrapped) label
+function box(ctx,cx,cy,bw,bh,label,fill,stroke,col,fs){ rrect(ctx,cx-bw/2,cy-bh/2,bw,bh,12,fill,stroke,2); ctx.save(); ctx.font=F(fs); const ls=wrapText(ctx,label,bw-10); ctx.restore(); ls.forEach((s,i)=>text(ctx,s,cx,cy+(i-(ls.length-1)/2)*(fs+3)+fs*0.35,col,F(fs),"center")); }
+const fm = x => f2(x).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const sgn = v => (v>0?"+€":v<0?"−€":"€")+Math.abs(Math.round(v*100)/100);
+
+
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+/* ================= MODELS + DRAWINGS ================= */
+const SECS = [["Executive summary","sum","blush"],["The business","biz","apricot"],["Market and marketing","mkt","sage"],["Operations","ops","cream"],["Management and staff","ppl","blush"],["Finance","fin","sage"]];
+function drawPlanDoc(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, pw=Math.min(w-30,cp?320:420), x0=(w-pw)/2, top=12, ph=h-24;
+  rrect(ctx,x0,top,pw,ph,10,C.surface,C.line,1.5); ctx.save(); ctx.fillStyle=C["surface-2"]; ctx.beginPath(); ctx.moveTo(x0+pw-24,top); ctx.lineTo(x0+pw,top+24); ctx.lineTo(x0+pw-24,top+24); ctx.closePath(); ctx.fill(); ctx.restore();
+  text(ctx,o.title||"Business plan",x0+14,top+24,C.ink,F(cp?13:15));
+  const y0=top+38, rh=(ph-46)/SECS.length;
+  SECS.forEach(([n,k,c],i)=>{ const y=y0+i*rh, bw=pw-28, fr=o.fill? o.fill[i] : 1, hl=o.hl&&o.hl.includes(i);
+    rrect(ctx,x0+14,y+3,bw,rh-8,7,C["surface-2"],hl?C.terra:null,hl?3:1);
+    if(fr>0) rrect(ctx,x0+14,y+3,Math.max(10,bw*fr),rh-8,7,C[c]);
+    text(ctx,(i+1)+". "+n,x0+24,y+rh/2+2,fr>0.35?"#3b2b21":C.ink,F(cp?11:12));
+    if(hl) text(ctx,"★",x0+14+bw-12,y+rh/2+2,C.terra,F(13),"right"); });
+}
+function drawTBL(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, base=h-30, top=cp?16:28, H=base-top, n=3, gap=w/n, bw=Math.min(70,gap*0.5);
+  [["Profit",o.profit/o.maxP,"€"+n0(o.profit),"apricot"],["People",o.people/o.maxPe,o.people+" / "+o.maxPe,"blush"],["Planet",o.planet/o.maxPl,o.planet+" / "+o.maxPl,"sage"]].forEach(([l,f,v,c],i)=>{
+    const cx=gap*(i+0.5), bh=Math.max(2,Math.min(1,f)*H); rrect(ctx,cx-bw/2,top,bw,H,8,C["surface-2"]); rrect(ctx,cx-bw/2,base-bh,bw,bh,8,C[c]);
+    text(ctx,v,cx,base-bh-6,C.ink,M(cp?10:12),"center"); text(ctx,l,cx,base+18,C.ink,F(cp?11:13),"center"); });
+  line(ctx,8,base,w-8,base,C.ink,1.4);
+}
+const VAL = [["C","Create value","apricot"],["D","Deliver value","sage"],["K","Capture value","blush"]];
+function drawValue(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, bw=Math.min(150,(w-60)/3), bh=cp?56:70, cy=h*0.32, gap=(w-3*bw)/4;
+  VAL.forEach(([k,l,c],i)=>{ const x=gap+i*(bw+gap), f=o.tot&&o.tot[k]? o.counts[k]/o.tot[k] : 1;
+    rrect(ctx,x,cy-bh/2,bw,bh,12,C["surface-2"],C.line,1.5); rrect(ctx,x,cy+bh/2-bh*f,bw,bh*f,12,C[c]);
+    text(ctx,l,x+bw/2,cy+4,f>0.45?"#3b2b21":C.ink,F(cp?11:13),"center"); if(o.tot&&!cp) text(ctx,`${o.counts[k]} / ${o.tot[k]}`,x+bw/2,cy+bh/2+16,C.muted,M(11),"center");
+    if(i<2) arrow(ctx,x+bw+4,cy,x+bw+gap-4,cy,C.ink,2); });
+  const by=h*0.78, bx=w*0.22, ux=w*0.78;
+  rrect(ctx,bx-54,by-20,108,40,12,C.olive); text(ctx,o.biz||"Business",bx,by+5,"#3b2b21",F(12),"center");
+  rrect(ctx,ux-54,by-20,108,40,12,C.cream); text(ctx,"Customer",ux,by+5,"#3b2b21",F(12),"center");
+  arrow(ctx,bx+58,by-10,ux-58,by-10,C.terra,2); text(ctx,"value (product or service)",w/2,by-16,C.terra,F(11),"center");
+  arrow(ctx,ux-58,by+10,bx+58,by+10,C.olive,2); text(ctx,"€ money",w/2,by+26,C.ink,F(11),"center");
+}
+const BMC = [["kp","Key partners"],["ka","Key activities"],["kr","Key resources"],["vp","Value proposition"],["cr","Customer relationships"],["ch","Channels"],["cs","Customer segments"],["co","Cost structure"],["rv","Revenue streams"]];
+function bmcRects(w,h){ const p=6, W=w-2*p, H=h-2*p, th=H*0.68, cw=W/5, R={};
+  R.kp=[p,p,cw,th]; R.ka=[p+cw,p,cw,th/2]; R.kr=[p+cw,p+th/2,cw,th/2]; R.vp=[p+2*cw,p,cw,th]; R.cr=[p+3*cw,p,cw,th/2]; R.ch=[p+3*cw,p+th/2,cw,th/2]; R.cs=[p+4*cw,p,cw,th];
+  R.co=[p,p+th,W/2,H-th]; R.rv=[p+W/2,p+th,W/2,H-th]; return R; }
+function drawBMC(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const R=bmcRects(w,h), fs=w<420?8.5:w<640?10:12;
+  BMC.forEach(([k,n],i)=>{ const [x,y,bw,bh]=R[k], hl=o.hl===k, fill=k==="vp"?C.cream:C.surface;
+    rrect(ctx,x+2,y+2,bw-4,bh-4,8,fill,hl?C.terra:C.line,hl?3:1.2);
+    ctx.save(); ctx.font=F(fs); const ls=wrapText(ctx,n,bw-12); ctx.restore(); ls.forEach((s,j)=>text(ctx,s,x+8,y+6+fs+j*(fs+2),k==="vp"?"#3b2b21":C.ink,F(fs)));
+    const notes=(o.placed&&o.placed[k])||[], sz=Math.min(16,bw/4);
+    notes.forEach((t,j)=>{ const nx=x+8+(j%3)*(sz+4), ny=y+bh-8-sz-Math.floor(j/3)*(sz+4); rrect(ctx,nx,ny,sz,sz,3,C.apricot,C.ink,0.8); }); });
+}
+function drawFlowM(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, nw=Math.min(140,w*0.29), nh=cp?38:46, area=h-(cp?10:64), P=o.nodes.map(([l,fx,fy])=>[fx*w,fy*area]);
+  o.links.forEach(([i,j,l,c],k)=>{ const [x1,y1]=P[i], [x2,y2]=P[j], d=Math.hypot(x2-x1,y2-y1), ux=(x2-x1)/d, uy=(y2-y1)/d, off=o.links.some(([a,b])=>a===j&&b===i)? 7 : 0;
+    const ox=-uy*off, oy=ux*off, sx=x1+ux*(Math.abs(ux)*nw/2+Math.abs(uy)*nh/2+4)+ox, sy=y1+uy*(Math.abs(ux)*nw/2+Math.abs(uy)*nh/2+4)+oy, ex=x2-ux*(Math.abs(ux)*nw/2+Math.abs(uy)*nh/2+6)+ox, ey=y2-uy*(Math.abs(ux)*nw/2+Math.abs(uy)*nh/2+6)+oy;
+    arrow(ctx,sx,sy,ex,ey,c==="m"?C.terra:C.olive,2); if(l){ const mx=(sx+ex)/2+ox*2.2, my=(sy+ey)/2+oy*2.2-(Math.abs(uy)<0.3?6:0); ctx.save(); ctx.font=F(cp?9.5:11); const tw=ctx.measureText(l).width; ctx.restore();
+      rrect(ctx,mx-tw/2-4,my-11,tw+8,15,5,C.surface); text(ctx,l,mx,my,c==="m"?C.terra:C.ink,F(cp?9.5:11),"center"); } });
+  o.nodes.forEach(([l,fx,fy,c],i)=>box(ctx,P[i][0],P[i][1],nw,nh,l,C[c||"cream"],C.ink,"#3b2b21",cp?10.5:12));
+  if(!cp && o.big){ text(ctx,o.big,w/2,h-30,C.ink,F(Math.min(20,w/26)),"center"); if(o.sub) text(ctx,o.sub,w/2,h-10,C.muted,F(11,600),"center"); }
+}
+const MNAME = {ret:["Retail","Buy from producers, sell to consumers at a mark-up","apricot"],man:["Manufacturing","Make finished products from raw materials","sage"],sub:["Subscription","Regular fee for continued access","blush"],fra:["Franchise","Fee and royalties for using a brand and system","cream"],aff:["Affiliate","Commission for sending customers to another business","sage"],mkt:["Marketplace","Platform takes a cut of sales between buyers and sellers","apricot"],cro:["Crowdfunding","Many people each fund a little of a project","blush"],adv:["Advertising-supported","Free to users, paid for by advertisers","cream"]};
+function drawWhichM(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const [n,d,c]=MNAME[o.ans], bw=Math.min(w-30,340);
+  rrect(ctx,w/2-bw/2,h/2-44,bw,88,18,C[c],C.ink,1.5); text(ctx,n,w/2,h/2-8,"#3b2b21",F(22),"center");
+  ctx.save(); ctx.font=F(12,600); const ls=wrapText(ctx,d,bw-20); ctx.restore(); ls.forEach((s,i)=>text(ctx,s,w/2,h/2+16+i*15,"#3b2b21",F(12,600),"center")); }
+
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "sources", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3","lo4","lo5","lo6","lo7"]; const loState=store.get("b23-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("b23-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("b23-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+/* ---------- money-flow models (labs, learn, infographics) ---------- */
+const e2 = x => "€"+fm(x);
+const TY = {
+  ret:{ n:"Retail", A:["Cost price from the wholesaler",[2,50,1],20,v=>"€"+v], B:["Mark-up on cost",[10,150,5],50,v=>v+"%"],
+    f(a,b){ const p=a*(1+b/100), pr=a*b/100; return { nodes:[["Producer or wholesaler",0.15,0.3,"sage"],["Retailer",0.5,0.3,"apricot"],["Consumer",0.85,0.3,"cream"]], links:[[0,1,"goods",""],[1,0,"€"+fm(a),"m"],[1,2,"goods",""],[2,1,e2(p),"m"]],
+      big:`Profit per item: ${e2(pr)}`, sub:`Price = €${a} + ${b}% mark-up = ${e2(p)}`, out:[["Selling price",e2(p)],["Profit per item",e2(pr)],["Profit on 1 000 items",eur(pr*1000)]], work:`Selling price = cost × (1 + mark-up %) = €${a} × ${(1+b/100).toFixed(2)} = <b>${e2(p)}</b>. The retailer earns the difference, ${e2(pr)} per item, to cover rent, wages and profit. Who it suits: businesses close to the customer (shops, online stores).` }; } },
+  man:{ n:"Manufacturing", A:["Cost to make one unit",[5,60,1],18,v=>"€"+v], B:["Price charged to retailers",[10,100,1],30,v=>"€"+v],
+    f(a,b){ const pr=b-a; return { nodes:[["Suppliers (raw materials)",0.15,0.3,"sage"],["Manufacturer",0.5,0.3,"apricot"],["Retailers and businesses",0.85,0.3,"cream"]], links:[[0,1,"materials",""],[1,0,"€ costs","m"],[1,2,"finished goods",""],[2,1,"€"+b+" each","m"]],
+      big:`${pr>=0?"Profit":"Loss"} per unit: ${pr<0?"−":""}€${Math.abs(pr)}`, sub:`€${b} price − €${a} cost to make`, out:[["Cost to make",`€${a}`],["Price to retailers",`€${b}`],["Profit per unit",`${pr<0?"−":""}€${Math.abs(pr)}`],["Profit on 10 000 units",(pr<0?"−":"")+eur(Math.abs(pr)*10000)]], work:`Profit per unit = price − cost to make = €${b} − €${a} = <b>${pr<0?"−":""}€${Math.abs(pr)}</b>. Manufacturers turn materials into products, usually in large quantities, and sell mostly to other businesses (B2B).`+(pr<0?" Selling below cost: the model doesn't work at this price.":"") }; } },
+  sub:{ n:"Subscription", A:["Subscribers",[100,5000,100],1200,v=>n0(v)], B:["Monthly fee",[5,50,1],12,v=>"€"+v],
+    f(a,b){ const m=a*b; return { nodes:[["The business",0.25,0.35,"apricot"],["Subscribers",0.75,0.35,"cream"]], links:[[0,1,"access every month",""],[1,0,"€"+b+" a month each","m"]],
+      big:`${eur(m)} a month · ${eur(m*12)} a year`, sub:`${n0(a)} subscribers × €${b}`, out:[["Monthly recurring revenue",eur(m)],["Yearly revenue",eur(m*12)],["If 5% cancel each month",`${n0(Math.round(a*0.95))} left next month`]], work:`Monthly recurring revenue = subscribers × fee = ${n0(a)} × €${b} = <b>${eur(m)}</b>. Regular, predictable income makes planning and cash flow easier, but the business must keep subscribers from cancelling (churn).` }; } },
+  fra:{ n:"Franchise", A:["Franchisee's yearly sales",[200,2000,50],800,v=>"€"+v+"k"], B:["Royalty on sales",[2,12,0.5],5,v=>v+"%"],
+    f(a,b){ const r=a*1000*b/100; return { nodes:[["Franchisor (brand owner)",0.2,0.25,"apricot"],["Franchisee (outlet owner)",0.5,0.75,"sage"],["Customers",0.8,0.25,"cream"]], links:[[0,1,"brand, system, training",""],[1,0,"€ fee + royalty","m"],[1,2,"products",""],[2,1,"€ sales","m"]],
+      big:`Royalty: ${eur(r)} a year`, sub:`${b}% of €${n0(a*1000)} sales, plus an upfront fee`, out:[["Royalty to the franchisor",eur(r)],["Upfront fee (illustrative)","€30 000"],["Franchisee keeps (before costs)",eur(a*1000-r)]], work:`Royalty = sales × rate = €${n0(a*1000)} × ${b}% = <b>${eur(r)}</b>. The franchisor grows using the franchisee's money and effort; the franchisee gets a proven brand and system, so less risk than starting from scratch, but less freedom.` }; } },
+  aff:{ n:"Affiliate", A:["Sales through your links per month",[1000,50000,1000],12000,v=>"€"+n0(v)], B:["Commission rate",[1,20,1],8,v=>v+"%"],
+    f(a,b){ const c=a*b/100; return { nodes:[["Affiliate (blog or creator)",0.2,0.25,"sage"],["Customer",0.5,0.75,"cream"],["Merchant (online shop)",0.8,0.25,"apricot"]], links:[[0,1,"review + link",""],[1,2,"€ buys","m"],[2,0,"€ commission","m"],[2,1,"product",""]],
+      big:`Commission: ${eur(c)} a month`, sub:`${b}% of ${eur(a)} sales`, out:[["Commission this month",eur(c)],["Per year",eur(c*12)],["Stock the affiliate holds","none"]], work:`Commission = sales × rate = ${eur(a)} × ${b}% = <b>${eur(c)}</b>. The affiliate holds no stock: it needs an audience that trusts it. The merchant only pays when a sale happens.` }; } },
+};
+const DG = {
+  mkt:{ n:"Marketplace", cousin:"A farmers' market or an auction house: a place where sellers meet buyers, and the organiser takes a fee.", A:["Sales on the platform per month",[10,1000,10],200,v=>"€"+v+"k"], B:["Commission",[3,20,1],10,v=>v+"%"],
+    f(a,b){ const g=a*1000, r=g*b/100; return { nodes:[["Sellers",0.15,0.3,"sage"],["Platform (app or website)",0.5,0.75,"apricot"],["Buyers",0.85,0.3,"cream"]], links:[[0,2,"goods",""],[2,1,"€ pays","m"],[1,0,"€ minus commission","m"]],
+      big:`Platform earns ${eur(r)} a month`, sub:`${b}% of ${eur(g)} sales`, out:[["Sales through the platform",eur(g)],["Platform's commission",eur(r)],["Paid on to sellers",eur(g-r)]], work:`Commission = sales × rate = ${eur(g)} × ${b}% = <b>${eur(r)}</b>. The platform owns no stock. It needs lots of buyers and sellers (a network effect) and trust: reviews, secure payment.` }; } },
+  sub:{ n:"Digital subscription", cousin:"A newspaper delivered every morning or a milk round: a regular fee for a regular service, but each extra customer costs much more to serve.", A:["Subscribers (thousands)",[1,500,1],50,v=>v+"k"], B:["Monthly fee",[3,20,0.5],10,v=>"€"+f2(v)],
+    f(a,b){ const m=a*1000*b; return { nodes:[["Streaming app or software",0.25,0.35,"apricot"],["Subscribers",0.75,0.35,"cream"]], links:[[0,1,"access anywhere, any time",""],[1,0,"€ every month","m"]],
+      big:`${eur(m)} a month`, sub:`${n0(a*1000)} subscribers × €${f2(b)}`, out:[["Monthly recurring revenue",eur(m)],["Yearly",eur(m*12)],["Cost of one more subscriber","close to €0"]], work:`Revenue = ${n0(a*1000)} × €${f2(b)} = <b>${eur(m)}</b> a month. Digital delivery means one more subscriber costs almost nothing to serve, so the model can scale to millions.` }; } },
+  cro:{ n:"Crowdfunding", cousin:"A bank loan, or selling shares to people in the community: but crowdfunding asks many people for small amounts, online, and tests demand at the same time.", A:["Backers",[50,2000,10],400,v=>n0(v)], B:["Average pledge",[5,200,5],40,v=>"€"+v],
+    f(a,b){ const p=a*b, T=20000, ok=p>=T, net=ok? p*0.95 : 0; return { nodes:[["Backers",0.15,0.3,"cream"],["Crowdfunding platform",0.5,0.75,"apricot"],["Creator",0.85,0.3,"sage"]], links:[[0,1,"€ pledges","m"],[1,2,ok?"€ funds − 5% fee":"€0: target missed","m"],[2,0,"rewards / product",""]],
+      big:ok? `Funded! Creator receives ${eur(net)}` : `Not funded: ${Math.round(p/T*100)}% of the target`, sub:`${n0(a)} × €${b} = ${eur(p)} pledged of a €20 000 target`, out:[["Pledged",eur(p)],["% of €20 000 target",Math.round(p/T*100)+"%"],["Creator receives",eur(net)]], work:`Pledged = backers × average pledge = ${n0(a)} × €${b} = ${eur(p)}. `+(ok? `That's ${Math.round(p/T*100)}% of the target, so the campaign is funded. After a 5% platform fee the creator gets <b>${eur(net)}</b>. Lots of backers also proves there is demand.` : `All-or-nothing: below €20 000, backers keep their money and the creator gets <b>€0</b>.`) }; } },
+  adv:{ n:"Advertising-supported", cousin:"A free newspaper or commercial radio: free to the audience, paid for by advertisers. Digital ads can be targeted using data about each user.", A:["Monthly users (thousands)",[10,2000,10],300,v=>v+"k"], B:["Pages viewed per user per month",[5,100,5],30,v=>String(v)],
+    f(a,b){ const imp=a*1000*b*2, r=imp/1000*4; return { nodes:[["Users",0.15,0.3,"cream"],["Free app or website",0.5,0.75,"apricot"],["Advertisers",0.85,0.3,"sage"]], links:[[1,0,"free content",""],[0,1,"attention + data",""],[2,1,"€ for ads","m"],[1,2,"audience",""]],
+      big:`${eur(r)} a month from adverts`, sub:`${n0(imp)} ad views at €4 per 1000`, out:[["Ad impressions (2 per page)",n0(imp)],["CPM (per 1000 views)","€4"],["Monthly ad revenue",eur(r)]], work:`Impressions = ${n0(a*1000)} users × ${b} pages × 2 ads = ${n0(imp)}. Revenue = impressions ÷ 1000 × CPM = ${n0(imp)} ÷ 1000 × €4 = <b>${eur(r)}</b>. Users pay with their attention and data, which raises ethical questions about privacy.` }; } },
+};
+/* ================= LEARN ================= */
+const LEARN = {
+  plan:{ vis:[["doc",{hl:[0,5]}]], cap:"Six sections. A bank manager reads the executive summary first, then jumps to finance: can the loan be repaid?",
+    keys:[["📄","A business plan sets out the business's goals and how it will reach them: the idea, the market, operations, people and finance. It must be coherent: every section supports the same goals."],["🚀","Functions: at start-up it gives direction and finds problems early; for funding it persuades banks, investors and grant bodies; in operations it is a benchmark to measure results against; for development it plans growth."],["🔁","It's a living document: update it at each stage, e.g. before expanding, launching a product or seeking new finance."]],
+    f:"Start-up · Funding · Operations · Development", mistake:"Writing the plan only to get a loan, then never looking at it again. Its main value is guiding and measuring the business." },
+  ethics:{ vis:[["tbl",{profit:19000,people:6,planet:6,maxP:30500,maxPe:6,maxPl:8}]], cap:"A coffee cart plan with Fairtrade beans, a living wage, a reusable-cup scheme and leftover food sold through an app: €19 000 profit instead of €30 000, but far better for people and planet.",
+    keys:[["⚖","Ethics means doing what is right and fair, not just what is legal: fair pay, honest marketing, ethical suppliers."],["🌱","Sustainability means meeting today's needs without harming future generations: less waste, less energy, longer-lasting products (a circular economy)."],["€","Planning for both pays off: loyal customers, better staff, a stronger reputation, access to green finance and grants, and fewer legal risks."]],
+    f:"Profit · People · Planet", mistake:"Treating ethics and sustainability as a cost only. Give the benefits too: reputation, customers, staff loyalty, grants and lower energy bills." },
+  model:{ vis:[["value",{biz:"Meal-kit firm"}]], cap:"A meal-kit business creates value (recipes and fresh ingredients), delivers it (boxes to the door) and captures value (a weekly payment).",
+    keys:[["💡","From the spec: a business model outlines how a company will operate, create, deliver and capture value."],["→","Create value: something customers want. Deliver value: get it to them. Capture value: turn it into income (sales, fees, subscriptions, commission)."],["🎯","The model is the heart of the business plan: the marketing, operations and finance sections all describe parts of it."]],
+    f:"Create → Deliver → Capture", mistake:"Confusing the business model with the product. Two firms can sell the same coffee with very different models: a café, a subscription, a franchise." },
+  canvas:{ vis:[["bmc",{placed:{kp:[1],ka:[1],kr:[1],vp:[1,1],cr:[1],ch:[1,1],cs:[1],co:[1],rv:[1,1]},hl:"vp"}]], cap:"The nine blocks on one page. The value proposition in the centre; customers on the right; the business's partners, activities and resources on the left; money along the bottom.",
+    keys:[["9","Key partners, key activities, key resources, value proposition, customer relationships, channels, customer segments, cost structure, revenue streams."],["❤","The value proposition says why customers would choose you: the problem you solve or the need you meet."],["✏","It is quick to change: test a new idea by changing one block and seeing which others must change too."]],
+    f:"9 blocks · value proposition at the centre", mistake:"Writing the product in the value proposition box. Write the benefit to the customer: \"great coffee in 2 minutes\", not \"coffee\"." },
+  types:{ vis:[["flow",{m:"fra"}]], cap:"In a franchise, the franchisee runs the outlet using the franchisor's brand and system, and pays a fee plus a royalty on sales.",
+    keys:[["🏪","Retail: buy from producers or wholesalers, sell to consumers at a mark-up. Manufacturing: turn materials into products, often sold to other businesses."],["🔁","Subscription: a regular fee for continued access. Predictable income, but you must keep customers from cancelling."],["🤝","Franchise: grow using other people's money under your brand. Affiliate: earn commission for sending customers to another business."]],
+    f:"Retail · Manufacturing · Subscription · Franchise · Affiliate", mistake:"Mixing up franchisor and franchisee. The franchisor owns the brand; the franchisee buys the right to use it." },
+  digital:{ vis:[["flow",{m:"mkt",d:1}]], cap:"An online marketplace connects sellers and buyers and keeps a commission on each sale, without owning any stock.",
+    keys:[["📱","Digital technology drives change: the internet, smartphones, online payments, data and the cloud let tiny firms reach the world and sell 24/7."],["🛒","Marketplace (platform takes a cut) · Subscription (regular fee for digital access) · Crowdfunding (many small backers) · Advertising-supported (free, paid by advertisers)."],["≈","Similar to non-digital cousins (markets, newspapers, bank loans, free papers), but with huge reach, very low cost per extra customer and lots of customer data."]],
+    f:"Marketplace · Subscription · Crowdfunding · Advertising", mistake:"Saying a free app makes no money. Advertising-supported apps earn from advertisers, using users' attention and data." },
+};
+/* ================= INFOGRAPHICS ================= */
+const TINTS = ["var(--blush)","var(--apricot)","var(--sage)","var(--cream)"];
+const BIZ = [
+  {n:"Netflix", ic:"tv", chip:["Subscription · digital","real"], who:"An American company founded in 1997.", job:"Began by posting DVDs to subscribers, then moved to streaming in 2007. Customers pay a monthly fee; some plans now include adverts.", ie:"A subscription model that adapted when technology (broadband) changed: digital technology as a driver of change."},
+  {n:"McDonald's", ic:"burger", chip:["Franchise","real"], who:"The fast-food chain, with restaurants in over 100 countries.", job:"Most of its restaurants are run by franchisees, who pay fees and a share of sales for the brand, menu and system.", ie:"Franchising lets a brand grow fast using franchisees' money, while each outlet follows the same system."},
+  {n:"Amazon Associates", ic:"link", chip:["Affiliate","real"], who:"Amazon's affiliate programme, started in the 1990s.", job:"Bloggers, reviewers and creators link to products and earn a commission when someone buys through their link.", ie:"The affiliate holds no stock; it earns from its audience's trust. The merchant only pays for actual sales."},
+  {n:"Kickstarter", ic:"rocket", chip:["Crowdfunding","real"], who:"A crowdfunding platform launched in 2009.", job:"Creators set a target and a deadline; backers pledge in return for rewards. Projects are all-or-nothing, and the platform takes a fee from funded projects.", ie:"Raises money and tests demand at the same time: lots of backers is proof that people want the product."},
+  {n:"Etsy", ic:"shop", chip:["Marketplace","real"], who:"An online marketplace for handmade, vintage and craft items.", job:"Independent sellers list products; Etsy charges listing and transaction fees and handles payments.", ie:"A marketplace owns no stock: it earns a cut of each sale and needs plenty of buyers and sellers."},
+  {n:"Spotify", ic:"music", chip:["Freemium: advertising + subscription","real"], who:"A music-streaming service founded in Sweden in 2006.", job:"A free tier is paid for by adverts; Premium subscribers pay monthly for no adverts and extra features.", ie:"Two digital models in one: advertising-supported (free) to attract users, subscription (premium) to earn more from fans."},
+];
+$("cases").innerHTML = BIZ.map((c,k)=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${TINTS[k%4]}">${svg(c.ic)}</div><h3>${c.n}</h3></div><div class="chips">${chipsHTML([c.chip])}</div><p><b>Who:</b> ${c.who}</p><p><b>How it earns:</b> ${c.job}</p><p><b>Lesson:</b> ${c.ie}</p></div>`).join("");
+const IMPACTS = [
+  ["shop","Marketplace ↔ farmers' market","Both bring sellers and buyers together and take a fee. Online: millions of buyers, 24/7, reviews and secure payment; the platform can grow without owning stock.","var(--apricot)"],
+  ["tv","Digital subscription ↔ newspaper delivery","Both charge a regular fee. Online: almost no cost per extra subscriber and instant access anywhere; but rivals are one click away.","var(--blush)"],
+  ["rocket","Crowdfunding ↔ bank loan","Both raise money to start or grow. Crowdfunding: many small backers, no repayments (rewards instead) and a test of demand; but a public failure if the target is missed.","var(--sage)"],
+  ["music","Advertising-supported ↔ free newspaper","Both are free and paid for by advertisers. Online: adverts targeted using data, measured click by click; raises privacy questions.","var(--cream)"],
+];
+$("impacts").innerHTML = IMPACTS.map(([i,t,p,tn])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${t}</h3></div><p>${p}</p></div>`).join("");
+const AROUND = [
+  ["gov","Local Enterprise Offices","LEOs run Start Your Own Business courses and mentoring, and can help with writing a business plan. Check your local office for current supports.",[["Business plans","real"],["LEO","neutral"]],"var(--blush)"],
+  ["bank","Banks and Microfinance Ireland","Lenders usually ask for a business plan with cash-flow forecasts before approving a business loan.",[["Funding","real"]],"var(--apricot)"],
+  ["leaf","Origin Green","Bord Bia's sustainability programme for Irish food and drink companies, which set and report on sustainability targets.",[["Sustainability","real"],["Planning","neutral"]],"var(--sage)"],
+  ["shield","B Corp certification","An international certification for businesses that meet standards on social and environmental performance. Several Irish firms are certified.",[["Ethics","real"]],"var(--cream)"],
+  ["euro","SEAI supports for business","The Sustainable Energy Authority of Ireland supports businesses to cut energy use, which can be built into a plan's operations and finance sections.",[["Energy","neutral"],["Costs","real"]],"var(--blush)"],
+  ["globe","Enterprise Ireland","Supports Irish businesses that plan to export and grow. A strong business plan is part of applying for many of its supports.",[["Development","real"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"plan",label:"Business plan",col:"var(--blush)",leaves:[["Six sections","Summary to finance."],["Start-up","Direction, find problems early."],["Funding","Persuades lenders and investors."],["Operations","A benchmark to measure against."]]},
+  {id:"ethics",label:"Ethics and sustainability",col:"var(--sage)",leaves:[["People","Fair pay, ethical suppliers."],["Planet","Less waste and energy."],["Why","Reputation, customers, grants."]]},
+  {id:"model",label:"Business model",col:"var(--apricot)",leaves:[["Create","Something customers value."],["Deliver","Get it to them."],["Capture","Turn it into income."]]},
+  {id:"canvas",label:"Model canvas",col:"var(--cream)",leaves:[["Value proposition","Why customers choose you."],["Customer side","Segments, channels, relationships."],["Business side","Partners, activities, resources."],["Money","Costs and revenue streams."]]},
+  {id:"types",label:"Common models",col:"var(--blush)",leaves:[["Retail","Buy, mark up, sell."],["Manufacturing","Make products."],["Subscription","Regular fee."],["Franchise","Brand + royalty."],["Affiliate","Commission on sales."]]},
+  {id:"digital",label:"Digital models",col:"var(--sage)",leaves:[["Marketplace","Platform takes a cut."],["Crowdfunding","Many small backers."],["Advertising","Free, paid by advertisers."],["Drivers","Internet, phones, data."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["plan","What is a business plan?","A written document that sets out a business's goals and how it will achieve them: its product, market, operations, people and finances."],
+  ["plan","Name the six main sections of a business plan.","Executive summary; the business (description and ownership); market and marketing; operations; management and staff; finance."],
+  ["plan","Outline the four key functions of a business plan.","Start-up: direction and goals; funding: persuades lenders and investors; operations: a benchmark to control and measure performance; development: plans growth."],
+  ["plan","Why is the executive summary written last but read first?","It summarises the whole plan, so it can only be written once the plan is finished, and busy readers use it to decide whether to read on."],
+  ["plan","What will a bank look for in a business plan?","The finance section, especially cash-flow forecasts, to see if the loan can be repaid, plus security and the owners' experience."],
+  ["ethics","What do ethics mean in business planning?","Doing what is right and fair, not just legal or profitable: fair pay, honest marketing, ethical suppliers."],
+  ["ethics","What is sustainability?","Meeting the needs of today without harming the ability of future generations to meet their needs."],
+  ["ethics","Give three benefits of planning ethically and sustainably.","A better reputation and more loyal customers; easier to attract and keep staff; access to green finance and grants; lower energy and waste costs; fewer legal risks."],
+  ["ethics","What is the triple bottom line?","Measuring a business on people (social) and planet (environmental) results as well as profit."],
+  ["model","Define a business model (spec).","An element within the business plan which outlines how a company will operate, create, deliver, and capture value in economic, social, and cultural contexts."],
+  ["model","What do create, deliver and capture value mean?","Create: make something customers want. Deliver: get it to them. Capture: turn it into income for the business."],
+  ["model","Why is the business model important to the business plan?","It is the core of the plan: it explains how the business will earn money, and the marketing, operations and finance sections all build on it."],
+  ["canvas","Name the nine blocks of the business model canvas.","Key partners, key activities, key resources, value proposition, customer relationships, channels, customer segments, cost structure, revenue streams."],
+  ["canvas","What is a value proposition?","Why the customer would choose the product or service: the benefits it offers and the problem it solves."],
+  ["canvas","What is the difference between channels and customer relationships?","Channels: how the business reaches and delivers to customers (shop, app). Relationships: the type of relationship it builds (personal service, loyalty scheme)."],
+  ["canvas","Give two benefits of using a business model canvas.","Shows the whole model on one page; easy to share and discuss; quick to change and test new ideas; shows how the blocks depend on each other."],
+  ["types","Name five common business models.","Retail, manufacturing, subscription, franchise and affiliate."],
+  ["types","What is a franchise?","An arrangement where a franchisor lets a franchisee use its brand and system in return for a fee and usually a royalty on sales."],
+  ["types","Give one advantage and one disadvantage of buying a franchise.","Advantage: a proven brand and system, so lower risk and help with training. Disadvantage: fees and royalties, and little freedom to make changes."],
+  ["types","How does an affiliate earn money?","By earning a commission when customers it refers (e.g. through links) buy from another business."],
+  ["types","Why do businesses like subscription models?","Regular, predictable (recurring) income, easier cash-flow planning and an ongoing relationship with customers."],
+  ["digital","Outline how digital technology is a driver of change in business.","The internet, smartphones, online payments, data and the cloud let businesses reach more customers, sell 24/7, cut costs, personalise offers and create new models."],
+  ["digital","How does an online marketplace make money?","It takes a commission or fee on sales between buyers and sellers, without owning the stock."],
+  ["digital","What is crowdfunding?","Raising money for a project from a large number of people, usually online, often in return for rewards."],
+  ["digital","What does all-or-nothing mean in crowdfunding?","The creator only receives the money if the campaign reaches its target; otherwise backers aren't charged."],
+  ["digital","How does an advertising-supported model work?","Users get the product free; advertisers pay to reach them. Revenue depends on users, views and data."],
+  ["digital","Give one similarity and one difference between a digital and a non-digital subscription.","Similarity: both charge a regular fee for a regular service. Difference: digital has almost no cost per extra customer and can reach the whole world."],
+  ["digital","What is a network effect?","A service becomes more valuable as more people use it, e.g. more buyers on a marketplace attract more sellers."],
+];
+
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Business</text><text x="${cx}" y="${cy+22}" text-anchor="middle">planning</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("b23-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("b23-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("b23-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("b23-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["plan","Which of these is NOT a function of a business plan?",["Persuading a bank to lend money","Setting goals and direction at start-up","Acting as a benchmark to measure performance","Guaranteeing that the business will make a profit"],3,"A plan guides, persuades and measures, but it can't guarantee success: forecasts can be wrong."],
+  ["plan","The section of a business plan that shows whether a loan can be repaid is:",["Finance, including cash-flow forecasts","Market and marketing","Operations","Management and staff"],0,"The cash-flow forecast shows whether enough money will come in each month to make the repayments."],
+  ["plan","The executive summary of a business plan is usually written:",["First, before any research is done","Last, once the rest of the plan is complete","By the bank","Only by very large companies"],1,"It summarises the whole plan, so it's written last, but it goes first because readers read it first."],
+  ["ethics","Sustainability means:",["Making as much profit as possible this year","Meeting the needs of today without harming the ability of future generations to meet theirs","Only using local suppliers","Keeping costs the same every year"],1,"Sustainable planning thinks about the long-term impact on the environment and society."],
+  ["ethics","Which planning decision shows ethical treatment of employees?",["Paying a living wage with set hours","Switching to compostable cups","Choosing a green electricity tariff","Selling through an app"],0,"Fair pay and secure hours are about people. The others are mainly about the planet or channels."],
+  ["ethics","Making misleading claims that a product is more environmentally friendly than it really is, is called:",["Fairtrade","Greenwashing","The circular economy","Recycling"],1,"Greenwashing damages trust and can break consumer protection law."],
+  ["model","According to the specification, a business model outlines how a company will:",["Operate, create, deliver and capture value","Pay its taxes","Recruit, train and pay staff","Advertise its products"],0,"The spec's glossary: a business model outlines how a company will operate, create, deliver, and capture value."],
+  ["model","A gym charges members €40 a month. This part of its business model is how the gym:",["Creates value","Delivers value","Captures value","Chooses its partners"],2,"Capturing value means turning the value into income: the membership fee."],
+  ["canvas","Which block is at the centre of the business model canvas?",["Cost structure","Key partners","Value proposition","Channels"],2,"The value proposition, why customers choose you, is the centre that every other block supports."],
+  ["canvas","A coffee cart's loyalty app (\"10th coffee free\") belongs in which block?",["Key resources","Customer relationships","Cost structure","Key partners"],1,"It's about the relationship the business builds with its customers to keep them coming back."],
+  ["canvas","How many blocks are in the business model canvas?",["Four","Six","Nine","Twelve"],2,"Nine: key partners, activities, resources, value proposition, customer relationships, channels, segments, costs and revenue streams."],
+  ["types","A business that buys goods from wholesalers and sells them to consumers at a mark-up uses a:",["Retail model","Manufacturing model","Affiliate model","Crowdfunding model"],0,"That's retail: the shop adds a mark-up to the cost price."],
+  ["types","In a franchise, the royalty is paid by:",["The franchisor to the franchisee","The franchisee to the franchisor","Customers to the government","The bank to the franchisee"],1,"The franchisee pays the franchisor for using the brand and system, usually a percentage of sales."],
+  ["types","A blogger earns 8% of the sales made through links on their website. This is:",["A subscription model","A franchise model","An affiliate model","A manufacturing model"],2,"Affiliates earn commission for sending customers to another business."],
+  ["digital","An online platform that lets sellers reach buyers and takes a commission on each sale uses a:",["Marketplace model","Retail model","Crowdfunding model","Subscription model"],0,"A marketplace connects buyers and sellers and earns a cut, without owning the stock."],
+  ["digital","An all-or-nothing crowdfunding campaign has a target of €20 000 and raises €18 500. The creator receives:",["€18 500","€0","€17 575","€20 000"],1,"All-or-nothing: the target wasn't reached, so backers aren't charged and the creator gets nothing."],
+  ["digital","An app is free to download and earns money by showing adverts to its users. This is:",["An advertising-supported model","A franchise","A manufacturing model","An affiliate model"],0,"Users get it free; advertisers pay to reach them."],
+  ["digital","Which is a key difference between a digital and a non-digital subscription?",["Only the digital one charges a regular fee","Serving one more digital subscriber costs almost nothing","Non-digital subscriptions have no customers","Digital subscriptions have no competitors"],1,"Both charge regular fees, but digital delivery has a very low cost per extra customer, so it scales easily."],
+];
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Appreciate","Recognise the meaning, value or importance of something, or have a practical understanding of it.","Appreciate the importance of having a business plan."],
+  ["Outline","Give the main points; restrict to essential points of information.","Outline the key functions of a business plan."],
+  ["Explain","Give a detailed account including reasons or causes.","Explain what is meant by a business model."],
+  ["Identify","Recognise patterns, facts or details; name them.","Identify the key elements of the business model canvas."],
+  ["Compare","Give an account of the similarities and (or) differences between two or more items or situations, referring to both throughout.","Compare a marketplace model with a retail model."],
+  ["Discuss","Offer a considered, balanced review that includes a range of arguments, factors or hypotheses, supported by evidence.","Discuss the advantages of a franchise for a new entrepreneur."],
+  ["Assess","Judge, evaluate or estimate the value of something.","Assess the business model of a music-streaming service."],
+  ["Calculate","Obtain a numerical answer showing the relevant stages in the working.","Calculate the royalty paid to the franchisor."],
+  ["Suggest","Propose a solution, hypothesis or other possible answer.","Suggest a value proposition for the business."],
+];
+
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("b23-best",null); if(best==null||pct>best) store.set("b23-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+
+// Numbers trainer
+const r1 = x => Math.round(x*10)/10, r2 = x => Math.round(x*100)/100;
+const PTYPES = {
+  markup:{ name:"Selling price", gen(){ const c=pick([8,12,20,40,60]), m=pick([20,25,40,50,75]), p=c*(1+m/100);
+    return { q:`A shop buys a product for <b>€${c}</b> and adds a mark-up of <b>${m}%</b> on cost. Calculate the selling price.`, ans:p, unit:"€", steps:[`Mark-up = €${c} × ${m}% = €${f2(c*m/100)}`,`Selling price = cost + mark-up = €${c} + €${f2(c*m/100)}`,`= <b>€${f2(p)}</b>`] }; } },
+  mkpct:{ name:"Mark-up %", gen(){ const c=pick([20,40,50,80]), pr=pick([5,10,20,30]), m=pr/c*100;
+    return { q:`A retailer buys a jacket for <b>€${c}</b> and sells it for <b>€${c+pr}</b>. Calculate the mark-up as a percentage of cost.`, ans:m, unit:"%", steps:[`Profit = €${c+pr} − €${c} = €${pr}`,"Mark-up % = profit ÷ cost × 100",`= ${pr} ÷ ${c} × 100 = <b>${r1(m)}%</b>`] }; } },
+  mrr:{ name:"Subscription revenue", gen(){ const s=pick([250,800,1200,3500]), fee=pick([4.99,9.99,12,15]), y=s*fee*12;
+    return { q:`A business has <b>${n0(s)}</b> subscribers paying <b>€${f2(fee)}</b> a month. Calculate its subscription revenue for a year, assuming no one cancels.`, ans:y, unit:"€", steps:[`Monthly revenue = ${n0(s)} × €${f2(fee)} = €${fm(s*fee)}`,`Yearly revenue = €${fm(s*fee)} × 12`,`= <b>€${fm(y)}</b>`] }; } },
+  churn:{ name:"Churn", gen(){ const s=pick([1000,2000,5000]), c=pick([2,4,5,8]), left=s*(1-c/100);
+    return { q:`A streaming app has <b>${n0(s)}</b> subscribers. <b>${c}%</b> cancel this month and no new ones join. How many subscribers are left?`, ans:left, unit:"subscribers", steps:[`Cancelled = ${n0(s)} × ${c}% = ${n0(s*c/100)}`,`Left = ${n0(s)} − ${n0(s*c/100)}`,`= <b>${n0(left)}</b>`] }; } },
+  royalty:{ name:"Franchise royalty", gen(){ const s=pick([400000,650000,1200000]), r=pick([4,5,6.5,8]), y=s*r/100;
+    return { q:`A franchisee's outlet has yearly sales of <b>€${n0(s)}</b>. The royalty is <b>${r}%</b> of sales. Calculate the royalty paid to the franchisor.`, ans:y, unit:"€", steps:["Royalty = sales × royalty rate",`= €${n0(s)} × ${r}%`,`= <b>€${fm(y)}</b>`] }; } },
+  affil:{ name:"Affiliate commission", gen(){ const s=pick([5000,12000,30000]), r=pick([3,5,8,10]), c=s*r/100;
+    return { q:`Readers of a blog buy <b>€${n0(s)}</b> of products through its links in a month. The merchant pays <b>${r}%</b> commission. How much does the blog earn?`, ans:c, unit:"€", steps:["Commission = sales × rate",`= €${n0(s)} × ${r}%`,`= <b>€${fm(c)}</b>`] }; } },
+  mkt:{ name:"Marketplace fee", gen(){ const g=pick([50000,120000,800000]), r=pick([5,10,12,15]), c=g*r/100;
+    return { q:`Sellers on an online marketplace make <b>€${n0(g)}</b> of sales in a month. The platform keeps <b>${r}%</b> commission. Calculate the platform's revenue.`, ans:c, unit:"€", steps:["Platform revenue = sales × commission rate",`= €${n0(g)} × ${r}%`,`= <b>€${fm(c)}</b>`] }; } },
+  crowd:{ name:"% funded", gen(){ const b=pick([150,320,480,900]), a=pick([25,30,45,60]), T=pick([10000,15000,20000,25000]), p=b*a, pc=p/T*100;
+    return { q:`A crowdfunding campaign has a target of <b>€${n0(T)}</b>. <b>${b}</b> backers pledge an average of <b>€${a}</b>. What percentage of the target is pledged?`, ans:pc, unit:"%", steps:[`Pledged = ${b} × €${a} = €${n0(p)}`,"% funded = pledged ÷ target × 100",`= ${n0(p)} ÷ ${n0(T)} × 100 = <b>${r1(pc)}%</b>`+(pc>=100?" (funded)":" (not funded if all-or-nothing)")] }; } },
+  ads:{ name:"Advert revenue", gen(){ const u=pick([50000,200000,1500000]), pg=pick([10,20,40]), cpm=pick([2,3,4,5]), imp=u*pg*2, r=imp/1000*cpm;
+    return { q:`A free app has <b>${n0(u)}</b> users a month. Each views <b>${pg}</b> pages with <b>2</b> adverts per page. Advertisers pay <b>€${cpm}</b> per 1000 ad views (CPM). Calculate the monthly advertising revenue.`, ans:r, unit:"€", steps:[`Ad views = ${n0(u)} × ${pg} × 2 = ${n0(imp)}`,"Revenue = views ÷ 1000 × CPM",`= ${n0(imp)} ÷ 1000 × €${cpm} = <b>€${fm(r)}</b>`] }; } },
+};
+
+let pType="markup", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const raw=$("paIn").value.replace(/[€%£$\sm]/g,"").replace(/years?/i,"").replace(/[−–]/g,"-").replace(/,(?=\d{3}(\D|$))/g,"").replace(",",".");
+  const x=parseFloat(raw);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 1500 or 59.3.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(0.05, Math.abs(pCur.ans)*0.005);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: write the formula first; a percentage of an amount = amount × rate ÷ 100; monthly × 12 for a year. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Which business model? [statement, key, why]
+const PRED = [
+  ["You pay €12.99 every month to stream films and series.","sub","A regular fee for continued access."],
+  ["A local hardware shop buys tools from a wholesaler and sells them at a mark-up.","ret","Buy, add a mark-up, sell to consumers."],
+  ["A dairy processor turns milk into cheese and sells it to supermarkets.","man","It makes finished products from raw materials and sells them to other businesses."],
+  ["A family opens a burger restaurant under a famous brand, paying a fee and 5% of sales to the brand owner.","fra","Fee plus royalty for using the brand and system."],
+  ["A gaming YouTuber earns 4% of the price whenever a viewer buys a headset through the link in the description.","aff","Commission for sending customers to another business."],
+  ["An app lets people sell second-hand clothes to each other and keeps 10% of each sale.","mkt","A platform connecting buyers and sellers, taking a cut."],
+  ["A board-game designer collects €25 000 from 600 people online before making the first copies.","cro","Many people each fund a little of the project."],
+  ["A free weather app earns its money from adverts shown between forecasts.","adv","Free to users, paid for by advertisers."],
+  ["A furniture maker builds tables from Irish oak in its workshop and sells them to shops.","man","Making products from materials, selling to retailers."],
+  ["A meal-kit company delivers recipes and ingredients every week for a weekly fee.","sub","A regular payment for a regular delivery."],
+  ["A travel blog gets a commission each time a reader books a hotel through its links.","aff","Paid per sale it refers."],
+  ["A website lets tradespeople take bookings from customers and charges a fee on each booking.","mkt","The platform brings both sides together and takes a fee."],
+  ["A department store sells clothes, cosmetics and homewares from many brands.","ret","It buys from many suppliers and sells to consumers."],
+  ["A coffee chain lets local owners run cafés under its name, using its menu, suppliers and training.","fra","Local owners (franchisees) use the brand and system."],
+  ["A podcast is free to listen to and is paid for by sponsors' adverts.","adv","Listeners pay with their attention; sponsors pay money."],
+  ["A sports club raises money online for a new pitch through hundreds of small donations.","cro","Donation-based crowdfunding."],
+];
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k && PRED.length>1); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>${PRED[k][0]}</b> Which business model is this?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick a model first.</div>`; return; }
+  const [,ans,why]=PRED[pd.k], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> It's ${MNAME[ans][0].toLowerCase()}. ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Planning Spin Cycle", intro:"Niamh and Ravi plan to open Spin Cycle, a bike repair and rental business beside a university (illustrative). They need a €20 000 bank loan and want the business to be ethical and sustainable.",
+    parts:[["a","Outline four key functions of a business plan for Spin Cycle.",12,"4 × 3 (name 1 + applied outline 2): start-up (sets goals and direction, spots problems before money is spent); funding (persuades the bank to lend the €20 000, shows repayments are possible); operations (benchmark: compare actual rentals and costs with the plan); development (plans future growth, e.g. a second outlet)."],
+      ["b","Explain why the executive summary is important when the bank reads the plan.",6,"It's read first and gives a short overview of the whole plan (3); a busy bank manager uses it to decide whether to read on and consider the loan, so it must be clear and convincing (3)."],
+      ["c","Outline the importance of ethics and sustainability when planning Spin Cycle. Give two examples of decisions they could make.",12,"Importance (6): reputation with students and the university; customers choose ethical businesses; staff loyalty; access to grants/green finance; fewer legal risks. Two applied examples (3 + 3): refurbish and reuse parts (circular economy); fair pay for mechanics; recycle tyres and oil safely; promote cycling instead of cars."],
+      ["d","Explain why the business plan should be updated after Spin Cycle opens.",6,"Actual results differ from forecasts, so targets must be revised (3); the plan guides new decisions and is needed again for new finance or expansion (3)."]] },
+  { title:"The business model canvas", intro:"Spin Cycle's owners want to map their business model on a business model canvas before they open.",
+    parts:[["a","Explain what is meant by a business model and appreciate its role within the business plan.",8,"Spec definition or equivalent: how a company will operate, create, deliver and capture value (4); it is the core of the plan: the marketing, operations and finance sections describe parts of it, and it shows lenders how the business will earn money (4)."],
+      ["b","Identify the nine elements of the business model canvas.",9,"1 mark each: key partners, key activities, key resources, value proposition, customer relationships, channels, customer segments, cost structure, revenue streams."],
+      ["c","Suggest a value proposition, a customer segment and two revenue streams for Spin Cycle.",9,"Value proposition (3), e.g. fast, cheap repairs while you're at lectures / bikes to rent by the week. Segment (2), e.g. students and staff. Revenue streams (2 × 2), e.g. repair charges, weekly rentals, a termly maintenance subscription, sale of parts."],
+      ["d","Outline the role of business models in successful enterprises, with reference to a business you have studied.",8,"Role (4): shows how value is created and captured; aligns everyone; helps spot weaknesses; lets the business adapt its model. Applied example (4), e.g. Netflix moving from DVD rental to streaming subscriptions."]] },
+  { title:"Digital business models", intro:"Digital technology has changed how many businesses earn money.",
+    parts:[["a","Outline how digital technology is a driver of change in business.",8,"Any four × 2: reach customers worldwide online; sell 24/7; lower costs per customer; use data to personalise products and adverts; new models (marketplaces, streaming, crowdfunding); faster communication; changing customer expectations."],
+      ["b","Compare a marketplace model with a traditional retail model.",10,"Similarity (2): both get products to consumers and earn from sales. Differences (4 × 2): marketplace holds no stock, retailer buys stock; marketplace earns commission, retailer earns a mark-up; marketplace needs many sellers and buyers (network effect); online reach vs. a physical location; reviews and data."],
+      ["c","A creator runs an all-or-nothing crowdfunding campaign with a target of €15 000. 420 backers pledge an average of €40 each. Calculate whether the campaign is funded and how much the creator receives after a 5% platform fee.",8,"Pledged = 420 × €40 = €16 800 (3); €16 800 ≥ €15 000, so funded (1); fee = 5% × €16 800 = €840 (2); creator receives €16 800 − €840 = €15 960 (2)."],
+      ["d","Discuss the advantages and disadvantages of an advertising-supported model for a new app.",8,"Advantages (2 × 2): free, so it attracts many users quickly; revenue grows with users; can add a premium tier later (freemium). Disadvantages (2 × 2): needs a very large audience to earn much; adverts annoy users; privacy and data concerns; income falls if advertisers cut budgets."]] },
+];
+
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+// Revision checklist
+const RAG = ["Name the six sections of a business plan","Outline the four functions: start-up, funding, operations, development","Explain who reads a business plan and why","Appreciate why a plan is updated as the business develops","Outline the importance of ethics in planning, with examples","Outline the importance of sustainability in planning, with examples","Quote the spec's definition of a business model","Explain create, deliver and capture value","Explain the business model's role within the business plan","Identify all nine blocks of the business model canvas","Write a value proposition as a customer benefit","Compare retail, manufacturing, subscription, franchise and affiliate models","Outline how digital technology drives change in business","Compare marketplace, subscription, crowdfunding and advertising-supported models","Calculate mark-up, subscription revenue, royalties and commission"];
+
+const ragState=store.get("b23-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("b23-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Research a real business model","Use the business's website, annual report or news articles to find how it creates, delivers and captures value.","Common and digital models labs"],["Map it on a canvas","Fill in all nine blocks of the business model canvas for a business you investigate.","Canvas lab"],["Compare fairly","Use a table to show similarities and differences between two models, referring to both throughout.","Types and digital labs"],["Use numbers as evidence","Work out commission, mark-ups and subscription revenue, and show the working.","Numbers trainer"],["Consider ethics and sustainability","Ask how a business's choices affect people and the planet, not only profit.","Ethics lab"],["Check your sources","Note where each fact came from and how recent it is; company websites can be one-sided.","Infographics"],["Think about different readers","Ask who would use a plan or report (bank, investor, manager) and what they need.","Business plan lab"],["Reach and justify a conclusion","Decide which model suits a business best and support the decision with evidence.","Types and digital labs"]];
+
+const skState=store.get("b23-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("b23-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+// Build the business plan
+const PL = [["A one-page overview of the whole plan, written last","S","The executive summary sums up everything."],["The business's name, legal structure and owners","B","Describing the business."],["The mission statement and objectives for year one","B","The business section sets out its purpose and goals."],["Results of a survey of 120 potential customers","M","Market research belongs in the market section."],["Prices, promotion plans and where the product will be sold","M","That's the marketing mix."],["The main competitors and how the business will be different","M","Competition is part of the market analysis."],["Suppliers, premises, equipment and opening hours","O","How the business will run day to day."],["Quality checks and how orders will be delivered","O","Production and delivery processes."],["The owners' experience and the staff to be hired","P","Management and staff."],["Cash-flow forecast for the first 12 months","F","Finance: will there be enough cash each month?"],["How much the owners invest and the size of loan needed","F","Sources of finance."],["Projected profit and loss account","F","Finance: will it make a profit?"]];
+const PLN = {S:"Summary",B:"Business",M:"Market",O:"Operations",P:"People",F:"Finance"}, PLK=["S","B","M","O","P","F"], plS = { order:[], ans:{} };
+const RD = [["Founders (start-up)",[1,2,3],"At start-up the plan turns the idea into clear goals, tests whether it can work and spots problems before money is committed."],["Bank (funding)",[0,5],"A bank reads the summary, then the cash-flow forecast: can the loan be repaid, and is there security?"],["Investor (funding)",[0,2,5],"An investor wants a big market, a strong team and a good return: summary, market and finance."],["Manager (operations)",[3,4,5],"Once open, the plan is a benchmark: compare actual sales, costs and staffing with the targets and act on any gaps."],["Enterprise agency (development)",[0,2,4,5],"To support growth (e.g. exports, new jobs), agencies check the market, the team and the financial projections."]];
+let plRd=1;
+function plFill(){ return PLK.map(k=>{ const idx=PL.map((p,i)=>i).filter(i=>PL[i][1]===k); return idx.filter(i=>plS.ans[i]===k).length/idx.length; }); }
+function plRender(){ sorter("plList","plOut",PL,PLN,plS); $("plWork").innerHTML=`<b>${RD[plRd][0]}:</b> ${RD[plRd][2]}`; plC.redraw(); }
+function plNew(){ plS.order=shuffle(PL.map((s,k)=>k)); plS.ans={}; plRender(); }
+$("plRd").innerHTML = RD.map((r,i)=>`<button data-i="${i}" aria-pressed="${i===plRd}">${r[0]}</button>`).join("");
+$("plRd").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; plRd=+b.dataset.i; pressGroup([...$("plRd").querySelectorAll("button")],b); plRender(); });
+$("plList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; plS.ans[b.dataset.k]=b.dataset.v; plRender(); });
+$("plReset").addEventListener("click",plNew);
+// Ethics and sustainability
+const ET = [
+  ["Coffee beans",[["Cheapest beans, no checks on farm conditions",0,0,0,"Cheap, but you can't show growers are treated fairly."],["Fairtrade-certified beans",3000,2,1,"Growers get a minimum price and a premium; a selling point for customers."]]],
+  ["Cups",[["Single-use cups",0,0,0,"Cheap, but thousands end up in landfill each year."],["Compostable cups",1500,0,1,"Better, but only if they reach a composting bin."],["Reusable-cup scheme with a 20c discount",2500,0,3,"Cuts waste most; costs the discounts and washing."]]],
+  ["Staff pay",[["Minimum wage, zero-hours contracts",0,0,0,"Lowest cost, but insecure for staff and high staff turnover."],["Living wage with set hours",6000,3,0,"Staff can live on their pay; loyal, experienced baristas."]]],
+  ["Energy",[["Standard electricity plan",0,0,0,"No change."],["Green tariff and an efficient machine",1200,0,2,"Lower emissions; the efficient machine also cuts the bill over time."]]],
+  ["Unsold food",[["Throw it out at closing time",0,0,0,"Food and money wasted."],["Sell it at half price on a food-waste app, donate the rest",-500,1,2,"Earns some money back and helps people."]]],
+];
+const et = { ch:[0,0,0,0,0] };
+function etCalc(){ let cost=0,pe=0,pl=0; ET.forEach(([n,opts],i)=>{ const o=opts[et.ch[i]]; cost+=o[1]; pe+=o[2]; pl+=o[3]; }); return {profit:30000-cost,people:pe,planet:pl,cost}; }
+function etRender(){ const r=etCalc();
+  $("etList").innerHTML = ET.map(([n,opts],i)=>`<div class="row"><span><b>${n}</b><small>${opts[et.ch[i]][4]}</small></span><div class="btns">${opts.map((o,j)=>`<button data-i="${i}" data-j="${j}" aria-pressed="${et.ch[i]===j}">${o[0]}${o[1]?` (${o[1]>0?"+":"−"}€${n0(Math.abs(o[1]))})`:""}</button>`).join("")}</div></div>`).join("");
+  setReadout($("etOut"),[["Forecast profit",eur(r.profit)],["Extra cost a year",(r.cost<0?"−":"")+eur(Math.abs(r.cost))],["People score",r.people+" / 6"],["Planet score",r.planet+" / 8"]]);
+  $("etWork").innerHTML = r.people+r.planet===0? "The cheapest plan maximises profit this year, but risks the cart's reputation on an eco-minded campus, staff turnover and missed customers who choose ethical businesses."
+    : `Profit = €30 000 − ${r.cost<0?"(−€"+n0(-r.cost)+")":eur(r.cost)} = <b>${eur(r.profit)}</b>. Benefits to set against the cost: ${[r.people>=3?"loyal, experienced staff":"",et.ch[0]===1?"a Fairtrade selling point":"",r.planet>=4?"a strong green reputation with students":"",et.ch[4]===1?"less waste and some money back":"",et.ch[3]===1?"lower energy bills over time":""].filter(Boolean).join(", ")||"a better reputation"}.`;
+  etC.redraw(); }
+$("etList").addEventListener("click",e=>{ const b=e.target.closest("button[data-i]"); if(!b) return; et.ch[+b.dataset.i]=+b.dataset.j; etRender(); });
+// Create, deliver, capture
+const MD = [
+  {n:"Meal-kit firm", d:"FreshBox (illustrative) sends recipes and fresh ingredients to homes every week.", items:[["Chefs design six new recipes every week","C","Making something customers value."],["Buying fresh ingredients from Irish farms","C","Part of making a quality product."],["Packing boxes and delivering them in chilled vans","D","Getting the value to the customer."],["An app where customers choose their meals","D","A channel to reach and serve customers."],["A weekly payment of €45 by card","K","Income: capturing value."],["Selling extra desserts as add-ons","K","Another way to earn from each customer."]]},
+  {n:"Local gym", d:"PowerHouse Gym (illustrative), a town-centre gym.", items:[["Equipment, classes and trainers that help members get fit","C","The value members want."],["Designing a new beginners' programme","C","Creating new value."],["Opening 6 am to 10 pm, with an app to book classes","D","Making the value easy to reach."],["Classes streamed online for members at home","D","Another channel for delivering value."],["A monthly membership fee of €40","K","Recurring income."],["Personal training sessions at €30 each","K","Extra income per member."]]},
+  {n:"Music app", d:"A music-streaming app (illustrative).", items:[["Licensing millions of songs from record labels","C","The catalogue is the core value."],["Playlists made for each listener using their data","C","Personalised value."],["Streaming to phones, cars and smart speakers","D","Delivering the music wherever the listener is."],["Offline downloads for Premium users","D","Delivery without a signal."],["Monthly Premium subscriptions","K","Recurring income from fans."],["Adverts played to free users","K","Income from advertisers."]]},
+];
+const MDN = {C:"Create",D:"Deliver",K:"Capture"}, md = { i:0, S:{order:[],ans:{}} };
+function mdCounts(){ const D=MD[md.i].items, c={C:0,D:0,K:0}, t={C:0,D:0,K:0}; D.forEach(([,k],i)=>{ t[k]++; if(md.S.ans[i]===k) c[k]++; }); return {c,t}; }
+function mdRender(){ sorter("mdList","mdOut",MD[md.i].items,MDN,md.S); $("mdDesc").textContent=MD[md.i].d; mdC.redraw(); }
+function mdNew(){ md.S.order=shuffle(MD[md.i].items.map((s,k)=>k)); md.S.ans={}; mdRender(); }
+$("mdBiz").innerHTML = MD.map((m,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${m.n}</button>`).join("");
+$("mdBiz").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; md.i=+b.dataset.i; pressGroup([...$("mdBiz").querySelectorAll("button")],b); mdNew(); });
+$("mdList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; md.S.ans[b.dataset.k]=b.dataset.v; mdRender(); });
+// Business model canvas
+const NOTES = [["Students and staff on a busy campus","cs","Customer segments: who the cart serves."],["Great coffee in two minutes, in a reusable cup, beside the lecture halls","vp","Value proposition: why customers choose Bean There."],["The cart itself, plus pre-orders through an app","ch","Channels: how customers are reached and served."],["Loyalty app: your 10th coffee is free","cr","Customer relationships: keeping customers coming back."],["Coffee sales at €3.20 a cup","rv","Revenue streams: how the cart earns money."],["A €15-a-month coffee subscription","rv","Another revenue stream."],["Making drinks fast at peak times between lectures","ka","Key activities: what the business must do well."],["The cart, the espresso machine and two trained baristas","kr","Key resources: the assets the model needs."],["A local roastery that supplies Fairtrade beans","kp","Key partners: suppliers the business relies on."],["The college, which rents out the pitch","kp","Another key partner."],["Beans, milk, cups, wages and pitch rent","co","Cost structure: the main costs."]];
+const BSH = {kp:"Partners",ka:"Activities",kr:"Resources",vp:"Value proposition",cr:"Relationships",ch:"Channels",cs:"Segments",co:"Costs",rv:"Revenue"};
+const cv = { i:0, placed:{}, miss:0, msg:"" };
+$("cvBtns").innerHTML = BMC.map(([k,n])=>`<button data-b="${k}">${n}</button>`).join("");
+function cvRender(){ const done=cv.i>=NOTES.length;
+  $("cvNote").innerHTML = (cv.msg? cv.msg+"<br>" : "") + (done? `<b>Canvas complete!</b> ${NOTES.length} notes placed with ${cv.miss} wrong tr${cv.miss===1?"y":"ies"}. Every block supports the value proposition in the middle.` : `<b>Sticky note ${cv.i+1} of ${NOTES.length}:</b> "${NOTES[cv.i][0]}"`);
+  document.querySelectorAll("#cvBtns button").forEach(b=>b.disabled=done);
+  setReadout($("cvOut"),[["Placed",`${Math.min(cv.i,NOTES.length)} / ${NOTES.length}`],["Wrong tries",String(cv.miss)],["Blocks filled",`${Object.keys(cv.placed).length} / 9`]]);
+  cvC.redraw(); }
+$("cvBtns").addEventListener("click",e=>{ const b=e.target.closest("button[data-b]"); if(!b||cv.i>=NOTES.length) return; const [t,k,why]=NOTES[cv.i];
+  if(b.dataset.b===k){ (cv.placed[k]=cv.placed[k]||[]).push(t); cv.msg=`<span style="color:var(--good)">✓</span> ${why}`; cv.i++; }
+  else { cv.miss++; cv.msg=`<span style="color:var(--bad)">✗</span> Not ${BMC.find(x=>x[0]===b.dataset.b)[1].toLowerCase()}. Try again.`; }
+  cvRender(); });
+$("cvReset").addEventListener("click",()=>{ cv.i=0; cv.placed={}; cv.miss=0; cv.msg=""; cvRender(); });
+// Five common models + four digital models (shared slider logic)
+function modelLab(pre,DEF,start){ const st={k:start};
+  $(pre+"M").innerHTML = Object.entries(DEF).map(([k,m])=>`<button data-m="${k}" aria-pressed="${k===start}">${m.n}</button>`).join("");
+  function set(k){ st.k=k; const M=DEF[k]; [["A",M.A],["B",M.B]].forEach(([X,[lab,[a,b,s],v]])=>{ const el=$(pre+X); el.min=a; el.max=b; el.step=s; el.value=v; $(pre+X+"l").textContent=lab; }); upd(); }
+  function upd(){ const M=DEF[st.k], a=+$(pre+"A").value, b=+$(pre+"B").value, r=M.f(a,b); st.r=r;
+    $(pre+"Ao").textContent=M.A[3](a); $(pre+"Bo").textContent=M.B[3](b); setReadout($(pre+"Out"),r.out);
+    $(pre+"Work").innerHTML=r.work+(M.cousin? `<br><b>Non-digital cousin:</b> ${M.cousin}` : ""); if(st.c) st.c.redraw(); }
+  $(pre+"M").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pressGroup([...$(pre+"M").querySelectorAll("button")],b); set(b.dataset.m); });
+  ["A","B"].forEach(X=>$(pre+X).addEventListener("input",upd));
+  st.set=set; return st; }
+const ty = modelLab("ty",TY,"ret"), dg = modelLab("dg",DG,"mkt");
+const TW = [["A supermarket chain selling groceries from hundreds of suppliers","ret","Buys from suppliers and sells to consumers at a mark-up."],["A company that makes car parts and sells them to car makers","man","Makes products and sells them to other businesses."],["A gym charging €40 a month","sub","A regular fee for continued access."],["A pizza brand whose outlets are run by local owners who pay it 6% of sales","fra","Franchisees pay royalties to the franchisor."],["A website that earns a commission when readers buy recommended books","aff","Commission for referring customers."],["A bakery that makes bread and sells it to cafés and shops","man","Producing goods for other businesses."],["A magazine delivered to your door every month for a yearly fee","sub","Regular payment, regular delivery."],["An online shop selling trainers it buys from big brands","ret","Retail can be online too."],["A cleaning company that lets people run local branches under its name and system","fra","A franchise."],["A cashback website paid by retailers for every sale it sends them","aff","Paid per referred sale."]];
+const TWN = {ret:"Retail",man:"Manufacturing",sub:"Subscription",fra:"Franchise",aff:"Affiliate"}, twS={order:[],ans:{}};
+function twRender(){ sorter("twList","twOut",TW,TWN,twS); }
+function twNew(){ twS.order=shuffle(TW.map((s,k)=>k)); twS.ans={}; twRender(); }
+$("twList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; twS.ans[b.dataset.k]=b.dataset.v; twRender(); });
+$("twReset").addEventListener("click",twNew);
+const DD = [["A website where people sell their used cars to each other, paying a listing fee","mkt","A platform connecting sellers and buyers for a fee."],["A language-learning app charging €7.99 a month for full access","sub","A digital subscription."],["An inventor raises €40 000 online from 900 people to build a new bike light","cro","Many small backers fund the project."],["A free video site that plays adverts before videos","adv","Paid for by advertisers."],["An app connecting people with local dog walkers, keeping 15% of each booking","mkt","A service marketplace."],["Cloud storage software paid for monthly by businesses","sub","Software as a subscription."],["A community raises money online to save its local pub","cro","Community crowdfunding."],["A free news app that earns from targeted adverts","adv","Advertising-supported, using data to target adverts."]];
+const DDN = {mkt:"Marketplace",sub:"Subscription",cro:"Crowdfunding",adv:"Advertising"}, ddS={order:[],ans:{}};
+function ddRender(){ sorter("ddList","ddOut",DD,DDN,ddS); }
+function ddNew(){ ddS.order=shuffle(DD.map((s,k)=>k)); ddS.ans={}; ddRender(); }
+$("ddList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; ddS.ans[b.dataset.k]=b.dataset.v; ddRender(); });
+$("ddReset").addEventListener("click",ddNew);
+
+/* ================= CREATE CANVASES ================= */
+const HERO_PL = {kp:[1,1],ka:[1],kr:[1,1],vp:[1,1,1],cr:[1],ch:[1,1],cs:[1,1],co:[1,1],rv:[1,1]};
+const hero = makeCanvas($("heroCanvas"), 0.75, 260, s => drawBMC(s.ctx,s.w,s.h,{placed:HERO_PL,hl:reduce?"vp":BMC[Math.floor(heroT*0.7)%9][0]}), 440);
+const plC = makeCanvas($("plC"), 0.5, 300, s => drawPlanDoc(s.ctx,s.w,s.h,{fill:plFill(),hl:RD[plRd][1]}), 420);
+const etC = makeCanvas($("etC"), 0.4, 240, s => drawTBL(s.ctx,s.w,s.h,{...etCalc(),maxP:30500,maxPe:6,maxPl:8}), 340);
+const mdC = makeCanvas($("mdC"), 0.42, 250, s => { const {c,t}=mdCounts(); drawValue(s.ctx,s.w,s.h,{counts:c,tot:t,biz:MD[md.i].n}); }, 340);
+const cvC = makeCanvas($("cvC"), 0.55, 280, s => drawBMC(s.ctx,s.w,s.h,{placed:cv.placed,hl:cv.i<NOTES.length?null:"vp"}), 460);
+ty.c = makeCanvas($("tyC"), 0.5, 300, s => drawFlowM(s.ctx,s.w,s.h,ty.r||{nodes:[],links:[]}), 420);
+dg.c = makeCanvas($("dgC"), 0.5, 300, s => drawFlowM(s.ctx,s.w,s.h,dg.r||{nodes:[],links:[]}), 420);
+predC = makeCanvas($("predC"), 0.5, 180, s => { const ans=PRED[pd.k<0?0:pd.k][1];
+  if(pd.shown) drawWhichM(s.ctx,s.w,s.h,{ans,bgc:C["surface-2"]});
+  else { bg(s.ctx,s.w,s.h,C["surface-2"]); text(s.ctx,"?",s.w/2,s.h/2+18,C.muted,F(56),"center"); text(s.ctx,"The answer appears here",s.w/2,s.h-14,C.muted,F(11,600),"center"); } }, 300);
+pdNew();
+// Learn minis
+const flowOf = o => { const M=(o.d?DG:TY)[o.m]; return M.f(M.A[2],M.B[2]); };
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    doc:s=>drawPlanDoc(s.ctx,s.w,s.h,{...o,compact:true}),
+    tbl:s=>drawTBL(s.ctx,s.w,s.h,{...o,compact:true}),
+    value:s=>drawValue(s.ctx,s.w,s.h,{...o,compact:true}),
+    bmc:s=>drawBMC(s.ctx,s.w,s.h,{...o,compact:true}),
+    flow:s=>drawFlowM(s.ctx,s.w,s.h,{...flowOf(o),compact:true}),
+  };
+  makeCanvas(el, 0.62, 230, draws[kind], 380);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-mini=doc]").forEach(el=>makeCanvas(el,0.75,200,s=>drawPlanDoc(s.ctx,s.w,s.h,{compact:true,bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=bmc]").forEach(el=>makeCanvas(el,0.7,180,s=>drawBMC(s.ctx,s.w,s.h,{placed:HERO_PL,hl:"vp",bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=tbl]").forEach(el=>makeCanvas(el,0.7,180,s=>drawTBL(s.ctx,s.w,s.h,{compact:true,profit:19000,people:6,planet:6,maxP:30500,maxPe:6,maxPl:8,bgc:C["surface-2"]})));
+plNew(); etRender(); mdNew(); cvRender(); ty.set("ret"); dg.set("mkt"); twNew(); ddNew();
+
+/* ================= LOOP / THEME / START ================= */
+
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>

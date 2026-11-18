@@ -1,0 +1,1858 @@
+<title>Forces on a Particle</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<style>
+:root{--band-ink:#3b2b21}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--surface)}
+.xlink:hover{border-color:var(--terra)}
+.working.wrap{white-space:normal;font-family:var(--f-body);font-size:.9rem}
+.spec-bullets{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+</style>
+<style>
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.rc-card{display:grid;gap:8px;padding:16px}
+.rc-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.rc-card .ico svg{width:24px;height:24px}
+.rc-card p{font-size:.9rem;margin:0}
+.rc-card p b{color:var(--terra)}
+</style>
+<style>
+.cases .rc-card canvas{width:100%;display:block;border-radius:12px}
+.sec td,.sec th{padding:4px 8px;text-align:right;font-family:var(--f-mono);font-size:.85rem;white-space:nowrap}
+.sec{border-collapse:collapse;width:100%}
+.sec tr+tr td{border-top:1px solid var(--line)}
+.secwrap{overflow-x:auto}
+.srt .row .btns button{padding:6px 10px;font-size:.85rem}
+.predopts .btns button{min-width:84px}
+</style>
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="8" height="8" rx="1.5"/><path d="M12 8V2M12 16v6M16 12h6M8 12H2"/></svg></div>
+        <div style="min-width:0"><b>Forces on a Particle</b><span>Leaving Cert Physics · Strand 1 · Section 1.2</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details open><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="here"><span class="mono">1.2</span>Forces on a particle</li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 1 · Section 1.2 · Forces acting on a particle</span>
+          <h1 style="margin-top:12px">Push it.<br>Pull it.<br><em>Crash it.</em></h1>
+          <p class="lede">Forces change how things move. Learn Newton's three laws, draw free-body diagrams, use F = ma, work out pressure and density, and see why momentum is conserved in every collision.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Two gliders on an air track colliding and sticking together, with momentum bars before and after"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/8</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">1.2.1</span><span>model real-world situations using Newton’s laws of motion</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">1.2.2</span><span>verify Newton’s 2nd law of motion using primary and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">1.2.3</span><span>model problems involving the motion of a particle under a constant resultant force</span></label></li>
+          <li><label><input type="checkbox" id="lo4"><span class="mono">1.2.4</span><span>solve problems relating to solids resting on a surface and pressure within fluids</span></label></li>
+          <li><label><input type="checkbox" id="lo5"><span class="mono">1.2.5</span><span>investigate density</span></label></li>
+          <li><label><input type="checkbox" id="lo6"><span class="mono">1.2.6</span><span>investigate the principle of conservation of momentum using primary and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo7"><span class="mono">1.2.7</span><span>verify using secondary data that collisions are governed by Newton’s laws of motion</span></label></li>
+          <li><label><input type="checkbox" id="lo8"><span class="mono">1.2.8</span><span>model direct collisions in one dimension and in two dimensions using perpendicular and parallel components</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">Students learn about:</p>
+        <ul class="spec-bullets"><li>Newton’s 3 laws of motion</li><li>the concepts of mass, centre of mass and a force as a vector quantity</li><li>types of forces: Normal, Frictional, Resistant, Tension, Buoyancy, Gravitational</li><li>resultant force as the sum of all forces: F<sub>net</sub> = ma</li><li>pressure: P = F/A; in fluids P = hρg</li><li>the concept of density: ρ = m/V</li><li>the concept of momentum: p = mv</li><li>collisions as governed by Newton’s laws of motion and by conservation of momentum</li></ul>
+        <p class="result" style="margin-top:10px">Builds on 1.1 (vectors, components and the equations of motion). Springs and Hooke's law come next, in 1.3.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Pull a box across the floor, verify F = ma, ride a lift, dive into a tank, find a hidden density and crash gliders on an air track. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="forces">
+        <div class="labhead"><span class="pill t">Free-body diagram</span><p class="goal">A box sits on the floor. Pull it with a rope. Watch every force on the box (weight, normal reaction, friction, tension) and the resultant that decides whether it moves.</p></div>
+        <div class="panel sim">
+          <canvas id="fbC" aria-label="A box on a floor pulled by a rope, with arrows for weight, normal reaction, friction, tension and the resultant force"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="fbM">Mass m <output id="fbMo">5.0 kg</output></label><input type="range" id="fbM" min="1" max="10" step="0.5" value="5"></div>
+            <div class="ctl"><label for="fbP">Pull (tension) T <output id="fbPo">20 N</output></label><input type="range" id="fbP" min="0" max="60" step="1" value="20"></div>
+            <div class="ctl"><label for="fbTh">Rope angle θ <output id="fbTho">0°</output></label><input type="range" id="fbTh" min="0" max="60" step="5" value="0"></div>
+            <div class="ctl"><label for="fbMu">Friction coefficient μ <output id="fbMuo">0.30</output></label><input type="range" id="fbMu" min="0" max="0.6" step="0.05" value="0.3"></div>
+          </div>
+          <div class="readout" id="fbOut"></div>
+          <div class="working wrap" id="fbWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Name that force</h3></div>
+          <div class="srt" id="nfList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="nfReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="nfOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Set μ = 0.30 and m = 5 kg. What is the smallest horizontal pull that moves the box?</div><div class="try"><b>2</b>Raise the rope angle. Why does the normal reaction get smaller?</div><div class="try"><b>3</b>When the box is still, how big is the friction force? (Hint: not always μR.)</div></div>
+      </div>
+
+      <div class="lab" data-lab="newton2" hidden>
+        <div class="labhead"><span class="pill t">Experiment: verify F = ma</span><p class="goal">A trolley on a friction-compensated runway is pulled by a hanging mass. Move 20 g discs from the trolley to the hanger, so the total mass stays the same while the force changes. A data logger with two light gates measures the acceleration.</p></div>
+        <div class="panel sim">
+          <canvas id="n2C" aria-label="A trolley on a runway pulled by a string over a pulley to a hanging mass, with two light gates and a data logger"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="n2N">Discs on the hanger <output id="n2No">2</output></label><input type="range" id="n2N" min="1" max="6" step="1" value="2"></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="n2Go">Release and measure</button><button id="n2Clear">Clear</button><button id="n2New">New trolley</button><button id="n2Reveal">Reveal answer</button></div></div>
+          </div>
+          <div class="readout" id="n2Out"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>discs</th><th>F (N)</th><th>a (m/s²)</th><th></th></tr></thead><tbody id="n2Table"></tbody></table><div class="empty" id="n2Empty">No readings yet. Measure a for five or six different forces.</div></div>
+            <div class="graphbox"><canvas id="n2Graph" aria-label="Graph of acceleration against force with a line of best fit"></canvas><p class="result" id="n2Result"></p></div>
+          </div>
+        </div>
+        <p class="result">Simulated data logger: each acceleration has a small random error (about ±2%). The pulling force is the weight of the hanger: F = (number of discs × 0.020 kg) × 9.8 m/s². "New trolley" hides a new trolley mass.</p>
+        <div class="tries"><div class="try"><b>1</b>Why move discs from the trolley to the hanger, instead of adding new ones?</div><div class="try"><b>2</b>What shape is the a against F graph? What does that tell you?</div><div class="try"><b>3</b>The slope is 1/m. Use it to find the total mass that is accelerating.</div></div>
+      </div>
+
+      <div class="lab" data-lab="lift" hidden>
+        <div class="labhead"><span class="pill t">Model: the lift</span><p class="goal">Stand on bathroom scales in a lift. The scales read the normal reaction R, not your weight. Pick a stage of the journey and use R − mg = ma.</p></div>
+        <div class="panel sim">
+          <canvas id="lfC" aria-label="A person on scales inside a lift, with arrows for weight and normal reaction and the lift's acceleration"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Stage</span><div class="btns" id="lfS"></div></div>
+            <div class="ctl"><label for="lfM">Your mass m <output id="lfMo">60 kg</output></label><input type="range" id="lfM" min="30" max="100" step="5" value="60"></div>
+            <div class="ctl"><label for="lfA">Size of acceleration <output id="lfAo">1.5 m/s²</output></label><input type="range" id="lfA" min="0.5" max="3" step="0.5" value="1.5"></div>
+          </div>
+          <div class="readout" id="lfOut"></div>
+          <div class="working wrap" id="lfWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>When do the scales read more than your weight? Is the lift always going up then?</div><div class="try"><b>2</b>Why is the reading the same at rest and at constant velocity?</div><div class="try"><b>3</b>Pick "Cable snaps". Why do the scales read zero?</div></div>
+      </div>
+
+      <div class="lab" data-lab="pressure" hidden>
+        <div class="labhead"><span class="pill t">Pressure: solids and liquids</span><p class="goal">Pressure is force per unit area. Turn a brick onto a different face, then lower a pressure sensor into a tank and hang a block in the liquid.</p></div>
+        <div class="panel sim">
+          <canvas id="prC" aria-label="A brick resting on a face, or a tank of liquid with a pressure probe and a block hanging from a spring balance"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Mode</span><div class="btns" id="prMode"><button data-m="solid" aria-pressed="true">Solid on a surface</button><button data-m="fluid" aria-pressed="false">Pressure in a liquid</button></div></div>
+            <div class="ctl prS" style="grid-column:1/-1"><span class="lbl">Brick (2.0 kg, 20 cm × 10 cm × 5 cm) resting on</span><div class="btns" id="prFace"><button data-f="0" aria-pressed="true">Largest face</button><button data-f="1" aria-pressed="false">Side face</button><button data-f="2" aria-pressed="false">End face</button></div></div>
+            <div class="ctl prF" hidden><span class="lbl">Liquid</span><div class="btns" id="prLiq"></div></div>
+            <div class="ctl prF" hidden><label for="prH">Probe depth h <output id="prHo">2.0 m</output></label><input type="range" id="prH" min="0" max="5" step="0.1" value="2"></div>
+            <div class="ctl prF" hidden><span class="lbl">Block (aluminium, 1000 cm³)</span><div class="btns"><button id="prBlock" aria-pressed="true">Hanging in the liquid</button></div></div>
+          </div>
+          <div class="readout" id="prOut"></div>
+          <div class="working wrap" id="prWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Which face gives the biggest pressure on the floor? Why?</div><div class="try"><b>2</b>Double the depth. What happens to the liquid pressure?</div><div class="try"><b>3</b>Swap water for sea water. Why does the spring balance read less?</div></div>
+      </div>
+
+      <div class="lab" data-lab="density" hidden>
+        <div class="labhead"><span class="pill t">Experiment: find the density</span><p class="goal">You have pieces of an unknown solid. Weigh each one, then find its volume by displacement in a measuring cylinder. Plot mass against volume: the slope is the density. Identify the material.</p></div>
+        <div class="panel sim">
+          <canvas id="dnC" aria-label="An electronic balance with a sample on it, and a measuring cylinder showing the water level before and after the sample is added"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Piece</span><div class="btns" id="dnP"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="dnGo">Measure this piece</button><button id="dnClear">Clear</button><button id="dnNew">New material</button><button id="dnReveal">Reveal answer</button></div></div>
+          </div>
+          <div class="readout" id="dnOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>piece</th><th>m (g)</th><th>V (cm³)</th><th>m/V</th><th></th></tr></thead><tbody id="dnTable"></tbody></table><div class="empty" id="dnEmpty">No readings yet. Measure five or more pieces.</div></div>
+            <div class="graphbox"><canvas id="dnGraph" aria-label="Graph of mass against volume with a line of best fit"></canvas><p class="result" id="dnResult"></p></div>
+          </div>
+        </div>
+        <div class="panel pad"><p class="result" style="margin:0">Compare your answer: perspex 1.19 · glass 2.50 · aluminium 2.70 · steel 7.85 · brass 8.50 · copper 8.96 · lead 11.3 (all g/cm³; × 1000 for kg/m³). Simulated readings: balance ±0.1 g, cylinder read to the nearest 0.5 cm³.</p></div>
+        <div class="tries"><div class="try"><b>1</b>Why does a graph of m against V give a better density than one piece?</div><div class="try"><b>2</b>How do you read a measuring cylinder correctly?</div><div class="try"><b>3</b>Convert your answer from g/cm³ to kg/m³.</div></div>
+      </div>
+
+      <div class="lab" data-lab="momentum" hidden>
+        <div class="labhead"><span class="pill t">Experiment: collisions on an air track</span><p class="goal">Two gliders collide on a frictionless air track. Set the masses and velocities, pick the type of collision and press Play. Record each run and compare the total momentum before and after.</p></div>
+        <div class="panel sim">
+          <canvas id="mmC" aria-label="Two gliders on an air track with velocity arrows, before and after a collision"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="mmM1">Mass A <output id="mmM1o">0.50 kg</output></label><input type="range" id="mmM1" min="0.1" max="1" step="0.05" value="0.5"></div>
+            <div class="ctl"><label for="mmU1">Velocity A <output id="mmU1o">0.80 m/s</output></label><input type="range" id="mmU1" min="0" max="1.5" step="0.05" value="0.8"></div>
+            <div class="ctl"><label for="mmM2">Mass B <output id="mmM2o">0.30 kg</output></label><input type="range" id="mmM2" min="0.1" max="1" step="0.05" value="0.3"></div>
+            <div class="ctl"><label for="mmU2">Velocity B <output id="mmU2o">0.00 m/s</output></label><input type="range" id="mmU2" min="-1" max="1" step="0.05" value="0"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Collision</span><div class="btns" id="mmE"><button data-e="0" aria-pressed="true">Stick together (Velcro)</button><button data-e="0.5" aria-pressed="false">Partly bouncy</button><button data-e="1" aria-pressed="false">Elastic (springs)</button></div></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="mmPlay">Play</button><button id="mmReset">Back to start</button><button id="mmRec">Record run</button><button id="mmClear">Clear table</button></div></div>
+          </div>
+          <div class="readout" id="mmOut"></div>
+          <div class="working wrap" id="mmWork"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>p before (kg m/s)</th><th>p after (kg m/s)</th><th>KE lost</th><th></th></tr></thead><tbody id="mmTable"></tbody></table><div class="empty" id="mmEmpty">Play a collision, then record it. Try five or more different runs.</div></div>
+            <div class="graphbox"><canvas id="mmGraph" aria-label="Graph of total momentum after against total momentum before"></canvas><p class="result" id="mmResult"></p></div>
+          </div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Two dimensions: a glancing collision</h3></div>
+          <canvas id="glC" aria-label="Puck A hits stationary puck B of equal mass; they move off at angles with their parallel and perpendicular components shown"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="glU">Speed of A before <output id="glUo">2.0 m/s</output></label><input type="range" id="glU" min="0.5" max="3" step="0.1" value="2"></div>
+            <div class="ctl"><label for="glTh">Angle of A after θ <output id="glTho">30°</output></label><input type="range" id="glTh" min="10" max="80" step="1" value="30"></div>
+          </div>
+          <div class="readout" id="glOut"></div>
+          <div class="working wrap" id="glWork"></div>
+        </div>
+        <p class="result">Simulated data logger: recorded velocities have a small random error (about ±2%), like a real experiment.</p>
+        <div class="tries"><div class="try"><b>1</b>In which collision type is kinetic energy conserved? Is momentum conserved in all three?</div><div class="try"><b>2</b>Make the gliders equal in mass and elastic, with B at rest. What happens to A?</div><div class="try"><b>3</b>In 2D, check that the perpendicular components of momentum after add to zero.</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of forces acting on a particle"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Modelling with Newton's laws · LO 1.2.1</p><h2>Six free-body diagrams to know</h2></div><p>Draw the object as a dot or box, then add every force acting on it. Equal and opposite arrows mean no resultant force.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>F = ma, pressure and momentum</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="agraph"></canvas><h3>a ∝ F</h3><p>Double the resultant force, double the acceleration. A heavier object gives a less steep line (slope = 1/m).</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="pdepth"></canvas><h3>Deeper = more pressure</h3><p>P = hρg: pressure in a liquid rises in a straight line with depth. Denser liquid, steeper line.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="pbars"></canvas><h3>Momentum before = after</h3><p>In any collision with no outside force, the total momentum stays the same. Kinetic energy may not.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Secondary data · LO 1.2.6 and 1.2.7</p><h2>A collision seen by two force sensors</h2></div><p>Sample data-logger results (simulated, for practice): glider A (0.50 kg, 0.80 m/s) hits glider B (0.50 kg, at rest) with spring buffers. A force sensor on each glider records the force during the 0.10 s contact.</p></div>
+        <canvas class="mini" data-mini="ftime" aria-label="Force–time graph: glider A's force is a negative pulse and glider B's is an equal positive pulse at the same time"></canvas>
+        <p class="result" style="margin-top:10px">The two traces are mirror images: at every instant the force on A equals the force on B in size and is opposite in direction (Newton's third law). Each area is about 0.39 N s, the impulse, which equals each glider's change in momentum (Newton's second law). So A loses exactly the momentum B gains.</p>
+        <div class="secwrap" style="margin-top:12px"><table class="sec" id="secT"></table></div>
+        <p class="result" style="margin-top:10px">Four sample air-track runs. Velocities to the right are positive. Total momentum before and after agrees within about 3%, within the experimental error.</p>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Where you meet it</p><h2>Forces around you</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Start every force problem with a <b>free-body diagram</b>: one object, every force on it, labelled arrows.</li>
+            <li>F in F = ma is the <b>resultant</b> force: (forward forces) − (backward forces).</li>
+            <li>Weight is a force: <b>W = mg</b>, in newtons. Mass is in kilograms and doesn't change.</li>
+            <li>Newton's third law pairs act on <b>different objects</b>, so they never cancel each other.</li>
+            <li>Pressure: convert cm² to m² (<b>÷ 10 000</b>) and g/cm³ to kg/m³ (<b>× 1000</b>).</li>
+            <li>Momentum is a vector: pick a positive direction and give <b>signs</b> to velocities going the other way.</li>
+            <li>Momentum is conserved in every collision; kinetic energy only in <b>elastic</b> ones.</li>
+            <li>In 2D, conserve momentum <b>separately</b> along and across the original direction.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The verb tells you what the examiner wants. The learning outcomes for this section use model, verify, solve and investigate.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="text" placeholder="e.g. 12.5 or -2" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Find the resultant</h2></div></div>
+          <canvas id="predC" aria-label="A box with four force arrows of different sizes"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" data-g="0"><button data-a="up">Up</button><button data-a="down">Down</button><button data-a="left">Left</button><button data-a="right">Right</button><button data-a="none">Zero</button></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next diagram</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: inertia, newton, momentum, ρ…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>Forces acting on a particle. Forces in newtons (N), masses in kilograms (kg), g = 9.8 m/s².</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Newton's 2nd law</span><span class="big">F = ma</span><dl><dt>F</dt><dd>resultant force, N</dd><dt>a</dt><dd>acceleration, m/s²</dd></dl><div class="ex">12 N on 4.0 kg: a = 3.0 m/s²</div></div>
+        <div class="panel fcell"><span class="pill">Weight</span><span class="big">W = mg</span><dl><dt>g</dt><dd>9.8 m/s² (9.8 N/kg) on Earth</dd></dl><div class="ex">60 kg: W = 588 N</div></div>
+        <div class="panel fcell"><span class="pill">Resultant</span><span class="big">F<sub>net</sub> = ΣF</span><dl><dt>e.g.</dt><dd>driving force − resistance</dd></dl><div class="ex">2000 N − 800 N = 1200 N forwards</div></div>
+        <div class="panel fcell"><span class="pill">Friction (sliding)</span><span class="big">F = μR</span><dl><dt>R</dt><dd>normal reaction, N</dd><dt>μ</dt><dd>coefficient of friction (no unit)</dd></dl><div class="ex">μ = 0.3, R = 49 N: F = 14.7 N</div></div>
+        <div class="panel fcell"><span class="pill">Lift</span><span class="big">R − mg = ma</span><dl><dt>a</dt><dd>+ if accelerating upwards</dd></dl><div class="ex">60 kg, a = 1.5 up: R = 678 N</div></div>
+        <div class="panel fcell"><span class="pill a">Pressure</span><span class="big">P = F / A</span><dl><dt>P</dt><dd>pascal, Pa = N/m²</dd><dt>A</dt><dd>area, m²</dd></dl><div class="ex">600 N on 0.04 m²: P = 15 000 Pa</div></div>
+        <div class="panel fcell"><span class="pill a">Liquid pressure</span><span class="big">P = hρg</span><dl><dt>h</dt><dd>depth, m</dd><dt>ρ</dt><dd>density of liquid, kg/m³</dd></dl><div class="ex">10 m of water: P = 98 000 Pa</div></div>
+        <div class="panel fcell"><span class="pill a">Density</span><span class="big">ρ = m / V</span><dl><dt>ρ</dt><dd>kg/m³ (or g/cm³)</dd></dl><div class="ex">1 g/cm³ = 1000 kg/m³</div></div>
+        <div class="panel fcell"><span class="pill a">Upthrust</span><span class="big">U = ρ<sub>liquid</sub> V g</span><dl><dt>Archimedes</dt><dd>= weight of liquid displaced</dd></dl><div class="ex">0.001 m³ in water: U = 9.8 N</div></div>
+        <div class="panel fcell"><span class="pill">Momentum</span><span class="big">p = mv</span><dl><dt>p</dt><dd>kg m/s (a vector)</dd></dl><div class="ex">0.5 kg at 4 m/s: p = 2 kg m/s</div></div>
+        <div class="panel fcell"><span class="pill">Conservation</span><span class="big">m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂</span><dl><dt>stick together</dt><dd>m₁u₁ + m₂u₂ = (m₁ + m₂)v</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Impulse</span><span class="big">Ft = mv − mu</span><dl><dt>Ft</dt><dd>N s = change in momentum</dd></dl><div class="ex">Longer t, smaller F: airbags</div></div>
+      </div>
+      <footer>
+        <p>Built on section 1.2 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes are quoted from the specification. Experiment and force-sensor data are simulated for practice. Densities are typical textbook values.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent","--band-ink"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+/* ---------- icons + topics ---------- */
+const ICON = {
+  forces:'<rect x="7" y="8" width="10" height="8" rx="1.5"/><path d="M17 12h5M20 10l2 2-2 2M12 16v5M12 8V3"/>',
+  newton2:'<path d="M2 14h15"/><rect x="4" y="9" width="8" height="5" rx="1"/><circle cx="19" cy="14" r="2"/><path d="M12 11h7M21 14v4"/><rect x="19.5" y="18" width="3" height="3"/>',
+  lift:'<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 9l3-3 3 3M9 15l3 3 3-3"/>',
+  pressure:'<path d="M3 5h18v15H3z"/><path d="M3 9h18" stroke-dasharray="2 2"/><path d="M8 13v3M12 12v5M16 11v7"/>',
+  density:'<path d="M8 3h8M9 3v15a3 3 0 006 0V3"/><path d="M9 11h6"/>',
+  momentum:'<path d="M2 18h20"/><rect x="3" y="11" width="7" height="5" rx="1"/><rect x="14" y="11" width="7" height="5" rx="1"/><path d="M4 7h6M8 5l2 2-2 2"/>',
+  belt:'<path d="M5 3l14 18M12 3v18"/><rect x="10" y="10" width="4" height="4"/>',
+  rocket:'<path d="M12 2c3 3 4 7 4 11l-4 3-4-3c0-4 1-8 4-11z"/><path d="M10 18l-1 4M14 18l1 4M12 17v5"/>',
+  snow:'<ellipse cx="12" cy="18" rx="9" ry="3"/><path d="M9 15V5h4v10"/>',
+  dam:'<path d="M4 4v16h16"/><path d="M9 4l4 16"/><path d="M4 9h3M4 13h4M4 17h5" stroke-dasharray="1 2"/>',
+  ship:'<path d="M3 15l2 5h14l2-5z"/><path d="M7 15V9h10v6M12 9V5"/>',
+  skate:'<circle cx="8" cy="5" r="2"/><circle cx="17" cy="5" r="2"/><path d="M8 7v8M17 7v8M10 11h5M5 19h6M14 19h6"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"forces", name:"Forces and Newton's laws", short:"Six types of force, free-body diagrams and Newton's three laws.", tint:"var(--blush)"},
+  {id:"newton2", name:"Verifying F = ma", short:"Resultant force, mass and acceleration: show a ∝ F with light gates.", tint:"var(--apricot)"},
+  {id:"lift", name:"Constant resultant force", short:"Lifts, cars and skydivers: use F = ma, then the equations of motion.", tint:"var(--sage)"},
+  {id:"pressure", name:"Pressure and upthrust", short:"P = F/A on a surface, P = hρg in a liquid, and Archimedes' principle.", tint:"var(--cream)"},
+  {id:"density", name:"Density", short:"ρ = m/V: measure mass and volume, plot a graph and identify a material.", tint:"var(--blush)"},
+  {id:"momentum", name:"Momentum and collisions", short:"p = mv, conservation of momentum in one and two dimensions, and impulse.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Force","F","Anything that changes (or tends to change) the velocity of a body. A vector, measured in newtons (N).","forces"],
+  ["Newton","N","The SI unit of force: the force that gives a mass of 1 kg an acceleration of 1 m/s².","forces","1 N = 1 kg m/s²"],
+  ["Mass","m","The amount of matter in a body, and a measure of its inertia. A scalar, in kilograms (kg).","forces"],
+  ["Weight","W","The gravitational force on a body. A vector, in newtons, acting down through the centre of mass.","forces","W = mg"],
+  ["g","acceleration due to gravity","9.8 m/s² near the Earth's surface. Also the weight per kilogram: 9.8 N/kg.","forces"],
+  ["Centre of mass","","The point where all the mass of a body can be taken to act. The weight acts through it.","forces"],
+  ["Inertia","","The tendency of a body to resist any change in its motion. More mass means more inertia.","forces"],
+  ["Newton's first law","","A body stays at rest, or moves with constant velocity in a straight line, unless a resultant external force acts on it.","forces"],
+  ["Newton's second law","","The rate of change of momentum of a body is proportional to the resultant force and takes place in the direction of that force.","forces","F = ma"],
+  ["Newton's third law","","If body A exerts a force on body B, then B exerts an equal and opposite force on A. The two forces act on different bodies.","forces"],
+  ["Resultant force","net force, Fnet","The single force with the same effect as all the forces acting together: the vector sum of all the forces.","forces","Fnet = ma"],
+  ["Equilibrium","","A body is in equilibrium when the resultant force on it is zero: it is at rest or moving at constant velocity.","forces"],
+  ["Free-body diagram","force diagram","A sketch of one object showing every force acting on it as a labelled arrow.","forces"],
+  ["Normal reaction","R, normal force","The push of a surface on an object, at right angles (normal) to the surface.","forces"],
+  ["Friction","","A force that opposes sliding (or attempted sliding) between two surfaces in contact.","forces","F = μR (sliding)"],
+  ["Coefficient of friction","μ","Friction ÷ normal reaction for sliding surfaces. No unit; depends on the two surfaces.","forces"],
+  ["Resistance","air resistance, drag","A force that opposes motion through a fluid (air or water). It grows as the speed grows.","forces"],
+  ["Tension","T","The pulling force in a stretched string, rope or cable.","forces"],
+  ["Buoyancy","upthrust, buoyant force","The upward force a fluid exerts on an object in it, equal to the weight of fluid displaced.","pressure","U = ρ(fluid) V g"],
+  ["Gravitational force","","The attractive force between masses. Near the Earth it is the weight, W = mg.","forces"],
+  ["Terminal velocity","","The constant velocity a falling object reaches when air resistance equals its weight.","lift"],
+  ["Driving force","thrust","The forward force from an engine, legs or propeller.","lift"],
+  ["Apparent weight","","The reading on scales: the normal reaction R. In a lift, R = m(g + a).","lift","R − mg = ma"],
+  ["Free fall","","Motion under gravity alone (a = g). In a falling lift, the scales read zero: 'weightlessness'.","lift"],
+  ["Uniform acceleration","constant acceleration","Produced by a constant resultant force. The equations of motion apply.","lift"],
+  ["Friction-compensated runway","","A runway tilted just enough that a trolley, once pushed, moves at constant velocity. The slope cancels friction.","newton2"],
+  ["Light gate","","A beam of light and a sensor. A card on the trolley breaks the beam; the data logger times it.","newton2"],
+  ["Data logger","","An electronic device that records measurements automatically. With two light gates it can calculate acceleration.","newton2"],
+  ["Directly proportional","∝","y ∝ x: a graph of y against x is a straight line through the origin.","newton2"],
+  ["Primary data","","Data you collect yourself in your own experiment.","newton2"],
+  ["Secondary data","","Data collected by someone else, e.g. published results or another class's force-sensor traces.","newton2"],
+  ["Pressure","P","Force per unit area.","pressure","P = F / A"],
+  ["Pascal","Pa","The SI unit of pressure: 1 Pa = 1 N/m².","pressure"],
+  ["Liquid pressure","","The pressure at a depth h in a liquid of density ρ: P = hρg. It acts equally in all directions.","pressure","P = hρg"],
+  ["Atmospheric pressure","","The pressure of the air above us: about 101 000 Pa (1.01 × 10⁵ Pa) at sea level.","pressure"],
+  ["Archimedes' principle","","A body wholly or partly immersed in a fluid experiences an upthrust equal to the weight of fluid displaced.","pressure"],
+  ["Law of flotation","","A floating object displaces its own weight of fluid.","pressure"],
+  ["Fluid","","A liquid or a gas: anything that can flow.","pressure"],
+  ["Density","ρ (rho)","Mass per unit volume. Unit kg/m³ (or g/cm³).","density","ρ = m / V"],
+  ["kg/m³","","The SI unit of density. Water: 1000 kg/m³.","density"],
+  ["g/cm³","","A smaller unit of density. 1 g/cm³ = 1000 kg/m³.","density"],
+  ["Displacement method","","Find the volume of an irregular solid from the rise in water level when it is lowered into a measuring cylinder.","density"],
+  ["Overflow can","eureka can","A can with a spout. The water pushed out by an object is collected and measured: its volume equals the object's.","density"],
+  ["Meniscus","","The curved surface of a liquid in a tube. Read the bottom of a water meniscus, with your eye level with it.","density"],
+  ["Volume","V","The space an object takes up. m³ or cm³ (1 m³ = 1 000 000 cm³).","density"],
+  ["Momentum","p","Mass × velocity. A vector, in kg m/s.","momentum","p = mv"],
+  ["Principle of conservation of momentum","","In any collision or interaction, the total momentum stays the same, provided no external force acts.","momentum","m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂"],
+  ["Impulse","","Force × the time it acts. It equals the change in momentum. Unit N s.","momentum","Ft = mv − mu"],
+  ["Collision","","An interaction where bodies push on each other for a short time, exchanging momentum.","momentum"],
+  ["Elastic collision","","A collision in which kinetic energy is also conserved.","momentum"],
+  ["Inelastic collision","","A collision in which some kinetic energy becomes heat, sound or deformation. Momentum is still conserved.","momentum"],
+  ["Recoil","","The backward motion of one body when it pushes another forwards, e.g. a gun firing or two skaters pushing apart.","momentum"],
+  ["Air track","","A track with tiny air jets so gliders float with almost no friction: a near-closed system for collisions.","momentum"],
+  ["Parallel component","","In a 2D collision, the part of a velocity (or momentum) along the original direction of motion.","momentum"],
+  ["Perpendicular component","","The part of a velocity (or momentum) at right angles to the original direction. Its total stays zero if it started at zero.","momentum"],
+  ["Kinetic energy","KE","The energy of a moving body: ½mv². A scalar, in joules.","momentum","KE = ½mv²"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["resultant","Resultant force"],["free-body","Free-body diagram"],["normal reaction","Normal reaction"],["friction","Friction"],["tension","Tension"],["upthrust","Buoyancy"],["weight","Weight"],["inertia","Inertia"],["momentum","Momentum"],["impulse","Impulse"],["pressure","Pressure"],["density","Density"],["equilibrium","Equilibrium"],["light gate","Light gate"],["secondary data","Secondary data"],["terminal velocity","Terminal velocity"],["centre of mass","Centre of mass"],["meniscus","Meniscus"],["Archimedes","Archimedes' principle"],["elastic","Elastic collision"]];
+
+/* ---------- glossary links + canvas helpers ---------- */
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function dbl(ctx,x1,y1,x2,y2,color,w=2){ line(ctx,x1,y1,x2,y2,color,w); const a=Math.atan2(y2-y1,x2-x1); arrowHead(ctx,x2,y2,a,color,8); arrowHead(ctx,x1,y1,a+Math.PI,color,8); }
+function dimArrow(ctx,xa,xb,y,label,col){ line(ctx,xa,y,xb,y,col,1.4); arrowHead(ctx,xa,y,Math.PI,col,7); arrowHead(ctx,xb,y,0,col,7); line(ctx,xa,y-5,xa,y+5,col,1.2); line(ctx,xb,y-5,xb,y+5,col,1.2); if(label) text(ctx,label,(xa+xb)/2,y-5,col,F(12),"center"); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const s3 = x => (+x.toPrecision(3)).toString();
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
+const sup = n => String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(x,d=3){ if(x===0) return "0"; let e=Math.floor(Math.log10(Math.abs(x))), ms=(x/Math.pow(10,e)).toFixed(d-1);
+  if(Math.abs(+ms)>=10){ e++; ms=(x/Math.pow(10,e)).toFixed(d-1); } return e===0? ms : `${ms} × 10${sup(e)}`; }
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+
+/* ================= MODELS + DRAWINGS ================= */
+const G = 9.8;
+const rad = d => d*Math.PI/180, deg = r => r*180/Math.PI;
+// Box pulled along a floor
+function fbModel(o){ const W=o.m*G, th=rad(o.th), Px=o.P*Math.cos(th), Py=o.P*Math.sin(th), N=Math.max(0,W-Py), fmax=o.mu*N;
+  let f, a; if(Px<=fmax+1e-9){ f=Px; a=0; } else { f=fmax; a=(Px-fmax)/o.m; }
+  return {W,Px,Py,N,fmax,f,a,lift:Py>W+1e-9}; }
+function drawBox(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, r=fbModel(o), fy=h*(cp?0.72:0.68), bw=cp?Math.min(64,w*0.2):Math.min(130,w*0.24), bh=cp?42:Math.min(80,h*0.26), cx=w*0.4, cy=fy-bh/2;
+  ctx.fillStyle=C["surface-2"]; ctx.fillRect(0,fy,w,h-fy); line(ctx,0,fy,w,fy,C.ink,2);
+  if(!cp) for(let x=10;x<w;x+=16) line(ctx,x,fy+3,x-8,fy+11,C.line,1);
+  rrect(ctx,cx-bw/2,cy-bh/2,bw,bh,6,C.apricot,C.ink,1.5);
+  circle(ctx,cx,cy,cp?2.5:3.5,"#3b2b21");
+  const Fm=Math.max(r.W,o.P,r.N,1), sc=(cp?h*0.3:Math.min(h*0.3,w*0.26))/Fm, L=v=>v*sc, fs=cp?10:12;
+  const lb=(t,x,y,col,al)=>text(ctx,t,x,y,col,F(fs),al||"center");
+  if(r.W>0){ arrow(ctx,cx+7,cy,cx+7,cy+L(r.W),C.bad,cp?2.2:3); lb(cp?"W":`W = ${s3(r.W)} N`,cx+12,cy+L(r.W)-2,C.bad,"left"); }
+  if(r.N>0.05){ arrow(ctx,cx-7,cy,cx-7,cy-L(r.N),C.olive,cp?2.2:3); lb(cp?"R":`R = ${s3(r.N)} N`,cx-12,cy-L(r.N)+10,C["olive-ink"],"right"); }
+  if(r.f>0.05){ arrow(ctx,cx-bw/2,fy-5,cx-bw/2-L(r.f),fy-5,C.terra,cp?2.2:3); lb(cp?"f":`f = ${s3(r.f)} N`,cx-bw/2-L(r.f)/2,fy-11,C["terra-ink"]); }
+  if(o.P>0.05){ const t=rad(o.th), x0=cx+bw/2, y0=cy, x1=x0+L(o.P)*Math.cos(t), y1=y0-L(o.P)*Math.sin(t);
+    line(ctx,x0,y0,x0+(w-x0)*Math.cos(t),y0-(w-x0)*Math.sin(t),C.muted,1.2,[3,4]);
+    arrow(ctx,x0,y0,x1,y1,C.ink,cp?2.2:3); lb(cp?"T":`T = ${s3(o.P)} N`,x1+4,y1-8,C.ink,"left"); }
+  if(!cp){ const net=r.lift? 0 : r.Px-r.f;
+    text(ctx,r.lift?"The pull lifts the box off the floor":r.a>0?`Resultant = ${s3(net)} N →  a = ${s3(r.a)} m/s²`:"Resultant = 0: the box stays at rest",14,24,r.a>0||r.lift?C.good:C.muted,F(13));
+    if(r.a>0 && !r.lift) arrow(ctx,14,38,14+Math.max(16,Math.min(w*0.4,L(net))),38,C.good,3); }
+}
+// F = ma runway
+const N2_DISC = 0.020, N2_TOTAL = 6, N2_RUN = 0.8;
+function drawN2(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, pad=cp?10:24, ry=cp?h*0.45:h*0.46, pr=cp?7:11, px=w-pad-pr-(cp?4:10);
+  line(ctx,pad,ry,px,ry,C.ink,cp?2.5:3.5); line(ctx,px,ry,px,ry+(cp?10:16),C.ink,2);
+  circle(ctx,px,ry,pr,C["surface-2"],C.ink,2);
+  const tw=cp?44:Math.min(80,w*0.14), th=cp?14:22, x0=pad+tw/2+4, x1=px-pr-tw/2-(cp?24:40), xs=x0+Math.min(1,o.p)*(x1-x0);
+  [0.3,0.85].forEach(f=>{ const gx=x0+tw/2+f*(x1-x0)*0.98; rrect(ctx,gx-5,ry-(cp?30:50),10,cp?26:44,3,null,C.olive,2.5); line(ctx,gx,ry-(cp?26:44),gx,ry-4,C.bad,1.2,[3,3]); });
+  const top=ry-th-(cp?5:7);
+  rrect(ctx,xs-tw/2,top,tw,th,5,C.terra); circle(ctx,xs-tw/4,ry-(cp?3:4),cp?3:4.5,C.ink); circle(ctx,xs+tw/4,ry-(cp?3:4),cp?3:4.5,C.ink);
+  const dh=cp?3.5:6, dw=cp?12:20, nT=N2_TOTAL-o.n;
+  for(let k=0;k<nT;k++){ const col=k%3, row=Math.floor(k/3); rrect(ctx,xs-tw/2+4+col*(dw+3),top-dh-1-row*(dh+1),dw,dh,2,C.olive); }
+  line(ctx,xs+tw/2,top+th/2,px,ry-pr,C.ink,1.3);
+  const hy0=ry+pr+(cp?8:14), drop=Math.min(1,o.p)*Math.min(x1-x0,h-hy0-o.n*(dh+1)-(cp?8:16));
+  const hy=hy0+drop; line(ctx,px+pr,ry,px+pr,hy,C.ink,1.3);
+  for(let k=0;k<o.n;k++) rrect(ctx,px+pr-dw/2,hy+k*(dh+1),dw,dh,2,C.olive,C.ink,1);
+  if(!cp){ const bw=Math.min(180,w*0.42), bh=48, bx=pad, by=10; rrect(ctx,bx,by,bw,bh,10,C.ink); text(ctx,"DATA LOGGER",bx+10,by+16,C.bg,M(10)); text(ctx,o.aShow==null?"a = –.––– m/s²":`a = ${o.aShow.toFixed(3)} m/s²`,bx+10,by+38,C.bg,M(15));
+    text(ctx,`hanger: ${o.n} × 20 g   F = ${(o.n*N2_DISC*G).toFixed(3)} N`,pad,h-12,C.muted,F(12,600)); }
+}
+// Lift
+const STAGES = [
+  {n:"At rest",s:0,v:0},{n:"Speeding up going up",s:1,v:1},{n:"Steady speed up",s:0,v:1},{n:"Slowing down going up",s:-1,v:1},
+  {n:"Speeding up going down",s:-1,v:-1},{n:"Slowing down going down",s:1,v:-1},{n:"Cable snaps",s:"g",v:-1}];
+const liftA = (st,a) => st.s==="g"? -G : st.s*a;
+function drawLift(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, st=STAGES[o.stage], a=liftA(st,o.a), R=Math.max(0,o.m*(G+a)), W=o.m*G;
+  const sw=cp?Math.min(120,w*0.4):Math.min(180,w*0.34), sx=w/2-sw/2, top=cp?8:14, bot=h-(cp?8:14);
+  rrect(ctx,sx-8,top,sw+16,bot-top,6,C["surface-2"],C.line,1.5);
+  const ch=(bot-top)*0.72, cy0=top+(bot-top-ch)/2 - st.v*(cp?6:10);
+  rrect(ctx,sx,cy0,sw,ch,6,C.surface,C.ink,2); line(ctx,w/2,top,w/2,cy0,C.muted,1.5,st.s==="g"?[4,4]:null);
+  const fl=cy0+ch-8, scw=sw*0.42; rrect(ctx,w/2-scw/2,fl-(cp?9:13),scw,cp?9:13,3,C.cream,C.ink,1.2);
+  if(!cp) text(ctx,`${(R/G).toFixed(1)} kg`,w/2,fl-3,"#3b2b21",M(10),"center");
+  const fh=ch*0.55, fx=w/2, ft=fl-(cp?9:13), hd=cp?6:9;
+  line(ctx,fx,ft,fx-hd*0.7,ft-fh*0.35,C.ink,2.5); line(ctx,fx,ft,fx+hd*0.7,ft-fh*0.35,C.ink,2.5);
+  line(ctx,fx,ft-fh*0.35,fx,ft-fh*0.8,C.ink,3); circle(ctx,fx,ft-fh*0.8-hd,hd,C.apricot,C.ink,1.5);
+  const ccy=ft-fh*0.5, Fm=o.m*(G+3), sc=(ch*0.42)/Fm;
+  const wx=fx+sw*0.3, wl=Math.min(W*sc,ft-ccy-6);
+  if(R>0.5) arrow(ctx,fx-scw*0.32,ft,fx-scw*0.32,ft-R*sc,C.olive,cp?2.2:3); arrow(ctx,wx,ccy,wx,ccy+wl,C.bad,cp?2.2:3);
+  text(ctx,cp?"R":`R = ${s3(R)} N`,fx-scw*0.32-4,Math.max(cy0+14,ft-R*sc+4),C["olive-ink"],F(cp?10:12),"right");
+  text(ctx,cp?"W":`W = ${s3(W)} N`,wx-4,ccy-6,C.bad,F(cp?10:12),"center");
+  const ax=sx+sw+(cp?18:28);
+  if(Math.abs(a)>0.01){ const L=Math.min(ch*0.4,Math.abs(a)/G*ch*0.9+18)*Math.sign(a); arrow(ctx,ax,ccy,ax,ccy-L,C.terra,cp?2.5:3.5); if(!cp && ax+6<w-4) text(ctx,"a",ax+6,ccy-L/2,C["terra-ink"],F(13)); }
+  const vx=sx-(cp?18:28);
+  if(st.v){ arrow(ctx,vx,ccy+st.v*18,vx,ccy-st.v*18,C.good,cp?2.5:3.5); if(!cp && vx-6>4) text(ctx,"v",vx-6,ccy+4,C.good,F(13),"right"); }
+}
+// Pressure
+const FACES = [[0.20,0.10,0.05,"20 cm × 10 cm"],[0.20,0.05,0.10,"20 cm × 5 cm"],[0.10,0.05,0.20,"10 cm × 5 cm"]];
+const BRICK_M = 2.0;
+const LIQ = [["Fresh water",1000],["Sea water",1030],["Cooking oil",920],["Glycerol",1260]];
+const BLOCK_V = 0.001, BLOCK_RHO = 2700;
+function drawPressure(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact;
+  if(o.mode==="solid"){
+    const [lx,ly,hz,lab]=FACES[o.face], fy=h*(cp?0.62:0.58), k=Math.min((w*0.5)/0.20,(fy-(cp?10:30))/0.20), bw=lx*k, bh=hz*k, cx=w/2;
+    ctx.fillStyle=C["surface-2"]; ctx.fillRect(0,fy,w,h-fy); line(ctx,0,fy,w,fy,C.ink,2);
+    rrect(ctx,cx-bw/2,fy-bh,bw,bh,3,C.terra,C.ink,1.5);
+    const P=BRICK_M*G/(lx*ly), n=Math.max(2,Math.round(bw/18)), L=P/3920*(h-fy-(cp?8:30));
+    for(let i=0;i<n;i++){ const x=cx-bw/2+(i+0.5)*bw/n; arrow(ctx,x,fy+3,x,fy+3+Math.max(8,L),C.bad,cp?1.8:2.4); }
+    if(!cp){ text(ctx,`resting on the ${lab} face`,cx,fy-bh-10,C.ink,F(13),"center"); text(ctx,`P = ${Math.round(P)} Pa`,cx+bw/2+12,fy+24,C.bad,F(14),"left"); }
+    return; }
+  const rho=LIQ[o.liq][1], wide=!cp&&w>=520, tx=cp?10:24, tw=wide? w*0.62 : w-(cp?20:48), ty=cp?14:30, tb=h-(cp?8:16), Hm=5, Y=d=>ty+d/Hm*(tb-ty);
+  ctx.save(); ctx.globalAlpha=.55; ctx.fillStyle=C.sage; ctx.fillRect(tx,ty,tw,tb-ty); ctx.restore();
+  line(ctx,tx,ty-8,tx,tb,C.ink,2.5); line(ctx,tx,tb,tx+tw,tb,C.ink,2.5); line(ctx,tx+tw,ty-8,tx+tw,tb,C.ink,2.5); line(ctx,tx,ty,tx+tw,ty,C.ink,1,[4,3]);
+  for(let d=1; d<=5; d++){ const y=Y(d), L=(cp?4:8)+d*(cp?3:7); arrow(ctx,tx+tw-2,y,tx+tw-2-L,y,C.bad,1.8); if(!cp){ line(ctx,tx-6,y,tx,y,C.ink,1.2); text(ctx,d+" m",tx+4,y-4,C.muted,M(10)); } }
+  const px=tx+tw*0.3, py=Y(o.h); line(ctx,px,ty-(cp?6:14),px,py,C.ink,1.5); circle(ctx,px,py,cp?4:6,C.terra,C.ink,1.5);
+  const P=o.h*rho*G;
+  if(!cp) text(ctx,`P = ${String(Math.round(P)).replace(/\B(?=(\d{3})+(?!\d))/g," ")} Pa`,px-10,py+4,C.ink,F(13),"right");
+  if(o.block){ const bx=wide? tx+tw*0.62 : tx+tw*0.66, bs=cp?22:Math.min(46,(tb-ty)*0.18), by=Y(2.6), U=rho*BLOCK_V*G, Wb=BLOCK_RHO*BLOCK_V*G;
+    line(ctx,bx,ty-(cp?6:20),bx,by-bs/2,C.ink,1.3); rrect(ctx,bx-bs/2,by-bs/2,bs,bs,3,C.cream,C.ink,1.5);
+    const sc=(cp?26:58)/Wb; arrow(ctx,bx-bs*0.25,by-bs/2,bx-bs*0.25,by-bs/2-U*sc,C.olive,cp?2:2.8); arrow(ctx,bx+bs*0.25,by,bx+bs*0.25,by+Wb*sc,C["terra-ink"],cp?2:2.8);
+    if(!cp){ text(ctx,`U = ${U.toFixed(1)} N`,bx+bs/2+6,by-bs/2+4,C["olive-ink"],F(12)); text(ctx,`W = ${Wb.toFixed(1)} N`,bx+bs*0.25+6,by+Wb*sc-4,C["terra-ink"],F(12)); }
+    if(wide){ const gx=w-pad2(w)-120, gy=ty-6; rrect(ctx,gx,gy,120,56,10,C.ink); text(ctx,"SPRING BALANCE",gx+10,gy+16,C.bg,M(9)); text(ctx,`${(Wb-U).toFixed(1)} N`,gx+10,gy+42,C.bg,M(18)); } }
+}
+const pad2 = w => Math.min(24, w*0.05);
+// Density
+const MATS = [["Perspex",1.19],["Glass",2.50],["Aluminium",2.70],["Steel",7.85],["Brass",8.50],["Copper",8.96],["Lead",11.3]];
+const PIECES = [4.0,7.5,11.0,15.5,20.0,26.0];
+const CYL0 = 50;
+function drawDensity(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, base=h-(cp?10:22), side=w*0.5;
+  const bx=side*0.5, bw=Math.min(side*0.7,180), bht=cp?18:30;
+  rrect(ctx,bx-bw/2,base-bht,bw,bht,6,C.ink); rrect(ctx,bx-bw*0.38,base-bht-(cp?5:8),bw*0.76,cp?5:8,3,C.muted);
+  rrect(ctx,bx-bw*0.3,base-bht+5,bw*0.6,bht-10,4,C.cream);
+  text(ctx,o.mShow==null?"––.– g":`${o.mShow.toFixed(1)} g`,bx,base-bht/2+(cp?3:5),"#3b2b21",M(cp?9:14),"center");
+  const ps=(cp?8:14)*Math.cbrt(o.V);
+  if(!o.inCyl) rrect(ctx,bx-ps/2,base-bht-(cp?5:8)-ps,ps,ps*0.9,4,C.apricot,C.ink,1.2);
+  const cx=side+side*0.5, cw=cp?34:Math.min(70,side*0.35), ct=cp?10:24, cb=base, Vmax=100, Y=v=>cb-v/Vmax*(cb-ct-6);
+  const lev=o.inCyl? CYL0+o.Vread : CYL0;
+  ctx.save(); ctx.globalAlpha=.55; ctx.fillStyle=C.sage; ctx.fillRect(cx-cw/2,Y(lev),cw,cb-Y(lev)); ctx.restore();
+  line(ctx,cx-cw/2,ct,cx-cw/2,cb,C.ink,2); line(ctx,cx+cw/2,ct,cx+cw/2,cb,C.ink,2); line(ctx,cx-cw/2-8,cb,cx+cw/2+8,cb,C.ink,3);
+  for(let v=10; v<=Vmax; v+=10){ line(ctx,cx-cw/2,Y(v),cx-cw/2+(v%50?8:14),Y(v),C.ink,1); if(!cp && v%20===0) text(ctx,String(v),cx-cw/2-6,Y(v)+4,C.muted,M(10),"right"); }
+  if(!cp) text(ctx,"cm³",cx-cw/2-6,ct+4,C.muted,M(10),"right");
+  if(o.inCyl){ rrect(ctx,cx-ps/2,cb-ps*0.9-2,ps,ps*0.9,4,C.apricot,C.ink,1.2); line(ctx,cx-cw/2,Y(CYL0),cx+cw/2,Y(CYL0),C.muted,1.2,[4,3]);
+    if(!cp){ text(ctx,`before ${CYL0.toFixed(1)}`,cx+cw/2+8,Y(CYL0)+4,C.muted,M(11)); text(ctx,`after ${lev.toFixed(1)}`,cx+cw/2+8,Y(lev)-2,C.ink,M(11)); } }
+  if(!cp){ text(ctx,"balance",bx,base+16,C.muted,F(11,600),"center"); text(ctx,"measuring cylinder",cx,base+16,C.muted,F(11,600),"center"); }
+}
+// Air track collisions
+const AT_L = 2.0, GL_L = 0.20, X1 = 0.35, X2 = 1.05;
+function atColl(o){ const rel=o.u1-o.u2, M=o.m1+o.m2, P=o.m1*o.u1+o.m2*o.u2;
+  const v1=(P-o.m2*o.e*(o.u1-o.u2))/M, v2=(P+o.m1*o.e*(o.u1-o.u2))/M;
+  let tc = rel>1e-9 ? (X2-X1-GL_L)/rel : Infinity;
+  if(isFinite(tc) && X2+o.u2*tc+GL_L/2>AT_L) tc=Infinity;
+  return {tc,v1,v2,P}; }
+function atPos(o,t){ const c=atColl(o); let x1,x2;
+  if(t<c.tc){ x1=X1+o.u1*t; x2=X2+o.u2*t; } else { x1=X1+o.u1*c.tc+c.v1*(t-c.tc); x2=X2+o.u2*c.tc+c.v2*(t-c.tc); }
+  const lo=GL_L/2, hi=AT_L-GL_L/2; x1=Math.max(lo,Math.min(hi,x1)); x2=Math.max(lo,Math.min(hi,x2));
+  if(t>=c.tc){ if(x2-x1<GL_L){ if(x2>=hi-1e-9) x1=x2-GL_L; else x2=x1+GL_L; } }
+  return {x1, x2, after:t>=c.tc, c}; }
+function drawAir(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, pad=cp?10:22, ty=o.bars? h*0.42 : (cp?h*0.62:h*0.6), X=x=>pad+x/AT_L*(w-2*pad), k=(w-2*pad)/AT_L;
+  rrect(ctx,pad-4,ty,w-2*pad+8,cp?8:12,3,C["surface-2"],C.ink,1.5);
+  if(!cp) for(let x=pad+8;x<w-pad;x+=14) circle(ctx,x,ty+6,1.2,C.muted);
+  const p=atPos(o,o.t), v1=p.after? p.c.v1 : o.u1, v2=p.after? p.c.v2 : o.u2;
+  const gh=m=>(cp?8:12)+m*(cp?14:24);
+  [[p.x1,o.m1,v1,C.terra,"A"],[p.x2,o.m2,v2,C.olive,"B"]].forEach(([x,m,v,col,n])=>{
+    const gx=X(x), gw=GL_L*k, hh=gh(m); rrect(ctx,gx-gw/2,ty-hh,gw,hh,4,col,C.ink,1.2);
+    text(ctx,cp||gw<80?n:`${n} ${m.toFixed(2)} kg`,gx,ty-hh/2+4,"#3b2b21",F(cp?10:12),"center");
+    if(Math.abs(v)>0.01){ const L=v*(cp?28:60), y=ty-hh-(cp?8:14); arrow(ctx,gx,y,gx+L,y,C.ink,cp?2:2.6); if(!cp) text(ctx,`${v.toFixed(2)} m/s`,gx+L/2,y-8,C.ink,F(12),"center"); } });
+  if(!cp && !o.bars) text(ctx,p.after?"after the collision":isFinite(p.c.tc)?"before the collision":"they never meet on the track",pad,22,C.muted,F(13));
+  if(o.bars){ const pb=[o.m1*o.u1,o.m2*o.u2], pa=p.after? [o.m1*p.c.v1,o.m2*p.c.v2] : pb, by=h-(cp?12:18), bh=h*0.3, tot=Math.max(0.01,Math.abs(pb[0]+pb[1]));
+    const bar=(x,lab,vals)=>{ let y=by; vals.forEach((v,i)=>{ const hh=Math.max(0,v)/tot*bh; rrect(ctx,x,y-hh,w*0.18,hh,3,i?C.olive:C.terra); y-=hh; }); text(ctx,lab,x+w*0.09,by+14,C.ink,F(cp?10:12),"center"); };
+    bar(w*0.22,"p before",pb); bar(w*0.6,"p after",pa); }
+}
+// 2D glancing collision (equal masses, elastic, B at rest)
+const PUCK_M = 0.17;
+function drawGlance(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, th=rad(o.th), vA=o.u*Math.cos(th), vB=o.u*Math.sin(th), cx=w*0.38, cy=h/2, sc=Math.min(w*0.5,h*0.42)/3;
+  line(ctx,14,cy,w-14,cy,C.grid,1,[4,4]);
+  arrow(ctx,cx-o.u*sc-14,cy,cx-14,cy,C.terra,cp?2:2.6); circle(ctx,cx-o.u*sc-24,cy,cp?7:11,C.terra,C.ink,1.2);
+  circle(ctx,cx,cy,cp?7:11,C.olive,C.ink,1.2);
+  const ax=cx+vA*Math.cos(th)*sc, ay=cy-vA*Math.sin(th)*sc, bxx=cx+vB*Math.cos(Math.PI/2-th)*sc, byy=cy+vB*Math.sin(Math.PI/2-th)*sc;
+  line(ctx,cx,cy,ax,cy,C["terra-ink"],1.4,[4,3]); line(ctx,ax,cy,ax,ay,C["terra-ink"],1.4,[4,3]);
+  line(ctx,cx,cy,bxx,cy,C["olive-ink"],1.4,[4,3]); line(ctx,bxx,cy,bxx,byy,C["olive-ink"],1.4,[4,3]);
+  arrow(ctx,cx,cy,ax,ay,C.terra,cp?2.5:3.2); arrow(ctx,cx,cy,bxx,byy,C.olive,cp?2.5:3.2);
+  if(!cp){ text(ctx,`A before: ${o.u.toFixed(1)} m/s`,14,cy-18,C["terra-ink"],F(12));
+    text(ctx,`A: ${vA.toFixed(2)} m/s at ${o.th}°`,ax+8,ay,C["terra-ink"],F(12)); text(ctx,`B: ${vB.toFixed(2)} m/s at ${90-o.th}°`,bxx+8,byy+4,C["olive-ink"],F(12));
+    text(ctx,"dashed: parallel and perpendicular components",14,h-10,C.muted,F(11,600)); }
+}
+// Situations (infographics) and the drill
+const SITS = [
+  {n:"Book on a table", s:"table", f:[["R","u",1],["W","d",1]], d:"Weight down, normal reaction up, equal in size. Resultant zero: it stays at rest."},
+  {n:"Hanging lamp", s:"ceiling", f:[["T","u",1],["W","d",1]], d:"Tension in the cable balances the weight. In equilibrium."},
+  {n:"Skydiver at terminal velocity", s:"none", f:[["air resistance","u",1],["W","d",1]], d:"Air resistance has grown to equal the weight. Resultant zero: constant velocity (Newton's first law)."},
+  {n:"Car speeding up", s:"road", f:[["driving force","r",1.1],["resistance","l",0.55],["R","u",0.9],["W","d",0.9]], d:"Driving force > resistance: the resultant is forwards, so the car accelerates (F = ma)."},
+  {n:"Boat floating", s:"water", f:[["upthrust","u",1],["W","d",1]], d:"Upthrust = weight of water displaced = weight of the boat (law of flotation)."},
+  {n:"Box sliding to a stop", s:"floor", f:[["friction","l",0.7],["R","u",0.9],["W","d",0.9]], d:"Only friction acts along the floor, against the motion: the resultant is backwards, so it decelerates."},
+];
+function drawSit(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const S=SITS[o.k], cx=w/2, cy=h/2, bw=Math.min(70,w*0.22), bh=Math.min(40,h*0.2), base=Math.min(h*0.34,w*0.26);
+  if(S.s==="table"||S.s==="floor"||S.s==="road"){ ctx.fillStyle=C["surface-2"]; ctx.fillRect(0,cy+bh/2,w,h); line(ctx,0,cy+bh/2,w,cy+bh/2,C.ink,1.5); }
+  if(S.s==="ceiling"){ line(ctx,0,8,w,8,C.ink,3); line(ctx,cx,8,cx,cy-bh/2,C.muted,1.5); }
+  if(S.s==="water"){ ctx.save(); ctx.globalAlpha=.5; ctx.fillStyle=C.sage; ctx.fillRect(0,cy,w,h-cy); ctx.restore(); line(ctx,0,cy,w,cy,C.olive,1.5); }
+  if(S.s==="road"){ circle(ctx,cx-bw*0.3,cy+bh/2-5,6,C.ink); circle(ctx,cx+bw*0.3,cy+bh/2-5,6,C.ink); }
+  if(S.s==="water"){ ctx.fillStyle=C.apricot; ctx.beginPath(); ctx.moveTo(cx-bw/2,cy-bh/2); ctx.lineTo(cx+bw/2,cy-bh/2); ctx.lineTo(cx+bw*0.35,cy+bh/2); ctx.lineTo(cx-bw*0.35,cy+bh/2); ctx.closePath(); ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.2; ctx.stroke(); }
+  else if(S.s==="none"){ circle(ctx,cx,cy,Math.min(bw,bh)*0.5,C.apricot,C.ink,1.2); }
+  else rrect(ctx,cx-bw/2,cy-bh/2,bw,bh-(S.s==="road"?6:0),5,S.s==="road"?C.terra:C.apricot,C.ink,1.2);
+  if(o.k===5){ arrow(ctx,cx+bw/2+6,cy-bh/2-8,cx+bw/2+40,cy-bh/2-8,C.good,2); text(ctx,"v",cx+bw/2+44,cy-bh/2-4,C.good,F(11)); }
+  const D={u:[0,-1],d:[0,1],l:[-1,0],r:[1,0]};
+  S.f.forEach(([lab,dir,sz])=>{ const [dx,dy]=D[dir], sx=cx+dx*(dx?bw/2:0)+(dir==="u"?-6:dir==="d"?6:0), sy=cy+dy*(dy?0:0), L=base*sz;
+    const x0=dx? cx+dx*bw/2 : sx, y0=dy? cy : cy+ (dir==="l"&&S.s!=="none"?bh*0.2:0);
+    arrow(ctx,x0,y0,x0+dx*L,y0+dy*L,dir==="d"?C.bad:dir==="u"?C.olive:C.ink,2.4);
+    if(dx) text(ctx,lab,x0+dx*L/2,y0-8,C.ink,F(11),"center"); else text(ctx,lab,x0+6,y0+dy*L+(dy>0?-2:10),C.ink,F(11),"left"); });
+}
+function drawDrill(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cx=w/2, cy=h/2, bw=Math.min(70,w*0.2), bh=Math.min(50,h*0.26), mx=Math.max(...o.f), Lm=Math.min(w*0.3,h*0.36);
+  rrect(ctx,cx-bw/2,cy-bh/2,bw,bh,6,C.apricot,C.ink,1.5);
+  const dirs=[[0,-1,"up"],[0,1,"down"],[-1,0,"left"],[1,0,"right"]];
+  o.f.forEach((v,i)=>{ const [dx,dy]=dirs[i], L=12+v/mx*(Lm-12), x0=cx+dx*bw/2, y0=cy+dy*bh/2;
+    arrow(ctx,x0,y0,x0+dx*L,y0+dy*L,i<2?(i?C.bad:C.olive):C.terra,2.8);
+    text(ctx,v+" N",x0+dx*L+(dx?dx*6:8),y0+dy*L+(dy>0?0:dy<0?12:4),C.ink,F(13),dx<0?"right":"left"); });
+}
+// Infographic minis
+function axes(ctx,w,h,xl,yl,pad=28){ line(ctx,pad,h-pad,w-10,h-pad,C.ink,1.5); line(ctx,pad,10,pad,h-pad,C.ink,1.5); text(ctx,yl,pad+5,18,C.ink,F(11)); text(ctx,xl,w-10,h-pad-6,C.ink,F(11),"right"); }
+function drawAgraph(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const p=28; axes(ctx,w,h,"F (N)","a (m/s²)",p);
+  line(ctx,p,h-p,w-14,14,C.terra,3); line(ctx,p,h-p,w-14,h-p-(h-p-14)*0.5,C.olive,3);
+  text(ctx,"m = 0.5 kg",w*0.55,h*0.36,C["terra-ink"],F(11),"right"); text(ctx,"m = 1.0 kg",w-14,h*0.62,C["olive-ink"],F(11),"right"); }
+function drawPDepth(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const p=28; axes(ctx,w,h,"depth h (m)","P (Pa)",p);
+  line(ctx,p,h-p,w-14,24,C.ink,3); line(ctx,p,h-p,w-14,h-p-(h-p-24)*0.73,C.apricot,3);
+  text(ctx,"glycerol",w*0.62,h*0.32,C.ink,F(11),"right"); text(ctx,"oil",w-14,h*0.48,C["terra-ink"],F(11),"right"); }
+function drawPBars(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const base=h-26, bh=h-56, bw=w*0.22;
+  rrect(ctx,w*0.2,base-bh,bw,bh,3,C.terra); text(ctx,"A 0.40",w*0.2+bw/2,base-bh/2,"#3b2b21",F(11),"center");
+  rrect(ctx,w*0.58,base-bh*0.625,bw,bh*0.625,3,C.terra); rrect(ctx,w*0.58,base-bh,bw,bh*0.375,3,C.olive);
+  text(ctx,"A 0.25",w*0.58+bw/2,base-bh*0.3,"#3b2b21",F(11),"center"); text(ctx,"B 0.15",w*0.58+bw/2,base-bh*0.8,"#3b2b21",F(11),"center");
+  text(ctx,"before",w*0.2+bw/2,h-8,C.ink,F(12),"center"); text(ctx,"after",w*0.58+bw/2,h-8,C.ink,F(12),"center"); text(ctx,"kg m/s",8,16,C.muted,F(11)); }
+function drawFtime(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const pl=44, pr=14, pt=14, pb=26, mid=(h-pb+pt)/2, T=0.2, Fp=6.2, Fm=8, X=t=>pl+t/T*(w-pl-pr), Y=f=>mid-f/Fm*((h-pb-pt)/2);
+  line(ctx,pl,Y(0),w-pr,Y(0),C.ink,1.4); line(ctx,pl,pt,pl,h-pb,C.ink,1.4);
+  [-8,-4,4,8].forEach(f=>{ line(ctx,pl,Y(f),w-pr,Y(f),C.grid,1); text(ctx,String(f),pl-5,Y(f)+4,C.muted,M(10),"right"); });
+  [0,0.05,0.1,0.15,0.2].forEach(t=>text(ctx,t.toFixed(2),X(t),h-pb+14,C.muted,M(10),"center"));
+  text(ctx,"F (N)",pl+5,pt+10,C.ink,F(11)); text(ctx,"t (s)",w-pr,Y(0)-6,C.ink,F(11),"right");
+  const pulse=t=> t<0.05||t>0.15? 0 : Fp*Math.sin((t-0.05)/0.1*Math.PI);
+  [[1,C.olive,"force on B"],[-1,C.terra,"force on A"]].forEach(([sg,col,lab])=>{ ctx.save(); ctx.globalAlpha=.25; ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(X(0.05),Y(0)); for(let i=0;i<=60;i++){ const t=0.05+i/60*0.1; ctx.lineTo(X(t),Y(sg*pulse(t))); } ctx.lineTo(X(0.15),Y(0)); ctx.closePath(); ctx.fill(); ctx.restore();
+    ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=3; ctx.beginPath(); for(let i=0;i<=80;i++){ const t=i/80*T; i?ctx.lineTo(X(t),Y(sg*pulse(t))):ctx.moveTo(X(t),Y(sg*pulse(t))); } ctx.stroke(); ctx.restore();
+    text(ctx,`${lab}: area ${sg>0?"+":"−"}0.39 N s`,X(0.155),Y(sg*Fp*0.7)+4,sg>0?C["olive-ink"]:C["terra-ink"],F(12)); });
+}
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); });
+}
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "forces", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3","lo4","lo5","lo6","lo7","lo8"]; const loState=store.get("s12-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s12-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s12-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  forces:{ vis:[["box",{m:5,P:25,th:20,mu:0.3}]], cap:"A 5 kg box pulled by a rope at 20°. Four forces act on it: weight, normal reaction, friction and tension.",
+    keys:[["1","Newton's 1st law: with no resultant force, an object stays at rest or keeps moving at constant velocity. This resistance to change is inertia."],["2","Newton's 2nd law: the resultant force causes an acceleration, F = ma. Weight is a force too: W = mg, acting through the centre of mass."],["3","Newton's 3rd law: if A pushes B, B pushes A back with an equal and opposite force. The two forces act on different objects."]],
+    f:"F = ma · W = mg", mistake:"Calling weight and normal reaction a third-law pair. They act on the same object. The pair to the book's weight is the book pulling the Earth up." },
+  newton2:{ vis:[["n2",{n:3,p:0.45}]], cap:"Moving 20 g discs from the trolley to the hanger changes the pulling force but keeps the total mass the same.",
+    keys:[["∝","Keep the mass constant and change the resultant force: a ∝ F. The a against F graph is a straight line through the origin."],["1/m","The slope of the a against F graph is 1/m, so the total mass m = 1 ÷ slope."],["⚖","Compensate for friction first: tilt the runway until a gently pushed trolley moves at constant velocity."]],
+    f:"a = F / m → slope of a v F = 1/m", mistake:"Adding extra discs to the hanger without taking them from the trolley. The total mass changes, so it isn't a fair test of a ∝ F." },
+  lift:{ vis:[["lift",{m:60,a:1.5,stage:1}]], cap:"Accelerating upwards: the scales push up harder than your weight, so they read more than 60 kg.",
+    keys:[["Σ","Find the resultant: add the forces with signs. Take the direction of the acceleration as positive."],["a","A constant resultant force gives a constant acceleration. Then the equations of motion from 1.1 apply."],["R","In a lift, R − mg = ma. The scales read R, so you feel heavier speeding up going up and lighter slowing down."]],
+    f:"Fnet = ma · v = u + at · s = ut + ½at²", mistake:"Putting the driving force into F = ma. F is the resultant: take away the resistance first." },
+  pressure:{ vis:[["press",{mode:"fluid",liq:0,h:3,block:true}]], cap:"Pressure in a liquid grows with depth. The block feels an upthrust equal to the weight of liquid it pushes aside.",
+    keys:[["P","Pressure = force ÷ area, in pascals (1 Pa = 1 N/m²). The same force on a smaller area gives a bigger pressure."],["h","In a liquid, P = hρg. It depends on depth and density, not on the shape of the container."],["↑","Upthrust = weight of fluid displaced (Archimedes). A floating object displaces its own weight of fluid."]],
+    f:"P = F / A · P = hρg", mistake:"Leaving the area in cm². Convert to m² first: 1 cm² = 0.0001 m²." },
+  density:{ vis:[["dens",{V:15.5,Vread:15.5,mShow:41.9,inCyl:true}]], cap:"Volume by displacement: the water level rises by the volume of the piece.",
+    keys:[["ρ","Density = mass ÷ volume, in kg/m³ or g/cm³. 1 g/cm³ = 1000 kg/m³."],["V","Regular solid: measure and multiply the sides. Irregular solid: displacement in a measuring cylinder or overflow can."],["📈","Plot m against V for several pieces: a straight line through the origin. The slope is the density."]],
+    f:"ρ = m / V", mistake:"Reading the top of the meniscus, or reading from above. Read the bottom of the meniscus with your eye level with it." },
+  momentum:{ vis:[["air",{m1:0.5,u1:0.8,m2:0.3,u2:0,e:0,t:1.5}]], cap:"Glider A hits B and they stick. Total momentum is 0.40 kg m/s before and after.",
+    keys:[["p","Momentum p = mv, in kg m/s. It's a vector: a velocity to the left gets a minus sign."],["=","With no external force, total momentum before = total momentum after. It follows from Newton's 2nd and 3rd laws."],["2D","In two dimensions, conserve momentum separately along (parallel) and across (perpendicular to) the original direction."]],
+    f:"m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂ · Ft = mv − mu", mistake:"Forgetting the minus sign for something moving the other way. Choose a positive direction before you start." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+$("cases").innerHTML = SITS.map((S,i)=>`<div class="panel rc-card"><canvas data-sit="${i}" aria-label="Free-body diagram: ${S.n}"></canvas><h3>${S.n}</h3><p>${S.d}</p></div>`).join("");
+const SEC = [[1,0.50,0.80,0.30,0.00,0.50,0.50,"stuck"],[2,0.50,0.60,0.50,0.00,0.30,0.30,"stuck"],[3,0.30,0.90,0.50,-0.30,0.15,0.15,"stuck"],[4,0.50,0.80,0.50,0.00,0.00,0.79,"springs"]];
+$("secT").innerHTML = `<tr><th style="text-align:left">Run</th><th>m<sub>A</sub> (kg)</th><th>u<sub>A</sub> (m/s)</th><th>m<sub>B</sub> (kg)</th><th>u<sub>B</sub> (m/s)</th><th>v<sub>A</sub> (m/s)</th><th>v<sub>B</sub> (m/s)</th><th>p before</th><th>p after</th></tr>`
+  + SEC.map(([r,ma,ua,mb,ub,va,vb,ty])=>`<tr><td style="text-align:left">${r} (${ty})</td><td>${ma.toFixed(2)}</td><td>${ua.toFixed(2)}</td><td>${mb.toFixed(2)}</td><td>${ub.toFixed(2)}</td><td>${va.toFixed(2)}</td><td>${vb.toFixed(2)}</td><td>${(ma*ua+mb*ub).toFixed(3)}</td><td>${(ma*va+mb*vb).toFixed(3)}</td></tr>`).join("");
+const AROUND = [
+  ["belt","Seatbelts, airbags and crumple zones","In a crash your momentum must drop to zero. Ft = change in momentum, so making the stopping time t longer makes the force F smaller.",[["Impulse","neutral"],["Road safety","alert"]],"var(--blush)"],
+  ["rocket","Rockets in space","A rocket pushes hot gas backwards; the gas pushes the rocket forwards (Newton's third law). Nothing to 'push against' is needed.",[["Newton's 3rd law","real"],["Momentum","neutral"]],"var(--apricot)"],
+  ["snow","Snowshoes and stiletto heels","Snowshoes spread your weight over a big area: low pressure, so you don't sink. A narrow heel puts the same weight on a tiny area: huge pressure.",[["P = F/A","neutral"]],"var(--sage)"],
+  ["dam","Dams are thicker at the bottom","Water pressure grows with depth (P = hρg), so the force on the lowest part of a dam is the greatest.",[["P = hρg","neutral"],["Engineering","real"]],"var(--cream)"],
+  ["ship","Steel ships float","A hull holds a lot of air, so the ship's average density is less than water's. It sinks until it displaces its own weight of water.",[["Upthrust","real"],["Density","neutral"]],"var(--blush)"],
+  ["skate","Skaters pushing apart","Two skaters at rest push off each other. Total momentum stays zero, so the lighter skater moves away faster.",[["Conservation of momentum","real"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"forces",label:"Forces & Newton",col:"var(--blush)",leaves:[["Newton's laws","1st: inertia. 2nd: F = ma. 3rd: equal and opposite pairs on different bodies."],["Six forces","Normal, friction, resistance, tension, buoyancy, gravitational."],["Free-body diagram","One object, every force on it, as labelled arrows."],["Weight","W = mg, acting through the centre of mass."]]},
+  {id:"newton2",label:"Verify F = ma",col:"var(--apricot)",leaves:[["a ∝ F","Straight line through the origin."],["Slope = 1/m","So m = 1 ÷ slope."],["Constant mass","Move discs from trolley to hanger."]]},
+  {id:"lift",label:"Resultant force",col:"var(--sage)",leaves:[["Fnet = ma","Forward forces − backward forces."],["Lift","R − mg = ma."],["Then suvat","Constant force → constant a."]]},
+  {id:"pressure",label:"Pressure",col:"var(--cream)",leaves:[["P = F/A","Pascal = N/m²."],["P = hρg","Grows with depth."],["Upthrust","= weight of fluid displaced."]]},
+  {id:"density",label:"Density",col:"var(--blush)",leaves:[["ρ = m/V","kg/m³ or g/cm³."],["Displacement","Volume of irregular solids."],["m v V graph","Slope = density."]]},
+  {id:"momentum",label:"Momentum",col:"var(--sage)",leaves:[["p = mv","A vector, kg m/s."],["Conservation","Total before = total after."],["Impulse","Ft = change in momentum."],["2D","Parallel and perpendicular components."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["forces","State Newton's first law of motion.","A body stays at rest, or moves with constant velocity in a straight line, unless a resultant external force acts on it."],
+  ["forces","State Newton's second law of motion.","The rate of change of momentum of a body is proportional to the resultant force and takes place in the direction of the force. This leads to F = ma."],
+  ["forces","State Newton's third law of motion.","If body A exerts a force on body B, then body B exerts an equal and opposite force on body A."],
+  ["forces","Define the newton.","The force that gives a mass of 1 kg an acceleration of 1 m/s²."],
+  ["forces","Distinguish between mass and weight.","Mass: amount of matter, in kg, a scalar, the same everywhere. Weight: the gravitational force on it, W = mg, in N, a vector that depends on g."],
+  ["forces","Name the six types of force in the specification.","Normal, frictional, resistant (e.g. air resistance), tension, buoyancy and gravitational."],
+  ["forces","What is the centre of mass?","The point where all the mass of a body can be taken to act. Its weight acts through this point."],
+  ["forces","What is inertia?","The tendency of a body to resist a change in its motion. More mass means more inertia."],
+  ["newton2","How do you show that a ∝ F for a trolley?","Friction-compensated runway. Vary the hanging force while keeping the total mass constant. Measure a with light gates. Plot a against F: a straight line through the origin."],
+  ["newton2","Why move discs from the trolley to the hanger?","So the total mass being accelerated stays constant. Only the force changes: a fair test."],
+  ["newton2","What does the slope of an a against F graph give?","1/m, where m is the total mass being accelerated."],
+  ["newton2","How do you compensate for friction on a runway?","Tilt it until a trolley, given a small push, moves at constant velocity (equal light-gate times or equal ticker-tape gaps)."],
+  ["lift","A 1200 kg car: driving force 3000 N, resistance 600 N. Find a.","Resultant = 3000 − 600 = 2400 N. a = F/m = 2400 / 1200 = 2.0 m/s²."],
+  ["lift","Why do you feel heavier as a lift starts going up?","R − mg = ma with a upwards, so R = m(g + a) > mg. The floor pushes up harder on you."],
+  ["lift","What does a constant resultant force produce?","A constant (uniform) acceleration, so the equations of motion can be used."],
+  ["lift","What is terminal velocity?","The constant velocity reached when air resistance equals weight, so the resultant force is zero."],
+  ["pressure","Define pressure and give its unit.","Force per unit area, P = F/A. Unit: the pascal (Pa); 1 Pa = 1 N/m²."],
+  ["pressure","Why do snowshoes stop you sinking into snow?","They spread your weight over a larger area, so the pressure on the snow is smaller."],
+  ["pressure","What does pressure in a liquid depend on?","Depth and the liquid's density: P = hρg. Not the shape or width of the container."],
+  ["pressure","State Archimedes' principle.","A body wholly or partly immersed in a fluid experiences an upthrust equal to the weight of fluid displaced."],
+  ["pressure","Why are dams thicker at the bottom?","Water pressure increases with depth, so the push on the bottom of the dam is greatest."],
+  ["density","Define density.","Mass per unit volume, ρ = m/V. Unit: kg/m³."],
+  ["density","How do you find the volume of an irregular solid?","Displacement: lower it into water in a measuring cylinder (or overflow can). The rise in level (or the water pushed out) is its volume."],
+  ["density","Convert 2.7 g/cm³ to kg/m³.","Multiply by 1000: 2700 kg/m³."],
+  ["momentum","Define momentum.","Mass × velocity, p = mv. A vector, in kg m/s."],
+  ["momentum","State the principle of conservation of momentum.","In any collision or interaction, the total momentum stays the same, provided no external force acts on the system."],
+  ["momentum","Define impulse.","Force × time it acts, Ft. It equals the change in momentum (N s)."],
+  ["momentum","How do airbags reduce injury?","They make the stopping time longer. Ft = change in momentum, so a longer t means a smaller force."],
+  ["momentum","Elastic or inelastic: what's the difference?","Elastic: kinetic energy is conserved too. Inelastic: some kinetic energy becomes heat and sound. Momentum is conserved in both."],
+  ["momentum","How do you solve a 2D collision?","Resolve each momentum into components parallel and perpendicular to the original direction. Conserve each set separately."],
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Forces on</text><text x="${cx}" y="${cy+22}" text-anchor="middle">a particle</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("s12-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s12-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s12-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s12-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["forces","A book rests on a table. The Newton's third law partner of the book's weight is:",["The table pushing up on the book","The book pulling the Earth upwards","The weight of the table","Friction on the book"],1,"The weight is the Earth pulling the book down, so its partner is the book pulling the Earth up. The table's push acts on the same object (the book), so it isn't the pair."],
+  ["forces","A car moves at constant velocity on a straight road. The resultant force on it is:",["Forwards","Backwards","Zero","Equal to its weight"],2,"No change in velocity means no acceleration, so the resultant force is zero (Newton's first law)."],
+  ["forces","The weight of a 6.0 kg mass on Earth (g = 9.8 m/s²) is:",["6.0 N","58.8 N","0.61 N","60 kg"],1,"W = mg = 6.0 × 9.8 = 58.8 N."],
+  ["forces","Which force holds up a boat floating on a lake?",["Tension","Buoyancy (upthrust)","Friction","Normal reaction from the lake bed"],1,"The water pushes up with an upthrust equal to the weight of water displaced."],
+  ["newton2","In the F = ma experiment, the a against F graph is a straight line through the origin. This shows that:",["a is proportional to F","a is inversely proportional to F","F is constant","the mass is increasing"],0,"A straight line through the origin means direct proportion: a ∝ F (for constant mass)."],
+  ["newton2","The slope of an a against F graph is 2.0 kg⁻¹. The total mass being accelerated is:",["2.0 kg","0.50 kg","4.0 kg","0.25 kg"],1,"Slope = 1/m, so m = 1 ÷ 2.0 = 0.50 kg."],
+  ["newton2","Why is the runway tilted slightly before the F = ma experiment?",["To make the trolley go faster","To compensate for friction","To increase the mass","To stop the string slipping"],1,"The slope is set so friction is cancelled: then the hanging weight is the resultant force."],
+  ["lift","A resultant force of 12 N acts on a 3.0 kg mass that starts at rest. Its velocity after 2.0 s is:",["4.0 m/s","8.0 m/s","24 m/s","2.0 m/s"],1,"a = F/m = 12/3.0 = 4.0 m/s². v = u + at = 0 + 4.0 × 2.0 = 8.0 m/s."],
+  ["lift","A 50 kg person stands on scales in a lift accelerating upwards at 2.0 m/s². The scales read (g = 9.8 m/s²):",["390 N","490 N","590 N","100 N"],2,"R − mg = ma, so R = m(g + a) = 50 × 11.8 = 590 N."],
+  ["lift","A skydiver is falling at terminal velocity. Which is true?",["Air resistance is greater than weight","Air resistance equals weight","Air resistance is zero","Weight is zero"],1,"Constant velocity means zero resultant force, so the upward and downward forces are equal."],
+  ["pressure","A person of weight 600 N stands on 0.040 m² of floor. The pressure on the floor is:",["24 Pa","15 000 Pa","1500 Pa","640 Pa"],1,"P = F/A = 600 / 0.040 = 15 000 Pa."],
+  ["pressure","The pressure due to water at a depth of 5.0 m (ρ = 1000 kg/m³, g = 9.8 m/s²) is:",["5000 Pa","49 000 Pa","4900 Pa","490 000 Pa"],1,"P = hρg = 5.0 × 1000 × 9.8 = 49 000 Pa."],
+  ["pressure","An object fully under water displaces 0.0020 m³ of water. The upthrust on it is:",["2.0 N","9.8 N","19.6 N","0.0020 N"],2,"Upthrust = weight of water displaced = ρVg = 1000 × 0.0020 × 9.8 = 19.6 N."],
+  ["density","A 54 g stone raises the water in a measuring cylinder by 20 cm³. Its density is:",["2.7 g/cm³","0.37 g/cm³","1080 g/cm³","74 g/cm³"],0,"ρ = m/V = 54 / 20 = 2.7 g/cm³ (2700 kg/m³)."],
+  ["density","When reading a measuring cylinder of water you should read:",["The top of the meniscus, from above","The bottom of the meniscus, at eye level","Either edge of the water","The highest mark on the scale"],1,"Reading at eye level avoids parallax error; for water, use the bottom of the curve."],
+  ["momentum","The momentum of a 0.20 kg ball moving at 15 m/s is:",["3.0 kg m/s","75 kg m/s","0.013 kg m/s","15.2 kg m/s"],0,"p = mv = 0.20 × 15 = 3.0 kg m/s."],
+  ["momentum","A 2.0 kg trolley at 3.0 m/s hits a 1.0 kg trolley at rest and they stick together. Their common velocity is:",["1.0 m/s","1.5 m/s","2.0 m/s","3.0 m/s"],2,"Momentum before = 2.0 × 3.0 = 6.0 kg m/s = 3.0 × v, so v = 2.0 m/s."],
+  ["momentum","With no external forces, momentum is conserved in:",["Elastic collisions only","Collisions where the objects stick only","All collisions","No collisions"],2,"Momentum is conserved in every collision. Kinetic energy is conserved only in elastic ones."],
+  ["momentum","A 60 kg skater and a 40 kg skater, both at rest, push apart. The 60 kg skater moves off at 2.0 m/s. The 40 kg skater moves at:",["2.0 m/s in the same direction","3.0 m/s in the opposite direction","1.3 m/s in the opposite direction","0 m/s"],1,"Total momentum stays zero: 60 × 2.0 = 40 × v, so v = 3.0 m/s the other way."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s12-best",null); if(best==null||pct>best) store.set("s12-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Define","Give the exact meaning in one full, precise sentence.","Define momentum."],
+  ["State","Give a short fact, law or value. No explanation needed.","State Newton's third law of motion."],
+  ["Model","Use a diagram, equation, graph or simulation to represent how something behaves, and use it to predict.","Model the forces on a person in a lift."],
+  ["Verify","Show by experiment or calculation that a law or relationship holds.","Verify Newton's second law using light gates."],
+  ["Investigate","Observe, study or examine in detail to establish facts and reach new conclusions.","Investigate the density of an irregular solid."],
+  ["Solve","Work out the answer to a problem, showing each step.","Solve for the pressure under a brick."],
+  ["Calculate","Write the formula, substitute the numbers, give the answer with a unit.","Calculate the common velocity after a collision."],
+  ["Explain","Give reasons, using physics ideas, for why something happens.","Explain why airbags reduce injuries."],
+  ["Describe","Give the steps or features in a clear order.","Describe how to measure the acceleration of a trolley."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+
+// Calculation trainer
+function parseNum(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,ch=>({"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-"})[ch]);
+  s=s.replace(/[x×*]10\^?/i,"e");
+  return parseFloat(s);
+}
+const PTYPES = {
+  fma:{ name:"a = F/m", gen(){ const F=pick([6,10,12,15,24,30,45]), m=pick([2,3,4,5,6]), a=F/m;
+    return { q:`A resultant force of <b>${F} N</b> acts on a mass of <b>${m} kg</b>. Calculate its acceleration.`, ans:a, unit:"m/s²", steps:["a = F / m",`a = ${F} / ${m}`,`a = ${s3(a)} m/s²`] }; } },
+  fnet:{ name:"Resultant force", gen(){ const m=pick([800,1000,1200,1500]), D=pick([2400,3000,3600,4500]), R=pick([600,900,1200]), a=(D-R)/m;
+    return { q:`A car of mass <b>${m} kg</b> has a driving force of <b>${D} N</b>. The total resistance is <b>${R} N</b>. Calculate its acceleration.`, ans:a, unit:"m/s²", steps:[`Resultant F = ${D} − ${R} = ${D-R} N`,`a = F / m = ${D-R} / ${m}`,`a = ${s3(a)} m/s²`] }; } },
+  wt:{ name:"W = mg", gen(){ const m=pick([0.5,2,5,12,45,60,75]), W=m*G;
+    return { q:`Calculate the weight of a <b>${m} kg</b> mass on Earth. (g = 9.8 m/s²)`, ans:W, unit:"N", steps:["W = mg",`W = ${m} × 9.8`,`W = ${s3(W)} N`] }; } },
+  lift:{ name:"Lift", gen(){ const m=pick([50,60,70,80]), a=pick([1,1.5,2,2.5]), up=Math.random()<0.5, R=m*(G+(up?a:-a));
+    return { q:`A <b>${m} kg</b> person stands on scales in a lift that is accelerating <b>${up?"upwards":"downwards"}</b> at <b>${a} m/s²</b>. What force do the scales read? (g = 9.8 m/s²)`, ans:R, unit:"N", steps:["Take up as positive: R − mg = ma",`R = m(g + a) = ${m} × (9.8 ${up?"+":"−"} ${a})`,`R = ${s3(R)} N`] }; } },
+  suvat:{ name:"F = ma, then v", gen(){ const m=pick([2,4,5,10]), F=pick([10,20,30,40]), t=pick([2,3,4,5]), a=F/m, v=a*t;
+    return { q:`A constant resultant force of <b>${F} N</b> acts on a <b>${m} kg</b> mass that starts at rest. Calculate its velocity after <b>${t} s</b>.`, ans:v, unit:"m/s", steps:[`a = F / m = ${F} / ${m} = ${s3(a)} m/s²`,`v = u + at = 0 + ${s3(a)} × ${t}`,`v = ${s3(v)} m/s`] }; } },
+  fric:{ name:"Friction μR", gen(){ const m=pick([2,4,5,8,10]), mu=pick([0.2,0.25,0.3,0.4,0.5]), R=m*G, Ff=mu*R;
+    return { q:`A <b>${m} kg</b> box slides along a level floor. The coefficient of friction is <b>${mu}</b>. Calculate the friction force. (g = 9.8 m/s²)`, ans:Ff, unit:"N", steps:[`R = mg = ${m} × 9.8 = ${s3(R)} N`,`F = μR = ${mu} × ${s3(R)}`,`F = ${s3(Ff)} N`] }; } },
+  ps:{ name:"P = F/A", gen(){ const F=pick([400,500,600,720,800]), A=pick([200,250,400,500]), Am=A/10000, P=F/Am;
+    return { q:`A crate of weight <b>${F} N</b> rests on a base of area <b>${A} cm²</b>. Calculate the pressure on the floor.`, ans:P, unit:"Pa", steps:[`A = ${A} cm² = ${A} ÷ 10 000 = ${Am} m²`,`P = F / A = ${F} / ${Am}`,`P = ${s3(P)} Pa`] }; } },
+  pl:{ name:"P = hρg", gen(){ const h=pick([2,5,8,10,20]), sea=Math.random()<0.5, rho=sea?1030:1000, P=h*rho*G;
+    return { q:`Calculate the pressure due to the water at a depth of <b>${h} m</b> in ${sea?"the sea (ρ = 1030 kg/m³)":"a lake (ρ = 1000 kg/m³)"}. (g = 9.8 m/s²)`, ans:P, unit:"Pa", steps:["P = hρg",`P = ${h} × ${rho} × 9.8`,`P = ${s3(P)} Pa`] }; } },
+  rho:{ name:"ρ = m/V", gen(){ const r=pick([1.19,2.7,7.85,8.96,11.3]), V=pick([5,10,15,20,25]), m=+(r*V).toFixed(1), ans=m/V*1000;
+    return { q:`A piece of metal has a mass of <b>${m} g</b>. It raises the water in a measuring cylinder by <b>${V} cm³</b>. Calculate its density in <b>kg/m³</b>.`, ans, unit:"kg/m³", steps:["ρ = m / V",`ρ = ${m} / ${V} = ${s3(m/V)} g/cm³`,`× 1000 = ${s3(ans)} kg/m³`] }; } },
+  p:{ name:"p = mv", gen(){ const m=pick([0.05,0.16,0.45,2,1200]), v=pick([3,8,12,20,25]), p=m*v;
+    return { q:`Calculate the momentum of a <b>${m} kg</b> object moving at <b>${v} m/s</b>.`, ans:p, unit:"kg m/s", steps:["p = mv",`p = ${m} × ${v}`,`p = ${s3(p)} kg m/s`] }; } },
+  stick:{ name:"Stick together", gen(){ const m1=pick([1,2,3,4]), u1=pick([2,3,4,6]), m2=pick([1,2,3]), v=m1*u1/(m1+m2);
+    return { q:`A <b>${m1} kg</b> trolley moving at <b>${u1} m/s</b> hits a <b>${m2} kg</b> trolley at rest. They stick together. Calculate their common velocity.`, ans:v, unit:"m/s", steps:["Momentum before = momentum after: m₁u₁ + 0 = (m₁ + m₂)v",`${m1} × ${u1} = ${m1+m2} × v`,`v = ${m1*u1} / ${m1+m2} = ${s3(v)} m/s`] }; } },
+  recoil:{ name:"Pushing apart", gen(){ const m1=pick([40,50,60]), m2=pick([50,60,70,80]), v2=pick([1,1.5,2]), v1=m2*v2/m1;
+    return { q:`Two skaters, A (<b>${m1} kg</b>) and B (<b>${m2} kg</b>), stand at rest on ice and push apart. B moves off at <b>${v2} m/s</b>. Calculate the speed of A.`, ans:v1, unit:"m/s", steps:["Total momentum before = 0, so after: m_A v_A = m_B v_B (opposite directions)",`${m1} × v_A = ${m2} × ${v2}`,`v_A = ${s3(m2*v2)} / ${m1} = ${s3(v1)} m/s`] }; } },
+  imp:{ name:"Impulse Ft", gen(){ const m=pick([0.4,0.45,0.6]), v=pick([15,20,25]), t=pick([0.01,0.02,0.05]), F=m*v/t;
+    return { q:`A <b>${m} kg</b> football at rest is kicked and leaves the boot at <b>${v} m/s</b>. The boot is in contact with the ball for <b>${t} s</b>. Calculate the average force on the ball.`, ans:F, unit:"N", steps:["Ft = mv − mu",`F × ${t} = ${m} × ${v} − 0 = ${s3(m*v)} N s`,`F = ${s3(m*v)} / ${t} = ${s3(F)} N`] }; } },
+};
+let pType="fma", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseNum($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 12.5 or 0.68.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(Math.abs(pCur.ans)*0.02, 0.01);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: use the resultant force; convert g to kg, cm² to m² and g/cm³ to kg/m³; give velocities in the other direction a minus sign. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Find the resultant drill
+const PD_N = {up:"Up",down:"Down",left:"Left",right:"Right",none:"Zero"};
+let pd = { f:[30,30,20,20], k:"none", sel:null, shown:false, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=pick(["up","down","left","right","none"]); }while(k===pd.k && Math.random()<0.7);
+  const v=5*rnd(2,10), hz=5*rnd(2,10), d=5*rnd(1,4);
+  const f = k==="up"?[v+d,v,hz,hz] : k==="down"?[v,v+d,hz,hz] : k==="left"?[v,v,hz+d,hz] : k==="right"?[v,v,hz,hz+d] : [v,v,hz,hz];
+  pd={...pd,f,k,sel:null,shown:false};
+  $("predQ").innerHTML=`Four forces act on the box. Which way is the <b>resultant force</b>?`;
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML=""; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const ok=pd.sel===pd.k; pd.streak=ok?pd.streak+1:0; pd.shown=true; const [u,dn,l,r]=pd.f, vy=u-dn, vx=r-l;
+  const why=`Vertical: ${u} − ${dn} = ${vy} N. Horizontal: ${r} − ${l} = ${vx} N. `+(pd.k==="none"?"All the forces balance, so the box stays at rest or moves at constant velocity (Newton's first law).":`Resultant ${Math.abs(vx||vy)} N ${PD_N[pd.k].toLowerCase()}, so the box accelerates ${pd.k==="up"?"upwards":pd.k==="down"?"downwards":"to the "+pd.k} (F = ma).`);
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Newton's laws on the road", intro:"A car of mass 1200 kg starts from rest on a level road. The engine provides a driving force of 3600 N and the total resistance is 1200 N. (g = 9.8 m/s²)",
+    parts:[["a","State Newton's first and second laws of motion.",6,"First: a body stays at rest or moves with constant velocity unless a resultant external force acts (3). Second: rate of change of momentum ∝ resultant force, in the direction of the force (3)."],
+      ["b","Draw a labelled free-body diagram showing all the forces acting on the car.",6,"Weight 11 760 N down; normal reaction 11 760 N up (total, from the road); driving force 3600 N forwards; resistance 1200 N backwards. 4 correct arrows with labels (6); deduct for missing labels."],
+      ["c","Calculate the acceleration of the car and its speed after 8.0 s.",9,"Resultant = 3600 − 1200 = 2400 N (3). a = F/m = 2400 / 1200 = 2.0 m/s² (3). v = u + at = 0 + 2.0 × 8.0 = 16 m/s (3)."],
+      ["d","Later the car travels at a constant 25 m/s. What is the driving force now? Explain.",6,"Constant velocity, so the resultant force is zero (Newton's first law) (3). The driving force equals the total resistance at that speed (3)."],
+      ["e","Use Newton's third law to explain how the tyres make the car move forwards.",6,"The tyres push backwards on the road (through friction) (3). The road pushes forwards on the tyres with an equal and opposite force, which drives the car (3)."]] },
+  { title:"Verifying Newton's second law", intro:"A student uses a trolley on a runway, a pulley and a hanger with slotted masses, and two light gates connected to a data logger. Moving masses from the trolley to the hanger, they record:<br>F (N): 0.20 · 0.39 · 0.59 · 0.78 · 0.98<br>a (m/s²): 0.33 · 0.64 · 0.99 · 1.30 · 1.62",
+    parts:[["a","Describe how the student should compensate for friction.",6,"Tilt the runway by raising one end (2) until a trolley given a small push moves at constant velocity (2), checked with equal light-gate times / equally spaced ticker dots (2)."],
+      ["b","Explain why masses are moved from the trolley to the hanger, and describe how a is measured.",9,"Total mass being accelerated stays constant (3), so only the force changes: a fair test of a ∝ F (2). Card on trolley breaks two light gates; logger finds the two velocities and the time between them (2); a = (v − u)/t (2)."],
+      ["c","Draw a graph of a against F and use it to find the total mass being accelerated.",12,"Axes labelled with quantities and units (3); points plotted correctly (3); straight line through the origin (2); slope ≈ 1.66 kg⁻¹, accept 1.6–1.7 (2); m = 1/slope ≈ 0.60 kg (2)."],
+      ["d","How does the graph verify Newton's second law?",6,"Straight line through the origin, so a ∝ F (3), for constant mass, which agrees with F = ma (3)."]] },
+  { title:"Momentum on the ice", intro:"In curling, stone A (mass 20 kg) slides at 2.0 m/s towards stone B (mass 20 kg), which is at rest. Friction from the ice can be ignored during the collisions.",
+    parts:[["a","State the principle of conservation of momentum.",6,"In any collision (3), the total momentum before equals the total momentum after, provided no external force acts (3)."],
+      ["b","In a head-on collision, A stops. Calculate B's velocity, and show whether kinetic energy is conserved.",9,"20 × 2.0 = 20 × v (2), so v = 2.0 m/s in A's original direction (3). KE before = ½ × 20 × 2.0² = 40 J; after = 40 J (2): conserved, so the collision is elastic (2)."],
+      ["c","In another shot, A hits B a glancing blow and moves off at 1.0 m/s at 60° to its original direction. Use components to find the speed and direction of B.",12,"Parallel: 20 × 2.0 = 20 × 1.0 cos 60° + 20 v_x, so v_x = 1.5 m/s (4). Perpendicular: 0 = 20 × 1.0 sin 60° − 20 v_y, so v_y = 0.87 m/s (4). v = √(1.5² + 0.87²) = 1.7 m/s (2), at tan⁻¹(0.87/1.5) = 30° to A's original direction, on the other side (2)."],
+      ["d","Use Newton's second and third laws to explain why momentum is conserved in a collision.",9,"A pushes B with force F; B pushes A with −F (third law) (3). Both act for the same contact time t (2). Impulse Ft = change in momentum (second law) (2), so B gains exactly the momentum A loses: the total is unchanged (2)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist
+const RAG = ["State Newton's three laws of motion","Distinguish mass and weight; use W = mg","Name and draw the six types of force","Draw free-body diagrams and find the resultant","Use F = ma with the resultant force","Describe the experiment to verify a ∝ F","Analyse an a against F graph (slope = 1/m)","Model a lift: R − mg = ma","Combine F = ma with the equations of motion","Use P = F/A with areas in m²","Use P = hρg and Archimedes' principle","Measure the density of regular and irregular solids","Define momentum; use p = mv","Use conservation of momentum (stick, bounce, push apart)","Use impulse: Ft = mv − mu","Resolve momentum in 2D collisions"];
+const ragState=store.get("s12-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s12-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Plan a fair test","Independent variable: force F. Dependent: acceleration a. Controlled: total mass, runway slope.","F = ma lab"],["Collect primary data","Measure a for six forces; repeat and average.","F = ma lab"],["Choose the right graph","a against F (straight line through the origin) or m against V.","F = ma and density labs"],["Use the slope","m = 1 ÷ slope; density = slope of m against V.","F = ma and density labs"],["Read instruments well","Bottom of the meniscus at eye level; zero the balance first.","Density lab"],["Use secondary data","Check force-sensor traces and air-track tables for conservation of momentum.","Infographics: two force sensors"],["Compare with theory","Compare total momentum before and after; give the % difference.","Air-track lab"],["Use models","Treat objects as particles; say what friction or air resistance the model ignores.","Free-body lab"]];
+const skState=store.get("s12-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s12-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+const fx2 = x => (Math.abs(x)<0.005?0:x).toFixed(2);
+// Free-body diagram
+const fb = { m:5, P:20, th:0, mu:0.3 };
+function fbUpd(){ const r=fbModel(fb);
+  $("fbMo").textContent=fb.m.toFixed(1)+" kg"; $("fbPo").textContent=fb.P+" N"; $("fbTho").textContent=fb.th+"°"; $("fbMuo").textContent=fb.mu.toFixed(2);
+  setReadout($("fbOut"),[["Weight W = mg",s3(r.W)+" N"],["Normal reaction R",s3(r.N)+" N"],["Most friction can give μR",s3(r.fmax)+" N"],["Horizontal pull T cos θ",s3(r.Px)+" N"],["Friction now",s3(r.f)+" N"],["Resultant",r.lift?"–":s3(r.Px-r.f)+" N"],["Acceleration",r.lift?"–":s3(r.a)+" m/s²"]]);
+  $("fbWork").innerHTML = r.lift? `The upward part of the pull, T sin θ = ${s3(r.Py)} N, is bigger than the weight (${s3(r.W)} N): the box lifts off the floor. This model only works while the box stays on the floor.`
+    : (r.a===0? `Vertically: R = mg − T sin θ = ${s3(r.W)} − ${s3(r.Py)} = <b>${s3(r.N)} N</b>. Horizontally: T cos θ = ${s3(r.Px)} N is not more than μR = ${fb.mu.toFixed(2)} × ${s3(r.N)} = ${s3(r.fmax)} N, so friction just matches the pull (${s3(r.f)} N). Resultant = 0: the box stays at rest (Newton's first law).`
+    : `Vertically: R = mg − T sin θ = ${s3(r.W)} − ${s3(r.Py)} = <b>${s3(r.N)} N</b>. Sliding friction = μR = ${fb.mu.toFixed(2)} × ${s3(r.N)} = ${s3(r.fmax)} N. Resultant = T cos θ − μR = ${s3(r.Px)} − ${s3(r.fmax)} = <b>${s3(r.Px-r.f)} N</b>. a = F/m = ${s3(r.Px-r.f)} / ${fb.m} = <b>${s3(r.a)} m/s²</b> (Newton's second law).`)
+    + ` Third law: the box pushes down on the floor with ${s3(r.N)} N, and the Earth is pulled up by the box with ${s3(r.W)} N.`;
+  fbC.redraw(); }
+[["fbM","m"],["fbP","P"],["fbTh","th"],["fbMu","mu"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ fb[k]=+e.target.value; fbUpd(); }));
+const NF = [["The floor pushing up on your feet","N","Normal reaction: a surface pushes at right angles to itself."],["A rope pulling a bucket up a well","T","Tension: the pull of a stretched rope."],["Water holding a swimmer up","B","Buoyancy (upthrust): the weight of water displaced."],["The Earth pulling an apple down","G","Gravitational force: the apple's weight."],["Air pushing back on a cyclist","Re","Resistance (drag): opposes motion through a fluid."],["The road gripping a car's tyres","F","Friction between surfaces in contact."],["Brake pads slowing a bike wheel","F","Friction opposes sliding."],["A parachute slowing a skydiver","Re","Air resistance grows with speed and area."],["A helium balloon rising","B","Upthrust from the air is bigger than its weight."],["A cable holding up a lamp","T","Tension in the cable."],["The Moon pulling on the oceans","G","Gravitational attraction causes the tides."],["A table pushing up on a book","N","Normal reaction."]];
+const NFN = {N:"Normal",F:"Friction",Re:"Resistance",T:"Tension",B:"Buoyancy",G:"Gravity"}, nfS = { order:[], ans:{} };
+const nfRender=()=>sorter("nfList","nfOut",NF,NFN,nfS);
+function nfNew(){ nfS.order=shuffle(NF.map((s,k)=>k)); nfS.ans={}; nfRender(); }
+$("nfList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b) return; nfS.ans[+b.dataset.k]=b.dataset.v; nfRender(); });
+$("nfReset").addEventListener("click",nfNew);
+// F = ma experiment
+const n2 = { n:2, M:0.58, data:[], run:false, p:0, tRun:0, aMeas:null, revealed:false, msg:"" };
+const n2Mt = () => n2.M + N2_TOTAL*N2_DISC, n2F = n => n*N2_DISC*G, n2A = n => n2F(n)/n2Mt();
+function n2NewHidden(){ n2.M=pick([0.38,0.48,0.58,0.68,0.78]); n2.data=[]; n2.revealed=false; n2.aMeas=null; n2.msg=""; n2.run=false; n2.p=0; }
+n2NewHidden();
+function n2Finish(){ n2.run=false; n2.p=1; n2.data=n2.data.filter(d=>d[0]!==n2.n); n2.data.push([n2.n,n2F(n2.n),n2.aMeas]); n2.data.sort((a,b)=>a[0]-b[0]); n2.msg=`Recorded: F = ${n2F(n2.n).toFixed(3)} N, a = ${n2.aMeas.toFixed(3)} m/s².`; n2Table(); n2Upd(); }
+function n2Upd(){ $("n2No").textContent=n2.n+" ("+(n2.n*20)+" g)";
+  setReadout($("n2Out"),[["Discs on hanger / trolley",`${n2.n} / ${N2_TOTAL-n2.n}`],["Pulling force F = mg",`${n2.n} × 0.020 × 9.8 = ${n2F(n2.n).toFixed(3)} N`],["Total mass","constant (trolley + 6 discs)"],["Data logger",n2.run?"measuring…":n2.aMeas==null?"–":n2.aMeas.toFixed(3)+" m/s²"],["Readings",n2.data.length+(n2.msg?" · "+n2.msg:"")]]);
+  n2C.redraw(); }
+function n2Table(){
+  $("n2Table").innerHTML = n2.data.map(([n,F,a],k)=>`<tr><td>${n}</td><td>${F.toFixed(3)}</td><td>${a.toFixed(3)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("n2Empty").hidden = n2.data.length>0; if(n2Graph) n2Graph.redraw(); }
+$("n2Table").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ n2.data.splice(+k,1); n2Table(); } });
+$("n2N").addEventListener("input",e=>{ n2.n=+e.target.value; if(!n2.run){ n2.p=0; n2.aMeas=null; } n2Upd(); });
+$("n2Go").addEventListener("click",()=>{ if(n2.run) return; n2.aMeas=n2A(n2.n)*(1+(Math.random()*2-1)*0.02); n2.msg=""; n2.p=0; n2.tRun=0; n2.run=true; if(reduce) n2Finish(); else n2Upd(); });
+$("n2Clear").addEventListener("click",()=>{ n2.data=[]; n2.msg=""; n2Table(); n2Upd(); });
+$("n2New").addEventListener("click",()=>{ n2NewHidden(); n2Table(); n2Upd(); });
+$("n2Reveal").addEventListener("click",()=>{ n2.revealed=!n2.revealed; n2Table(); });
+// Lift
+const lf = { stage:1, m:60, a:1.5 };
+$("lfS").innerHTML = STAGES.map((s,k)=>`<button data-k="${k}" aria-pressed="${k===lf.stage}">${s.n}</button>`).join("");
+function lfUpd(){ const st=STAGES[lf.stage], a=liftA(st,lf.a), R=Math.max(0,lf.m*(G+a)), W=lf.m*G;
+  $("lfMo").textContent=lf.m+" kg"; $("lfAo").textContent=lf.a+" m/s²";
+  setReadout($("lfOut"),[["Weight mg",s3(W)+" N"],["Acceleration (up = +)",(Math.abs(a)<1e-9?"0":fx2(a))+" m/s²"],["Normal reaction R",s3(R)+" N"],["Scales show",(R/G).toFixed(1)+" kg"],["Resultant R − mg",(Math.abs(R-W)<1e-6?"0":s3(R-W))+" N"]]);
+  let tx = st.s==="g"? `The lift falls freely: a = −g. R = m(g + a) = ${lf.m} × (9.8 − 9.8) = <b>0 N</b>. You and the scales fall together, so you feel weightless.`
+    : `Take up as positive. R − mg = ma, so R = m(g + a) = ${lf.m} × (9.8 ${a<0?"−":"+"} ${Math.abs(a)}) = <b>${s3(R)} N</b>. `+(a===0? "With a = 0 the reading is the same at rest and at a steady speed (Newton's first law)." : a>0? "The scales read more than your weight." : "The scales read less than your weight.");
+  if(lf.stage===1||lf.stage===4||lf.stage===6){ const A=Math.abs(a); tx+=` Constant resultant force, so constant acceleration: starting from rest, after 2.0 s, v = at = ${s3(A*2)} m/s and s = ½at² = ${s3(0.5*A*4)} m (${a>0?"up":"down"}).`; }
+  else if(lf.stage===3||lf.stage===5) tx+=" The velocity and acceleration point opposite ways, so the lift is slowing down.";
+  $("lfWork").innerHTML=tx; lfC.redraw(); }
+$("lfS").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; lf.stage=+b.dataset.k; pressGroup([...$("lfS").querySelectorAll("button")],b); lfUpd(); });
+$("lfM").addEventListener("input",e=>{ lf.m=+e.target.value; lfUpd(); });
+$("lfA").addEventListener("input",e=>{ lf.a=+e.target.value; lfUpd(); });
+// Pressure
+const pr = { mode:"solid", face:0, liq:0, h:2, block:true };
+$("prLiq").innerHTML = LIQ.map(([n],k)=>`<button data-k="${k}" aria-pressed="${k===pr.liq}">${n}</button>`).join("");
+const fmtPa = x => String(Math.round(x)).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+function prUpd(){ const solid=pr.mode==="solid";
+  document.querySelectorAll(".prS").forEach(el=>el.hidden=!solid); document.querySelectorAll(".prF").forEach(el=>el.hidden=solid);
+  $("prHo").textContent=pr.h.toFixed(1)+" m"; $("prBlock").textContent=pr.block?"Hanging in the liquid":"Taken out"; $("prBlock").setAttribute("aria-pressed",pr.block);
+  if(solid){ const [lx,ly,,lab]=FACES[pr.face], A=lx*ly, W=BRICK_M*G, P=W/A;
+    setReadout($("prOut"),[["Weight of brick",s3(W)+" N"],["Area in contact",`${lab} = ${A} m²`],["Pressure",fmtPa(P)+" Pa"]]);
+    $("prWork").innerHTML=`P = F / A = ${s3(W)} / ${A} = <b>${fmtPa(P)} Pa</b>. Same weight on every face; the smaller the area, the bigger the pressure. Area: ${lab} = ${lx} m × ${ly} m = ${A} m².`; }
+  else { const [n,rho]=LIQ[pr.liq], P=pr.h*rho*G, U=rho*BLOCK_V*G, Wb=BLOCK_RHO*BLOCK_V*G;
+    setReadout($("prOut"),[["Liquid",`${n}, ρ = ${rho} kg/m³`],["Pressure at probe P = hρg",fmtPa(P)+" Pa"],["Total with air above",fmtPa(P+101000)+" Pa"]].concat(pr.block?[["Block weight",Wb.toFixed(1)+" N"],["Upthrust",U.toFixed(1)+" N"],["Spring balance reads",(Wb-U).toFixed(1)+" N"]]:[]));
+    $("prWork").innerHTML=`P = hρg = ${pr.h.toFixed(1)} × ${rho} × 9.8 = <b>${fmtPa(P)} Pa</b>. The arrows on the wall grow with depth: pressure acts in all directions.`+(pr.block?` The block displaces ${BLOCK_V} m³ of liquid, so upthrust = ρVg = ${rho} × ${BLOCK_V} × 9.8 = <b>${U.toFixed(1)} N</b> (Archimedes). Balance = W − U = ${Wb.toFixed(1)} − ${U.toFixed(1)} = ${(Wb-U).toFixed(1)} N.`:""); }
+  prC.redraw(); }
+$("prMode").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pr.mode=b.dataset.m; pressGroup([...$("prMode").querySelectorAll("button")],b); prUpd(); });
+$("prFace").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pr.face=+b.dataset.f; pressGroup([...$("prFace").querySelectorAll("button")],b); prUpd(); });
+$("prLiq").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pr.liq=+b.dataset.k; pressGroup([...$("prLiq").querySelectorAll("button")],b); prUpd(); });
+$("prH").addEventListener("input",e=>{ pr.h=+e.target.value; prUpd(); });
+$("prBlock").addEventListener("click",()=>{ pr.block=!pr.block; prUpd(); });
+// Density
+const dn = { mat:2, piece:0, data:[], revealed:false, last:null };
+$("dnP").innerHTML = PIECES.map((v,k)=>`<button data-k="${k}" aria-pressed="${k===dn.piece}">Piece ${k+1}</button>`).join("");
+function dnNewHidden(){ let k; do{ k=rnd(0,MATS.length-1); }while(k===dn.mat); dn.mat=k; dn.data=[]; dn.revealed=false; dn.last=null; }
+dnNewHidden();
+function dnUpd(){ const last=dn.last&&dn.last.piece===dn.piece? dn.last : null;
+  setReadout($("dnOut"),[["Piece",`${dn.piece+1} of ${PIECES.length}`],["Balance",last? last.m.toFixed(1)+" g":"–"],["Water before",CYL0.toFixed(1)+" cm³"],["Water after",last? (CYL0+last.V).toFixed(1)+" cm³":"–"],["Volume",last? last.V.toFixed(1)+" cm³":"–"],["Readings",String(dn.data.length)]]);
+  dnC.redraw(); }
+function dnTable(){
+  $("dnTable").innerHTML = dn.data.map(([p,m,V],k)=>`<tr><td>${p+1}</td><td>${m.toFixed(1)}</td><td>${V.toFixed(1)}</td><td>${(m/V).toFixed(2)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("dnEmpty").hidden = dn.data.length>0; if(dnGraph) dnGraph.redraw(); }
+$("dnTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ dn.data.splice(+k,1); dnTable(); } });
+$("dnP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; dn.piece=+b.dataset.k; pressGroup([...$("dnP").querySelectorAll("button")],b); dnUpd(); });
+$("dnGo").addEventListener("click",()=>{ const V=PIECES[dn.piece], rho=MATS[dn.mat][1], m=Math.round((rho*V+(Math.random()*2-1)*0.1)*10)/10, Vr=Math.round((V+(Math.random()*2-1)*0.3)*2)/2;
+  dn.last={piece:dn.piece,m,V:Vr}; dn.data=dn.data.filter(d=>d[0]!==dn.piece); dn.data.push([dn.piece,m,Vr]); dn.data.sort((a,b)=>a[0]-b[0]); dnTable(); dnUpd(); });
+$("dnClear").addEventListener("click",()=>{ dn.data=[]; dn.last=null; dnTable(); dnUpd(); });
+$("dnNew").addEventListener("click",()=>{ dnNewHidden(); dnTable(); dnUpd(); });
+$("dnReveal").addEventListener("click",()=>{ dn.revealed=!dn.revealed; dnTable(); });
+// Air track
+const mo = { m1:0.5, u1:0.8, m2:0.3, u2:0, e:0, t:0, play:false, data:[], msg:"" };
+const moEnd = () => { const c=atColl(mo); return isFinite(c.tc)? c.tc+2 : 4; };
+function moPlayBtn(){ $("mmPlay").textContent = mo.play? "Pause" : (mo.t>=moEnd()? "Play again" : "Play"); }
+function moUpd(){ const c=atColl(mo), pb=c.P, KEb=0.5*mo.m1*mo.u1**2+0.5*mo.m2*mo.u2**2, KEa=0.5*mo.m1*c.v1**2+0.5*mo.m2*c.v2**2, hit=isFinite(c.tc);
+  $("mmM1o").textContent=mo.m1.toFixed(2)+" kg"; $("mmM2o").textContent=mo.m2.toFixed(2)+" kg"; $("mmU1o").textContent=mo.u1.toFixed(2)+" m/s"; $("mmU2o").textContent=fx2(mo.u2)+" m/s";
+  setReadout($("mmOut"),[["Total p before",pb.toFixed(3)+" kg m/s"],["v_A after",hit?fx2(c.v1)+" m/s":"–"],["v_B after",hit?fx2(c.v2)+" m/s":"–"],["Total p after",hit?(mo.m1*c.v1+mo.m2*c.v2).toFixed(3)+" kg m/s":"–"],["KE before → after",hit?`${KEb.toFixed(3)} → ${KEa.toFixed(3)} J`:"–"],["Readings",mo.data.length+(mo.msg?" · "+mo.msg:"")]]);
+  $("mmWork").innerHTML = !hit? "With these velocities the gliders don't meet on the track. Make A faster than B (or send B towards A)."
+    : `Before: (${mo.m1.toFixed(2)})(${mo.u1.toFixed(2)}) + (${mo.m2.toFixed(2)})(${fx2(mo.u2)}) = <b>${pb.toFixed(3)} kg m/s</b>. After: (${mo.m1.toFixed(2)})(${fx2(c.v1)}) + (${mo.m2.toFixed(2)})(${fx2(c.v2)}) = <b>${(mo.m1*c.v1+mo.m2*c.v2).toFixed(3)} kg m/s</b>. Momentum is conserved. `
+      + (mo.e===1? "Kinetic energy is conserved too: an elastic collision." : `Kinetic energy falls by ${KEb>0?Math.round((KEb-KEa)/KEb*100):0}%: an inelastic collision (energy goes to heat and sound).`);
+  moPlayBtn(); mmC.redraw(); }
+[["mmM1","m1"],["mmU1","u1"],["mmM2","m2"],["mmU2","u2"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ mo[k]=+e.target.value; mo.t=0; mo.play=false; mo.msg=""; moUpd(); }));
+$("mmE").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; mo.e=+b.dataset.e; mo.t=0; mo.play=false; pressGroup([...$("mmE").querySelectorAll("button")],b); moUpd(); });
+$("mmPlay").addEventListener("click",()=>{ if(mo.t>=moEnd()) mo.t=0; mo.play=!mo.play; if(reduce&&mo.play){ mo.t=moEnd(); mo.play=false; } moUpd(); });
+$("mmReset").addEventListener("click",()=>{ mo.t=0; mo.play=false; moUpd(); });
+$("mmRec").addEventListener("click",()=>{ const c=atColl(mo);
+  if(!isFinite(c.tc)){ mo.msg="no collision to record"; moUpd(); return; }
+  const nz=v=>v*(1+(Math.random()*2-1)*0.02), v1=nz(c.v1), v2=nz(c.v2), pa=mo.m1*v1+mo.m2*v2, KEb=0.5*mo.m1*mo.u1**2+0.5*mo.m2*mo.u2**2, KEa=0.5*mo.m1*v1**2+0.5*mo.m2*v2**2;
+  mo.data.push([c.P,pa,KEb>0?Math.max(0,(KEb-KEa)/KEb*100):0]); mo.msg="Recorded."; moTable(); moUpd(); });
+$("mmClear").addEventListener("click",()=>{ mo.data=[]; mo.msg=""; moTable(); moUpd(); });
+function moTable(){
+  $("mmTable").innerHTML = mo.data.map(([b,a,k],i)=>`<tr><td>${b.toFixed(3)}</td><td>${a.toFixed(3)}</td><td>${k.toFixed(0)}%</td><td><button data-k="${i}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("mmEmpty").hidden = mo.data.length>0; if(mmGraph) mmGraph.redraw(); }
+$("mmTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ mo.data.splice(+k,1); moTable(); } });
+// 2D glancing collision
+const gl2 = { u:2, th:30 };
+function glUpd(){ const th=rad(gl2.th), vA=gl2.u*Math.cos(th), vB=gl2.u*Math.sin(th), m=PUCK_M;
+  $("glUo").textContent=gl2.u.toFixed(1)+" m/s"; $("glTho").textContent=gl2.th+"°";
+  const parA=m*vA*Math.cos(th), parB=m*vB*Math.cos(Math.PI/2-th), perA=m*vA*Math.sin(th), perB=m*vB*Math.sin(Math.PI/2-th);
+  setReadout($("glOut"),[["A after",`${vA.toFixed(2)} m/s at ${gl2.th}°`],["B after",`${vB.toFixed(2)} m/s at ${90-gl2.th}° the other side`],["Parallel p before",(m*gl2.u).toFixed(3)+" kg m/s"],["Parallel p after",(parA+parB).toFixed(3)+" kg m/s"],["Perpendicular p after",(perA-perB).toFixed(3)+" kg m/s"],["KE before → after",`${(0.5*m*gl2.u**2).toFixed(3)} → ${(0.5*m*(vA*vA+vB*vB)).toFixed(3)} J`]]);
+  $("glWork").innerHTML = `Two ${m} kg pucks; B starts at rest. <b>Parallel</b> (along A's first path): ${m} × ${gl2.u.toFixed(1)} = ${m} × ${vA.toFixed(2)} cos ${gl2.th}° + ${m} × ${vB.toFixed(2)} cos ${90-gl2.th}° = ${(parA+parB).toFixed(3)} kg m/s ✓. <b>Perpendicular</b>: 0 = ${m} × ${vA.toFixed(2)} sin ${gl2.th}° − ${m} × ${vB.toFixed(2)} sin ${90-gl2.th}° = ${fx2(perA-perB)} ✓. For equal masses in an elastic glancing collision the two pucks always move off at 90° to each other.`;
+  glC.redraw(); }
+$("glU").addEventListener("input",e=>{ gl2.u=+e.target.value; glUpd(); });
+$("glTh").addEventListener("input",e=>{ gl2.th=+e.target.value; glUpd(); });
+
+/* ================= CREATE CANVASES ================= */
+let n2Graph=null, dnGraph=null, mmGraph=null;
+const HERO = {m1:0.5,u1:0.8,m2:0.3,u2:0,e:0};
+const hero = makeCanvas($("heroCanvas"), 0.7, 240, s => drawAir(s.ctx,s.w,s.h,{...HERO,t:reduce?2:(heroT%3.6),bars:true}), 420);
+const fbC = makeCanvas($("fbC"), 0.5, 260, s => drawBox(s.ctx,s.w,s.h,fb), 420);
+const n2C = makeCanvas($("n2C"), 0.42, 240, s => drawN2(s.ctx,s.w,s.h,{n:n2.n,p:n2.p,aShow:n2.run?null:n2.aMeas}), 360);
+const lfC = makeCanvas($("lfC"), 0.55, 300, s => drawLift(s.ctx,s.w,s.h,lf), 440);
+const prC = makeCanvas($("prC"), 0.5, 280, s => drawPressure(s.ctx,s.w,s.h,pr), 420);
+const dnC = makeCanvas($("dnC"), 0.45, 240, s => { const last=dn.last&&dn.last.piece===dn.piece? dn.last:null; drawDensity(s.ctx,s.w,s.h,{V:PIECES[dn.piece],Vread:last?last.V:0,mShow:last?last.m:null,inCyl:!!last}); }, 360);
+const mmC = makeCanvas($("mmC"), 0.36, 220, s => drawAir(s.ctx,s.w,s.h,mo), 320);
+const glC = makeCanvas($("glC"), 0.5, 260, s => drawGlance(s.ctx,s.w,s.h,gl2), 400);
+n2Graph = makeCanvas($("n2Graph"), 0.72, 190, s => {
+  const pts=n2.data.map(([n,F,a])=>[F,a]), spread=pts.length? Math.max(...pts.map(p=>p[0]))-Math.min(...pts.map(p=>p[0])) : 0;
+  const fit = pts.length>=3 && spread>0.1 ? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,1.2],yr:[0,1],xl:"F (N)",yl:"a (m/s²)",fit});
+  const truth = n2.revealed? ` True total mass: <b>${n2Mt().toFixed(2)} kg</b> (trolley ${n2.M.toFixed(2)} kg + six 20 g discs).` : "";
+  if(!fit){ $("n2Result").innerHTML="Record three or more forces to draw the line."+truth; return; }
+  $("n2Result").innerHTML = `Slope = 1/m = ${fit[0].toFixed(3)} kg⁻¹, so <b>m = ${(1/fit[0]).toFixed(2)} kg</b>. Intercept = ${fit[1].toFixed(3)} m/s² (should be close to 0). A straight line through the origin shows a ∝ F: Newton's second law.`+truth;
+}, 300);
+dnGraph = makeCanvas($("dnGraph"), 0.72, 190, s => {
+  const pts=dn.data.map(([p,m,V])=>[V,m]), fit = pts.length>=3 ? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,30],yr:[0,40],xl:"V (cm³)",yl:"m (g)",fit});
+  const truth = dn.revealed? ` The material is <b>${MATS[dn.mat][0]}</b> (${MATS[dn.mat][1]} g/cm³).` : "";
+  if(!fit){ $("dnResult").innerHTML="Measure three or more pieces to draw the line."+truth; return; }
+  const best=MATS.reduce((a,b)=>Math.abs(b[1]-fit[0])<Math.abs(a[1]-fit[0])?b:a);
+  $("dnResult").innerHTML = `Slope = density = <b>${fit[0].toFixed(2)} g/cm³ = ${Math.round(fit[0]*1000)} kg/m³</b>. Closest match in the table: ${best[0]}. Intercept = ${fit[1].toFixed(1)} g (should be close to 0).`+truth;
+}, 300);
+mmGraph = makeCanvas($("mmGraph"), 0.72, 190, s => {
+  const pts=mo.data.map(([b,a])=>[b,a]), spread=pts.length? Math.max(...pts.map(p=>p[0]))-Math.min(...pts.map(p=>p[0])) : 0;
+  const fit = pts.length>=2 && spread>0.1 ? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,1.5],yr:[0,1.5],xl:"p before (kg m/s)",yl:"p after",fit});
+  $("mmResult").innerHTML = !pts.length? "Record runs with different masses and velocities." : fit? `Slope = <b>${fit[0].toFixed(3)}</b>, intercept = ${fit[1].toFixed(3)} kg m/s. A straight line through the origin with slope 1 means total momentum after = total momentum before: momentum is conserved.` : "Record runs with different total momentum to draw the line.";
+}, 300);
+predC = makeCanvas($("predC"), 0.6, 200, s => drawDrill(s.ctx,s.w,s.h,{f:pd.f,bgc:C["surface-2"]}), 320);
+pdNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    box:s=>drawBox(s.ctx,s.w,s.h,{...o,compact:true}),
+    n2:s=>drawN2(s.ctx,s.w,s.h,{...o,compact:true}),
+    lift:s=>drawLift(s.ctx,s.w,s.h,{...o,compact:true}),
+    press:s=>drawPressure(s.ctx,s.w,s.h,{...o,compact:true}),
+    dens:s=>drawDensity(s.ctx,s.w,s.h,{...o,compact:true}),
+    air:s=>drawAir(s.ctx,s.w,s.h,{...o,compact:true}),
+  };
+  makeCanvas(el, kind==="lift"? 0.75 : 0.6, 160, draws[kind], 380);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-sit]").forEach(el=>{ const k=+el.dataset.sit; makeCanvas(el,0.62,150,s=>drawSit(s.ctx,s.w,s.h,{k,bgc:C["surface-2"]}),240); });
+document.querySelectorAll("canvas[data-mini=agraph]").forEach(el=>makeCanvas(el,0.7,160,s=>drawAgraph(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=pdepth]").forEach(el=>makeCanvas(el,0.7,160,s=>drawPDepth(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=pbars]").forEach(el=>makeCanvas(el,0.7,160,s=>drawPBars(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=ftime]").forEach(el=>makeCanvas(el,0.42,220,s=>drawFtime(s.ctx,s.w,s.h,{bgc:C["surface-2"]}),340));
+fbUpd(); nfNew(); n2Table(); n2Upd(); lfUpd(); prUpd(); dnTable(); dnUpd(); moTable(); moUpd(); glUpd();
+
+/* ================= LOOP / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(view==="labs" && !reduce){
+    if(lab==="momentum" && mo.play){ mo.t=Math.min(moEnd(),mo.t+dt); if(mo.t>=moEnd()) mo.play=false; moPlayBtn(); mmC.redraw(); }
+    if(lab==="newton2" && n2.run){ n2.tRun+=dt; const T=Math.sqrt(2*N2_RUN/n2A(n2.n)); if(n2.tRun>=T) n2Finish(); else { n2.p=Math.min(1,(n2.tRun/T)**2); n2C.redraw(); } }
+  }
+  requestAnimationFrame(loop);
+})(performance.now());
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>

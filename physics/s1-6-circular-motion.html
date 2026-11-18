@@ -1,0 +1,1705 @@
+<title>Circular Motion</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<style>
+:root{--band-ink:#3b2b21}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--surface)}
+.xlink:hover{border-color:var(--terra)}
+.working.wrap{white-space:normal;font-family:var(--f-body);font-size:.9rem}
+.spec-bullets{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+</style>
+<style>
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.rc-card{display:grid;gap:8px;padding:16px}
+.rc-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.rc-card .ico svg{width:24px;height:24px}
+.rc-card p{font-size:.9rem;margin:0}
+.rc-card p b{color:var(--terra)}
+</style>
+<style>
+.cases .rc-card canvas{width:100%;display:block;border-radius:12px}
+.sec td,.sec th{padding:4px 8px;text-align:right;font-family:var(--f-mono);font-size:.85rem;white-space:nowrap}
+.sec{border-collapse:collapse;width:100%}
+.sec tr+tr td{border-top:1px solid var(--line)}
+.secwrap{overflow-x:auto}
+.srt .row .btns button{padding:6px 10px;font-size:.85rem}
+.predopts .btns button{min-width:84px}
+</style>
+
+
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="1.5"/><circle cx="20" cy="12" r="2"/><path d="M12 12h6"/></svg></div>
+        <div style="min-width:0"><b>Circular Motion</b><span>Leaving Cert Physics · Strand 1 · Section 1.6</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details open><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="here"><span class="mono">1.6</span>Circular motion</li></ol></details>
+      <details><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 1 · Section 1.6 · Uniform circular motion</span>
+          <h1 style="margin-top:12px">Swing it.<br>Spin it.<br><em>Orbit it.</em></h1>
+          <p class="lede">Anything moving in a circle is accelerating towards the centre, so it needs a centripetal force. Measure angular velocity, whirl a bung to find a hidden mass, check Kepler's third law with real data, and see how gravity keeps the Moon, the planets and satellites in their orbits.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="A satellite orbiting the Earth with its velocity along the orbit and the centripetal force pointing to the Earth's centre"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/4</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">1.6.1</span><span>explain centripetal force</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">1.6.2</span><span>model the dynamics of an object moving in a circle with constant angular velocity</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">1.6.3</span><span>verify Kepler's 3rd law using secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo4"><span class="mono">1.6.4</span><span>model situations involving the orbits of planets and satellites in near Earth and geostationary orbits</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">Students learn about:</p>
+        <ul class="spec-bullets"><li>the centripetal force required to maintain uniform motion in a circle</li><li>evidence that the force of gravity meets the centripetal force requirements for planetary motion</li><li>relate the orbits of satellites to their uses</li></ul>
+        <p class="result" style="margin-top:10px">Equations in the specification for 1.6: F = mv²/r and T² = 4π²R³/GM. This page also uses ω = θ/t, v = ωr, a = v²/r = ω²r and T = 2π/ω to model motion with constant angular velocity. Builds on 1.1 (velocity and acceleration), 1.2 (F = ma) and 1.5 (F = Gm₁m₂/d²).</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Whirl a ball on a string and cut it, spin a disc, time a whirling bung, test Kepler's third law with real data, fire Newton's cannon and put satellites into orbit. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="centripetal">
+        <div class="labhead"><span class="pill t">Centripetal force</span><p class="goal">A ball on a string moves in a horizontal circle (seen from above). Its velocity keeps changing direction, so it accelerates towards the centre. The string pulls it inwards with the centripetal force F = mv²/r. Cut the string and watch where it goes.</p></div>
+        <div class="panel sim">
+          <canvas id="cfC" aria-label="Top view of a ball on a string moving in a circle, with the velocity arrow along the circle and the force arrow pointing to the centre"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="cfM">Mass m <output id="cfMo"></output></label><input type="range" id="cfM" min="0.1" max="1" step="0.05" value="0.3"></div>
+            <div class="ctl"><label for="cfV">Speed v <output id="cfVo"></output></label><input type="range" id="cfV" min="1" max="10" step="0.5" value="4"></div>
+            <div class="ctl"><label for="cfR">Radius r <output id="cfRo"></output></label><input type="range" id="cfR" min="0.3" max="1.5" step="0.05" value="0.8"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="cfCut">Cut the string</button><button id="cfReset">Reset</button></div></div>
+          </div>
+          <div class="readout" id="cfOut"></div>
+          <div class="working wrap" id="cfWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>What provides the centripetal force?</h3></div>
+          <div class="srt" id="cpList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="cpReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="cpOut"></div>
+        </div>
+        <p class="result">The string snaps if the tension needed is more than 60 N. Air resistance and the weight of the ball are ignored (a smooth horizontal table).</p>
+        <div class="tries"><div class="try"><b>1</b>Double the speed. What happens to the force? Double the radius instead. What happens now?</div><div class="try"><b>2</b>Cut the string. Does the ball fly outwards or along a tangent? Why?</div><div class="try"><b>3</b>Find the fastest speed the string can take for a 1 kg ball on a 0.5 m string.</div></div>
+      </div>
+
+      <div class="lab" data-lab="angular" hidden>
+        <div class="labhead"><span class="pill t">Model: constant angular velocity</span><p class="goal">A disc spins at a constant angular velocity ω, in radians per second. Every point on it turns through the same angle, but points further out move faster: v = ωr. Watch the angle in radians build up and compare an inner and an outer point.</p></div>
+        <div class="panel sim">
+          <canvas id="avC" aria-label="A spinning disc with two marked points, the angle turned in radians and their velocity arrows"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="avW">Angular velocity ω <output id="avWo"></output></label><input type="range" id="avW" min="0.2" max="6" step="0.1" value="1.5"></div>
+            <div class="ctl"><label for="avR">Radius of point B <output id="avRo"></output></label><input type="range" id="avR" min="0.1" max="0.5" step="0.01" value="0.4"></div>
+            <div class="ctl"><label for="avM">Mass at B <output id="avMo"></output></label><input type="range" id="avM" min="0.05" max="1" step="0.05" value="0.2"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="avGo">Pause</button><button id="avZero">Reset the angle</button></div></div>
+          </div>
+          <div class="readout" id="avOut"></div>
+          <div class="working wrap" id="avWork"></div>
+        </div>
+        <p class="result">Point A is fixed 0.10 m from the centre. One radian is the angle where the arc length equals the radius: 2π rad = 360°.</p>
+        <div class="tries"><div class="try"><b>1</b>Pause when the angle is close to π rad. How many degrees is that?</div><div class="try"><b>2</b>Point B is four times as far out as A. How do their speeds compare? Their angular velocities?</div><div class="try"><b>3</b>Double ω. What happens to T, to v and to the centripetal force on B?</div></div>
+      </div>
+
+      <div class="lab" data-lab="whirl" hidden>
+        <div class="labhead"><span class="pill t">Experiment: the whirling bung</span><p class="goal">A rubber bung of unknown mass m is whirled on a string through a glass tube. Hanging masses on the other end set the tension, F = Mg, which is the centripetal force. Keep r fixed with a marker, time 10 revolutions, and work out v = 2πr/T. Plot F against v²: the slope is m/r.</p></div>
+        <div class="panel sim">
+          <canvas id="wbC" aria-label="A bung whirled in a horizontal circle above a glass tube, with hanging masses below and a stopwatch"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="wbM">Hanging mass M <output id="wbMo"></output></label><input type="range" id="wbM" min="0.05" max="0.3" step="0.025" value="0.1"></div>
+            <div class="ctl"><label for="wbR">Radius r <output id="wbRo"></output></label><input type="range" id="wbR" min="0.3" max="0.8" step="0.05" value="0.5"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="wbGo">Time 10 revolutions</button><button id="wbClear">Clear</button><button id="wbNew">New bung</button><button id="wbReveal">Reveal m</button></div></div>
+          </div>
+          <div class="readout" id="wbOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>F = Mg (N)</th><th>10T (s)</th><th>T (s)</th><th>v (m/s)</th><th>v² (m²/s²)</th><th></th></tr></thead><tbody id="wbTable"></tbody></table><div class="empty" id="wbEmpty">No readings yet. Time 10 revolutions for five or more hanging masses.</div></div>
+            <div class="graphbox"><canvas id="wbGraph" aria-label="Graph of centripetal force against speed squared with a line of best fit"></canvas><p class="result" id="wbResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Simulated stopwatch: your reaction time adds up to about ±0.15 s to each 10-revolution time. The string is assumed horizontal and friction in the tube is ignored; g = 9.8 m/s². Changing r clears the table, because the slope m/r needs a fixed radius.</p>
+        <div class="tries"><div class="try"><b>1</b>Why time 10 revolutions instead of one?</div><div class="try"><b>2</b>Why plot F against v² rather than F against v?</div><div class="try"><b>3</b>Find the bung's mass from your slope, then press "Reveal m". How close were you?</div></div>
+      </div>
+
+      <div class="lab" data-lab="kepler" hidden>
+        <div class="labhead"><span class="pill t">Kepler's third law from secondary data</span><p class="goal">For bodies orbiting the same central mass, T² is proportional to R³. Gravity provides the centripetal force: GMm/R² = m(2πR/T)²/R, so T² = (4π²/GM) R³. Pick a real data set, plot T² against R³, check for a straight line through the origin, and use the slope to find the central mass.</p></div>
+        <div class="panel sim">
+          <canvas id="kpC" aria-label="The orbits in the chosen data set drawn to scale, each body moving at its own rate"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Data set</span><div class="btns" id="kpSet"></div></div>
+          </div>
+          <div class="readout" id="kpOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead id="kpHead"></thead><tbody id="kpTable"></tbody></table></div>
+            <div class="graphbox"><canvas id="kpGraph" aria-label="Graph of period squared against radius cubed with a line of best fit"></canvas><p class="result" id="kpResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Secondary data: mean orbital radii and periods (rounded published values). Orbits are treated as circles; G = 6.67 × 10⁻¹¹ N m² kg⁻². Animation speeds are scaled so you can see them.</p>
+        <div class="tries"><div class="try"><b>1</b>Work out T²/R³ for each row. What do you notice?</div><div class="try"><b>2</b>Why does each data set give a different slope?</div><div class="try"><b>3</b>Which data set gives the mass of the Sun? Of Jupiter? Of the Earth?</div></div>
+      </div>
+
+      <div class="lab" data-lab="cannon" hidden>
+        <div class="labhead"><span class="pill t">Gravity provides the centripetal force</span><p class="goal">Newton imagined a cannon on a very high mountain. Fire a 1000 kg probe sideways from 400 km above the Earth. Too slow and it falls back; at just the right speed gravity gives exactly the centripetal force a circle needs, so it falls around the Earth for ever.</p></div>
+        <div class="panel sim">
+          <canvas id="ncC" aria-label="The Earth with a probe fired sideways from 400 km up, and the path it follows"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Try</span><div class="btns" id="ncPre"><button data-v="6">6 km/s</button><button data-v="7.67">Circular</button><button data-v="9.5">9.5 km/s</button><button data-v="11">11 km/s</button></div></div>
+            <div class="ctl"><label for="ncV">Launch speed <output id="ncVo"></output></label><input type="range" id="ncV" min="4" max="12" step="0.05" value="7"></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="ncGo">Fire</button><button id="ncClear">Clear paths</button></div></div>
+          </div>
+          <div class="readout" id="ncOut"></div>
+          <div class="working wrap" id="ncWork"></div>
+        </div>
+        <p class="result">Model: no air resistance, Earth treated as a uniform sphere (M = 5.97 × 10²⁴ kg, R = 6.37 × 10⁶ m), the Earth's rotation is ignored. Paths are worked out step by step from F = GMm/r².</p>
+        <div class="tries"><div class="try"><b>1</b>Fire at 6 km/s and at 7 km/s. Compare gravity with the centripetal force needed at launch.</div><div class="try"><b>2</b>Find the speed for a circular orbit. Why does the 1000 kg mass not matter?</div><div class="try"><b>3</b>Above which speed does the probe never come back? Compare with 1.5's escape velocity.</div></div>
+      </div>
+
+      <div class="lab" data-lab="orbits" hidden>
+        <div class="labhead"><span class="pill t">Satellite orbits and their uses</span><p class="goal">The higher the orbit, the slower the satellite and the longer its period: T² = 4π²r³/GM. At about 36 000 km up the period is 24 hours, so a geostationary satellite stays above the same point on the equator. Pick an orbit and watch it next to the spinning Earth.</p></div>
+        <div class="panel sim">
+          <canvas id="obC" aria-label="The Earth spinning with a marked point on the equator, and a satellite in the chosen orbit"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Orbit</span><div class="btns" id="obPre"><button data-h="400">ISS (400 km)</button><button data-h="800">Polar weather (800 km)</button><button data-h="20200">GPS (20 200 km)</button><button data-h="35790">Geostationary</button></div></div>
+            <div class="ctl"><label for="obH">Height above the surface <output id="obHo"></output></label><input type="range" id="obH" min="200" max="40000" step="10" value="400"></div>
+          </div>
+          <div class="readout" id="obOut"></div>
+          <div class="working wrap" id="obWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Which orbit suits the job?</h3></div>
+          <div class="srt" id="osList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="osReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="osOut"></div>
+        </div>
+        <p class="result">Animation: 1 second shows about 1 hour. The Earth turns once in 24 hours (strictly 23 h 56 min). Orbits shown are circular and above the equator, seen from above the North Pole.</p>
+        <div class="tries"><div class="try"><b>1</b>Pick the ISS. How many times does it go round while the Earth turns once?</div><div class="try"><b>2</b>Drag the height until the satellite stays over the marked point. What height and speed?</div><div class="try"><b>3</b>Why are weather-imaging satellites for close-up pictures in low orbits, but TV satellites geostationary?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of uniform circular motion"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Secondary data · LO 1.6.3</p><h2>Kepler's third law, three times</h2></div><p>Real orbital data for three different central masses. Each gives a straight line of T² against R³, and each slope gives the mass at the centre.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>Graphs to know</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="fv"></canvas><h3>F ∝ v²</h3><p>At a fixed radius, twice the speed needs four times the centripetal force.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="fr"></canvas><h3>F ∝ 1/r</h3><p>At a fixed speed, a tighter circle (half the radius) needs twice the force.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="tr"></canvas><h3>Higher = slower</h3><p>Orbital speed v = √(GM/r) falls with height; the period rises steeply.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Model the orbits · LO 1.6.4</p><h2>Satellites and the Moon compared</h2></div><p>Worked out from r = R + h, v = √(GM/r) and T = 2π√(r³/GM) for the Earth.</p></div>
+        <div class="secwrap"><table class="sec" id="secT"></table></div>
+        <p class="result" id="secRes" style="margin-top:10px"></p>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Where you meet it</p><h2>Circular motion around you</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Centripetal force is <b>not a new kind of force</b>. Name what provides it: tension, friction, gravity or a normal reaction.</li>
+            <li>The force and acceleration point <b>towards the centre</b>; the velocity is along the <b>tangent</b>.</li>
+            <li>Angles in ω = θ/t are in <b>radians</b>. One revolution = 2π rad, so ω = 2π/T.</li>
+            <li>Use F = mv²/r or F = mω²r: <b>square the speed</b>, and use metres for r.</li>
+            <li>To derive T² = 4π²R³/GM, set <b>GMm/R² = mv²/R</b> and use v = 2πR/T.</li>
+            <li>For Kepler's third law, plot <b>T² against R³</b>: straight line through the origin, slope 4π²/GM.</li>
+            <li>For satellites, <b>r = R + h</b> from the centre of the Earth, in metres.</li>
+            <li>Geostationary: <b>period 24 h, above the equator, same direction as the Earth's spin</b>, about 36 000 km up.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The verb tells you what the examiner wants. The learning outcomes for this section use explain, model and verify.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="text" placeholder="e.g. 7.67 or 4.22e7" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>What happens to the force?</h2></div></div>
+          <canvas id="predC" aria-label="A mass moving in a circle before and after its mass, speed and radius are changed"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" data-g="0"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: centripetal, radian, Kepler, ω…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>Uniform circular motion and orbits. G = 6.67 × 10⁻¹¹ N m² kg⁻²; Earth: M = 5.97 × 10²⁴ kg, R = 6.37 × 10⁶ m.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Centripetal force (spec)</span><span class="big">F = mv² / r</span><dl><dt>F</dt><dd>force towards the centre, N</dd><dt>r</dt><dd>radius of the circle, m</dd></dl><div class="ex">0.3 kg at 4 m/s, r = 0.8 m: 6.0 N</div></div>
+        <div class="panel fcell"><span class="pill">Centripetal acceleration</span><span class="big">a = v² / r = ω²r</span><dl><dt>direction</dt><dd>towards the centre</dd></dl><div class="ex">15 m/s, r = 25 m: 9.0 m/s²</div></div>
+        <div class="panel fcell"><span class="pill">Angular velocity</span><span class="big">ω = θ / t</span><dl><dt>θ</dt><dd>angle turned, rad</dd><dt>ω</dt><dd>rad/s (rad s⁻¹)</dd></dl><div class="ex">π rad in 2 s: 1.57 rad/s</div></div>
+        <div class="panel fcell"><span class="pill">Speed and ω</span><span class="big">v = ωr</span><dl><dt>v</dt><dd>linear (tangential) speed, m/s</dd></dl><div class="ex">ω = 2 rad/s, r = 0.4 m: 0.8 m/s</div></div>
+        <div class="panel fcell"><span class="pill">Period</span><span class="big">T = 2π / ω = 2πr / v</span><dl><dt>T</dt><dd>time for one revolution, s</dd><dt>f</dt><dd>= 1/T, Hz</dd></dl><div class="ex">ω = 0.6 rad/s: T = 10.5 s</div></div>
+        <div class="panel fcell"><span class="pill">With ω</span><span class="big">F = mω²r</span><dl><dt>use</dt><dd>when ω (or T) is given</dd></dl><div class="ex">0.2 kg, ω = 3 rad/s, r = 0.5 m: 0.9 N</div></div>
+        <div class="panel fcell"><span class="pill">Radians</span><span class="big">θ = s / r · 2π rad = 360°</span><dl><dt>s</dt><dd>arc length, m</dd></dl><div class="ex">1 rad ≈ 57.3°</div></div>
+        <div class="panel fcell"><span class="pill a">Kepler's third law (spec)</span><span class="big">T² = 4π²R³ / GM</span><dl><dt>from</dt><dd>GMm/R² = mv²/R, v = 2πR/T</dd><dt>M</dt><dd>mass at the centre, kg</dd></dl><div class="ex">Earth round the Sun: M = 1.99 × 10³⁰ kg</div></div>
+        <div class="panel fcell"><span class="pill a">Orbital speed</span><span class="big">v = √(GM / r)</span><dl><dt>r</dt><dd>= R + h, from the centre</dd></dl><div class="ex">ISS, 400 km: 7.67 km/s</div></div>
+        <div class="panel fcell"><span class="pill a">Central mass from an orbit</span><span class="big">M = 4π²R³ / GT²</span><dl><dt>use</dt><dd>"weighing" a planet or star</dd></dl><div class="ex">Io round Jupiter: 1.90 × 10²⁷ kg</div></div>
+        <div class="panel fcell"><span class="pill a">Geostationary orbit</span><span class="big">T = 24 h → r = ∛(GMT² / 4π²)</span><dl><dt>r</dt><dd>4.22 × 10⁷ m from the centre</dd><dt>h</dt><dd>about 36 000 km</dd></dl><div class="ex">v = 2πr/T = 3.07 km/s</div></div>
+        <div class="panel fcell"><span class="pill">Units</span><span class="big">rad/s · m/s · m/s² · N</span><dl><dt>1 rev</dt><dd>2π rad</dd><dt>rpm → ω</dt><dd>× 2π ÷ 60</dd></dl><div class="ex">a and F point to the centre</div></div>
+      </div>
+      <footer>
+        <p>Built on section 1.6 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes are quoted from the specification. Experiment readings are simulated; orbital data are rounded published values.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent","--band-ink"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+/* ---------- icons + topics ---------- */
+const ICON = {
+  centripetal:'<circle cx="12" cy="12" r="8" stroke-dasharray="3 3"/><circle cx="20" cy="12" r="2"/><path d="M18 12h-5M14.5 10.5L13 12l1.5 1.5"/>',
+  angular:'<circle cx="12" cy="12" r="9"/><path d="M12 12h9M12 12l6.4-6.4"/><path d="M16.5 12a4.5 4.5 0 00-1.3-3.2"/>',
+  whirl:'<path d="M12 21V11"/><ellipse cx="12" cy="7" rx="9" ry="3"/><circle cx="21" cy="7" r="1.5"/><rect x="10" y="17" width="4" height="4" rx="1"/>',
+  kepler:'<circle cx="12" cy="12" r="2.5"/><ellipse cx="12" cy="12" rx="10" ry="6"/><circle cx="22" cy="12" r="1.3"/><path d="M4 20l4-3"/>',
+  cannon:'<circle cx="12" cy="14" r="7"/><path d="M12 3v4M12 3l7 1"/><path d="M19 4a10 10 0 01-2 13" stroke-dasharray="2 2"/>',
+  orbits:'<circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="9" stroke-dasharray="2 3"/><rect x="18.5" y="4" width="3" height="3"/>',
+  car:'<path d="M3 16v-4l2-5h14l2 5v4z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>',
+  drum:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 7v-2"/>',
+  coaster:'<path d="M2 20c4-14 8-14 10-6s6 8 10-8"/><path d="M2 21h20"/>',
+  hammer:'<circle cx="6" cy="18" r="2.5"/><path d="M7.5 16L19 4"/><circle cx="19" cy="4" r="1.2"/>',
+  dish:'<path d="M4 14a9 9 0 0010-10z"/><path d="M8 10l7-3M8 20h6M11 15v5"/>',
+  moon:'<path d="M20 14A8 8 0 1110 4a6 6 0 0010 10z"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"centripetal", name:"Centripetal force", short:"Moving in a circle means accelerating towards the centre. That needs a force: F = mv²/r.", tint:"var(--blush)"},
+  {id:"angular", name:"Angular velocity", short:"ω = θ/t in rad/s. Same ω for every point on a disc, but v = ωr grows with r.", tint:"var(--apricot)"},
+  {id:"whirl", name:"Whirling bung experiment", short:"Hanging masses set F; time 10 revolutions for v. Plot F against v²: slope = m/r.", tint:"var(--sage)"},
+  {id:"kepler", name:"Kepler's third law", short:"T² = 4π²R³/GM. Real orbital data give a straight line of T² against R³.", tint:"var(--cream)"},
+  {id:"cannon", name:"Gravity and orbits", short:"Gravity supplies exactly the centripetal force a planet or moon needs: GMm/r² = mv²/r.", tint:"var(--blush)"},
+  {id:"orbits", name:"Satellite orbits and uses", short:"Low orbits for close-up images and the ISS; GPS higher up; geostationary for TV and weather.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Uniform circular motion","","Motion in a circle at constant speed. The velocity changes direction all the time, so the object is accelerating.","centripetal"],
+  ["Centripetal force","","The resultant force towards the centre needed to keep an object moving in a circle. It is provided by a real force such as tension, friction or gravity.","centripetal","F = mv²/r"],
+  ["Centripetal acceleration","","The acceleration of an object moving in a circle, directed towards the centre.","centripetal","a = v²/r = ω²r"],
+  ["Tangent","","A line that touches a circle at one point, at right angles to the radius. The velocity in circular motion is along the tangent.","centripetal"],
+  ["Velocity","","Speed in a given direction (a vector). In a circle the speed can be constant while the velocity changes.","centripetal"],
+  ["Newton's first law","","An object keeps moving in a straight line at constant speed unless a resultant force acts. Cut the string and the ball flies off along the tangent.","centripetal"],
+  ["Centrifugal force","","A force that seems to push you outwards when you are in a turning car or ride. It isn't a real force: your body simply tends to keep going straight.","centripetal"],
+  ["Tension","","The pulling force in a string or rope. It provides the centripetal force for a ball whirled on a string.","centripetal"],
+  ["Friction","","A force opposing sliding. Friction between the tyres and the road provides the centripetal force for a car turning a corner.","centripetal"],
+  ["Normal reaction","","The push of a surface at right angles to it. The drum of a spin dryer provides the centripetal force on the clothes this way.","centripetal"],
+  ["Banked track","","A road or track tilted towards the centre of a bend, so part of the normal reaction helps provide the centripetal force.","centripetal"],
+  ["Radian","rad","The angle at the centre of a circle where the arc length equals the radius. 2π rad = 360°; 1 rad ≈ 57.3°.","angular","θ = s/r"],
+  ["Arc length","s","The distance along part of a circle.","angular","s = rθ"],
+  ["Angular velocity","ω","The rate of change of angle: the angle turned per second, in radians per second.","angular","ω = θ/t"],
+  ["ω","omega","Symbol for angular velocity, in rad/s (rad s⁻¹).","angular"],
+  ["θ","theta","Symbol for an angle, in radians in circular-motion formulas.","angular"],
+  ["Linear speed","tangential speed","The speed of a point along its circular path, in m/s.","angular","v = ωr"],
+  ["Period","T","The time for one complete revolution, in seconds.","angular","T = 2π/ω = 2πr/v"],
+  ["Frequency","f","The number of revolutions per second, in hertz (Hz).","angular","f = 1/T"],
+  ["Revolutions per minute","rpm","A common unit of rotation rate. Multiply by 2π and divide by 60 to get rad/s.","angular"],
+  ["Whirling bung","","A school experiment: a rubber bung whirled on a string through a glass tube, with hanging masses giving the tension (centripetal force).","whirl"],
+  ["Reference marker","","A paper clip or tape on the string below the tube. Keeping it just below the tube keeps the radius constant.","whirl"],
+  ["Reaction time","","The delay in starting and stopping a stopwatch, about 0.1–0.2 s. Timing 10 revolutions makes it a small fraction of the total.","whirl"],
+  ["Line of best fit","","A straight line drawn through data points with points evenly scattered either side. Its slope gives a physical quantity.","whirl"],
+  ["Slope","gradient","Rise over run of a graph line. For F against v² it equals m/r.","whirl"],
+  ["Primary data","","Data you collect yourself in an experiment.","whirl"],
+  ["Kepler's third law","law of periods","For bodies orbiting the same central mass, the square of the period is proportional to the cube of the mean orbital radius.","kepler","T² = 4π²R³/GM"],
+  ["Johannes Kepler","","German astronomer (1571–1630) who found the three laws of planetary motion from Tycho Brahe's observations.","kepler"],
+  ["Orbital radius","R","The distance from the centre of the central body to the orbiting body (mean distance for a slightly elliptical orbit).","kepler"],
+  ["Orbital period","T","The time for one complete orbit.","kepler"],
+  ["Secondary data","","Data collected by someone else, e.g. published planetary radii and periods.","kepler"],
+  ["Astronomical unit","AU","The mean distance from the Earth to the Sun, about 1.50 × 10¹¹ m.","kepler"],
+  ["Central mass","M","The mass of the body being orbited, e.g. the Sun for the planets. It can be found from the slope of T² against R³.","kepler","M = 4π²R³/GT²"],
+  ["Ellipse","","An oval path. Planetary orbits are ellipses, but most are very close to circles.","kepler"],
+  ["Newton's law of universal gravitation","","Any two point masses attract with a force proportional to the product of their masses and inversely proportional to the square of the distance between them.","cannon","F = Gm₁m₂/d²"],
+  ["Gravitational constant","G","6.67 × 10⁻¹¹ N m² kg⁻².","cannon"],
+  ["Orbit","","The curved path of a body around another, held by gravity. In a circular orbit, gravity provides exactly the centripetal force needed.","cannon","GMm/r² = mv²/r"],
+  ["Orbital speed","","The speed needed for a circular orbit of radius r around a mass M. It doesn't depend on the satellite's mass.","cannon","v = √(GM/r)"],
+  ["Free fall","","Moving with only gravity acting. A satellite is in free fall: it falls towards the Earth but moves sideways fast enough to keep missing it.","cannon"],
+  ["Weightlessness","","The feeling of having no weight in free fall, e.g. on the ISS. Gravity still acts.","cannon"],
+  ["Newton's cannonball","","Newton's thought experiment: a cannon on a high mountain firing faster and faster until the ball goes all the way round the Earth.","cannon"],
+  ["Escape velocity","vₑ","The minimum speed needed to escape completely from a body's gravitational field (from 1.5).","cannon","vₑ = √(2GM/r)"],
+  ["Satellite","","Any object in orbit around a planet. The Moon is a natural satellite; the ISS and GPS satellites are artificial.","orbits"],
+  ["Low Earth orbit","LEO","An orbit from about 200 to 2000 km up. Period about 90–120 minutes. Used by the ISS, Earth-imaging and some internet satellites.","orbits"],
+  ["Polar orbit","","A low orbit passing over both poles. As the Earth turns underneath, the satellite scans every part of the surface: good for mapping and weather.","orbits"],
+  ["Medium Earth orbit","MEO","Orbits between LEO and geostationary, e.g. GPS and Galileo navigation satellites about 20 000 km up, period about 12 hours.","orbits"],
+  ["Geostationary orbit","GEO","A circular orbit above the equator with a period of 24 hours, in the same direction as the Earth turns, so the satellite stays above one point. About 36 000 km up.","orbits"],
+  ["Geosynchronous","","Having a period equal to one Earth rotation. A geostationary orbit is the special case above the equator.","orbits"],
+  ["International Space Station","ISS","A crewed space station in low Earth orbit about 400 km up, going round about 16 times a day.","orbits"],
+  ["GPS","Global Positioning System","A set of navigation satellites in medium Earth orbit. A receiver uses signals from at least four to find its position.","orbits"],
+  ["Latency","","The delay for a signal to travel. Geostationary links have a noticeable delay (about a quarter of a second up and down) because they are so far away.","orbits"],
+  ["Height","h","Distance above the surface. For orbit formulas use r = R + h.","orbits","r = R + h"],
+];
+GLOSS.forEach((g,i)=>{ GLOSS[i]={t:g[0],aka:g[1],d:g[2],topic:g[3],f:g[4],id:"g-"+g[0].toLowerCase().replace(/[^a-z0-9]+/g,"-")}; });
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["centripetal force","Centripetal force"],["centripetal acceleration","Centripetal acceleration"],["tangent","Tangent"],["radian","Radian"],["angular velocity","Angular velocity"],["period","Period"],["tension","Tension"],["friction","Friction"],["normal reaction","Normal reaction"],["Kepler's third law","Kepler's third law"],["secondary data","Secondary data"],["reaction time","Reaction time"],["slope","Slope"],["free fall","Free fall"],["weightless","Weightlessness"],["geostationary","Geostationary orbit"],["polar orbit","Polar orbit"],["low Earth orbit","Low Earth orbit"],["GPS","GPS",true],["orbital speed","Orbital speed"],["first law","Newton's first law"],["centrifugal","Centrifugal force"],["universal gravitation","Newton's law of universal gravitation"],["banked","Banked track"]];
+
+
+/* ---------- glossary links + canvas helpers ---------- */
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function dbl(ctx,x1,y1,x2,y2,color,w=2){ line(ctx,x1,y1,x2,y2,color,w); const a=Math.atan2(y2-y1,x2-x1); arrowHead(ctx,x2,y2,a,color,8); arrowHead(ctx,x1,y1,a+Math.PI,color,8); }
+function dimArrow(ctx,xa,xb,y,label,col){ line(ctx,xa,y,xb,y,col,1.4); arrowHead(ctx,xa,y,Math.PI,col,7); arrowHead(ctx,xb,y,0,col,7); line(ctx,xa,y-5,xa,y+5,col,1.2); line(ctx,xb,y-5,xb,y+5,col,1.2); if(label) text(ctx,label,(xa+xb)/2,y-5,col,F(12),"center"); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const s3 = x => (+x.toPrecision(3)).toString();
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
+const sup = n => String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(x,d=3){ if(x===0) return "0"; let e=Math.floor(Math.log10(Math.abs(x))), ms=(x/Math.pow(10,e)).toFixed(d-1);
+  if(Math.abs(+ms)>=10){ e++; ms=(x/Math.pow(10,e)).toFixed(d-1); } return e===0? ms : `${ms} × 10${sup(e)}`; }
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+function coilV(ctx,x,y1,y2,n,wd,col,lw=2){ const lead=Math.min(8,(y2-y1)*0.12), a=y1+lead, b=y2-lead, seg=(b-a)/(2*n);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x,a);
+  for(let i=0;i<2*n;i++) ctx.lineTo(x+(i%2?-1:1)*wd/2, a+seg*(i+0.5)); ctx.lineTo(x,b); ctx.lineTo(x,y2); ctx.stroke(); ctx.restore(); }
+function coilH(ctx,x1,x2,y,n,ht,col,lw=2){ const lead=Math.min(8,(x2-x1)*0.12), a=x1+lead, b=x2-lead, seg=(b-a)/(2*n);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(a,y);
+  for(let i=0;i<2*n;i++) ctx.lineTo(a+seg*(i+0.5), y+(i%2?-1:1)*ht/2); ctx.lineTo(b,y); ctx.lineTo(x2,y); ctx.stroke(); ctx.restore(); }
+function massBlock(ctx,x,y,wd,ht,label){ rrect(ctx,x-wd/2,y,wd,ht,5,C.apricot,C.ink,1.4); text(ctx,label,x,y+ht/2+4,"#3b2b21",F(11),"center"); }
+function vdim(ctx,x,ya,yb,label,col){ line(ctx,x,ya,x,yb,col,1.4); line(ctx,x-5,ya,x+5,ya,col,1.2); line(ctx,x-5,yb,x+5,yb,col,1.2);
+  if(Math.abs(yb-ya)>16){ const d=yb>ya?1:-1; arrowHead(ctx,x,ya,-d*Math.PI/2,col,7); arrowHead(ctx,x,yb,d*Math.PI/2,col,7); }
+  if(label) text(ctx,label,x+8,(ya+yb)/2+4,col,F(12)); }
+/* ================= MODELS + DRAWINGS ================= */
+const G = 6.67e-11, GE = 9.8, TAU = 2*Math.PI, RE = 6.37e6, ME = 5.97e24, GME = G*ME;
+const fmtN = x => { const t=s3(x); return Math.abs(x)>=10000? t.replace(/\B(?=(\d{3})+(?!\d))/g," ") : t; };
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function axesBox(ctx,w,h,xl,yl){ const p=30; line(ctx,p,h-p+6,w-10,h-p+6,C.ink,1.4); line(ctx,p,10,p,h-p+6,C.ink,1.4); text(ctx,yl,p+5,18,C.ink,F(11)); text(ctx,xl,w-10,h-p,C.ink,F(11),"right"); return {x0:p,y0:h-p+6,x1:w-10,y1:12}; }
+// Ball on a string, top view
+const CF_MAX = 60;
+function drawWhirl(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, cx=w/2, cy=h/2+(cp?0:8), sc=(Math.min(w,h)/2-(cp?22:34))/1.5, R=o.r*sc, Fv=o.m*o.v*o.v/o.r;
+  ctx.save(); ctx.strokeStyle=C.grid; ctx.setLineDash([5,6]); ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(cx,cy,R,0,TAU); ctx.stroke(); ctx.restore();
+  circle(ctx,cx,cy,5,C.ink); const br=6+5*Math.cbrt(o.m);
+  if(o.cut){ const x=cx+o.cut.x*sc, y=cy+o.cut.y*sc; line(ctx,cx,cy,cx+Math.cos(o.cut.a0)*16,cy+Math.sin(o.cut.a0)*16,C.muted,1.5);
+    line(ctx,cx+Math.cos(o.cut.a0)*R,cy+Math.sin(o.cut.a0)*R,x,y,C.olive,1.5,[3,4]); circle(ctx,x,y,br,C.apricot,C.ink,1.5);
+    const vl=12+o.v*6; arrow(ctx,x,y,x+o.cut.ux*vl,y+o.cut.uy*vl,C.olive,2.4); if(!cp) text(ctx,o.snap?"The string snapped! The ball moves along the tangent.":"String cut: the ball moves along the tangent.",14,22,C.bad,F(13)); return; }
+  const a=o.ang, x=cx+Math.cos(a)*R, y=cy+Math.sin(a)*R; line(ctx,cx,cy,x,y,C.ink,1.6);
+  const ux=-Math.sin(a), uy=Math.cos(a), vl=12+o.v*6; arrow(ctx,x,y,x+ux*vl,y+uy*vl,C.olive,2.6); text(ctx,"v",x+ux*vl+6,y+uy*vl+4,C.olive,F(13));
+  const fl=Math.min(R*0.75, 14+Math.sqrt(Fv)*9); arrow(ctx,x,y,x-Math.cos(a)*fl,y-Math.sin(a)*fl,C.terra,3); text(ctx,"F",x-Math.cos(a)*fl*0.55+8,y-Math.sin(a)*fl*0.55-6,C.terra,F(13));
+  circle(ctx,x,y,br,C.apricot,C.ink,1.5);
+  if(!cp){ text(ctx,`F = mv²/r = ${s3(Fv)} N`,14,22,Fv>CF_MAX?C.bad:C.ink,F(14)); text(ctx,"seen from above · shown 4× slower",14,40,C.muted,F(11,600)); }
+}
+// Spinning disc
+function drawDisc(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, cx=cp?w/2:Math.min(w*0.4,w/2), cy=h/2, sc=(Math.min(h,cp?w:w*0.8)/2-18)/0.5, RD=0.5*sc, th=o.th;
+  circle(ctx,cx,cy,RD,C["surface-2"],C.line,1.5); for(let k=0;k<12;k++){ const q=th+k*TAU/12; line(ctx,cx,cy,cx+Math.cos(q)*RD,cy+Math.sin(q)*RD,C.grid,1); }
+  line(ctx,cx,cy,cx+RD+8,cy,C.muted,1.2,[4,4]); const ang=((th%TAU)+TAU)%TAU;
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(cx,cy,0.06*sc+10,0,ang); ctx.stroke(); ctx.restore();
+  line(ctx,cx,cy,cx+Math.cos(th)*RD,cy+Math.sin(th)*RD,C.ink,2);
+  [[0.1,"A",C.sage],[o.r,"B",C.apricot]].forEach(([r,l,c])=>{ const x=cx+Math.cos(th)*r*sc, y=cy+Math.sin(th)*r*sc, v=o.w*r, vl=8+v*22;
+    arrow(ctx,x,y,x-Math.sin(th)*vl,y+Math.cos(th)*vl,C.olive,2.2); circle(ctx,x,y,7,c,C.ink,1.5); text(ctx,l,x+9,y-8,C.ink,F(12)); });
+  circle(ctx,cx,cy,4,C.ink);
+  if(!cp){ const tx=Math.min(cx+RD+24,w-190); text(ctx,`θ = ${o.th.toFixed(2)} rad`,tx,30,C.terra,F(15)); text(ctx,`= ${(o.th*180/Math.PI).toFixed(0)}°`,tx,50,C.muted,F(12)); text(ctx,`turns: ${(o.th/TAU).toFixed(2)}`,tx,70,C.muted,F(12));
+    text(ctx,`v_A = ${(o.w*0.1).toFixed(2)} m/s`,tx,h-44,C.ink,M(12)); text(ctx,`v_B = ${(o.w*o.r).toFixed(2)} m/s`,tx,h-24,C.ink,M(12)); }
+}
+// Whirling bung
+function drawBung(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, cx=w*(cp?0.5:0.42), ty=h*0.36, tubeB=ty+(cp?44:60), rx=Math.min(w*0.36,o.r*(cp?190:280)), ry=rx*0.28, a=o.ang;
+  ctx.save(); ctx.strokeStyle=C.grid; ctx.setLineDash([5,5]); ctx.beginPath(); ctx.ellipse(cx,ty,rx,ry,0,0,TAU); ctx.stroke(); ctx.restore();
+  const bx=cx+Math.cos(a)*rx, by=ty+Math.sin(a)*ry, back=Math.sin(a)<0;
+  const bung=()=>{ rrect(ctx,bx-8,by-6,16,12,4,C.terra,C.ink,1.3); };
+  if(back){ line(ctx,cx,ty,bx,by,C.ink,1.4); bung(); }
+  rrect(ctx,cx-5,ty,10,tubeB-ty,3,C.glass||C["surface-2"],C.ink,1.2); text(ctx,"glass tube",cx+10,tubeB-6,C.muted,F(10,600));
+  if(!back){ line(ctx,cx,ty,bx,by,C.ink,1.4); bung(); }
+  const my=tubeB+14+(cp?0:6); line(ctx,cx,tubeB,cx,my,C.ink,1.4); rrect(ctx,cx-6,tubeB+4,12,5,2,C.olive); // marker
+  const mh=12+o.M*60; rrect(ctx,cx-16,my,32,mh,4,C.apricot,C.ink,1.3); text(ctx,`${Math.round(o.M*1000)} g`,cx,my+mh/2+4,"#3b2b21",F(10),"center");
+  if(!cp){ text(ctx,"marker",cx+12,tubeB+10,C.muted,F(10,600)); text(ctx,`F = Mg = ${(o.M*GE).toFixed(2)} N`,14,22,C.ink,F(14)); text(ctx,`r = ${o.r.toFixed(2)} m`,cx+rx-40,ty-ry-8,C.olive,F(12));
+    const sw=w-120; rrect(ctx,sw,14,104,48,10,C["surface-2"],C.line,1.2); text(ctx,(o.t||0).toFixed(2)+" s",sw+52,38,C.ink,M(16),"center"); text(ctx,`rev ${o.n||0} / 10`,sw+52,55,C.muted,F(10,600),"center"); }
+}
+// Kepler orbits
+function drawKepler(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const S=KSETS[o.set], cx=w/2, cy=h/2, Rm=Math.min(w,h)/2-16, maxR=Math.max(...S.rows.map(r=>r[1])), minT=Math.min(...S.rows.map(r=>r[2]));
+  circle(ctx,cx,cy,o.set==="planets"?7:o.set==="jupiter"?6:8,o.set==="planets"?C.apricot:o.set==="jupiter"?C.cream:C.sage,C.ink,1.3);
+  S.rows.forEach(([n,R,T],i)=>{ const rr=Math.max(10,R/maxR*Rm), a=o.t*TAU/(2*T/minT)+i*1.3; ctx.save(); ctx.strokeStyle=C.grid; ctx.setLineDash([3,5]); ctx.beginPath(); ctx.arc(cx,cy,rr,0,TAU); ctx.stroke(); ctx.restore();
+    const x=cx+Math.cos(a)*rr, y=cy+Math.sin(a)*rr; circle(ctx,x,y,4,C.terra,C.ink,1); if(!o.compact&&rr>30) text(ctx,n,x+7,y-6,C.ink,F(11)); });
+  if(!o.compact) text(ctx,`${S.n} · to scale`,12,20,C.muted,F(12,600));
+}
+// Newton's cannon
+function cannonPath(v){ const GM=G*ME, r0=RE+4e5; let x=0,y=r0,vx=v*1000,vy=0; const pts=[[x/RE,y/RE]]; let ang=0, prev=Math.atan2(y,x), out="orbit", dt=4, rmin=r0, rmax=r0;
+  const acc=(x,y)=>{ const r=Math.hypot(x,y), k=-GM/(r*r*r); return [k*x,k*y]; }; let [ax,ay]=acc(x,y);
+  for(let i=0;i<60000;i++){ x+=vx*dt+0.5*ax*dt*dt; y+=vy*dt+0.5*ay*dt*dt; const [nx,ny]=acc(x,y); vx+=0.5*(ax+nx)*dt; vy+=0.5*(ay+ny)*dt; ax=nx; ay=ny;
+    const r=Math.hypot(x,y), an=Math.atan2(y,x); rmin=Math.min(rmin,r); rmax=Math.max(rmax,r); let d=an-prev; if(d>Math.PI) d-=TAU; if(d<-Math.PI) d+=TAU; ang+=d; prev=an;
+    if(i%6===0) pts.push([x/RE,y/RE]); if(r<RE){ out="crash"; pts.push([x/RE,y/RE]); break; } if(r>9*RE){ out="escape"; break; } if(Math.abs(ang)>=TAU){ out=rmax-rmin<4e4?"circle":"ellipse"; pts.push([0,r0/RE]); break; } }
+  return {pts,out,v}; }
+const NC_COL = ()=>[C.terra,C.sage,C.ink,C.apricot];
+function drawCannon(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const sc=Math.min((h-16)/4.9,(w-16)/4.6), cx=w/2, cy=8+1.25*sc, X=p=>cx+p[0]*sc, Y=p=>cy-p[1]*sc;
+  circle(ctx,cx,cy,sc,C.sage,C.ink,1.5); text(ctx,"Earth",cx,cy+5,"#3b2b21",F(13),"center");
+  ctx.save(); ctx.strokeStyle=C.grid; ctx.setLineDash([3,5]); ctx.beginPath(); ctx.arc(cx,cy,sc*(1+4e5/RE),0,TAU); ctx.stroke(); ctx.restore();
+  const cols=NC_COL(); (o.paths||[]).forEach((P,k)=>{ const n=P.shown!=null?P.shown:P.pts.length; ctx.save(); ctx.beginPath(); ctx.rect(0,0,w,h); ctx.clip(); ctx.strokeStyle=cols[k%4]; ctx.lineWidth=2.2; if(k%2) ctx.setLineDash([7,4]); ctx.beginPath(); P.pts.slice(0,n).forEach((p,i)=>i?ctx.lineTo(X(p),Y(p)):ctx.moveTo(X(p),Y(p))); ctx.stroke(); ctx.restore();
+    if(n<P.pts.length){ const p=P.pts[Math.max(0,n-1)]; circle(ctx,X(p),Y(p),4.5,cols[k%4],C.ink,1.2); } if(!o.compact){ const ly=h-12-((o.paths.length-1-k)*18); line(ctx,12,ly-4,30,ly-4,cols[k%4],3,k%2?[5,3]:null); text(ctx,`${P.v} km/s: ${({crash:"falls back",circle:"circle",ellipse:"ellipse",orbit:"orbit",escape:"escapes"})[P.out]}`,36,ly,C.ink,F(11)); } });
+  const lx=cx, ly=cy-sc*(1+4e5/RE); rrect(ctx,lx-4,ly-4,8,8,2,C.ink); line(ctx,lx,cy-sc,lx,ly,C.ink,1.2);
+  if(!o.compact) text(ctx,"launch point, 400 km up",lx+8,ly-6,C.muted,F(11,600));
+}
+// Satellite orbit next to the spinning Earth
+function drawOrbit(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, cx=w/2, cy=h/2, r=RE+o.h*1000, Rm=Math.min(w,h)/2-14, sc=Rm/(RE+40500e3), Rp=RE*sc, Tsat=TAU*Math.sqrt(r*r*r/GME)/3600, ea=o.t*TAU/24, sa=o.t*TAU/Tsat;
+  ctx.save(); ctx.strokeStyle=C.grid; ctx.setLineDash([4,5]); ctx.beginPath(); ctx.arc(cx,cy,(RE+35790e3)*sc,0,TAU); ctx.stroke(); ctx.restore();
+  ctx.save(); ctx.strokeStyle=C.olive; ctx.lineWidth=1.4; ctx.beginPath(); ctx.arc(cx,cy,r*sc,0,TAU); ctx.stroke(); ctx.restore();
+  circle(ctx,cx,cy,Rp,C.sage,C.ink,1.3); const mx=cx+Math.cos(-ea)*Rp, my=cy+Math.sin(-ea)*Rp; line(ctx,cx,cy,mx,my,C.ink,1); circle(ctx,mx,my,3.5,C.terra);
+  const sx=cx+Math.cos(-sa)*r*sc, sy=cy+Math.sin(-sa)*r*sc; rrect(ctx,sx-5,sy-5,10,10,2,C.apricot,C.ink,1.3); line(ctx,sx-11,sy,sx+11,sy,C.ink,1.5);
+  if(!cp){ text(ctx,`t = ${o.t.toFixed(1)} h`,12,22,C.ink,M(13)); text(ctx,"dashed: geostationary height",12,h-12,C.muted,F(11,600)); text(ctx,"● marked point on the equator",w-12,h-12,C.terra,F(11,600),"right"); }
+}
+// Hero: satellite orbit with v and F
+function drawHero(ctx,w,h,t){ bg(ctx,w,h); const cx=w*0.5, cy=h*0.54, R=Math.min(w,h)*0.17, ro=Math.min(w*0.4,h*0.4), a=-t*0.5;
+  ctx.save(); ctx.strokeStyle=C.grid; ctx.setLineDash([4,6]); ctx.beginPath(); ctx.arc(cx,cy,ro,0,TAU); ctx.stroke(); ctx.restore();
+  circle(ctx,cx,cy,R,C.sage,C.ink,1.5); text(ctx,"Earth",cx,cy+5,"#3b2b21",F(13),"center");
+  const x=cx+Math.cos(a)*ro, y=cy+Math.sin(a)*ro; arrow(ctx,x,y,x+Math.sin(a)*48,y-Math.cos(a)*48,C.olive,2.6); arrow(ctx,x,y,x-Math.cos(a)*ro*0.45,y-Math.sin(a)*ro*0.45,C.terra,3);
+  rrect(ctx,x-7,y-7,14,14,3,C.apricot,C.ink,1.4); line(ctx,x-15,y,x+15,y,C.ink,2);
+  text(ctx,"F = mv²/r",14,24,C.terra,F(14)); text(ctx,"T² = 4π²R³/GM",14,44,C.ink,F(13)); text(ctx,"v",x+Math.sin(a)*54,y-Math.cos(a)*54,C.olive,F(13),"center");
+}
+// Drill: before and after
+function drawDrill(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const base=Math.min(h*0.17,(w-60)/10);
+  [[1,1,1,"before",w*0.25],[o.a,o.b,o.c,"after",w*0.68]].forEach(([a,b,c,lab,x])=>{ const r=base*c, y=h*0.52;
+    ctx.save(); ctx.strokeStyle=C.muted; ctx.setLineDash([3,4]); ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.stroke(); ctx.restore();
+    circle(ctx,x,y,3,C.ink); const bx=x+r, br=6*Math.cbrt(a); arrow(ctx,bx,y,bx,y-12-b*12,C.olive,2); circle(ctx,bx,y,br,C.apricot,C.ink,1.3);
+    text(ctx,lab,x,h-10,C.muted,F(12),"center"); text(ctx,`${a===1?"m":a+"m"} · ${b===1?"v":b+"v"} · ${c===1?"r":c+"r"}`,x,18,C.ink,F(12),"center"); });
+}
+// Infographic minis
+function drawFvMini(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const A=axesBox(ctx,w,h,"v","F"), X=v=>A.x0+v/2.2*(A.x1-A.x0), Y=f=>A.y0-f/4.8*(A.y0-A.y1);
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2.4; ctx.beginPath(); for(let i=0;i<=60;i++){ const v=2.2*i/60; i?ctx.lineTo(X(v),Y(v*v)):ctx.moveTo(X(v),Y(0)); } ctx.stroke(); ctx.restore();
+  [[1,"F"],[2,"4F"]].forEach(([v,l])=>{ circle(ctx,X(v),Y(v*v),4,C.ink); text(ctx,l,X(v)-8,Y(v*v)-6,C.ink,M(10),"right"); text(ctx,v===1?"v":"2v",X(v),A.y0+13,C.muted,M(9),"center"); }); }
+function drawFrMini(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const A=axesBox(ctx,w,h,"r","F"), X=r=>A.x0+r/4.2*(A.x1-A.x0), Y=f=>A.y0-f/2.2*(A.y0-A.y1);
+  ctx.save(); ctx.strokeStyle=C.olive; ctx.lineWidth=2.4; ctx.beginPath(); for(let i=0;i<=60;i++){ const r=0.5+3.6*i/60; i?ctx.lineTo(X(r),Y(1/r)):ctx.moveTo(X(r),Y(1/r)); } ctx.stroke(); ctx.restore();
+  [[0.5,"2F"],[1,"F"],[2,"F/2"]].forEach(([r,l])=>{ circle(ctx,X(r),Y(1/r),4,C.ink); text(ctx,l,X(r)+6,Y(1/r)-6,C.ink,M(10)); text(ctx,r===1?"r":r===2?"2r":"r/2",X(r),A.y0+13,C.muted,M(9),"center"); }); }
+function drawTrMini(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const A=axesBox(ctx,w,h,"height (×1000 km)","v (km/s)"), X=hk=>A.x0+hk/40000*(A.x1-A.x0), Y=v=>A.y0-v/8.5*(A.y0-A.y1);
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2.4; ctx.beginPath(); for(let i=0;i<=80;i++){ const hk=40000*i/80, v=Math.sqrt(GME/(RE+hk*1000))/1000; i?ctx.lineTo(X(hk),Y(v)):ctx.moveTo(X(hk),Y(v)); } ctx.stroke(); ctx.restore();
+  [[400,"ISS"],[20200,"GPS"],[35790,"GEO"]].forEach(([hk,l])=>{ const v=Math.sqrt(GME/(RE+hk*1000))/1000; circle(ctx,X(hk),Y(v),4,C.ink); text(ctx,`${l} ${v.toFixed(1)}`,X(hk)+6,Y(v)-6,C.ink,M(10)); });
+  [10000,20000,30000,40000].forEach(hk=>text(ctx,String(hk/1000),X(hk),A.y0+13,C.muted,M(9),"center")); }
+
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h,o.bgc);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ if(p[2]) circle(ctx,X(p[0]),Y(p[1]),4.5,null,C.olive,2); else { ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); } });
+}
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "centripetal", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+const loIds=["lo1","lo2","lo3","lo4"]; const loState=store.get("s16-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s16-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s16-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+/* ================= LEARN ================= */
+const LEARN = {
+  centripetal:{ vis:[["whirl",{m:0.3,v:4,r:0.8,ang:0.7}]], cap:"A 0.30 kg ball at 4.0 m/s on a 0.80 m string. The string must pull it inwards with F = mv²/r = 0.30 × 4.0² ÷ 0.80 = 6.0 N.",
+    keys:[["↻","In uniform circular motion the speed is constant but the direction keeps changing, so the velocity changes: the object accelerates towards the centre with a = v²/r."],["F","By F = ma, a resultant force towards the centre is needed: the centripetal force F = mv²/r. It is supplied by a real force: tension, friction, gravity or a normal reaction."],["✂","Remove the force (cut the string) and the object moves off in a straight line along the tangent (Newton's first law), not outwards."]],
+    f:"F = mv² / r", mistake:"Drawing a \"centrifugal force\" outwards on a free-body diagram. The only resultant force is inwards; the outward feeling is just your body trying to go straight." },
+  angular:{ vis:[["disc",{w:1.5,r:0.4,th:2.2}]], cap:"After 2.2 rad, both points have turned through the same angle. B is four times as far out as A, so it moves four times as fast: v = ωr.",
+    keys:[["rad","Angles are measured in radians: θ = s/r, so one full turn is 2π rad = 360°."],["ω","Angular velocity ω = θ/t, in rad/s. Every point on a rigid spinning object has the same ω. T = 2π/ω and f = 1/T."],["v","Linear speed v = ωr, so a = v²/r = ω²r and F = mω²r. Constant ω means constant speed, but the direction still changes."]],
+    f:"ω = θ/t · v = ωr · F = mω²r", mistake:"Using degrees in ω = θ/t or v = ωr. Convert to radians first (× π/180)." },
+  whirl:{ vis:[["bung",{M:0.15,r:0.5,ang:0.6}]], cap:"Hanging masses give the tension F = Mg. Time 10 revolutions to find T, then v = 2πr/T. A graph of F against v² is a straight line with slope m/r.",
+    keys:[["F","The hanging weight Mg pulls the string through the tube: this tension is the centripetal force on the bung."],["10T","Keep the marker just below the tube so r stays fixed. Time 10 revolutions and divide by 10 to cut the reaction-time error."],["/","F = mv²/r, so F against v² is a straight line through the origin with slope m/r. Bung mass m = slope × r."]],
+    f:"F = (m/r) v²", mistake:"Plotting F against v. F ∝ v², so F against v is a curve; plot F against v² to get a straight line." },
+  kepler:{ vis:[["kgraph",{set:"jupiter"}]], cap:"Jupiter's four largest moons: T² against R³ is a straight line through the origin. Slope = 4π²/GM gives Jupiter's mass, 1.9 × 10²⁷ kg.",
+    keys:[["K","Kepler's third law: for bodies orbiting the same central mass, T² is proportional to R³ (period squared ∝ radius cubed)."],["=","Derivation: gravity is the centripetal force. GMm/R² = mv²/R with v = 2πR/T gives T² = (4π²/GM) R³."],["M","Plot T² against R³ using secondary data. The slope is 4π²/GM, so the central mass M = 4π²/(G × slope)."]],
+    f:"T² = 4π²R³ / GM", mistake:"Comparing satellites of different central bodies on one graph. Kepler's law only gives one straight line for the same central mass." },
+  cannon:{ vis:[["cannon",{}]], cap:"Fired sideways from 400 km: at 6 km/s the probe falls back; at 7.67 km/s gravity exactly provides mv²/r and it orbits; faster gives an ellipse; above about 10.9 km/s it escapes.",
+    keys:[["G","For an orbit, gravity is the centripetal force: GMm/r² = mv²/r, so v = √(GM/r). The satellite's mass cancels."],["☾","Evidence: for the Moon, gravity gives 1.98 × 10²⁰ N (1.5), and the centripetal force it needs, m(2πr/T)²/r, is 2.0 × 10²⁰ N. They match."],["↓","A satellite is in free fall: it falls towards the Earth all the time, but moves sideways fast enough that the surface curves away beneath it."]],
+    f:"GMm / r² = mv² / r", mistake:"Saying there is no gravity in orbit. Gravity is what keeps the satellite in orbit; at 400 km g is still 8.7 N/kg." },
+  orbits:{ vis:[["orbit",{h:35790,t:6}]], cap:"A geostationary satellite goes round once every 24 hours, above the equator in the same direction as the Earth turns, so it stays above the same point.",
+    keys:[["↑","Higher orbits are slower and take longer: v = √(GM/r), T = 2π√(r³/GM). The ISS (400 km) takes about 92 minutes."],["24h","Geostationary: period 24 h, circular, above the equator, moving west to east, about 36 000 km up. Dishes on the ground can point at it without moving: TV and weather images of a whole hemisphere."],["🛰","Low orbits for detail (Earth imaging, ISS, low-delay internet); polar orbits scan the whole globe; GPS and Galileo navigation satellites are about 20 000–23 000 km up."]],
+    f:"T = 2π √(r³ / GM)", mistake:"Using the height above the surface as r. Add the Earth's radius: r = R + h (and convert km to m)." },
+};
+/* ================= SECONDARY DATA: KEPLER ================= */
+
+const KSETS = {
+  planets:{ n:"Planets round the Sun", short:"Planets", body:"the Sun", rx:11, tx:7, rows:[["Mercury",5.79e10,7.60e6],["Venus",1.082e11,1.941e7],["Earth",1.496e11,3.156e7],["Mars",2.279e11,5.936e7],["Jupiter",7.785e11,3.743e8],["Saturn",1.433e12,9.29e8]], real:"1.99 × 10³⁰ kg" },
+  jupiter:{ n:"Jupiter's four largest moons", short:"Jupiter's moons", body:"Jupiter", rx:8, tx:5, rows:[["Io",4.22e8,1.528e5],["Europa",6.71e8,3.068e5],["Ganymede",1.070e9,6.182e5],["Callisto",1.883e9,1.442e6]], real:"1.90 × 10²⁷ kg" },
+  earth:{ n:"Satellites round the Earth", short:"Earth's satellites", body:"the Earth", rx:6, tx:3, rows:[["ISS",6.79e6,5.574e3],["Polar imaging satellite",7.157e6,6.036e3],["GPS",2.656e7,4.308e4],["Galileo",2.960e7,5.064e4],["Geostationary",4.216e7,8.616e4]], real:"5.97 × 10²⁴ kg" },
+};
+const KKEYS = ["planets","jupiter","earth"];
+Object.values(KSETS).forEach(S=>{ S.xe=3*S.rx; S.ye=2*S.tx; S.pts=S.rows.map(([n,R,T])=>[Math.pow(R/Math.pow(10,S.rx),3), Math.pow(T/Math.pow(10,S.tx),2)]); S.fit=linfit(S.pts); S.M=4*Math.PI*Math.PI/(G*S.fit[0]*Math.pow(10,S.ye-S.xe)); });
+/* ================= INFOGRAPHICS ================= */
+$("cases").innerHTML = KKEYS.map((k,i)=>{ const S=KSETS[k]; return `<div class="panel rc-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${["var(--blush)","var(--apricot)","var(--sage)"][i]}">${svg(i===2?"orbits":"kepler")}</div><div><h3>${S.n}</h3><span class="formula">T² ∝ R³</span></div></div>
+  <div class="secwrap"><table class="sec"><tr><th style="text-align:left">Body</th><th>R (×10${sup(S.rx)} m)</th><th>T (×10${sup(S.tx)} s)</th><th>T²/R³ (s² m⁻³)</th></tr>${S.rows.map(([n,R,T])=>`<tr><td style="text-align:left">${n}</td><td>${s3(R/Math.pow(10,S.rx))}</td><td>${s3(T/Math.pow(10,S.tx))}</td><td>${sci(T*T/(R*R*R))}</td></tr>`).join("")}</table></div>
+  <canvas data-case="${k}" aria-label="${S.n}: graph of T² against R³ with a line of best fit"></canvas><p>Slope = ${sci(S.fit[0]*Math.pow(10,S.ye-S.xe))} s² m⁻³ = 4π²/GM, so the mass of ${S.body} M = 4π² ÷ (G × slope) = <b>${sci(S.M)} kg</b> (published value ${S.real}).</p></div>`; }).join("");
+const SEC = [["ISS",400,"Crewed science lab; Earth photos"],["Polar imaging",800,"Weather and Earth observation, whole globe"],["GPS",20200,"Satellite navigation"],["Geostationary",35790,"TV, communications, weather images"],["The Moon",378000,"Natural satellite"]];
+const fmtT = s => s<3*3600? Math.round(s/60)+" min" : s<4*86400? (s/3600).toFixed(1)+" h" : (s/86400).toFixed(1)+" days";
+$("secT").innerHTML = `<tr><th style="text-align:left">Orbit</th><th>h (km)</th><th>r = R + h (m)</th><th>v (km/s)</th><th>T</th><th style="text-align:left">Used for</th></tr>`
+  + SEC.map(([n,h,u])=>{ const r=6.37e6+h*1000, v=Math.sqrt(GME/r), T=TAU*Math.sqrt(r*r*r/GME); return `<tr><td style="text-align:left">${n}</td><td>${fmtN(h)}</td><td>${sci(r)}</td><td>${(v/1000).toFixed(2)}</td><td>${fmtT(T)}</td><td style="text-align:left">${u}</td></tr>`; }).join("");
+$("secRes").innerHTML = `The Moon test: the centripetal force the Moon needs is m(2πr/T)²/r = 7.35 × 10²² × (2π × 3.84 × 10⁸ ÷ 2.36 × 10⁶)² ÷ 3.84 × 10⁸ = <b>2.0 × 10²⁰ N</b>. Newton's law of gravitation gives <b>1.98 × 10²⁰ N</b> (section 1.5). Gravity meets the centripetal force requirement. (The table gives 27.5 days for the Moon from its mean distance; the real sidereal month is 27.3 days.)`;
+const AROUND = [
+  ["car","Cars on a roundabout","Friction between the tyres and the road provides the centripetal force. On ice there's too little friction, and the car slides off along a tangent.",[["Friction","neutral"],["F = mv²/r","real"]],"var(--blush)"],
+  ["drum","Spin dryers","The drum pushes the clothes inwards (normal reaction), but water passes through the holes and flies off along tangents.",[["Normal reaction","neutral"],["Tangent","real"]],"var(--sage)"],
+  ["coaster","Loop-the-loop","At the top of a loop, the track's push and the riders' weight together provide the centripetal force. Too slow and the push would need to be negative.",[["Weight + reaction","neutral"]],"var(--apricot)"],
+  ["hammer","Hammer throw","The athlete pulls on the wire (tension). Let go, and the hammer flies off along the tangent at the moment of release.",[["Tension","neutral"],["First law","real"]],"var(--cream)"],
+  ["dish","Satellite TV dishes","Dishes on Irish houses point at geostationary satellites and never need to move, because the satellite stays above the same point on the equator.",[["Geostationary","real"],["24 h","neutral"]],"var(--blush)"],
+  ["moon","Newton's Moon test","Newton compared the Moon's centripetal acceleration with the fall of an apple and showed one inverse square law of gravity explains both.",[["Evidence","real"],["Inverse square","neutral"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"centripetal",label:"Centripetal force",col:"var(--blush)",leaves:[["F = mv²/r","Towards the centre."],["a = v²/r","Velocity changes direction."],["Provided by","Tension, friction, gravity."],["Tangent","Where it goes if released."]]},
+  {id:"angular",label:"Angular velocity",col:"var(--apricot)",leaves:[["Radian","Arc = radius."],["ω = θ/t","rad/s."],["v = ωr","Faster further out."],["T = 2π/ω","One revolution."]]},
+  {id:"whirl",label:"Whirling bung",col:"var(--sage)",leaves:[["F = Mg","Hanging masses."],["10 revolutions","Cuts timing error."],["F v v²","Slope = m/r."]]},
+  {id:"kepler",label:"Kepler's third law",col:"var(--cream)",leaves:[["T² ∝ R³","Same central mass."],["Derivation","GMm/R² = mv²/R."],["Slope","4π²/GM."],["Secondary data","Planets, moons."]]},
+  {id:"cannon",label:"Gravity and orbits",col:"var(--blush)",leaves:[["v = √(GM/r)","Circular orbit speed."],["Free fall","Falling round the Earth."],["Moon test","2.0 × 10²⁰ N both ways."]]},
+  {id:"orbits",label:"Satellites",col:"var(--sage)",leaves:[["LEO","ISS, imaging."],["Polar","Scans the globe."],["GPS","About 20 000 km."],["Geostationary","24 h, equator."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["centripetal","What is centripetal force?","The resultant force towards the centre of a circle needed to keep an object moving in that circle: F = mv²/r."],
+  ["centripetal","Why is an object moving in a circle at constant speed accelerating?","Its direction keeps changing, so its velocity changes. The acceleration is towards the centre: a = v²/r."],
+  ["centripetal","What happens if the centripetal force is removed?","The object moves off in a straight line along the tangent (Newton's first law)."],
+  ["centripetal","What provides the centripetal force for a car going round a bend?","Friction between the tyres and the road."],
+  ["centripetal","What provides the centripetal force for the Moon orbiting the Earth?","The Earth's gravitational pull on the Moon."],
+  ["centripetal","Find the centripetal force on a 1200 kg car at 15 m/s on a bend of radius 25 m.","F = mv²/r = 1200 × 15² ÷ 25 = 10 800 N."],
+  ["centripetal","Is centrifugal force a real force?","No. The outward feeling is your body's tendency to keep moving in a straight line; the only real resultant force is inwards."],
+  ["angular","Define the radian.","The angle at the centre of a circle subtended by an arc equal in length to the radius. 2π rad = 360°."],
+  ["angular","Define angular velocity.","The rate of change of angle: ω = θ/t, measured in rad/s."],
+  ["angular","Give the relationship between linear speed and angular velocity.","v = ωr."],
+  ["angular","A wheel turns at 120 rpm. Find ω.","120 rev/min = 2 rev/s = 2 × 2π = 12.6 rad/s."],
+  ["angular","Give F in terms of ω.","F = mω²r (from F = mv²/r with v = ωr)."],
+  ["angular","How are T and ω related?","T = 2π/ω (one revolution is 2π radians)."],
+  ["whirl","In the whirling bung experiment, what provides the centripetal force?","The tension in the string, equal to the weight of the hanging masses, F = Mg."],
+  ["whirl","Why time 10 revolutions?","The reaction-time error is the same for any timing, so it becomes a smaller percentage of a longer time."],
+  ["whirl","What graph is plotted and what does its slope give?","F against v²: a straight line through the origin with slope m/r, so m = slope × r."],
+  ["whirl","How is the radius kept constant?","A marker (paper clip or tape) on the string is kept just below the glass tube."],
+  ["kepler","State Kepler's third law.","For bodies orbiting the same central mass, the square of the period is proportional to the cube of the orbital radius: T² ∝ R³."],
+  ["kepler","Derive T² = 4π²R³/GM.","Gravity provides the centripetal force: GMm/R² = mv²/R. With v = 2πR/T: GM/R = 4π²R²/T², so T² = 4π²R³/GM."],
+  ["kepler","How do you verify Kepler's third law with secondary data?","Find T² and R³ for several bodies orbiting the same mass and plot T² against R³: a straight line through the origin (T²/R³ constant)."],
+  ["kepler","How can you find the mass of the Sun from the Earth's orbit?","M = 4π²R³/GT² with R = 1.50 × 10¹¹ m and T = 3.16 × 10⁷ s: M ≈ 2.0 × 10³⁰ kg."],
+  ["cannon","Give the speed of a satellite in a circular orbit of radius r.","v = √(GM/r), from GMm/r² = mv²/r. It doesn't depend on the satellite's mass."],
+  ["cannon","What evidence shows gravity provides the centripetal force for the Moon?","The centripetal force needed, m(2πr/T)²/r ≈ 2.0 × 10²⁰ N, equals the gravitational force GMm/r² ≈ 1.98 × 10²⁰ N."],
+  ["cannon","Why do astronauts on the ISS feel weightless?","They and the station are in free fall together, falling around the Earth. Gravity still acts."],
+  ["orbits","State three features of a geostationary orbit.","Period 24 hours; above the equator; moves in the same direction as the Earth spins (west to east); about 36 000 km up."],
+  ["orbits","Give two uses of geostationary satellites.","Satellite TV and communications; weather images of a whole hemisphere."],
+  ["orbits","Why are Earth-imaging satellites in low orbits?","Closer to the surface they see more detail; in polar orbits the Earth turns beneath them so they cover the whole globe."],
+  ["orbits","About how long does the ISS take to orbit the Earth?","About 92 minutes, about 16 orbits a day, at about 7.7 km/s."],
+];
+
+
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Circular</text><text x="${cx}" y="${cy+22}" text-anchor="middle">motion</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("s16-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s16-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s16-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s16-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["centripetal","An object moves in a circle at constant speed. Which statement is true?",["Its velocity is constant","It has no acceleration","It accelerates towards the centre","It accelerates outwards"],2,"The direction of the velocity keeps changing, so it accelerates towards the centre: a = v²/r."],
+  ["centripetal","A ball on a string is whirled in a horizontal circle and the string breaks. The ball moves:",["Straight outwards, away from the centre","Along the tangent to the circle","Towards the centre","In a smaller circle"],1,"With no resultant force it keeps its velocity at that instant (Newton's first law), which is along the tangent."],
+  ["centripetal","A 0.50 kg ball moves at 4.0 m/s in a circle of radius 2.0 m. The centripetal force is:",["1.0 N","2.0 N","4.0 N","8.0 N"],2,"F = mv²/r = 0.50 × 16 ÷ 2.0 = 4.0 N."],
+  ["centripetal","The speed of a car on a bend doubles. The centripetal force needed:",["Doubles","Halves","Quadruples","Stays the same"],2,"F ∝ v², so 2 × v gives 4 × F."],
+  ["centripetal","What provides the centripetal force on a car turning on a flat road?",["The engine","Friction between the tyres and the road","Air resistance","The car's weight"],1,"Sideways friction on the tyres pushes the car towards the centre of the bend."],
+  ["angular","One radian is the angle at the centre of a circle where:",["The arc length equals the radius","The arc length equals the diameter","The angle is 90°","The arc is a quarter of the circle"],0,"θ = s/r: one radian when s = r. It is about 57.3°."],
+  ["angular","A disc turns through 6π rad in 3 s. Its angular velocity is:",["2 rad/s","6.3 rad/s","9.4 rad/s","18.8 rad/s"],1,"ω = θ/t = 6π ÷ 3 = 2π ≈ 6.3 rad/s (one revolution per second)."],
+  ["angular","Two points on a spinning disc are 0.1 m and 0.3 m from the centre. Compared with the inner point, the outer point has:",["The same ω and three times the speed","Three times ω and the same speed","The same ω and the same speed","A third of the speed"],0,"All points on the disc share ω; v = ωr, so three times r gives three times v."],
+  ["angular","A fairground ride turns with ω = 0.5 rad/s. Its period is about:",["0.5 s","2 s","6.3 s","12.6 s"],3,"T = 2π/ω = 6.28 ÷ 0.5 = 12.6 s."],
+  ["whirl","In the whirling bung experiment, which graph gives a straight line through the origin?",["F against v","F against v²","F against 1/v","v against r²"],1,"F = mv²/r, so F ∝ v² at fixed r."],
+  ["whirl","The slope of F against v² in the whirling bung experiment equals:",["m × r","m / r","r / m","mg"],1,"F = (m/r)v², so the slope is m/r."],
+  ["kepler","Kepler's third law says that, for bodies orbiting the same mass:",["T ∝ R","T² ∝ R³","T³ ∝ R²","T ∝ 1/R²"],1,"The square of the period is proportional to the cube of the orbital radius."],
+  ["kepler","When T² is plotted against R³ for the planets, the slope equals:",["GM/4π²","4π²/GM","4π²GM","2π/GM"],1,"T² = (4π²/GM)R³, so the slope is 4π²/GM, where M is the Sun's mass."],
+  ["kepler","Kepler's third law is derived by setting the gravitational force equal to:",["The weight on Earth","The centripetal force mv²/R","Zero","The escape velocity"],1,"GMm/R² = mv²/R, then v = 2πR/T gives T² = 4π²R³/GM."],
+  ["cannon","A satellite's orbital speed in a circular orbit does NOT depend on:",["The mass of the Earth","The orbital radius","The mass of the satellite","G"],2,"v = √(GM/r): the satellite's mass m cancels."],
+  ["cannon","Astronauts on the ISS feel weightless because:",["There is no gravity in space","They are in free fall with the station","The Earth's magnetic field holds them","The station is too far away"],1,"Gravity still acts (about 8.7 N/kg); they and the station fall together around the Earth."],
+  ["orbits","A geostationary satellite has a period of:",["90 minutes","12 hours","24 hours","27.3 days"],2,"It goes round once per Earth rotation, so it stays above the same point."],
+  ["orbits","Which job suits a geostationary orbit best?",["Close-up photos of every country","Satellite TV to fixed dishes","A crewed space station","Mapping the poles"],1,"A fixed dish can point at it all the time because it stays above the same point."],
+  ["orbits","Compared with the ISS, a GPS satellite (higher orbit) moves:",["Faster, with a shorter period","Slower, with a longer period","At the same speed","Faster, with a longer period"],1,"v = √(GM/r) falls and T = 2π√(r³/GM) rises as r increases."],
+];
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Explain","Give reasons, using physics ideas, for why something happens.","Explain why a car needs friction to turn a corner."],
+  ["Model","Describe a real situation using physics ideas and equations, stating what you assume.","Model the motion of a satellite in a geostationary orbit."],
+  ["Verify","Show by experiment or calculation that a model or law is true, comparing your result with the expected value.","Verify Kepler's third law using data for Jupiter's moons."],
+  ["Calculate","Write the formula, substitute the numbers, give the answer with a unit.","Calculate the centripetal force on the car."],
+  ["Define","Give the exact meaning in one full, precise sentence.","Define angular velocity."],
+  ["State","Give a short fact, law or value. No explanation needed.","State Kepler's third law."],
+  ["Derive","Start from a known law and show each step to reach the result.","Derive T² = 4π²R³/GM."],
+  ["Describe","Give the steps or features in a clear order.","Describe how to measure the centripetal force on a whirling bung."],
+  ["Investigate","Observe, study or examine in detail to establish facts and reach new conclusions.","Investigate how the centripetal force depends on speed."],
+];
+
+
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s16-best",null); if(best==null||pct>best) store.set("s16-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+function parseNum(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,ch=>({"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-"})[ch]);
+  s=s.replace(/[x×*]10\^?/i,"e");
+  return parseFloat(s);
+}
+const r1 = x => Math.round(x*10)/10;
+const sn = x => (Math.abs(x)>=1e4||Math.abs(x)<1e-3)? sci(x) : String(x);
+const PTYPES = {
+  cf:{ name:"F = mv²/r", gen(){ const [d,ms,vs,rs]=pick([["a ball whirled on a string",[0.2,0.3,0.5],[3,4,6],[0.5,0.8,1.2]],["a car on a roundabout",[900,1200,1500],[8,12,15],[20,25,40]],["a cyclist on a bend",[80,90],[6,8,10],[15,20,30]]]), m=pick(ms), v=pick(vs), r=pick(rs), F=m*v*v/r;
+    return { q:`Calculate the centripetal force on ${d}: mass <b>${m} kg</b>, speed <b>${v} m/s</b>, radius <b>${r} m</b>.`, ans:F, unit:"N", steps:["F = mv² / r",`F = ${m} × ${v}² ÷ ${r} = ${m} × ${v*v} ÷ ${r}`,`F = ${s3(F)} N`] }; } },
+  acc:{ name:"a = v²/r", gen(){ const v=pick([5,8,12,20,30]), r=pick([10,20,50,100]), a=v*v/r;
+    return { q:`A train takes a curve of radius <b>${r} m</b> at <b>${v} m/s</b>. Calculate its centripetal acceleration.`, ans:a, unit:"m/s²", steps:["a = v² / r",`a = ${v}² ÷ ${r} = ${v*v} ÷ ${r}`,`a = ${s3(a)} m/s²`] }; } },
+  rpm:{ name:"rpm → ω", gen(){ const n=pick([30,45,60,120,300,1200]), w=n*TAU/60;
+    return { q:`A wheel turns at <b>${n} revolutions per minute</b>. Calculate its angular velocity in rad/s.`, ans:w, unit:"rad/s", steps:[`${n} rev/min = ${s3(n/60)} rev/s`,"One revolution = 2π rad, so ω = 2π × rev/s",`ω = 2π × ${s3(n/60)} = ${s3(w)} rad/s`] }; } },
+  vwr:{ name:"v = ωr", gen(){ const w=pick([0.5,1.5,2,4,8]), r=pick([0.15,0.3,0.6,2.5]), v=w*r;
+    return { q:`A point is <b>${r} m</b> from the centre of a disc spinning with angular velocity <b>${w} rad/s</b>. Calculate its linear speed.`, ans:v, unit:"m/s", steps:["v = ωr",`v = ${w} × ${r}`,`v = ${s3(v)} m/s`] }; } },
+  period:{ name:"T = 2π/ω", gen(){ const w=pick([0.25,0.5,1.2,3,7.5]), T=TAU/w;
+    return { q:`A fairground ride rotates with a constant angular velocity of <b>${w} rad/s</b>. Calculate the time for one revolution.`, ans:T, unit:"s", steps:["One revolution = 2π rad, so T = 2π / ω",`T = 6.283 ÷ ${w}`,`T = ${s3(T)} s`] }; } },
+  fw:{ name:"F = mω²r", gen(){ const m=pick([0.1,0.2,0.5,2]), w=pick([2,3,5,10]), r=pick([0.2,0.4,0.5,1.5]), F=m*w*w*r;
+    return { q:`A <b>${m} kg</b> mass moves in a circle of radius <b>${r} m</b> with angular velocity <b>${w} rad/s</b>. Calculate the centripetal force.`, ans:F, unit:"N", steps:["F = mω²r",`F = ${m} × ${w}² × ${r} = ${m} × ${w*w} × ${r}`,`F = ${s3(F)} N`] }; } },
+  vmax:{ name:"Maximum speed", gen(){ const Fm=pick([20,40,60,100]), m=pick([0.5,1,2]), r=pick([0.5,0.8,1.2]), v=Math.sqrt(Fm*r/m);
+    return { q:`A string breaks when the tension exceeds <b>${Fm} N</b>. It whirls a <b>${m} kg</b> mass in a horizontal circle of radius <b>${r} m</b>. Calculate the maximum speed.`, ans:v, unit:"m/s", steps:["F = mv²/r, so v = √(Fr / m)",`v = √(${Fm} × ${r} ÷ ${m}) = √${s3(Fm*r/m)}`,`v = ${s3(v)} m/s`] }; } },
+  vorb:{ name:"Orbital speed", gen(){ const h=pick([300,400,800,2000,20200]), r=6.37e6+h*1000, v=Math.sqrt(GME/r);
+    return { q:`Calculate the speed, in km/s, of a satellite in a circular orbit <b>${fmtN(h)} km</b> above the Earth's surface. (M = 5.97 × 10²⁴ kg, R = 6.37 × 10⁶ m, G = 6.67 × 10⁻¹¹ N m² kg⁻²)`, ans:v/1000, unit:"km/s", steps:[`r = R + h = 6.37 × 10⁶ + ${sci(h*1000)} = ${sci(r)} m`,"GMm/r² = mv²/r, so v = √(GM / r)",`v = √(${sci(GME)} ÷ ${sci(r)}) = ${fmtN(Math.round(v))} m/s = ${s3(v/1000)} km/s`] }; } },
+  torb:{ name:"Orbital period", gen(){ const h=pick([400,800,1200,20200,23222]), r=6.37e6+h*1000, T=TAU*Math.sqrt(r*r*r/GME), mins=h<2000;
+    return { q:`Calculate the period of a satellite in a circular orbit <b>${fmtN(h)} km</b> above the Earth's surface, in ${mins?"minutes":"hours"}. (M = 5.97 × 10²⁴ kg, R = 6.37 × 10⁶ m, G = 6.67 × 10⁻¹¹ N m² kg⁻²)`, ans:mins?T/60:T/3600, unit:mins?"min":"h", steps:[`r = R + h = ${sci(r)} m`,"T² = 4π²r³ / GM, so T = 2π√(r³ / GM)",`T = 2π × √(${sci(r*r*r)} ÷ ${sci(GME)}) = ${fmtN(Math.round(T))} s = ${s3(mins?T/60:T/3600)} ${mins?"min":"h"}`] }; } },
+  geo:{ name:"Geostationary height", gen(){ const [n,M,R,Td]=pick([["the Earth",5.97e24,6.37e6,24],["Mars",6.42e23,3.39e6,24.6]]), T=Td*3600, r=Math.cbrt(G*M*T*T/(4*Math.PI*Math.PI)), h=(r-R)/1000;
+    return { q:`${n[0].toUpperCase()+n.slice(1)} (M = <b>${sci(M)} kg</b>, R = <b>${sci(R)} m</b>) spins once every <b>${Td} hours</b>. Calculate the height above the surface, in km, of a stationary orbit around it. (G = 6.67 × 10⁻¹¹ N m² kg⁻²)`, ans:h, unit:"km", steps:[`T = ${Td} × 3600 = ${fmtN(T)} s`,"T² = 4π²r³ / GM, so r = ∛(GMT² / 4π²)",`r = ∛(${sci(G*M)} × ${sci(T*T)} ÷ 39.48) = ${sci(r)} m`,`h = r − R = ${sci(r-R)} m = ${fmtN(Math.round(h))} km`] }; } },
+  kmass:{ name:"Central mass", gen(){ const [d,body,R,T,Ts]=pick([["the Earth orbits the Sun","the Sun",1.496e11,3.156e7,"3.156 × 10⁷ s (1 year)"],["Io orbits Jupiter","Jupiter",4.22e8,1.528e5,"1.528 × 10⁵ s (1.77 days)"],["the Moon orbits the Earth","the Earth",3.84e8,2.36e6,"2.36 × 10⁶ s (27.3 days)"]]), M=4*Math.PI*Math.PI*R*R*R/(G*T*T);
+    return { q:`${d[0].toUpperCase()+d.slice(1)} with orbital radius <b>${sci(R,4)} m</b> and period <b>${Ts}</b>. Calculate the mass of ${body}. (G = 6.67 × 10⁻¹¹ N m² kg⁻²)`, ans:M, unit:"kg", steps:["T² = 4π²R³ / GM, so M = 4π²R³ / GT²",`M = 39.48 × (${sci(R,4)})³ ÷ (6.67 × 10⁻¹¹ × (${sci(T,4)})²)`,`M = ${sci(M)} kg`] }; } },
+};
+
+
+let pType="cf", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseNum($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 12.5 or 0.68.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.abs(pCur.ans)*0.02;
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: convert km to m; square the distance (or t, or T); r is from the centre (R + h); type powers of ten as e.g. 1.98e20. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+// Drill: what happens to the centripetal force?
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+const frac=(n,d)=>{ const k=gcd(n,d); n/=k; d/=k; return d===1? "× "+n : `× ${n}/${d}`; };
+let pd = { a:1, b:2, c:1, ans:"", opts:[], sel:null, shown:false, streak:0 };
+let predC=null;
+function pdNew(){ let a,b,c;
+  do{ a=pick([1,1,2,3]); b=pick([1,2,2,3]); c=pick([1,2,3,4]); } while(a===1&&b===1&&c===1);
+  const ans=frac(a*b*b,c), set=new Set([ans]);
+  [frac(a*b,c),frac(a*b*b,c*c),frac(a*b*b*c,1),frac(c,a*b*b),frac(a*b,1),frac(1,1),frac(2*a*b,c)].forEach(x=>{ if(set.size<4) set.add(x); });
+  pd={...pd,a,b,c,ans,opts:shuffle([...set]),sel:null,shown:false};
+  const ch=[a!==1?`the mass is multiplied by <b>${a}</b>`:"", b!==1?`the speed is multiplied by <b>${b}</b>`:"", c!==1?`the radius is multiplied by <b>${c}</b>`:"the radius stays the same"].filter(Boolean);
+  $("predQ").innerHTML=`An object needs a centripetal force F to move in a circle. Now ${ch.join(", ")}. What centripetal force is needed?`;
+  $("predOpts").querySelector(".btns").innerHTML=pd.opts.map(x=>`<button data-a="${x}">F ${x}</button>`).join("");
+  $("predFb").innerHTML=""; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const ok=pd.sel===pd.ans; pd.streak=ok?pd.streak+1:0; pd.shown=true;
+  const why=`F = mv²/r. The mass multiplies F by ${pd.a}; the speed is squared, so it multiplies F by ${pd.b}² = ${pd.b*pd.b}; the radius divides F by ${pd.c}. New force = F ${pd.ans}.`;
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"A car on a roundabout", intro:"A car of mass 1200 kg travels around a roundabout of radius 25 m at a constant speed of 15 m/s.",
+    parts:[["a","Explain why the car is accelerating even though its speed is constant.",6,"Velocity is a vector / has direction (2); the direction keeps changing, so the velocity changes (2); acceleration is the rate of change of velocity, directed towards the centre (2)."],
+      ["b","Calculate the centripetal acceleration and the centripetal force on the car.",9,"a = v²/r = 15² ÷ 25 = 9.0 m/s² (3, formula 1 + substitution 1 + answer 1); F = ma = 1200 × 9.0 (3) = 10 800 N (3)."],
+      ["c","What provides this force? Explain what happens if the car drives onto black ice.",6,"Friction between the tyres and the road (3); with too little friction the centripetal force can't be provided, so the car slides off along a tangent / in a straight line (3)."],
+      ["d","Calculate the car's angular velocity and the time for one complete lap.",9,"ω = v/r = 15 ÷ 25 = 0.60 rad/s (3 + 1 for unit); T = 2π/ω (2) = 6.283 ÷ 0.60 = 10.5 s (3)."],
+      ["e","The driver doubles the speed. By what factor does the centripetal force needed change? Calculate it.",6,"F ∝ v², so × 4 (3); 4 × 10 800 = 43 200 N (3)."],
+      ["f","Define the radian.",6,"The angle at the centre of a circle (2) subtended by an arc (2) equal in length to the radius (2)."]] },
+  { title:"Verifying Kepler's third law", intro:"Secondary data for Jupiter's four largest moons (orbital radius R and period T):<br>Io: R = 4.22 × 10⁸ m, T = 1.77 days<br>Europa: 6.71 × 10⁸ m, 3.55 days<br>Ganymede: 1.070 × 10⁹ m, 7.15 days<br>Callisto: 1.883 × 10⁹ m, 16.69 days. (G = 6.67 × 10⁻¹¹ N m² kg⁻²)",
+    parts:[["a","State Kepler's third law.",6,"For bodies orbiting the same central mass (2), the square of the period (2) is proportional to the cube of the orbital radius (2)."],
+      ["b","Derive T² = 4π²R³/GM for a moon in a circular orbit.",9,"Gravity provides the centripetal force: GMm/R² = mv²/R (3); v = 2πR/T (3); GM/R = 4π²R²/T², so T² = 4π²R³/GM (3)."],
+      ["c","Calculate T (in seconds), T² and R³ for each moon.",9,"T = 1.53 × 10⁵, 3.07 × 10⁵, 6.18 × 10⁵, 1.44 × 10⁶ s (3); T² = 2.34 × 10¹⁰, 9.41 × 10¹⁰, 3.82 × 10¹¹, 2.08 × 10¹² s² (3); R³ = 7.52 × 10²⁵, 3.02 × 10²⁶, 1.23 × 10²⁷, 6.68 × 10²⁷ m³ (3)."],
+      ["d","Plot T² against R³ and explain how your graph verifies Kepler's third law.",12,"Axes with labels and units (3); suitable scales (2); points plotted (3); straight line through the origin (2); so T² ∝ R³ (2)."],
+      ["e","Use the slope of your graph to calculate the mass of Jupiter.",9,"Slope ≈ 3.11 × 10⁻¹⁶ s² m⁻³ (3); slope = 4π²/GM (3); M = 39.48 ÷ (6.67 × 10⁻¹¹ × 3.11 × 10⁻¹⁶) = 1.9 × 10²⁷ kg (3)."]] },
+  { title:"Satellites and their orbits", intro:"The Earth has mass 5.97 × 10²⁴ kg and radius 6.37 × 10⁶ m. (G = 6.67 × 10⁻¹¹ N m² kg⁻²)",
+    parts:[["a","Show that the speed of a satellite in a circular orbit of radius r is v = √(GM/r).",6,"Gravity provides the centripetal force (2): GMm/r² = mv²/r (2); v² = GM/r, so v = √(GM/r) (2)."],
+      ["b","The ISS orbits 400 km above the surface. Calculate its speed and its period in minutes.",12,"r = 6.37 × 10⁶ + 4.0 × 10⁵ = 6.77 × 10⁶ m (3); v = √(3.98 × 10¹⁴ ÷ 6.77 × 10⁶) = 7.67 × 10³ m/s (3); T = 2πr/v = 2π × 6.77 × 10⁶ ÷ 7670 (3) = 5.55 × 10³ s ≈ 92 min (3)."],
+      ["c","State three properties of a geostationary orbit.",6,"Any three (2 each): period 24 hours; above the equator; same direction as the Earth's rotation (west to east); circular; about 36 000 km above the surface."],
+      ["d","Calculate the height above the Earth's surface of a geostationary satellite.",12,"T = 86 400 s (2); r³ = GMT²/4π² (3) = 3.98 × 10¹⁴ × 7.46 × 10⁹ ÷ 39.48 = 7.53 × 10²² (2); r = 4.22 × 10⁷ m (2); h = r − R = 3.59 × 10⁷ m ≈ 35 900 km (3)."],
+      ["e","Give one use of a geostationary satellite and one use of a satellite in a low polar orbit, and explain why each orbit suits its use.",6,"Geostationary: TV/communications/weather images (1); stays above one point so dishes needn't move / constant view of a hemisphere (2). Low polar: Earth imaging/mapping/weather (1); close to the surface for detail and the Earth turns beneath it so it covers the whole globe (2)."]] },
+];
+const RAG = ["Explain why circular motion at constant speed is accelerated","Explain centripetal force and name what provides it in examples","Use F = mv²/r and a = v²/r","Say what happens when the centripetal force is removed","Define the radian and convert between degrees and radians","Define angular velocity and use ω = θ/t","Use v = ωr, T = 2π/ω and F = mω²r","Describe the whirling bung experiment and plot F against v²","State Kepler's third law","Derive T² = 4π²R³/GM","Verify Kepler's third law from secondary data (T² against R³)","Find a central mass from an orbit","Explain the evidence that gravity provides the centripetal force for the Moon and planets","Calculate orbital speed and period at a given height (r = R + h)","Describe geostationary, low and polar orbits and their uses"];
+const SKILLS = [["Control variables","In the bung experiment keep r and the bung fixed; change only the hanging mass.","Whirling bung lab"],["Reduce timing errors","Time 10 revolutions and divide by 10; repeat and average.","Whirling bung lab"],["Choose the right graph","Plot F against v² (slope m/r) or T² against R³ (slope 4π²/GM): straight lines through the origin.","Bung and Kepler labs"],["Use secondary data","Check where published data come from, keep track of units and powers of ten, and look for a constant ratio.","Kepler lab and infographics"],["Convert units","Days or hours to seconds, km to m, rpm to rad/s, degrees to radians.","Calculation trainer"],["Know the limits of a model","Orbits are treated as circles; the bung's string is assumed horizontal; friction in the tube is ignored.","Bung and cannon labs"],["Compare with an accepted value","Compare your bung mass or the Sun's mass with the true value and give a percentage difference.","Bung and Kepler labs"],["Work safely","Whirl the bung in a clear space, wear eye protection, and check the string and bung are secure.","Whirling bung lab"]];
+
+
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+const ragState=store.get("s16-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s16-rag",ragState); ragRender(); });
+ragRender();
+const skState=store.get("s16-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s16-skills",skState); });
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+/* ================= LAB STATE + WIRING ================= */
+// 1. Centripetal force
+const cf = { m:0.3, v:4, r:0.8, ang:0, cut:null, snap:false };
+function cfF(){ return cf.m*cf.v*cf.v/cf.r; }
+function cfDoCut(snap){ const a=cf.ang; cf.cut={x:Math.cos(a)*cf.r,y:Math.sin(a)*cf.r,ux:-Math.sin(a),uy:Math.cos(a),a0:a}; cf.snap=snap; }
+function cfUpd(){ const Fv=cfF(), a=cf.v*cf.v/cf.r, w=cf.v/cf.r;
+  $("cfMo").textContent=cf.m.toFixed(2)+" kg"; $("cfVo").textContent=cf.v.toFixed(1)+" m/s"; $("cfRo").textContent=cf.r.toFixed(2)+" m";
+  if(Fv>CF_MAX && !cf.cut) cfDoCut(true);
+  setReadout($("cfOut"),[["Centripetal force F",s3(Fv)+" N"],["Acceleration a = v²/r",s3(a)+" m/s²"],["Angular velocity ω = v/r",s3(w)+" rad/s"],["Period T = 2πr/v",s3(TAU*cf.r/cf.v)+" s"],["String",cf.cut?(cf.snap?"snapped":"cut"):Fv>CF_MAX*0.8?"near its limit":"OK (max 60 N)"]]);
+  $("cfWork").innerHTML=`F = mv²/r = ${cf.m.toFixed(2)} × ${cf.v.toFixed(1)}² ÷ ${cf.r.toFixed(2)} = <b>${s3(Fv)} N</b>, towards the centre. The tension in the string provides it.`+(cf.cut?` With no string, there is no resultant force, so the ball keeps its velocity: a straight line along the tangent (Newton's first law).`:"");
+  cfC.redraw(); }
+[["cfM","m"],["cfV","v"],["cfR","r"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ cf[k]=+e.target.value; if(cf.cut&&cfF()<=CF_MAX&&cf.snap){ cf.cut=null; cf.snap=false; } cfUpd(); }));
+$("cfCut").addEventListener("click",()=>{ if(!cf.cut) cfDoCut(false); cfUpd(); });
+$("cfReset").addEventListener("click",()=>{ cf.cut=null; cf.snap=false; if(cfF()>CF_MAX){ cf.v=Math.floor(Math.sqrt(CF_MAX*0.9*cf.r/cf.m)*2)/2; $("cfV").value=cf.v; } cfUpd(); });
+const CP = [["A conker whirled on a string","T","The string's tension pulls it inwards."],["A car going round a roundabout on a flat road","Fr","Sideways friction on the tyres."],["The Moon orbiting the Earth","G","The Earth's gravitational pull."],["Clothes pressed against the drum of a spin dryer","N","The drum pushes the clothes inwards."],["A hammer thrower swinging the hammer before release","T","Tension in the wire."],["The Earth orbiting the Sun","G","The Sun's gravity."],["A cyclist going round a bend on a flat road","Fr","Friction between the tyres and the road."],["A rider pinned to the wall of a spinning rotor ride","N","The wall pushes inwards on the rider."],["The ISS orbiting the Earth","G","Gravity: the station is in free fall."],["A runner going round the bend of a track","Fr","Friction between the shoes and the track."]];
+const CPN = {T:"Tension",Fr:"Friction",G:"Gravity",N:"Normal reaction"}, cpS={order:[],ans:{}};
+function cpRender(){ sorter("cpList","cpOut",CP,CPN,cpS); }
+function cpNew(){ cpS.order=shuffle(CP.map((s,k)=>k)); cpS.ans={}; cpRender(); }
+$("cpList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; cpS.ans[b.dataset.k]=b.dataset.v; cpRender(); });
+$("cpReset").addEventListener("click",cpNew);
+
+// 2. Angular velocity
+const av = { w:1.5, r:0.4, m:0.2, th:0, run:true };
+function avUpd(){ $("avWo").textContent=av.w.toFixed(1)+" rad/s"; $("avRo").textContent=av.r.toFixed(2)+" m"; $("avMo").textContent=av.m.toFixed(2)+" kg"; $("avGo").textContent=av.run?"Pause":"Play";
+  const T=TAU/av.w, vB=av.w*av.r;
+  setReadout($("avOut"),[["ω",av.w.toFixed(1)+" rad/s"],["Period T = 2π/ω",s3(T)+" s"],["Frequency f = 1/T",s3(1/T)+" Hz"],["Speed of A (r = 0.10 m)",(av.w*0.1).toFixed(2)+" m/s"],["Speed of B",vB.toFixed(2)+" m/s"],["F on B = mω²r",s3(av.m*av.w*av.w*av.r)+" N"]]);
+  $("avWork").innerHTML=`v = ωr: B is ${(av.r/0.1).toFixed(1)} times as far out as A, so it moves ${(av.r/0.1).toFixed(1)} times as fast, with the same ω. F = mω²r = ${av.m.toFixed(2)} × ${av.w.toFixed(1)}² × ${av.r.toFixed(2)} = <b>${s3(av.m*av.w*av.w*av.r)} N</b>. Angle so far: θ = ${av.th.toFixed(2)} rad = ${(av.th*180/Math.PI).toFixed(0)}°.`;
+  avC.redraw(); }
+[["avW","w"],["avR","r"],["avM","m"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ av[k]=+e.target.value; avUpd(); }));
+$("avGo").addEventListener("click",()=>{ av.run=!av.run; avUpd(); });
+$("avZero").addEventListener("click",()=>{ av.th=0; avUpd(); });
+
+// 3. Whirling bung experiment
+let wbGraph=null;
+const BUNGS = [0.020,0.025,0.030,0.035,0.040];
+const wb = { M:0.1, r:0.5, data:[], m:pick(BUNGS), ang:0, anim:null, t:0, n:0, revealed:false };
+const wbV = () => Math.sqrt(wb.M*GE*wb.r/wb.m);
+function wbUpd(){ $("wbMo").textContent=Math.round(wb.M*1000)+" g"; $("wbRo").textContent=wb.r.toFixed(2)+" m"; const last=wb.data.find(d=>Math.abs(d[0]-wb.M*GE)<1e-9);
+  setReadout($("wbOut"),[["Hanging mass M",Math.round(wb.M*1000)+" g"],["F = Mg",(wb.M*GE).toFixed(2)+" N"],["10T",last&&!wb.anim? last[1].toFixed(2)+" s":"–"],["v = 2πr/T",last&&!wb.anim? (TAU*wb.r/(last[1]/10)).toFixed(2)+" m/s":"–"],["Readings",String(wb.data.length)]]);
+  wbC.redraw(); }
+function wbTable(){ $("wbTable").innerHTML=wb.data.map(([F,t10],k)=>{ const T=t10/10, v=TAU*wb.r/T; return `<tr><td>${F.toFixed(2)}</td><td>${t10.toFixed(2)}</td><td>${T.toFixed(3)}</td><td>${v.toFixed(2)}</td><td>${(v*v).toFixed(1)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`; }).join("");
+  $("wbEmpty").hidden=wb.data.length>0; if(wbGraph) wbGraph.redraw(); }
+function wbFinish(){ const F=wb.M*GE, t10=wb.anim.t10; wb.data=wb.data.filter(d=>Math.abs(d[0]-F)>1e-9); wb.data.push([F,t10]); wb.data.sort((a,b)=>a[0]-b[0]); wb.t=t10; wb.n=10; wb.anim=null; wbTable(); wbUpd(); }
+$("wbGo").addEventListener("click",()=>{ if(wb.anim) return; const T=TAU*wb.r/wbV(), t10=Math.round((10*T+(Math.random()*2-1)*0.15)*100)/100; wb.anim={el:0,dur:Math.min(4,1.5+T),t10}; wb.t=0; wb.n=0; if(reduce) wbFinish(); });
+$("wbM").addEventListener("input",e=>{ wb.M=+e.target.value; if(!wb.anim){ wb.t=0; wb.n=0; } wbUpd(); });
+$("wbR").addEventListener("input",e=>{ wb.r=+e.target.value; wb.data=[]; wb.anim=null; wb.t=0; wb.n=0; wbTable(); wbUpd(); });
+$("wbClear").addEventListener("click",()=>{ wb.data=[]; wb.t=0; wb.n=0; wbTable(); wbUpd(); });
+$("wbNew").addEventListener("click",()=>{ let m; do{ m=pick(BUNGS); } while(m===wb.m); wb.m=m; wb.data=[]; wb.revealed=false; wb.t=0; wb.n=0; wbTable(); wbUpd(); });
+$("wbReveal").addEventListener("click",()=>{ wb.revealed=!wb.revealed; wbTable(); });
+$("wbTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ wb.data.splice(+k,1); wbTable(); wbUpd(); } });
+
+// 4. Kepler's third law
+let kpGraph=null;
+const kp = { set:"planets", t:0 };
+$("kpSet").innerHTML = KKEYS.map(k=>`<button data-s="${k}" aria-pressed="${k==="planets"}">${KSETS[k].short}</button>`).join("");
+function kpUpd(){ const S=KSETS[kp.set], ratios=S.rows.map(([n,R,T])=>T*T/(R*R*R)), mean=ratios.reduce((a,b)=>a+b,0)/ratios.length;
+  $("kpHead").innerHTML=`<tr><th>Body</th><th>R (×10${sup(S.rx)} m)</th><th>T (×10${sup(S.tx)} s)</th><th>R³ (×10${sup(S.xe)} m³)</th><th>T² (×10${sup(S.ye)} s²)</th><th>T²/R³</th></tr>`;
+  $("kpTable").innerHTML=S.rows.map(([n,R,T],i)=>`<tr><td>${n}</td><td>${s3(R/Math.pow(10,S.rx))}</td><td>${s3(T/Math.pow(10,S.tx))}</td><td>${s3(S.pts[i][0])}</td><td>${s3(S.pts[i][1])}</td><td>${sci(ratios[i])}</td></tr>`).join("");
+  setReadout($("kpOut"),[["Central body",S.body],["Bodies",String(S.rows.length)],["Mean T²/R³",sci(mean)+" s² m⁻³"],["Mass from slope",sci(S.M)+" kg"]]);
+  $("kpResult").innerHTML=`Straight line through the origin, so T² ∝ R³. Slope = ${sci(S.fit[0]*Math.pow(10,S.ye-S.xe))} s² m⁻³ = 4π²/GM. M = 4π² ÷ (6.67 × 10⁻¹¹ × slope) = <b>${sci(S.M)} kg</b>. Published mass of ${S.body}: ${S.real}.`;
+  if(kpGraph) kpGraph.redraw(); kpC.redraw(); }
+$("kpSet").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; kp.set=b.dataset.s; pressGroup([...$("kpSet").querySelectorAll("button")],b); kpUpd(); });
+
+// 5. Newton's cannon
+const nc = { v:7, paths:[] };
+function ncUpd(){ const r0=RE+4e5, vc=Math.sqrt(GME/r0), Fg=1000*GME/(r0*r0), Fn=1000*(nc.v*1000)**2/r0, ve=Math.sqrt(2*GME/r0);
+  $("ncVo").textContent=nc.v.toFixed(2)+" km/s";
+  const pred = nc.v*1000<vc-30? "falls back to Earth" : nc.v*1000<=vc+30? "circular orbit" : nc.v*1000<ve? "elliptical orbit" : "escapes";
+  setReadout($("ncOut"),[["Launch speed",nc.v.toFixed(2)+" km/s"],["Speed for a circle √(GM/r)",(vc/1000).toFixed(2)+" km/s"],["Gravity on the probe",fmtN(Math.round(Fg))+" N"],["Needed for a circle mv²/r",fmtN(Math.round(Fn))+" N"],["Outcome",pred]]);
+  $("ncWork").innerHTML=`At launch r = R + h = 6.77 × 10⁶ m. Gravity: GMm/r² = <b>${fmtN(Math.round(Fg))} N</b>. A circle at ${nc.v.toFixed(2)} km/s needs mv²/r = <b>${fmtN(Math.round(Fn))} N</b>. `+(Math.abs(Fg-Fn)<Fg*0.01? "They are equal: gravity provides exactly the centripetal force, so the probe stays in a circle." : Fg>Fn? "Gravity is more than a circle needs, so the path curves in more tightly and the probe falls towards the Earth." : "Gravity is less than a circle needs, so the probe swings out further"+(nc.v*1000>=ve?" and escapes for good (v ≥ √(2GM/r) = "+(ve/1000).toFixed(2)+" km/s).":" into an ellipse, then falls back to this point."));
+  ncC.redraw(); }
+$("ncV").addEventListener("input",e=>{ nc.v=+e.target.value; ncUpd(); });
+$("ncPre").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; nc.v=+b.dataset.v; $("ncV").value=nc.v; ncUpd(); });
+$("ncGo").addEventListener("click",()=>{ const P=cannonPath(nc.v); P.v=nc.v.toFixed(2); P.shown=reduce?P.pts.length:1; nc.paths.push(P); if(nc.paths.length>4) nc.paths.shift(); ncUpd(); });
+$("ncClear").addEventListener("click",()=>{ nc.paths=[]; ncUpd(); });
+
+// 6. Satellite orbits
+const ob = { h:400, t:0 };
+function obUpd(){ const r=RE+ob.h*1000, v=Math.sqrt(GME/r), T=TAU*Math.sqrt(r*r*r/GME), geo=Math.abs(T/3600-24)<0.25;
+  $("obHo").textContent=fmtN(ob.h)+" km";
+  setReadout($("obOut"),[["r = R + h",sci(r)+" m"],["Speed v = √(GM/r)",(v/1000).toFixed(2)+" km/s"],["Period T",fmtT(T)],["Orbits a day",(86400/T).toFixed(2)],["g at this height",s3(GME/(r*r))+" N/kg"],["Stays over one point?",geo?"yes: geostationary":"no"]]);
+  $("obWork").innerHTML=`T = 2π√(r³/GM) = 2π × √((${sci(r)})³ ÷ ${sci(GME)}) = <b>${fmtN(Math.round(T))} s</b> (${fmtT(T)}). `+(geo? "A 24-hour period above the equator, turning the same way as the Earth: the satellite stays above the marked point. Used for TV, communications and weather images." : ob.h<2000? "Low Earth orbit: fast and close, good for detailed images and crewed stations, but each satellite is only overhead for a few minutes." : T/3600<24? "Faster than the Earth turns, so it drifts across the sky. GPS and Galileo satellites use orbits like this." : "Slower than the Earth turns, so the ground overtakes it.");
+  obC.redraw(); }
+$("obH").addEventListener("input",e=>{ ob.h=+e.target.value; obUpd(); });
+$("obPre").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ob.h=+b.dataset.h; $("obH").value=ob.h; ob.t=0; obUpd(); });
+const OS = [["Satellite TV to dishes that never move","GEO","A geostationary satellite stays above one point."],["Weather images of the whole of Europe and Africa every 15 minutes","GEO","A fixed, far-away view of a whole hemisphere."],["Close-up photos of every part of the Earth's surface","POL","Low and over the poles: the Earth turns beneath it."],["Mapping sea ice at the North and South Poles","POL","Only polar orbits pass over the poles."],["A crewed space station astronauts can reach in hours","LEO","Low Earth orbit, about 400 km up."],["Sat-nav signals for phones and cars","MEO","GPS satellites are about 20 000 km up."],["Low-delay satellite broadband from thousands of satellites","LEO","Close to the ground, so signals arrive quickly."],["Galileo, the EU's navigation system","MEO","About 23 000 km up, period about 14 hours."]];
+const OSN = {LEO:"Low Earth",POL:"Polar",MEO:"Medium Earth",GEO:"Geostationary"}, osS={order:[],ans:{}};
+function osRender(){ sorter("osList","osOut",OS,OSN,osS); }
+function osNew(){ osS.order=shuffle(OS.map((s,k)=>k)); osS.ans={}; osRender(); }
+$("osList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; osS.ans[b.dataset.k]=b.dataset.v; osRender(); });
+$("osReset").addEventListener("click",osNew);
+
+/* ================= CREATE CANVASES ================= */
+const hero = makeCanvas($("heroCanvas"), 0.7, 240, s => drawHero(s.ctx,s.w,s.h,reduce?1.2:heroT), 420);
+const cfC = makeCanvas($("cfC"), 0.55, 300, s => drawWhirl(s.ctx,s.w,s.h,cf), 440);
+const avC = makeCanvas($("avC"), 0.5, 290, s => drawDisc(s.ctx,s.w,s.h,av), 420);
+const wbC = makeCanvas($("wbC"), 0.5, 290, s => drawBung(s.ctx,s.w,s.h,{M:wb.M,r:wb.r,ang:wb.ang,t:wb.t,n:wb.n}), 400);
+const kpC = makeCanvas($("kpC"), 0.5, 280, s => drawKepler(s.ctx,s.w,s.h,{set:kp.set,t:kp.t}), 420);
+const ncC = makeCanvas($("ncC"), 0.62, 330, s => drawCannon(s.ctx,s.w,s.h,nc), 480);
+const obC = makeCanvas($("obC"), 0.55, 300, s => drawOrbit(s.ctx,s.w,s.h,ob), 440);
+wbGraph = makeCanvas($("wbGraph"), 0.72, 190, s => {
+  const pts=wb.data.map(([F,t10])=>{ const v=TAU*wb.r/(t10/10); return [v*v,F]; }), fit=pts.length>=3? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,1],yr:[0,0.2],xl:"v² (m²/s²)",yl:"F (N)",fit});
+  const truth = wb.revealed? ` <b>Answer:</b> the bung's mass is ${Math.round(wb.m*1000)} g.` : "";
+  if(!fit){ $("wbResult").innerHTML="Record three or more hanging masses to draw the line."+truth; return; }
+  $("wbResult").innerHTML=`Slope = <b>${fit[0].toFixed(4)} kg/m</b> = m/r, intercept ${fit[1].toFixed(3)} N (close to 0). m = slope × r = ${fit[0].toFixed(4)} × ${wb.r.toFixed(2)} = <b>${(fit[0]*wb.r*1000).toFixed(1)} g</b>.`+truth;
+}, 300);
+kpGraph = makeCanvas($("kpGraph"), 0.72, 190, s => { const S=KSETS[kp.set]; scatter(s,S.pts,{xr:[0,0],yr:[0,0],xl:`R³ (×10${sup(S.xe)} m³)`,yl:`T² (×10${sup(S.ye)} s²)`,fit:S.fit}); }, 300);
+predC = makeCanvas($("predC"), 0.55, 200, s => drawDrill(s.ctx,s.w,s.h,{...pd,bgc:C["surface-2"]}), 300);
+pdNew();
+// Learn minis
+const NC_DEMO = [6,7.67,9.5,11].map(v=>{ const P=cannonPath(v); P.v=String(v); return P; });
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    whirl:s=>drawWhirl(s.ctx,s.w,s.h,{...o,compact:true}),
+    disc:s=>drawDisc(s.ctx,s.w,s.h,{...o,compact:true}),
+    bung:s=>drawBung(s.ctx,s.w,s.h,{...o,compact:true}),
+    kgraph:s=>{ const S=KSETS[o.set]; scatter(s,S.pts,{xr:[0,0],yr:[0,0],xl:`R³ (×10${sup(S.xe)} m³)`,yl:`T² (×10${sup(S.ye)} s²)`,fit:S.fit}); },
+    cannon:s=>drawCannon(s.ctx,s.w,s.h,{paths:NC_DEMO,compact:true}),
+    orbit:s=>drawOrbit(s.ctx,s.w,s.h,{...o,compact:true}),
+  };
+  makeCanvas(el, 0.8, 220, draws[kind], 420);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-case]").forEach(el=>{ const S=KSETS[el.dataset.case]; makeCanvas(el,0.62,180,s=>scatter(s,S.pts,{xr:[0,0],yr:[0,0],xl:`R³ (×10${sup(S.xe)} m³)`,yl:`T² (×10${sup(S.ye)} s²)`,fit:S.fit,bgc:C["surface-2"]}),280); });
+document.querySelectorAll("canvas[data-mini=fv]").forEach(el=>makeCanvas(el,0.7,160,s=>drawFvMini(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=fr]").forEach(el=>makeCanvas(el,0.7,160,s=>drawFrMini(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=tr]").forEach(el=>makeCanvas(el,0.7,160,s=>drawTrMini(s.ctx,s.w,s.h,{bgc:C["surface-2"]})));
+cfUpd(); cpNew(); avUpd(); wbTable(); wbUpd(); kpUpd(); ncUpd(); obUpd(); osNew();
+
+/* ================= LOOP / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(view==="labs" && !reduce){
+    if(lab==="centripetal"){ if(cf.cut){ if(Math.hypot(cf.cut.x,cf.cut.y)<4){ cf.cut.x+=cf.cut.ux*cf.v*dt*0.25; cf.cut.y+=cf.cut.uy*cf.v*dt*0.25; } } else cf.ang+=dt*(cf.v/cf.r)*0.25; cfC.redraw(); }
+    if(lab==="angular" && av.run){ av.th+=av.w*dt; avC.redraw(); if(Math.floor(now/250)!==Math.floor((now-dt*1000)/250)) avUpd(); }
+    if(lab==="whirl"){ wb.ang+=dt*wbV()/wb.r; if(wb.anim){ wb.anim.el+=dt; const f=Math.min(1,wb.anim.el/wb.anim.dur); wb.t=f*wb.anim.t10; wb.n=Math.floor(f*10); if(f>=1) wbFinish(); } wbC.redraw(); }
+    if(lab==="kepler"){ kp.t+=dt; kpC.redraw(); }
+    if(lab==="cannon"){ let moving=false; nc.paths.forEach(P=>{ if(P.shown<P.pts.length){ P.shown=Math.min(P.pts.length,P.shown+Math.max(2,Math.round(P.pts.length*dt/3))); moving=true; } }); if(moving) ncC.redraw(); }
+    if(lab==="orbits"){ ob.t+=dt; obC.redraw(); }
+  }
+  requestAnimationFrame(loop);
+})(performance.now());
+
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+
+</script>

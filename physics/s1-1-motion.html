@@ -1,0 +1,1721 @@
+<title>Straight-Line Motion Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<style>
+:root{--band-ink:#3b2b21}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--surface)}
+.xlink:hover{border-color:var(--terra)}
+.working.wrap{white-space:normal;font-family:var(--f-body);font-size:.9rem}
+.spec-bullets{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+</style>
+<style>
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.rc-card{display:grid;gap:8px;padding:16px}
+.rc-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.rc-card .ico svg{width:24px;height:24px}
+.rc-card p{font-size:.9rem;margin:0}
+.rc-card p b{color:var(--terra)}
+</style>
+<style>
+.cases .rc-card canvas{width:100%;display:block;border-radius:12px}
+.bolt td,.bolt th{padding:4px 8px;text-align:right;font-family:var(--f-mono);font-size:.85rem}
+.bolt{border-collapse:collapse;width:100%}
+.bolt tr+tr td{border-top:1px solid var(--line)}
+.boltwrap{overflow-x:auto}
+</style>
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18"/><rect x="5" y="11" width="10" height="5" rx="1.5"/><circle cx="8" cy="17" r="1.5"/><circle cx="13" cy="17" r="1.5"/><path d="M17 13h4M19 11l2 2-2 2"/></svg></div>
+        <div style="min-width:0"><b>Motion in a Straight Line</b><span>Leaving Cert Physics · Strand 1 · Section 1.1</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details open><summary>1 · Forces &amp; Motion</summary><ol><li class="here"><span class="mono">1.1</span>Motion in a straight line</li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 1 · Section 1.1 · Particle motion in a straight line</span>
+          <h1 style="margin-top:12px">Where is it?<br>How fast?<br><em>Speeding up?</em></h1>
+          <p class="lede">Every journey in a straight line can be described with four quantities: displacement, velocity, acceleration and time. Learn to read motion graphs, derive and use the three equations of motion, and add vectors in one and two dimensions.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="A trolley speeding up along a track, leaving a ticker tape of dots that spread further apart, with its velocity–time graph"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/4</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">1.1.1</span><span>model motion of a particle in a straight line</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">1.1.2</span><span>investigate constant and varying linear motion using primary and secondary data</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">1.1.3</span><span>derive the kinematic equations</span></label></li>
+          <li><label><input type="checkbox" id="lo4"><span class="mono">1.1.4</span><span>verify the law of addition of vectors using primary and secondary data in one and two dimensions</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">Students learn about:</p>
+        <ul class="spec-bullets"><li>basic concepts for describing the motion of a particle; displacement, velocity, acceleration and time.</li><li>relationships between the concepts; v = Δs/Δt, a = Δv/Δt</li><li>graphical representation and interpretation: displacement-time graphs, velocity-time graphs</li><li>the kinematics equations under constant acceleration: v = u + at, s = ut + ½at², v² = u² + 2as</li><li>identifying and representing scalar and vector quantities</li><li>resolving vectors into perpendicular components</li><li>calculating the resultant of two vectors</li></ul>
+        <p class="result" style="margin-top:10px">Forces and Newton's laws come next, in 1.2.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Run a ticker-timer trolley, build motion graphs, derive the equations, time a trolley with light gates and balance a force table. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="motion">
+        <div class="labhead"><span class="pill t">Ticker-tape trolley</span><p class="goal">A ticker timer marks a dot on the tape every 0.5 s. Pick a motion, play it, and read displacement, velocity and acceleration from the tape.</p></div>
+        <div class="panel sim">
+          <canvas id="trkC" aria-label="A trolley on a 20 m track with a ticker tape of dots below it and arrows for velocity and acceleration"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Motion</span><div class="btns" id="trkM"></div></div>
+            <div class="ctl"><label for="trkT">Time t <output id="trkTo">0.0 s</output></label><input type="range" id="trkT" min="0" max="6" step="0.1" value="0"></div>
+            <div class="ctl"><span class="lbl">Animation</span><div class="btns"><button id="trkPlay" class="primary">Play</button><button id="trkReset">Back to start</button></div></div>
+          </div>
+          <div class="readout" id="trkOut"></div>
+          <div class="working wrap" id="trkWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>How can you tell from the dots that the trolley is speeding up?</div><div class="try"><b>2</b>Run "there and back". Why are distance and displacement different at the end?</div><div class="try"><b>3</b>In "slowing down", what is the sign of the acceleration?</div></div>
+      </div>
+
+      <div class="lab" data-lab="graphs" hidden>
+        <div class="labhead"><span class="pill t">Graph builder</span><p class="goal">A journey in three 4-second stages. Set the starting velocity and the acceleration in each stage, and watch both graphs build. Then match the dashed target.</p></div>
+        <div class="panel sim">
+          <canvas id="grC" aria-label="A velocity–time graph with the area under it shaded, above a displacement–time graph of the same journey"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="grU">Starting velocity u <output id="grUo">0 m/s</output></label><input type="range" id="grU" min="0" max="6" step="1" value="0"></div>
+            <div class="ctl"><label for="grA1">Stage 1 acceleration <output id="grA1o">1</output></label><input type="range" id="grA1" min="-2" max="2" step="0.5" value="1"></div>
+            <div class="ctl"><label for="grA2">Stage 2 acceleration <output id="grA2o">0</output></label><input type="range" id="grA2" min="-2" max="2" step="0.5" value="0"></div>
+            <div class="ctl"><label for="grA3">Stage 3 acceleration <output id="grA3o">-1</output></label><input type="range" id="grA3" min="-2" max="2" step="0.5" value="-1"></div>
+            <div class="ctl"><label for="grCur">Read off at t = <output id="grCuro">6.0 s</output></label><input type="range" id="grCur" min="0" max="12" step="0.5" value="6"></div>
+            <div class="ctl"><span class="lbl">Challenge</span><div class="btns"><button class="primary" id="grNew">New target</button><button id="grHide">Hide target</button></div></div>
+          </div>
+          <div class="readout" id="grOut"></div>
+          <div class="working wrap" id="grWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Make the s–t graph a straight line all the way. What do the accelerations have to be?</div><div class="try"><b>2</b>The v–t area is the displacement. Check it against the s–t graph at t = 12 s.</div><div class="try"><b>3</b>Make the velocity go negative. What happens to the s–t graph?</div></div>
+      </div>
+
+      <div class="lab" data-lab="suvat" hidden>
+        <div class="labhead"><span class="pill t">Derive the equations</span><p class="goal">All three equations come from one straight-line velocity–time graph. Pick an equation and follow the derivation on the graph, with your own numbers.</p></div>
+        <div class="panel sim">
+          <canvas id="dvC" aria-label="Velocity–time graph of uniform acceleration from u to v in time t, with the slope or the areas shaded for the chosen derivation"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Equation</span><div class="btns" id="dvE"><button data-e="1" aria-pressed="true">v = u + at</button><button data-e="2" aria-pressed="false">s = ut + ½at²</button><button data-e="3" aria-pressed="false">v² = u² + 2as</button></div></div>
+            <div class="ctl"><label for="dvU">u <output id="dvUo">4 m/s</output></label><input type="range" id="dvU" min="0" max="10" step="1" value="4"></div>
+            <div class="ctl"><label for="dvA">a <output id="dvAo">2 m/s²</output></label><input type="range" id="dvA" min="0.5" max="4" step="0.5" value="2"></div>
+            <div class="ctl"><label for="dvT">t <output id="dvTo">5 s</output></label><input type="range" id="dvT" min="1" max="8" step="1" value="5"></div>
+          </div>
+          <div class="readout" id="dvOut"></div>
+          <div class="working wrap" id="dvWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Which part of the graph gives v = u + at: the slope or the area?</div><div class="try"><b>2</b>Split the area into a rectangle and a triangle. Which is ut and which is ½at²?</div><div class="try"><b>3</b>Check: do all three equations agree for your numbers?</div></div>
+      </div>
+
+      <div class="lab" data-lab="investigate" hidden>
+        <div class="labhead"><span class="pill t">Experiment: light gates</span><p class="goal">Investigate constant and varying motion. Move the light gate, release the trolley from rest, and the data logger times it. Record at least five distances, then use the graph to find the hidden velocity or acceleration.</p></div>
+        <div class="panel sim">
+          <canvas id="exC" aria-label="A trolley on a ramp with a light gate and a data logger display"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Set-up</span><div class="btns" id="exM"><button data-m="const" aria-pressed="false">Constant velocity (friction-compensated, pushed)</button><button data-m="acc" aria-pressed="true">Accelerating (steeper ramp, from rest)</button></div></div>
+            <div class="ctl"><label for="exS">Distance to light gate s <output id="exSo">0.60 m</output></label><input type="range" id="exS" min="0.10" max="1.20" step="0.05" value="0.60"></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="exGo">Release and time</button><button id="exClear">Clear</button><button id="exNew">New trolley</button><button id="exReveal">Reveal answer</button></div></div>
+          </div>
+          <div class="readout" id="exOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>s (m)</th><th>t (s)</th><th id="exH3">t² (s²)</th><th></th></tr></thead><tbody id="exTable"></tbody></table><div class="empty" id="exEmpty">No readings yet. Time five or more distances.</div></div>
+            <div class="graphbox"><canvas id="exGraph" aria-label="Graph of the recorded data with a line of best fit"></canvas><p class="result" id="exResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Simulated data logger: each time has a small random error (about ±0.01 s), like a real experiment. "New trolley" hides a new value to find.</p>
+        <div class="tries"><div class="try"><b>1</b>Why plot s against t² (not t) for the accelerating trolley?</div><div class="try"><b>2</b>For constant velocity, what does the slope of s against t give?</div><div class="try"><b>3</b>Why use a light gate and data logger instead of a stopwatch?</div></div>
+      </div>
+
+      <div class="lab" data-lab="vectors" hidden>
+        <div class="labhead"><span class="pill t">Resolve a vector</span><p class="goal">Any vector can be split into two perpendicular components. Set the size and direction and watch the horizontal and vertical parts change.</p></div>
+        <div class="panel sim">
+          <canvas id="vcC" aria-label="A vector arrow from the origin with dashed horizontal and vertical components and the angle marked"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Example</span><div class="btns" id="vcK"></div></div>
+            <div class="ctl"><label for="vcM">Size <output id="vcMo">20</output></label><input type="range" id="vcM" min="1" max="30" step="1" value="20"></div>
+            <div class="ctl"><label for="vcA">Angle above horizontal θ <output id="vcAo">30°</output></label><input type="range" id="vcA" min="0" max="90" step="1" value="30"></div>
+          </div>
+          <div class="readout" id="vcOut"></div>
+          <div class="working wrap" id="vcWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Scalar or vector?</h3></div>
+          <div class="srt" id="svList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="svReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="svOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>At what angle are the two components equal?</div><div class="try"><b>2</b>Set θ = 0°. What is the vertical component?</div><div class="try"><b>3</b>Check that Fx² + Fy² = F² for any angle.</div></div>
+      </div>
+
+      <div class="lab" data-lab="addition" hidden>
+        <div class="labhead"><span class="pill t">Experiment: force table</span><p class="goal">Verify the law of addition of vectors. Two weights pull on a ring. Find the third force that holds the ring still in the centre: it is equal and opposite to the resultant of the first two.</p></div>
+        <div class="panel sim">
+          <canvas id="ftC" aria-label="A circular force table seen from above with a ring pulled by three strings, and arrows for the two forces and their resultant"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="ftF1">F₁ (at 0°) <output id="ftF1o">3.0 N</output></label><input type="range" id="ftF1" min="1" max="5" step="0.5" value="3"></div>
+            <div class="ctl"><label for="ftF2">F₂ <output id="ftF2o">4.0 N</output></label><input type="range" id="ftF2" min="1" max="5" step="0.5" value="4"></div>
+            <div class="ctl"><label for="ftTh">Angle of F₂ <output id="ftTho">90°</output></label><input type="range" id="ftTh" min="0" max="180" step="5" value="90"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">One dimension</span><div class="btns" id="ftPre"><button data-t="0">Same direction (0°)</button><button data-t="180">Opposite (180°)</button><button data-t="90">Perpendicular (90°)</button></div></div>
+            <div class="ctl"><label for="ftF3">Your F₃ <output id="ftF3o">2.0 N</output></label><input type="range" id="ftF3" min="0" max="10" step="0.1" value="2"></div>
+            <div class="ctl"><label for="ftPh">Angle of F₃ <output id="ftPho">180°</output></label><input type="range" id="ftPh" min="0" max="359" step="1" value="180"></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="ftRec">Record reading</button><button id="ftClear">Clear table</button></div></div>
+          </div>
+          <div class="readout" id="ftOut"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>F₁ (N)</th><th>F₂ (N)</th><th>angle</th><th>F₃ (N)</th><th>R calc (N)</th><th>diff</th></tr></thead><tbody id="ftTable"></tbody></table><div class="empty" id="ftEmpty">Balance the ring, then record. Try three or more angles.</div></div>
+            <div class="graphbox"><canvas id="ftGraph" aria-label="Graph of measured F₃ against calculated resultant R"></canvas><p class="result" id="ftResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Simulated table: the ring counts as centred when the leftover force is under 0.15 N, as a real table has a little friction at the pulleys.</p>
+        <div class="tries"><div class="try"><b>1</b>F₁ = 3 N and F₂ = 4 N at 90°. What F₃ balances them?</div><div class="try"><b>2</b>Use the one-dimension buttons. How do 3 N and 4 N add on a line?</div><div class="try"><b>3</b>Plot F₃ against R for several angles. What graph verifies the law?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of motion in a straight line"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Modelling motion · LO 1.1.1</p><h2>Six graph shapes to know</h2></div><p>The same motion looks different on a displacement–time and a velocity–time graph. Learn to read both.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>Slopes, areas and components</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="area"></canvas><h3>Area = displacement</h3><p>The area under a velocity–time graph is the displacement. Its slope is the acceleration.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="vec"></canvas><h3>Components</h3><p>Fx = F cos θ and Fy = F sin θ. Together they replace the original vector.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="ft"></canvas><h3>Adding vectors</h3><p>3 N and 4 N at right angles add to 5 N, not 7 N. Direction matters.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Secondary data · LO 1.1.2</p><h2>Varying motion: a 100 m world record</h2></div><p>Split times every 10 m for Usain Bolt's 9.58 s run (Berlin, 2009), as widely published from the race's biomechanics analysis. Average speed for each 10 m = 10 m ÷ time for that 10 m.</p></div>
+        <div class="bars" id="bars"></div>
+        <div class="boltwrap" style="margin-top:12px"><table class="bolt" id="boltT"></table></div>
+        <p class="result" style="margin-top:10px">The first 10 m includes the reaction time at the start (about 0.15 s). He accelerates for about 60 m, reaches a top speed of about 12.3 m/s, then slows slightly. Check the figures against another source before using them in an investigation.</p>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Where you meet it</p><h2>Straight-line motion around you</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Displacement, velocity and acceleration are <b>vectors</b>: give a size <b>and a direction</b> (or a sign).</li>
+            <li>List <b>s, u, v, a, t</b>, tick the three you know, then pick the equation without the one you don't need.</li>
+            <li>"From rest" means <b>u = 0</b>. "Comes to rest" means <b>v = 0</b>. Slowing down means <b>a is negative</b>.</li>
+            <li>Convert km/h to m/s first: <b>÷ 3.6</b>.</li>
+            <li>s–t graph: <b>slope = velocity</b>. v–t graph: <b>slope = acceleration</b>, <b>area = displacement</b>.</li>
+            <li>To derive the equations, start from <b>a = (v − u)/t</b> and the <b>area under the v–t graph</b>.</li>
+            <li>Resolving: <b>F cos θ</b> is the component next to the angle, <b>F sin θ</b> the one opposite it.</li>
+            <li>Resultant of perpendicular vectors: <b>Pythagoras for size, tan⁻¹ for direction</b>. Always give the angle.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The verb tells you what the examiner wants. The learning outcomes for this section use model, investigate, derive and verify.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="text" placeholder="e.g. 12.5 or -2" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Read the graph</h2></div></div>
+          <canvas id="predC" aria-label="A displacement–time or velocity–time graph to describe"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" data-g="0"><button data-a="rest">At rest</button><button data-a="const">Constant velocity</button><button data-a="up">Speeding up</button><button data-a="down">Slowing down</button></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next graph</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: velocity, acceleration, vector, s…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>Motion in a straight line. Distances in metres, times in seconds, velocities in m/s, accelerations in m/s².</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Velocity</span><span class="big">v = Δs / Δt</span><dl><dt>s</dt><dd>displacement, m</dd><dt>t</dt><dd>time, s</dd></dl><div class="ex">120 m in 8 s: v = 15 m/s</div></div>
+        <div class="panel fcell"><span class="pill">Acceleration</span><span class="big">a = Δv / Δt</span><dl><dt>a</dt><dd>m/s² (negative when slowing down)</dd></dl><div class="ex">0 to 24 m/s in 6 s: a = 4 m/s²</div></div>
+        <div class="panel fcell"><span class="pill">Equation 1</span><span class="big">v = u + at</span><dl><dt>no s</dt><dd>use when distance isn't given or asked</dd></dl><div class="ex">u = 5, a = 2, t = 4: v = 13 m/s</div></div>
+        <div class="panel fcell"><span class="pill">Equation 2</span><span class="big">s = ut + ½at²</span><dl><dt>no v</dt><dd>use when final velocity isn't needed</dd></dl><div class="ex">from rest, a = 3, t = 4: s = 24 m</div></div>
+        <div class="panel fcell"><span class="pill">Equation 3</span><span class="big">v² = u² + 2as</span><dl><dt>no t</dt><dd>use when time isn't given or asked</dd></dl><div class="ex">u = 20, v = 0, a = −8: s = 25 m</div></div>
+        <div class="panel fcell"><span class="pill">Average velocity</span><span class="big">s = ((u + v) / 2) × t</span><dl><dt>only for</dt><dd>uniform acceleration</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Graphs</span><span class="big">s–t slope = v · v–t slope = a · v–t area = s</span><dl><dt>curved s–t</dt><dd>velocity changing</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Components</span><span class="big">Fx = F cos θ · Fy = F sin θ</span><dl><dt>θ</dt><dd>measured from the horizontal</dd></dl><div class="ex">20 N at 30°: 17.3 N and 10 N</div></div>
+        <div class="panel fcell"><span class="pill a">Resultant (90°)</span><span class="big">R = √(A² + B²) · tan α = B / A</span><div class="ex">3 N and 4 N: R = 5 N at 53.1° to the 3 N force</div></div>
+        <div class="panel fcell"><span class="pill a">Resultant (any angle)</span><span class="big">R² = F₁² + F₂² + 2F₁F₂ cos θ</span><dl><dt>θ = 0°</dt><dd>R = F₁ + F₂</dd><dt>θ = 180°</dt><dd>R = |F₁ − F₂|</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Units</span><span class="big">km/h ÷ 3.6 = m/s</span><div class="ex">72 km/h = 20 m/s</div></div>
+        <div class="panel fcell"><span class="pill">Free fall</span><span class="big">a = g = 9.8 m/s² (downwards)</span><dl><dt>from rest</dt><dd>s = ½gt²</dd></dl></div>
+      </div>
+      <footer>
+        <p>Built on section 1.1 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes are quoted from the specification. Experiment data is simulated. Sprint split times are rounded published figures; check them against your own sources for your investigation.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent","--band-ink"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  motion:'<path d="M3 19h18"/><rect x="4" y="10" width="10" height="5" rx="1.5"/><circle cx="7" cy="16" r="1.4"/><circle cx="12" cy="16" r="1.4"/><path d="M16 12h5M19 10l2 2-2 2"/>',
+  graphs:'<path d="M4 3v17h17"/><path d="M6 17l4-5 4 2 5-8"/>',
+  suvat:'<path d="M4 3v17h17"/><path d="M4 15l15-9"/><path d="M4 15h15v-9" stroke-dasharray="2 2"/>',
+  investigate:'<path d="M3 20l18-8"/><rect x="5" y="14" width="5" height="3" rx="1" transform="rotate(-24 7 15)"/><path d="M16 6v9M19 6v8"/><path d="M15 6h5"/>',
+  vectors:'<path d="M4 20L18 6"/><path d="M12 6h6v6"/><path d="M4 20h14M18 20V6" stroke-dasharray="2 2"/>',
+  addition:'<circle cx="12" cy="12" r="2"/><path d="M14 12h7M10.6 13.4L5 19M12 10V3"/>',
+  run:'<circle cx="14" cy="4" r="2"/><path d="M8 21l3-6 3 2v4M6 12l3-4h5l3 4M11 15l2-7"/>',
+  car:'<path d="M3 16v-4l3-4h9l4 4h2v4z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>',
+  plane:'<path d="M2 14l20-8-6 14-4-6z"/>',
+  drop:'<path d="M12 3c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/>',
+  gps:'<circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z"/>',
+  boat:'<path d="M3 16l2 4h14l2-4z"/><path d="M12 3v13M12 4l6 8h-6"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"motion", name:"Describing motion", short:"Displacement, velocity, acceleration and time, and how they link.", tint:"var(--blush)"},
+  {id:"graphs", name:"Motion graphs", short:"Read displacement–time and velocity–time graphs: slopes and areas.", tint:"var(--apricot)"},
+  {id:"suvat", name:"Equations of motion", short:"Derive and use v = u + at, s = ut + ½at² and v² = u² + 2as.", tint:"var(--sage)"},
+  {id:"investigate", name:"Investigating motion", short:"Light gates, data loggers and secondary data for constant and changing velocity.", tint:"var(--cream)"},
+  {id:"vectors", name:"Scalars, vectors, components", short:"Size only, or size and direction? Split a vector into two perpendicular parts.", tint:"var(--blush)"},
+  {id:"addition", name:"Adding vectors", short:"Find the resultant of two vectors in one and two dimensions, and verify it.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Particle","point particle","An object treated as a single point, ignoring its size and shape, so its motion is easier to model.","motion"],
+  ["Distance","","How far an object travels along its path. A scalar, measured in metres (m).","motion"],
+  ["Displacement","s","The distance travelled in a given direction from a starting point. A vector, in metres (m).","motion"],
+  ["Speed","","The rate of change of distance: distance ÷ time. A scalar, in m/s.","motion"],
+  ["Velocity","v","The rate of change of displacement. A vector, in m/s.","motion","v = Δs / Δt"],
+  ["Acceleration","a","The rate of change of velocity. A vector, in m/s².","motion","a = Δv / Δt"],
+  ["Deceleration","","A slowing down: acceleration opposite to the direction of motion, so it is given a negative sign.","motion"],
+  ["Uniform acceleration","constant acceleration","When velocity changes by the same amount every second.","motion"],
+  ["Average velocity","","Total displacement ÷ total time taken.","motion"],
+  ["Instantaneous velocity","","The velocity at one moment: the slope of the displacement–time graph at that point.","motion"],
+  ["Ticker timer","","A device that marks dots on a paper tape at equal time intervals, so the spacing shows how far an object moved in each interval.","motion"],
+  ["Δ","delta","Greek letter meaning 'change in', e.g. Δv = final velocity − initial velocity.","motion"],
+  ["m/s","metres per second","The SI unit of speed and velocity.","motion"],
+  ["m/s²","metres per second squared","The SI unit of acceleration: the change in velocity (m/s) each second.","motion"],
+  ["Displacement–time graph","s–t graph","A graph of displacement against time. Its slope is the velocity.","graphs"],
+  ["Velocity–time graph","v–t graph","A graph of velocity against time. Its slope is the acceleration; the area under it is the displacement.","graphs"],
+  ["Slope","gradient","Rise ÷ run of a graph line: Δy ÷ Δx.","graphs"],
+  ["Area under a graph","","On a v–t graph, the area between the line and the time axis equals the displacement.","graphs"],
+  ["Tangent","","A straight line touching a curve at one point. Its slope gives the rate of change at that instant.","graphs"],
+  ["Kinematics","","The description of motion (displacement, velocity, acceleration, time) without asking what causes it.","suvat"],
+  ["Equations of motion","kinematic equations, suvat","v = u + at, s = ut + ½at² and v² = u² + 2as, true only for constant acceleration in a straight line.","suvat","v = u + at · s = ut + ½at² · v² = u² + 2as"],
+  ["u","initial velocity","The velocity at the start of the time interval, in m/s.","suvat"],
+  ["v (final velocity)","","The velocity at the end of the time interval, in m/s.","suvat"],
+  ["s","displacement","The symbol for displacement in the equations of motion, in m.","suvat"],
+  ["t","time","The time interval, in seconds (s).","suvat"],
+  ["Derive","","Get an equation step by step from definitions or earlier results, explaining each step.","suvat"],
+  ["Free fall","","Motion under gravity alone, with acceleration g = 9.8 m/s² downwards near the Earth's surface.","suvat","a = g = 9.8 m/s²"],
+  ["Stopping distance","","Thinking distance + braking distance for a vehicle.","suvat"],
+  ["Light gate","","A beam of light and a sensor. When an object breaks the beam, it sends a signal to a timer or data logger.","investigate"],
+  ["Data logger","","An electronic device that records measurements automatically, often many per second.","investigate"],
+  ["Primary data","","Data you collect yourself in your own experiment.","investigate"],
+  ["Secondary data","","Data collected by someone else, e.g. published race split times.","investigate"],
+  ["Friction-compensated runway","","A runway tilted just enough that a trolley, once pushed, moves at constant velocity.","investigate"],
+  ["Random error","","Unpredictable scatter in readings. Reduced by repeating and averaging.","investigate"],
+  ["Systematic error","","An error that shifts every reading the same way, e.g. a timer that starts late.","investigate"],
+  ["Line of best fit","","A straight line (or smooth curve) drawn through the data with points spread evenly either side.","investigate"],
+  ["Scalar","","A quantity with size (magnitude) only, e.g. mass, time, distance, speed, energy.","vectors"],
+  ["Vector","","A quantity with size and direction, e.g. displacement, velocity, acceleration, force.","vectors"],
+  ["Magnitude","","The size of a quantity, without its direction.","vectors"],
+  ["Component","","One of two perpendicular vectors that together have the same effect as the original vector.","vectors","Fx = F cos θ · Fy = F sin θ"],
+  ["Resolve","resolving","Split a vector into perpendicular components.","vectors"],
+  ["Resultant","","The single vector that has the same effect as two or more vectors acting together.","addition","R = √(A² + B²) for perpendicular vectors"],
+  ["Parallelogram law","law of addition of vectors","Draw two vectors from one point as sides of a parallelogram; the diagonal from that point is the resultant.","addition","R² = F₁² + F₂² + 2F₁F₂ cos θ"],
+  ["Tip-to-tail method","head-to-tail","Draw the second vector starting at the tip of the first; the resultant joins the start of the first to the tip of the second.","addition"],
+  ["Equilibrant","","The single force that balances a set of forces: equal in size and opposite in direction to their resultant.","addition"],
+  ["Force table","","A circular table with pulleys and hanging masses, used to verify the law of addition of vectors.","addition"],
+  ["N","newton","The SI unit of force.","addition"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["displacement","Displacement"],["distance","Distance"],["velocity","Velocity"],["acceleration","Acceleration"],["scalar","Scalar"],["vector","Vector"],["components","Component"],["resultant","Resultant"],["slope","Slope"],["area under","Area under a graph"],["ticker timer","Ticker timer"],["light gate","Light gate"],["data logger","Data logger"],["secondary data","Secondary data"],["equilibrant","Equilibrant"],["parallelogram","Parallelogram law"],["free fall","Free fall"],["friction-compensated","Friction-compensated runway"],["uniform acceleration","Uniform acceleration"],["particle","Particle"]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function dbl(ctx,x1,y1,x2,y2,color,w=2){ line(ctx,x1,y1,x2,y2,color,w); const a=Math.atan2(y2-y1,x2-x1); arrowHead(ctx,x2,y2,a,color,8); arrowHead(ctx,x1,y1,a+Math.PI,color,8); }
+function dimArrow(ctx,xa,xb,y,label,col){ line(ctx,xa,y,xb,y,col,1.4); arrowHead(ctx,xa,y,Math.PI,col,7); arrowHead(ctx,xb,y,0,col,7); line(ctx,xa,y-5,xa,y+5,col,1.2); line(ctx,xb,y-5,xb,y+5,col,1.2); if(label) text(ctx,label,(xa+xb)/2,y-5,col,F(12),"center"); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const s3 = x => (+x.toPrecision(3)).toString();
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
+const sup = n => String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(x,d=3){ if(x===0) return "0"; let e=Math.floor(Math.log10(Math.abs(x))), ms=(x/Math.pow(10,e)).toFixed(d-1);
+  if(Math.abs(+ms)>=10){ e++; ms=(x/Math.pow(10,e)).toFixed(d-1); } return e===0? ms : `${ms} × 10${sup(e)}`; }
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+
+/* ================= MODELS + DRAWINGS ================= */
+// Ticker-tape trolley on a 20 m track
+const MOTIONS = [
+  {id:"const", n:"Constant velocity", u:3, a:0},
+  {id:"up", n:"Speeding up", u:0, a:1},
+  {id:"down", n:"Slowing down", u:6, a:-1},
+  {id:"back", n:"There and back", u:6, a:-2},
+];
+const TRK_T = 6, TRK_L = 20;
+const sAt=(u,a,t)=>u*t+0.5*a*t*t, vAt=(u,a,t)=>u+a*t;
+function distAt(u,a,t){ if(a===0||u*a>=0) return Math.abs(sAt(u,a,t)); const tt=-u/a; if(t<=tt) return Math.abs(sAt(u,a,t)); const sm=sAt(u,a,tt); return Math.abs(sm)+Math.abs(sm-sAt(u,a,t)); }
+function drawTrack(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, pad=cp?14:28, u=o.u, a=o.a, t=o.t;
+  const X=s=>pad+s/TRK_L*(w-2*pad), ty=o.inset?h*0.34:(cp?h*0.42:h*0.42), tape=o.inset?h*0.56:(cp?h*0.74:h*0.68);
+  line(ctx,pad,ty+14,w-pad,ty+14,C.ink,3);
+  for(let m=0;m<=TRK_L;m+=cp?5:2){ line(ctx,X(m),ty+14,X(m),ty+20,C.ink,1.2); if(!cp||m%10===0) text(ctx,m+(cp?"":" m"),X(m),ty+(cp?30:34),C.muted,M(cp?9:10),"center"); }
+  rrect(ctx,pad-6,tape-9,w-2*pad+12,18,4,C.cream,C.line,1);
+  for(let k=0;k*0.5<=t+1e-9;k++){ const s=sAt(u,a,k*0.5); circle(ctx,X(s),tape,cp?2.6:3.4,"#3b2b21"); }
+  if(!cp && !o.inset) text(ctx,"ticker tape: one dot every 0.5 s",pad,tape+26,C.muted,F(11,600));
+  const s=sAt(u,a,t), v=vAt(u,a,t), cx=X(s), cw=cp?26:40, ch=cp?14:20;
+  rrect(ctx,cx-cw/2,ty-ch+6,cw,ch,6,C.terra); circle(ctx,cx-cw/4,ty+8,cp?3.5:5,C.ink); circle(ctx,cx+cw/4,ty+8,cp?3.5:5,C.ink);
+  if(Math.abs(v)>0.05){ const L=v/6*(cp?40:70), y=ty-ch-(cp?6:10); arrow(ctx,cx,y,cx+L,y,C.good,cp?2:3); if(!cp) text(ctx,"v = "+v.toFixed(1)+" m/s",cx+L/2,y-8,C.good,F(12),"center"); }
+  if(a!==0 && !cp){ const L=a/2*40, y=ty-ch-42; arrow(ctx,cx,y,cx+L,y,C.bad,2.5); text(ctx,"a = "+a+" m/s²",cx+L/2,y-8,C.bad,F(12),"center"); }
+  if(!cp && !o.inset){ text(ctx,`t = ${t.toFixed(1)} s`,w-pad,22,C.ink,F(14),"right"); text(ctx,`s = ${s.toFixed(1)} m`,pad,22,C.ink,F(14)); }
+  if(o.inset){ const y0=tape+24, y1=h-10, x0=pad+20, x1=w-pad, vm=6.5, Xg=tt=>x0+tt/TRK_T*(x1-x0), Yg=vv=>y1-vv/vm*(y1-y0);
+    line(ctx,x0,y1,x1,y1,C.ink,1.4); line(ctx,x0,y0,x0,y1,C.ink,1.4); text(ctx,"v",x0-12,y0+8,C.ink,F(12)); text(ctx,"t",x1,y1-5,C.ink,F(12),"right");
+    line(ctx,Xg(0),Yg(u),Xg(TRK_T),Yg(vAt(u,a,TRK_T)),C.olive,2.5); circle(ctx,Xg(t),Yg(v),5,C.terra); }
+}
+// Graph builder: three 4 s stages
+const GR_T = 4;
+function grAt(u0,ph,t){ let v=u0,s=0,tt=0; for(let k=0;k<3;k++){ const d=Math.min(GR_T,Math.max(0,t-tt)); s+=v*d+0.5*ph[k]*d*d; v+=ph[k]*d; tt+=GR_T; } return {v,s}; }
+function gPanel(ctx,x0,y0,pw,ph_,xmax,ymin,ymax,xl,yl,cp){
+  const X=t=>x0+t/xmax*pw, Y=v=>y0+ph_-(v-ymin)/(ymax-ymin)*ph_;
+  const st=niceStep((ymax-ymin)/4);
+  for(let v=Math.ceil(ymin/st)*st; v<=ymax+1e-9; v+=st){ line(ctx,x0,Y(v),x0+pw,Y(v),C.grid,1); if(!cp) text(ctx,trim(v),x0-5,Y(v)+3,C.muted,M(10),"right"); }
+  if(!cp) for(let t=0;t<=xmax;t+=2) text(ctx,String(t),X(t),y0+ph_+13,C.muted,M(10),"center");
+  line(ctx,x0,Y(0),x0+pw,Y(0),C.ink,1.4); line(ctx,x0,y0,x0,y0+ph_,C.ink,1.4);
+  text(ctx,yl,x0+6,y0+11,C.ink,F(cp?10:12)); text(ctx,xl,x0+pw,Y(0)-5,C.ink,F(cp?9:11),"right");
+  return {X,Y};
+}
+function drawGraphs(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, T=3*GR_T, N=60;
+  const S=(u0,ph)=>Array.from({length:N+1},(_,i)=>{ const t=i/N*T; return [t,grAt(u0,ph,t)]; });
+  const cur=S(o.u0,o.ph), tg=o.target? S(o.target.u0,o.target.ph):null, all=cur.concat(tg||[]);
+  let vmin=Math.min(0,...all.map(p=>p[1].v)), vmax=Math.max(1,...all.map(p=>p[1].v)), smin=Math.min(0,...all.map(p=>p[1].s)), smax=Math.max(1,...all.map(p=>p[1].s));
+  vmax+=(vmax-vmin)*0.08; smax+=(smax-smin)*0.08; if(vmin<0) vmin-=(vmax-vmin)*0.05; if(smin<0) smin-=(smax-smin)*0.05;
+  const side=!cp && w>=640, padL=cp?10:40, padR=cp?8:14, gap=cp?14:(side?24:30), top=cp?8:12, bot=cp?6:20;
+  let A,B;
+  if(side){ const pw=(w-2*padL-gap-padR)/2, ph_=h-top-bot; A=[padL,top,pw,ph_]; B=[2*padL+pw+gap,top,pw,ph_]; }
+  else { const pw=w-padL-padR, ph_=(h-top-bot-gap)/2; A=[padL,top,pw,ph_]; B=[padL,top+ph_+gap,pw,ph_]; }
+  const gv=gPanel(ctx,...A,T,vmin,vmax,"t (s)","v (m/s)",cp), gs=gPanel(ctx,...B,T,smin,smax,"t (s)","s (m)",cp);
+  for(let i=0;i<N;i++){ const [t1,p1]=cur[i], [t2,p2]=cur[i+1], mid=(p1.v+p2.v)/2; ctx.save(); ctx.globalAlpha=.28; ctx.fillStyle=mid>=0?C.good:C.bad; ctx.beginPath(); ctx.moveTo(gv.X(t1),gv.Y(0)); ctx.lineTo(gv.X(t1),gv.Y(p1.v)); ctx.lineTo(gv.X(t2),gv.Y(p2.v)); ctx.lineTo(gv.X(t2),gv.Y(0)); ctx.closePath(); ctx.fill(); ctx.restore(); }
+  if(!cp) [GR_T,2*GR_T].forEach(tb=>{ line(ctx,gv.X(tb),A[1],gv.X(tb),A[1]+A[3],C.muted,1,[3,4]); line(ctx,gs.X(tb),B[1],gs.X(tb),B[1]+B[3],C.muted,1,[3,4]); });
+  const plot=(arr,g,key,col,lw,dash)=>{ ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; if(dash) ctx.setLineDash(dash); ctx.beginPath(); arr.forEach(([t,p],i)=>{ const x=g.X(t), y=g.Y(p[key]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke(); ctx.restore(); };
+  if(tg){ plot(tg,gv,"v",C.muted,2.5,[7,5]); plot(tg,gs,"s",C.muted,2.5,[7,5]); }
+  plot(cur,gv,"v",C.terra,cp?2.5:3.5); plot(cur,gs,"s",C.olive,cp?2.5:3.5);
+  if(o.cur!=null && !cp){ const p=grAt(o.u0,o.ph,o.cur); line(ctx,gv.X(o.cur),A[1],gv.X(o.cur),A[1]+A[3],C.ink,1.2,[2,3]); line(ctx,gs.X(o.cur),B[1],gs.X(o.cur),B[1]+B[3],C.ink,1.2,[2,3]); circle(ctx,gv.X(o.cur),gv.Y(p.v),5,C.terra,C.surface,2); circle(ctx,gs.X(o.cur),gs.Y(p.s),5,C.olive,C.surface,2); }
+}
+// Derivation graph
+function drawDerive(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, u=o.u, a=o.a, t=o.t, v=u+a*t, padL=cp?14:46, padR=cp?10:30, top=cp?10:26, bot=cp?16:36;
+  const vm=Math.max(v,1)*1.15, X=x=>padL+x/t*(w-padL-padR)*0.86, Y=y=>h-bot-y/vm*(h-top-bot);
+  const fillPoly=(pts,col,al)=>{ ctx.save(); ctx.globalAlpha=al; ctx.fillStyle=col; ctx.beginPath(); pts.forEach(([x,y],i)=>i?ctx.lineTo(X(x),Y(y)):ctx.moveTo(X(x),Y(y))); ctx.closePath(); ctx.fill(); ctx.restore(); };
+  if(o.eq===2){ fillPoly([[0,0],[t,0],[t,u],[0,u]],C.sage,.8); fillPoly([[0,u],[t,u],[t,v]],C.apricot,.75); }
+  if(o.eq===3){ fillPoly([[0,0],[t,0],[t,v],[0,u]],C.blush,.8); }
+  line(ctx,padL,h-bot,w-padR,h-bot,C.ink,1.5); line(ctx,padL,top-4,padL,h-bot,C.ink,1.5);
+  text(ctx,"v (m/s)",padL+6,top+(cp?6:4),C.ink,F(cp?10:12)); text(ctx,"t (s)",w-padR,h-bot-6,C.ink,F(cp?10:12),"right");
+  line(ctx,X(0),Y(u),X(t),Y(v),C.terra,cp?3:4);
+  line(ctx,X(t),Y(v),X(t),h-bot,C.muted,1.2,[4,4]); line(ctx,padL,Y(v),X(t),Y(v),C.muted,1.2,[4,4]);
+  text(ctx,"u",padL-6,Y(u)+4,C.ink,F(cp?10:13),"right"); text(ctx,"v",padL-6,Y(v)+4,C.ink,F(cp?10:13),"right"); text(ctx,"t",X(t),h-bot+(cp?12:16),C.ink,F(cp?10:13),"center");
+  if(o.eq===1){ line(ctx,X(0),Y(u),X(t),Y(u),C.olive,2,[5,4]); line(ctx,X(t),Y(u),X(t),Y(v),C.olive,2.5);
+    text(ctx,"t",X(t/2),Y(u)+(cp?12:18),C["olive-ink"],F(cp?11:14),"center"); text(ctx,cp?"at":"v − u = at",X(t)+6,Y((u+v)/2)+4,C["olive-ink"],F(cp?11:14));
+    if(!cp) text(ctx,"slope = a = (v − u) / t",X(t*0.3),Y(u+(v-u)*0.3)-14,C.terra,F(13)); }
+  if(o.eq===2){ text(ctx,"ut",X(t/2),Y(u/2)+5,"#3b2b21",F(cp?12:16),"center"); text(ctx,"½at²",X(t*0.68),Y(u+(v-u)*0.3)+5,"#3b2b21",F(cp?11:15),"center"); }
+  if(o.eq===3){ text(ctx,cp?"s = ½(u+v)t":"area: s = ½(u + v)t",X(t/2),Y(Math.min(u,v)/2)+5,"#3b2b21",F(cp?11:15),"center"); }
+  if(!cp){ for(let k=0;k<=t;k++) text(ctx,String(k),X(k),h-bot+28,C.muted,M(10),"center"); }
+}
+// Ramp and light gate
+function drawRamp(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, pad=cp?14:30, ang=(o.mode==="acc"?10:4)*Math.PI/180, Lm=1.3;
+  const x0=pad, y0=cp?h*0.36:h*0.42, len=(w-2*pad)/Math.cos(ang), k=len/Lm;
+  const P=d=>[x0+d*k*Math.cos(ang), y0+d*k*Math.sin(ang)], [xe,ye]=P(Lm), base=h-(cp?8:14);
+  ctx.fillStyle=C["surface-2"]; ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(xe,ye); ctx.lineTo(xe,base); ctx.lineTo(x0,base); ctx.closePath(); ctx.fill();
+  line(ctx,x0,y0,xe,ye,C.ink,3);
+  if(!cp) for(let d=0; d<=1.2001; d+=0.2){ const [x,y]=P(d); line(ctx,x,y,x,y+6,C.ink,1.2); text(ctx,d.toFixed(1)+" m",x,y+20,C.muted,M(10),"center"); }
+  const [gx,gy]=P(o.s), gh=cp?30:52; rrect(ctx,gx-7,gy-gh,14,gh,4,null,C.olive,3); line(ctx,gx,gy-gh+6,gx,gy-4,C.bad,1.5,[3,3]);
+  if(!cp) text(ctx,`light gate at s = ${o.s.toFixed(2)} m`,gx,gy-gh-8,C.ink,F(12),"center");
+  const [sx,sy]=P(0); line(ctx,sx,sy,sx,sy-(cp?16:26),C.ink,2); if(!cp) text(ctx,o.mode==="acc"?"release":"start gate",sx+4,sy-30,C.ink,F(11,600));
+  const [tx,ty]=P(Math.min(o.p,1)*o.s); ctx.save(); ctx.translate(tx,ty); ctx.rotate(ang); const tw=cp?24:38, th=cp?10:15;
+  rrect(ctx,-tw/2,-th-5,tw,th,4,C.terra); circle(ctx,-tw/4,-4,cp?3:4.5,C.ink); circle(ctx,tw/4,-4,cp?3:4.5,C.ink); ctx.restore();
+  if(!cp){ const bw=Math.min(170,w*0.42), bh=48, bx=w-pad-bw, by=10; rrect(ctx,bx,by,bw,bh,10,C.ink); text(ctx,"DATA LOGGER",bx+10,by+16,C.bg,M(10)); text(ctx,o.tShow==null?"t = –.––– s":`t = ${o.tShow.toFixed(3)} s`,bx+10,by+38,C.bg,M(16)); }
+}
+// Vector components
+function drawVector(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, pad=cp?16:36, th=o.ang*Math.PI/180, Fx=o.F*Math.cos(th), Fy=o.F*Math.sin(th), mx=o.max||30;
+  const ox=pad+(cp?4:14), oy=h-pad, sc=Math.min((w-ox-pad-(cp?10:70))/mx,(oy-pad)/mx), tx=ox+Fx*sc, ty=oy-Fy*sc;
+  line(ctx,ox,oy,w-pad,oy,C.muted,1.4); line(ctx,ox,oy,ox,pad-8,C.muted,1.4);
+  if(Fx*sc>3) arrow(ctx,ox,oy,tx,oy,C.olive,cp?2.5:3); if(Fy*sc>3) arrow(ctx,tx,oy,tx,ty,C.apricot,cp?2.5:3);
+  line(ctx,ox,ty,tx,ty,C.grid,1,[3,3]);
+  arrow(ctx,ox,oy,tx,ty,C.terra,cp?3:4);
+  if(o.ang>2){ ctx.save(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(ox,oy,cp?18:32,-th,0); ctx.stroke(); ctx.restore(); text(ctx,"θ",ox+(cp?22:38)*Math.cos(th/2),oy-(cp?22:38)*Math.sin(th/2)+4,C.ink,F(cp?10:13)); }
+  const u=o.unit||"";
+  text(ctx,cp?"Fx":`${o.sx||"Fx"} = ${Fx.toFixed(1)} ${u}`,(ox+tx)/2,oy+(cp?13:20),C["olive-ink"],F(cp?10:13),"center");
+  text(ctx,cp?"Fy":`${o.sy||"Fy"} = ${Fy.toFixed(1)} ${u}`,tx+8,(oy+ty)/2+4,C.ink,F(cp?10:13));
+  if(!cp) text(ctx,`${o.sym||"F"} = ${o.F} ${u}`,(ox+tx)/2-10,(oy+ty)/2-12,C.terra,F(14),"right");
+}
+// Force table and parallelogram of vectors
+const FT_TOL = 0.15;
+const rad = d => d*Math.PI/180, deg = r => r*180/Math.PI;
+function ftNet(o){ const x=o.F1+o.F2*Math.cos(rad(o.th))+o.F3*Math.cos(rad(o.ph)), y=o.F2*Math.sin(rad(o.th))+o.F3*Math.sin(rad(o.ph)); return {x,y,m:Math.hypot(x,y)}; }
+const ftR = (F1,F2,th) => Math.sqrt(Math.max(0,F1*F1+F2*F2+2*F1*F2*Math.cos(rad(th))));
+const ftDir = (F1,F2,th) => { const x=F1+F2*Math.cos(rad(th)), y=F2*Math.sin(rad(th)); return (deg(Math.atan2(y,x))+360)%360; };
+function drawPara(ctx,bx,by,bw,bh,F1,F2,th,cp){
+  const t=rad(th), p2=[F2*Math.cos(t),F2*Math.sin(t)], r=[F1+p2[0],p2[1]];
+  const xs=[0,F1,p2[0],r[0]], ys=[0,p2[1],r[1]], minx=Math.min(...xs), maxx=Math.max(...xs), maxy=Math.max(...ys,0.001);
+  const sc=Math.min((bw-24)/((maxx-minx)||1),(bh-30)/maxy), ox=bx+12-minx*sc, oy=by+bh-14, P=([x,y])=>[ox+x*sc,oy-y*sc];
+  line(ctx,...P([F1,0]),...P(r),C.muted,1.2,[4,4]); line(ctx,...P(p2),...P(r),C.muted,1.2,[4,4]);
+  arrow(ctx,ox,oy,...P([F1,0]),C.olive,cp?2.5:3); arrow(ctx,ox,oy,...P(p2),C.apricot,cp?2.5:3);
+  const R=ftR(F1,F2,th); if(R>0.05) arrow(ctx,ox,oy,...P(r),C.terra,cp?3:3.5);
+  const fs=cp?11:12, [ax,ay]=P([F1,0]), [bx2,by2]=P(p2), [rx,ry]=P(r);
+  text(ctx,`F₁ = ${F1} N`,(ox+ax)/2,oy+13,C["olive-ink"],F(fs),"center");
+  ctx.save(); ctx.font=F(fs); const f2w=ctx.measureText(`F₂ = ${F2} N`).width; ctx.restore(); const f2x=(ox+bx2)/2-6;
+  if(f2x-f2w<bx+2) text(ctx,`F₂ = ${F2} N`,(ox+bx2)/2+6,(oy+by2)/2+4,C.ink,F(fs),"left"); else text(ctx,`F₂ = ${F2} N`,f2x,(oy+by2)/2,C.ink,F(fs),"right");
+  text(ctx,`R = ${s3(R)} N`,rx+4,ry-6,C.terra,F(fs+1),rx>bx+bw*0.7?"right":"left");
+}
+function drawForceTable(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, wide=!cp && w>=560, cx=wide? w*0.62 : w/2, cy=h/2+(cp?0:4), R=Math.min(wide? w*0.36 : w/2, h/2)-(cp?10:26);
+  circle(ctx,cx,cy,R,C["surface-2"],C.line,2);
+  if(!cp) for(let d=0; d<360; d+=30){ const a=-rad(d); line(ctx,cx+Math.cos(a)*(R-8),cy+Math.sin(a)*(R-8),cx+Math.cos(a)*R,cy+Math.sin(a)*R,C.muted,1.5); text(ctx,d+"°",cx+Math.cos(a)*(R+15),cy+Math.sin(a)*(R+15)+4,C.muted,M(10),"center"); }
+  const net=ftNet(o), k=Math.min(1,net.m/2)*R*0.28, rx=cx+(net.m>1e-9? net.x/net.m*k:0), ry=cy-(net.m>1e-9? net.y/net.m*k:0);
+  [[o.F1,0,C.olive,"F₁"],[o.F2,o.th,C.apricot,"F₂"],[o.F3,o.ph,C.terra,"F₃"]].forEach(([Fv,d,col,lb])=>{ if(Fv<=0) return; const a=-rad(d), px=cx+Math.cos(a)*R, py=cy+Math.sin(a)*R; line(ctx,rx,ry,px,py,col,cp?2:3); circle(ctx,px,py,cp?4:7,col,C.ink,1.5); if(!cp) text(ctx,lb,cx+Math.cos(a)*R*0.55,cy+Math.sin(a)*R*0.55-8,C.ink,F(13),"center"); });
+  circle(ctx,cx,cy,cp?3:5,C.ink);
+  circle(ctx,rx,ry,cp?7:12,null,net.m<FT_TOL?C.good:C.bad,cp?2.5:3.5);
+  if(wide){ const bw=Math.min(w*0.32,230), bh=Math.min(h*0.55,190); rrect(ctx,10,10,bw,bh,12,C["surface-2"]); text(ctx,"F₁ + F₂ (parallelogram)",18,28,C.muted,F(11,600)); drawPara(ctx,10,30,bw,bh-20,o.F1,o.F2,o.th,false); }
+  if(!cp) text(ctx,net.m<FT_TOL?"Ring centred: balanced ✓":"Ring pulled off centre",wide? w*0.62 : w/2,h-6,net.m<FT_TOL?C.good:C.bad,F(13),"center");
+}
+// Graph shapes (infographics and the drill)
+function shapeY(g,k,x){
+  if(g==="s") return k==="rest"?0.55 : k==="const"?0.1+0.75*x : k==="up"?0.1+0.75*x*x : 0.1+0.75*(1-(1-x)*(1-x));
+  return k==="rest"?0 : k==="const"?0.6 : k==="up"?0.15+0.7*x : 0.85-0.75*x;
+}
+function drawShape(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, pad=cp?18:30, X=x=>pad+x*(w-2*pad), Y=y=>h-pad-y*(h-2*pad-6);
+  line(ctx,pad,h-pad,w-pad+6,h-pad,C.ink,1.5); line(ctx,pad,pad-8,pad,h-pad,C.ink,1.5);
+  text(ctx,o.g==="s"?"s":"v",pad-8,pad,C.ink,F(cp?12:14),"right"); text(ctx,"t",w-pad+4,h-pad+16,C.ink,F(cp?12:14),"right");
+  ctx.save(); ctx.strokeStyle=o.g==="s"?C.olive:C.terra; ctx.lineWidth=cp?3.5:4; ctx.beginPath(); for(let i=0;i<=50;i++){ const x=i/50, y=shapeY(o.g,o.k,x); i?ctx.lineTo(X(x),Y(y)):ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore();
+}
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); });
+}
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "motion", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3","lo4"]; const loState=store.get("s11-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s11-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s11-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  motion:{ vis:[["track",{u:0,a:1,t:5}]], cap:"A trolley speeding up from rest at 1 m/s². The ticker dots, 0.5 s apart, spread out as it goes faster.",
+    keys:[["s","Displacement is distance in a given direction. Distance has no direction. Go 9 m out and 9 m back: distance 18 m, displacement 0 m."],["v","Velocity is the rate of change of displacement: v = Δs/Δt, in m/s. Speed is the same idea without direction."],["a","Acceleration is the rate of change of velocity: a = Δv/Δt, in m/s². Slowing down means a negative acceleration."]],
+    f:"v = Δs / Δt · a = Δv / Δt", mistake:"Saying a body moving at constant speed in a straight line is accelerating. With no change in velocity, a = 0." },
+  graphs:{ vis:[["graphs",{u0:0,ph:[1,0,-1]}]], cap:"Speed up, cruise, slow down. Top: velocity–time with the area shaded. Bottom: the displacement–time graph of the same journey.",
+    keys:[["/","On a displacement–time graph the slope is the velocity. A straight line means constant velocity; a curve means the velocity is changing."],["⟋","On a velocity–time graph the slope is the acceleration. A flat line means constant velocity, not 'stopped'."],["▨","The area under a velocity–time graph is the displacement. Split it into rectangles and triangles."]],
+    f:"s–t slope = v · v–t slope = a · v–t area = s", mistake:"Reading a flat line on a v–t graph as 'at rest'. It means constant velocity; only a flat line at v = 0 means at rest." },
+  suvat:{ vis:[["derive",{u:4,a:2,t:5,eq:2}]], cap:"The area under the v–t graph is a rectangle (ut) plus a triangle (½at²). That's s = ut + ½at².",
+    keys:[["1","From a = (v − u)/t, rearrange: v = u + at."],["2","Area under the v–t graph = rectangle ut + triangle ½ × t × at, so s = ut + ½at²."],["3","s = ½(u + v)t (trapezium). Put in t = (v − u)/a and simplify: v² = u² + 2as."]],
+    f:"v = u + at · s = ut + ½at² · v² = u² + 2as", mistake:"Using the equations when the acceleration isn't constant, e.g. a sprinter's whole race. They only work for uniform acceleration." },
+  investigate:{ vis:[["ramp",{mode:"acc",s:0.8,p:0.7}]], cap:"A trolley rolls from rest down a ramp. A light gate and data logger time it over a measured distance.",
+    keys:[["⏱","Light gates and data loggers time far more precisely than a hand-held stopwatch, which adds reaction time."],["t²","From rest, s = ½at². Plot s against t²: a straight line through the origin, slope = ½a, so a = 2 × slope."],["📊","Secondary data, such as a sprinter's 10 m split times, shows varying motion: speed rises, levels off, then falls slightly."]],
+    f:"from rest: s = ½at² → slope of s v t² = a/2", mistake:"Plotting s against t for accelerated motion and drawing a straight line through a curve. Plot s against t² to get a straight line." },
+  vectors:{ vis:[["vector",{F:20,ang:30}]], cap:"A 20 N force at 30° splits into 17.3 N across and 10 N up.",
+    keys:[["S","Scalars have size only: mass, time, distance, speed, energy, temperature."],["V","Vectors have size and direction: displacement, velocity, acceleration, force, momentum. Draw them as arrows."],["⟂","Resolve a vector into perpendicular components: Fx = F cos θ, Fy = F sin θ, with θ measured from the horizontal."]],
+    f:"Fx = F cos θ · Fy = F sin θ", mistake:"Swapping sin and cos. The component next to the angle uses cos; the one opposite the angle uses sin." },
+  addition:{ vis:[["para",{F1:3,F2:4,th:90}]], cap:"3 N and 4 N at right angles: the resultant is 5 N, the diagonal of the parallelogram.",
+    keys:[["1D","On a line, add vectors with signs: 3 N + 4 N in the same direction = 7 N; in opposite directions = 1 N."],["2D","Two vectors at an angle: draw them tip to tail (or as a parallelogram). The resultant is the closing side (or diagonal)."],["✓","Verify it with a force table: the force that balances F₁ and F₂ is equal and opposite to their resultant."]],
+    f:"at 90°: R = √(F₁² + F₂²), tan α = F₂/F₁", mistake:"Adding sizes of vectors at an angle: 3 N + 4 N at 90° is 5 N, not 7 N." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const TINTS = ["var(--blush)","var(--apricot)","var(--sage)","var(--cream)"];
+const SHAPES = [["s","rest","At rest","s–t: flat line. The position doesn't change."],["s","const","Constant velocity","s–t: straight sloping line. Slope = velocity."],["s","up","Speeding up","s–t: curve getting steeper. The slope (velocity) increases."],["v","const","Constant velocity","v–t: flat line above zero. Acceleration = 0."],["v","up","Uniform acceleration","v–t: straight line sloping up. Slope = acceleration."],["v","down","Uniform deceleration","v–t: straight line sloping down towards zero."]];
+$("cases").innerHTML = SHAPES.map(([g,k,n,d],i)=>`<div class="panel rc-card"><canvas data-shape="${i}" aria-label="${n} on a ${g==="s"?"displacement":"velocity"}–time graph"></canvas><h3>${n}</h3><p>${d}</p></div>`).join("");
+const BOLT = [1.89,2.88,3.78,4.64,5.47,6.29,7.10,7.92,8.75,9.58];
+const boltSeg = BOLT.map((t,k)=>10/(t-(k?BOLT[k-1]:0)));
+$("bars").innerHTML = boltSeg.map((v,k)=>`<div class="barrow"><span><b>${k*10}–${k*10+10} m</b></span><div class="track"><i style="width:${v/13*100}%;background:var(--${k===0?"sage":v>=12.3?"terra":"apricot"})"></i></div><span class="v">${v.toFixed(1)} m/s</span></div>`).join("");
+$("boltT").innerHTML = `<tr><th style="text-align:left">Distance (m)</th>${BOLT.map((t,k)=>`<th>${(k+1)*10}</th>`).join("")}</tr><tr><td style="text-align:left">Time (s)</td>${BOLT.map(t=>`<td>${t.toFixed(2)}</td>`).join("")}</tr>`;
+const AROUND = [
+  ["run","Sprint split times","Coaches time every 10 m. The speeds show a sprinter accelerating for about 60 m, then holding or slightly losing speed: varying motion from secondary data.",[["Secondary data","real"],["v = Δs/Δt","neutral"]],"var(--blush)"],
+  ["car","Stopping distances","Stopping distance = thinking distance (constant speed during your reaction time) + braking distance (v² = u² + 2as). Double the speed and the braking distance is four times longer.",[["v² = u² + 2as","neutral"],["Road safety","alert"]],"var(--apricot)"],
+  ["gps","Average speed cameras","Some roads time cars between two cameras a known distance apart. Average speed = distance ÷ time, so slowing only at the camera doesn't help.",[["Average velocity","neutral"]],"var(--sage)"],
+  ["drop","Free fall on the Moon","On Apollo 15 (1971) an astronaut dropped a hammer and a feather together. With no air resistance they fell side by side with the same acceleration.",[["Uniform acceleration","real"]],"var(--cream)"],
+  ["plane","Take-off runs","A plane speeds up along the runway until it reaches take-off speed. Pilots and engineers use v² = u² + 2as to check the runway is long enough.",[["Equations of motion","neutral"]],"var(--blush)"],
+  ["boat","Crossing a river","A ferry heading straight across a river is also carried downstream. Its actual velocity is the resultant of its own velocity and the current's.",[["Adding vectors","neutral"],["2D","real"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"motion",label:"Describing motion",col:"var(--blush)",leaves:[["Displacement","Distance in a direction (vector)."],["Velocity","v = Δs/Δt, m/s."],["Acceleration","a = Δv/Δt, m/s²."],["Particle model","Treat the object as a point."]]},
+  {id:"graphs",label:"Graphs",col:"var(--apricot)",leaves:[["s–t slope","= velocity."],["v–t slope","= acceleration."],["v–t area","= displacement."]]},
+  {id:"suvat",label:"Equations",col:"var(--sage)",leaves:[["v = u + at","From the slope."],["s = ut + ½at²","From the area."],["v² = u² + 2as","Eliminate t."]]},
+  {id:"investigate",label:"Investigate",col:"var(--cream)",leaves:[["Light gates","Precise timing."],["s against t²","Slope = a/2."],["Split times","Secondary data."]]},
+  {id:"vectors",label:"Vectors",col:"var(--blush)",leaves:[["Scalar","Size only."],["Vector","Size and direction."],["Components","F cos θ, F sin θ."]]},
+  {id:"addition",label:"Adding vectors",col:"var(--sage)",leaves:[["1D","Add with signs."],["2D","Tip to tail or parallelogram."],["Force table","Verify the law."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["motion","Define displacement.","The distance travelled in a given direction (from the starting point). It is a vector, measured in metres."],
+  ["motion","Define velocity.","The rate of change of displacement: v = Δs/Δt. A vector, in m/s."],
+  ["motion","Define acceleration.","The rate of change of velocity: a = Δv/Δt. A vector, in m/s²."],
+  ["motion","Distinguish between distance and displacement.","Distance is how far you travel (scalar). Displacement is how far you are from the start in a given direction (vector)."],
+  ["motion","What does a negative acceleration mean for a car moving forwards?","It is slowing down (decelerating): the acceleration is opposite to the velocity."],
+  ["motion","How does a ticker tape show acceleration?","The dots are made at equal time intervals; if the gaps get bigger, the object is speeding up."],
+  ["graphs","What does the slope of a displacement–time graph give?","The velocity."],
+  ["graphs","What does the slope of a velocity–time graph give?","The acceleration."],
+  ["graphs","What does the area under a velocity–time graph give?","The displacement (distance travelled in that direction)."],
+  ["graphs","Describe the v–t graph for uniform acceleration from rest.","A straight line through the origin, sloping upwards."],
+  ["graphs","What does a curved, steepening s–t graph show?","Increasing velocity: the object is speeding up."],
+  ["suvat","Write the three equations of motion.","v = u + at · s = ut + ½at² · v² = u² + 2as (for uniform acceleration in a straight line)."],
+  ["suvat","Derive v = u + at.","a = (v − u)/t (definition of acceleration). Multiply by t: at = v − u, so v = u + at."],
+  ["suvat","Derive s = ut + ½at².","Area under the v–t graph = rectangle ut + triangle ½ × t × (v − u) = ut + ½ × t × at = ut + ½at²."],
+  ["suvat","Derive v² = u² + 2as.","s = ½(u + v)t and t = (v − u)/a, so s = (v + u)(v − u)/(2a) = (v² − u²)/(2a). Rearranged: v² = u² + 2as."],
+  ["suvat","What do u and v stand for?","u = initial velocity; v = final velocity (both in m/s)."],
+  ["suvat","Convert 72 km/h to m/s.","72 ÷ 3.6 = 20 m/s."],
+  ["investigate","Why use a light gate and data logger rather than a stopwatch?","Much more precise timing, with no human reaction time."],
+  ["investigate","A trolley starts from rest. What graph gives a straight line, and what is its slope?","s against t²; slope = ½a, so a = 2 × slope."],
+  ["investigate","How do you show a trolley moves with constant velocity?","Time it over several distances on a friction-compensated runway. s against t is a straight line through the origin; slope = v."],
+  ["investigate","How can secondary data show varying motion?","e.g. a sprinter's 10 m split times: 10 m ÷ time for each split shows the speed rising, levelling, then falling."],
+  ["vectors","Distinguish between scalar and vector quantities.","Scalar: size only (mass, time, speed). Vector: size and direction (displacement, velocity, force)."],
+  ["vectors","Give the components of a force F at angle θ to the horizontal.","Horizontal: F cos θ. Vertical: F sin θ."],
+  ["vectors","Is speed a scalar or a vector? And velocity?","Speed is a scalar; velocity is a vector."],
+  ["addition","How do you find the resultant of two perpendicular vectors?","Size: R = √(A² + B²). Direction: tan α = B/A, from the first vector."],
+  ["addition","State the parallelogram law of vectors.","If two vectors are drawn from a point as sides of a parallelogram, the diagonal from that point is their resultant."],
+  ["addition","What is the equilibrant?","The force that balances a set of forces: equal in size and opposite in direction to their resultant."],
+  ["addition","Describe how a force table verifies the law of addition of vectors.","Hang F₁ and F₂ at set angles. Adjust F₃ until the ring is centred. Compare F₃ with the calculated resultant of F₁ and F₂: equal size, opposite direction."],
+  ["addition","Walking at 1.5 m/s on a travelator moving at 0.8 m/s: your velocity?","Same direction: 1.5 + 0.8 = 2.3 m/s. Walking against it: 1.5 − 0.8 = 0.7 m/s."],
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Straight-line</text><text x="${cx}" y="${cy+22}" text-anchor="middle">motion</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("s11-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s11-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s11-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s11-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["motion","Which of these is a vector?",["Speed","Distance","Displacement","Time"],2,"Displacement has a size and a direction. The others have size only."],
+  ["motion","A runner goes once round a 400 m track and finishes where they started. Their displacement is:",["400 m","200 m","0 m","800 m"],2,"They end where they began, so the displacement is zero, although the distance is 400 m."],
+  ["motion","A car speeds up from 10 m/s to 25 m/s in 5 s. Its acceleration is:",["3 m/s²","5 m/s²","15 m/s²","7 m/s²"],0,"a = Δv/Δt = (25 − 10)/5 = 3 m/s²."],
+  ["graphs","The slope of a velocity–time graph gives the:",["Displacement","Acceleration","Speed","Time"],1,"Slope = Δv/Δt = acceleration."],
+  ["graphs","The area under a velocity–time graph gives the:",["Acceleration","Displacement","Velocity","Force"],1,"Area = velocity × time = displacement."],
+  ["graphs","A horizontal line on a displacement–time graph means the object is:",["At rest","Moving at constant velocity","Accelerating","Decelerating"],0,"Its position isn't changing, so the velocity (slope) is zero."],
+  ["graphs","A v–t graph is a straight line from 0 m/s to 12 m/s in 4 s. The displacement is:",["48 m","24 m","12 m","3 m"],1,"Area of the triangle = ½ × 4 × 12 = 24 m."],
+  ["suvat","Which equation of motion does not contain time?",["v = u + at","s = ut + ½at²","v² = u² + 2as","a = Δv/Δt"],2,"v² = u² + 2as links u, v, a and s only."],
+  ["suvat","A ball is dropped from rest. Its velocity after 2.0 s is (g = 9.8 m/s²):",["9.8 m/s","19.6 m/s","4.9 m/s","39.2 m/s"],1,"v = u + at = 0 + 9.8 × 2.0 = 19.6 m/s."],
+  ["suvat","A car at 20 m/s brakes at 5 m/s² and stops. Its braking distance is:",["4 m","20 m","40 m","80 m"],2,"0 = 20² + 2(−5)s, so s = 400/10 = 40 m."],
+  ["suvat","The equations of motion can only be used when:",["The velocity is constant","The acceleration is constant","The object starts from rest","The object moves upwards"],1,"They are derived for uniform (constant) acceleration."],
+  ["investigate","A trolley starts from rest and accelerates uniformly. Which graph is a straight line through the origin?",["s against t","s against t²","v against s","t against s²"],1,"s = ½at², so s ∝ t²."],
+  ["investigate","The slope of a graph of s against t² is 0.75 m/s². The acceleration is:",["0.375 m/s²","0.75 m/s²","1.5 m/s²","3.0 m/s²"],2,"Slope = ½a, so a = 2 × 0.75 = 1.5 m/s²."],
+  ["investigate","Why use light gates and a data logger instead of a stopwatch?",["They remove the need for a ramp","They time far more precisely, with no reaction time","They make the trolley go faster","They measure mass"],1,"Human reaction time (about 0.2 s) is large compared with times under a second."],
+  ["vectors","A 10 N force acts at 60° above the horizontal. Its horizontal component is:",["5.0 N","8.7 N","10 N","6.0 N"],0,"Fx = 10 cos 60° = 5.0 N. (The vertical component is 10 sin 60° = 8.7 N.)"],
+  ["vectors","Which list contains only scalars?",["Mass, time, energy","Velocity, force, mass","Displacement, speed, time","Acceleration, distance, momentum"],0,"Mass, time and energy have no direction."],
+  ["addition","Forces of 6 N and 8 N act at right angles. Their resultant is:",["14 N","2 N","10 N","48 N"],2,"R = √(6² + 8²) = √100 = 10 N."],
+  ["addition","Forces of 6 N and 8 N act in opposite directions along a line. Their resultant is:",["14 N","2 N","10 N","0 N"],1,"8 − 6 = 2 N, in the direction of the 8 N force."],
+  ["addition","The equilibrant of two forces is:",["Equal to their resultant in size and direction","Equal in size and opposite in direction to their resultant","Always zero","The larger of the two forces"],1,"It cancels the resultant, so the object stays in equilibrium."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s11-best",null); if(best==null||pct>best) store.set("s11-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Define","Give the exact meaning in one full, precise sentence.","Define acceleration."],
+  ["State","Give a short fact, law or value. No explanation needed.","State the unit of acceleration."],
+  ["Model","Use a diagram, equation, graph or simulation to represent how something behaves, and use it to predict.","Model the motion of a car braking to a stop."],
+  ["Investigate","Observe, study or examine in detail to establish facts and reach new conclusions.","Investigate the motion of a trolley down a ramp."],
+  ["Derive","Get an equation step by step from definitions or earlier results, explaining each step.","Derive v² = u² + 2as."],
+  ["Verify","Show by experiment or calculation that a law or relationship holds.","Verify the law of addition of vectors using a force table."],
+  ["Distinguish","Make the differences between two or more things clear.","Distinguish between distance and displacement."],
+  ["Calculate","Write the formula, substitute the numbers, give the answer with a unit.","Calculate the braking distance of a car."],
+  ["Describe","Give the steps or features in a clear order.","Describe how to measure the acceleration of a trolley."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+
+// Calculation trainer
+function parseNum(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,ch=>({"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-"})[ch]);
+  s=s.replace(/[x×*]10\^?/i,"e");
+  return parseFloat(s);
+}
+const PTYPES = {
+  avgv:{ name:"v = Δs/Δt", gen(){ const v=pick([2,2.5,4,5,8,12.5,15,20]), t=pick([4,8,10,12,20,30]), s=v*t;
+    return { q:`A cyclist travels <b>${s} m</b> in a straight line in <b>${t} s</b>. Calculate the average velocity.`, ans:v, unit:"m/s", steps:["v = Δs / Δt",`v = ${s} / ${t}`,`v = ${s3(v)} m/s`] }; } },
+  acc:{ name:"a = Δv/Δt", gen(){ const u=pick([0,2,4,5,10]), a=pick([0.5,1.5,2,2.5,3,4]), t=pick([2,4,5,6,8]), v=u+a*t;
+    return { q:`A car speeds up uniformly from <b>${u} m/s</b> to <b>${s3(v)} m/s</b> in <b>${t} s</b>. Calculate its acceleration.`, ans:a, unit:"m/s²", steps:["a = (v − u) / t",`a = (${s3(v)} − ${u}) / ${t}`,`a = ${s3(a)} m/s²`] }; } },
+  vuat:{ name:"v = u + at", gen(){ const u=pick([0,3,5,8,12]), a=pick([0.5,1.2,2,2.5,4]), t=pick([3,4,5,6,10]), v=u+a*t;
+    return { q:`A train moving at <b>${u} m/s</b> accelerates at <b>${a} m/s²</b> for <b>${t} s</b>. Calculate its final velocity.`, ans:v, unit:"m/s", steps:["v = u + at",`v = ${u} + (${a})(${t})`,`v = ${s3(v)} m/s`] }; } },
+  suat:{ name:"s = ut + ½at²", gen(){ const u=pick([0,2,3,5]), a=pick([1,2,3,4]), t=pick([2,3,4,5,6]), s=u*t+0.5*a*t*t;
+    return { q:`A trolley moving at <b>${u} m/s</b> accelerates at <b>${a} m/s²</b> for <b>${t} s</b>. How far does it travel in that time?`, ans:s, unit:"m", steps:["s = ut + ½at²",`s = (${u})(${t}) + ½(${a})(${t})²`,`s = ${s3(u*t)} + ${s3(0.5*a*t*t)} = ${s3(s)} m`] }; } },
+  brake:{ name:"Braking distance", gen(){ const u=pick([10,15,20,25,30]), a=pick([4,5,6.25,8,10]), s=u*u/(2*a);
+    return { q:`A car travelling at <b>${u} m/s</b> brakes with a constant deceleration of <b>${a} m/s²</b> until it stops. Calculate its braking distance.`, ans:s, unit:"m", steps:["v² = u² + 2as, with v = 0 and a = −"+a+" m/s²",`0 = ${u}² + 2(−${a})s`,`s = ${u*u} / ${s3(2*a)} = ${s3(s)} m`] }; } },
+  area:{ name:"Area under v–t", gen(){ const u=pick([0,4,6,10]), v=u+pick([4,6,8,10]), t=pick([2,4,5,8]), s=(u+v)/2*t;
+    return { q:`A v–t graph is a straight line from <b>${u} m/s</b> at t = 0 to <b>${v} m/s</b> at t = <b>${t} s</b>. Calculate the displacement (area under the graph).`, ans:s, unit:"m", steps:["Area of trapezium = ½(u + v) × t",`= ½(${u} + ${v}) × ${t}`,`= ${s3(s)} m`] }; } },
+  kmh:{ name:"km/h to m/s", gen(){ const k=pick([18,36,54,72,90,108,120]), v=k/3.6;
+    return { q:`Convert <b>${k} km/h</b> to m/s.`, ans:v, unit:"m/s", steps:[`${k} km/h = ${k} × 1000 m ÷ 3600 s`,`= ${k} ÷ 3.6`,`= ${s3(v)} m/s`] }; } },
+  fall:{ name:"Free fall time", gen(){ const h=pick([5,10,20,45,80]), t=Math.sqrt(2*h/9.8);
+    return { q:`A stone is dropped from rest from a height of <b>${h} m</b>. Ignoring air resistance, how long does it take to reach the ground? (g = 9.8 m/s²)`, ans:t, unit:"s", steps:["s = ut + ½at², with u = 0",`${h} = ½(9.8)t²`,`t = √(2 × ${h} / 9.8) = ${s3(t)} s`] }; } },
+  comp:{ name:"Components", gen(){ const F=pick([10,20,25,40,50]), th=pick([20,30,35,40,45,50,60]), ax=pick(["x","y"]), c=ax==="x"?F*Math.cos(rad(th)):F*Math.sin(rad(th));
+    return { q:`A force of <b>${F} N</b> acts at <b>${th}°</b> above the horizontal. Calculate its <b>${ax==="x"?"horizontal":"vertical"}</b> component.`, ans:c, unit:"N", steps:[ax==="x"?"Fx = F cos θ":"Fy = F sin θ",`= ${F} × ${ax==="x"?"cos":"sin"} ${th}°`,`= ${s3(c)} N`] }; } },
+  res:{ name:"Resultant (90°)", gen(){ const [A,B]=pick([[3,4],[5,12],[6,8],[8,15],[9,12],[7,24],[2,5],[10,10]]), R=Math.hypot(A,B);
+    return { q:`Two forces of <b>${A} N</b> and <b>${B} N</b> act on a point at right angles. Calculate the size of their resultant.`, ans:R, unit:"N", steps:["R = √(A² + B²)",`R = √(${A}² + ${B}²) = √${A*A+B*B}`,`R = ${s3(R)} N`] }; } },
+  ang:{ name:"Direction of resultant", gen(){ const [A,B]=pick([[3,4],[5,12],[6,8],[4,3],[12,5],[10,10],[2,5]]), al=deg(Math.atan(B/A));
+    return { q:`A boat heads due north across a river at <b>${A} m/s</b>. The current flows due east at <b>${B} m/s</b>. At what angle east of north does the boat actually travel? (degrees)`, ans:al, unit:"°", steps:["tan α = opposite / adjacent = current / boat",`tan α = ${B} / ${A}`,`α = tan⁻¹(${s3(B/A)}) = ${s3(al)}° east of north`] }; } },
+  add1:{ name:"Adding on a line", gen(){ const w=pick([1.2,1.5,1.8,2]), t=pick([0.5,0.7,0.8,1]), same=Math.random()<0.5, r=same? w+t : w-t;
+    return { q:`You walk at <b>${w} m/s</b> on a travelator moving at <b>${t} m/s</b>, ${same?"in the <b>same</b> direction as":"<b>against</b>"} its motion. What is your velocity relative to the ground?`, ans:r, unit:"m/s", steps:["Add the vectors along the line, with signs",`v = ${w} ${same?"+":"−"} ${t}`,`v = ${s3(r)} m/s in your walking direction`] }; } },
+};
+let pType="avgv", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseNum($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 12.5 or 0.68.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(Math.abs(pCur.ans)*0.02, 0.01);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: list s, u, v, a, t first; convert km/h to m/s; a negative acceleration when slowing down; your calculator in degrees for sin, cos and tan. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Read the graph drill
+const PD_N = {rest:"At rest",const:"Constant velocity",up:"Speeding up",down:"Slowing down"};
+const PD_WHY = {s:{rest:"A flat s–t line: the position isn't changing.",const:"A straight, sloping s–t line: constant slope means constant velocity.",up:"The s–t slope gets steeper: the velocity is increasing.",down:"The s–t slope gets less steep: the velocity is decreasing."},
+  v:{rest:"The v–t line sits on v = 0 the whole time.",const:"A flat v–t line above zero: the velocity doesn't change.",up:"The v–t line slopes up: the velocity is increasing.",down:"The v–t line slopes down towards zero: the velocity is decreasing."}};
+let pd = { g:"s", k:"const", sel:null, shown:false, streak:0 };
+let predC=null;
+function pdNew(){ let g,k; do{ g=pick(["s","v"]); k=pick(["rest","const","up","down"]); }while(g===pd.g&&k===pd.k); pd={...pd,g,k,sel:null,shown:false};
+  $("predQ").innerHTML=`This is a <b>${g==="s"?"displacement–time":"velocity–time"}</b> graph. Describe the motion.`;
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML=""; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const ok=pd.sel===pd.k; pd.streak=ok?pd.streak+1:0; pd.shown=true;
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${PD_N[pd.k]}. ${PD_WHY[pd.g][pd.k]}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Stopping a car", intro:"A car travels at 72 km/h along a straight road. The driver sees a hazard and takes 0.70 s to react, then brakes with a constant deceleration of 8.0 m/s² until the car stops.",
+    parts:[["a","Define velocity and acceleration.",6,"Velocity: rate of change of displacement (3). Acceleration: rate of change of velocity (3). Accept v = Δs/Δt and a = Δv/Δt with symbols explained."],
+      ["b","Convert 72 km/h to m/s and calculate the thinking distance.",6,"72 ÷ 3.6 = 20 m/s (3). Thinking distance = 20 × 0.70 = 14 m (3)."],
+      ["c","Calculate the braking distance and the braking time.",9,"v² = u² + 2as: 0 = 20² + 2(−8.0)s (3) → s = 400/16 = 25 m (2). v = u + at: 0 = 20 − 8.0t (2) → t = 2.5 s (2)."],
+      ["d","Sketch the velocity–time graph for the whole stop, and use it to find the total stopping distance.",9,"Flat line at 20 m/s from 0 to 0.70 s, then straight line down to 0 at 3.2 s (4). Area = 20 × 0.70 + ½ × 2.5 × 20 = 14 + 25 = 39 m (5)."],
+      ["e","Derive the equation v² = u² + 2as.",8,"s = ½(u + v)t (area of trapezium) (2); t = (v − u)/a from v = u + at (2); substitute: s = (u + v)(v − u)/(2a) (2); 2as = v² − u², so v² = u² + 2as (2)."]] },
+  { title:"Investigating a trolley's motion", intro:"A student releases a trolley from rest at the top of a ramp and uses a light gate and data logger to measure the time t taken to travel different distances s.<br>s (m): 0.20 · 0.40 · 0.60 · 0.80 · 1.00<br>t (s): 0.40 · 0.57 · 0.69 · 0.80 · 0.89",
+    parts:[["a","Describe how the student could set up and carry out this experiment.",8,"Ramp clamped at a fixed angle; trolley released from rest at a marked start (2); light gate placed at measured distance s from the start, with a metre stick (2); data logger records time from release to breaking the beam (2); repeat each distance and average; vary s (2)."],
+      ["b","Explain why a graph of s against t² should be a straight line through the origin.",6,"u = 0, so s = ut + ½at² becomes s = ½at² (3); ½a is constant, so s ∝ t²: straight line through origin with slope ½a (3)."],
+      ["c","Calculate t² for each reading, plot s against t², and use the graph to find the acceleration.",12,"t² = 0.16, 0.32, 0.48, 0.64, 0.79 s² (4). Axes labelled with units, points plotted, straight line through origin (4). Slope ≈ 1.25 m/s² (2), so a = 2 × slope ≈ 2.5 m/s² (2)."],
+      ["d","Give one source of error and one way to reduce it.",6,"e.g. trolley not released from exactly the start / given a push (3): use a release gate or electromagnet (3). Or friction varies: clean track, repeat and average. Or measuring s: use the same point on the trolley."],
+      ["e","Usain Bolt's published split times for 9.58 s in Berlin (2009) include 6.29 s at 60 m and 7.10 s at 70 m. Calculate his average velocity over the whole race and over the 60–70 m section, and comment.",6,"Whole race: 100 ÷ 9.58 = 10.4 m/s (2). 60–70 m: 10 ÷ 0.81 = 12.3 m/s (2). His velocity varies: much faster mid-race than the average, which includes the slow start (2)."]] },
+  { title:"Vectors on the river", intro:"A ferry heads straight across a river 60 m wide at 4.0 m/s relative to the water. The river flows at 3.0 m/s parallel to the banks.",
+    parts:[["a","Distinguish between scalar and vector quantities, giving two examples of each.",8,"Scalar: size only (2), e.g. mass, time, speed, distance (2). Vector: size and direction (2), e.g. velocity, displacement, force, acceleration (2)."],
+      ["b","Calculate the size and direction of the ferry's resultant velocity.",10,"R = √(4.0² + 3.0²) = 5.0 m/s (5). tan α = 3.0/4.0, α = 36.9° downstream from the straight-across direction (5)."],
+      ["c","How long does the crossing take, and how far downstream does the ferry land?",8,"Time = 60 ÷ 4.0 = 15 s (4) (the current doesn't change the across component). Drift = 3.0 × 15 = 45 m downstream (4)."],
+      ["d","Describe an experiment to verify the law of addition of vectors (parallelogram law).",10,"Force table or three spring balances (2); apply two known forces F₁ and F₂ at a measured angle (2); adjust a third force until the ring is centred / point is in equilibrium (2); record its size and direction (1); calculate the resultant of F₁ and F₂ by the parallelogram or R² = F₁² + F₂² + 2F₁F₂ cos θ (2); F₃ equals R in size and is opposite in direction (1)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist
+const RAG = ["Define displacement, velocity and acceleration, with units","Distinguish distance and displacement, speed and velocity","Use v = Δs/Δt and a = Δv/Δt","Read slopes on s–t and v–t graphs","Find displacement from the area under a v–t graph","Sketch graphs for rest, constant velocity and uniform acceleration","Derive v = u + at, s = ut + ½at² and v² = u² + 2as","Choose and use the right equation of motion","Describe a light gate experiment and use an s against t² graph","Analyse secondary data such as sprint splits","Classify scalars and vectors","Resolve a vector into perpendicular components","Find the resultant of two vectors (1D and 2D)","Describe how to verify the law of addition of vectors"];
+const ragState=store.get("s11-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s11-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Plan a fair test","Independent variable: distance s. Dependent: time t. Controlled: ramp angle, trolley, release point.","Light gates lab"],["Collect primary data","Time five or more distances and repeat each one.","Light gates lab"],["Choose the right graph","Plot s against t² (from rest) or s against t (constant velocity) to get a straight line.","Light gates lab"],["Use the slope","Find a = 2 × slope or v = slope, with units.","Light gates lab"],["Use secondary data","Turn published split times into speeds and describe the motion.","Infographics: sprint splits"],["Compare with theory","Compare measured F₃ with the calculated resultant and give the % difference.","Force table lab"],["Use models","Treat the trolley as a particle; say what the model ignores.","Ticker-tape lab"],["Communicate clearly","Label axes with quantities and units; give answers to sensible significant figures.","Graph builder"]];
+const skState=store.get("s11-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s11-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+const fx2 = x => (Math.abs(x)<0.005?0:x).toFixed(2);
+// Ticker-tape trolley
+const tt = { m:1, t:0, play:false };
+$("trkM").innerHTML = MOTIONS.map((m,k)=>`<button data-k="${k}" aria-pressed="${k===tt.m}">${m.n}</button>`).join("");
+function trkPlayBtn(){ $("trkPlay").textContent = tt.play? "Pause" : (tt.t>=TRK_T? "Play again" : "Play"); }
+function trkUpd(){ const M=MOTIONS[tt.m], u=M.u, a=M.a, t=tt.t, s=sAt(u,a,t), v=vAt(u,a,t), d=distAt(u,a,t);
+  $("trkTo").textContent=t.toFixed(1)+" s"; $("trkT").value=t;
+  setReadout($("trkOut"),[["Time t",t.toFixed(1)+" s"],["Displacement s",fx2(s)+" m"],["Distance travelled",fx2(d)+" m"],["Velocity v",fx2(v)+" m/s"],["Speed",fx2(Math.abs(v))+" m/s"],["Acceleration a",a+" m/s²"],["Average velocity s/t",t>0?fx2(s/t)+" m/s":"–"]]);
+  const note = M.id==="const"? "Equal gaps between dots: equal displacements in equal times, so the velocity is constant and a = 0."
+    : M.id==="up"? "The gaps grow by the same amount each 0.5 s: uniform acceleration."
+    : M.id==="down"? "The gaps shrink: the trolley is decelerating, so a is negative."
+    : "It stops at t = 3 s, 9 m from the start, then comes back. Distance keeps increasing, but the displacement falls back to 0 m.";
+  $("trkWork").innerHTML = `<b>${M.n}:</b> u = ${u} m/s, a = ${a} m/s². v = u + at = ${u} + (${a})(${t.toFixed(1)}) = <b>${fx2(v)} m/s</b>; s = ut + ½at² = <b>${fx2(s)} m</b>. ${note}`;
+  trkPlayBtn(); trkC.redraw(); }
+$("trkM").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; tt.m=+b.dataset.k; tt.t=0; tt.play=false; pressGroup([...$("trkM").querySelectorAll("button")],b); trkUpd(); });
+$("trkT").addEventListener("input",e=>{ tt.t=+e.target.value; tt.play=false; trkUpd(); });
+$("trkPlay").addEventListener("click",()=>{ if(tt.t>=TRK_T) tt.t=0; tt.play=!tt.play; if(reduce&&tt.play){ tt.t=TRK_T; tt.play=false; } trkUpd(); });
+$("trkReset").addEventListener("click",()=>{ tt.t=0; tt.play=false; trkUpd(); });
+// Graph builder
+const gr = { u0:0, ph:[1,0,-1], cur:6, target:null, show:true };
+function grNew(){ let tg; do{ tg={u0:pick([0,2,4]), ph:[pick([-1,-0.5,0,0.5,1,1.5]),pick([-1,-0.5,0,0.5,1]),pick([-1.5,-1,-0.5,0,0.5])]}; }while(tg.u0===gr.u0 && tg.ph.every((a,k)=>a===gr.ph[k])); gr.target=tg; gr.show=true; $("grHide").textContent="Hide target"; }
+const grMatch = () => gr.target && gr.target.u0===gr.u0 && gr.target.ph.every((a,k)=>a===gr.ph[k]);
+function grUpd(){
+  $("grUo").textContent=gr.u0+" m/s"; [1,2,3].forEach(k=>$("grA"+k+"o").textContent=gr.ph[k-1]+" m/s²"); $("grCuro").textContent=gr.cur.toFixed(1)+" s";
+  const p=grAt(gr.u0,gr.ph,gr.cur), vs=[0,4,8,12].map(t=>grAt(gr.u0,gr.ph,t).v), areas=[0,1,2].map(k=>(vs[k]+vs[k+1])/2*GR_T), tot=grAt(gr.u0,gr.ph,12).s, aNow=gr.ph[Math.min(2,Math.floor(gr.cur/GR_T))];
+  setReadout($("grOut"),[["At t = "+gr.cur.toFixed(1)+" s: velocity",fx2(p.v)+" m/s"],["Displacement",fx2(p.s)+" m"],["Acceleration (v–t slope)",aNow+" m/s²"],["Total displacement (area)",fx2(tot)+" m"],["Target",!gr.target?"–":grMatch()?"Matched ✓":"Not yet: compare with the dashed lines"]]);
+  $("grWork").innerHTML = `<b>Area under v–t</b> = stage 1: ½(${fx2(vs[0])} + ${fx2(vs[1])}) × 4 = ${fx2(areas[0])} m · stage 2: ½(${fx2(vs[1])} + ${fx2(vs[2])}) × 4 = ${fx2(areas[1])} m · stage 3: ½(${fx2(vs[2])} + ${fx2(vs[3])}) × 4 = ${fx2(areas[2])} m · total = <b>${fx2(tot)} m</b>, the final height of the s–t graph.${vs.some(v=>v<-1e-9)?" Where v is negative (red area), the object moves backwards and the s–t graph slopes down.":""}`;
+  grC.redraw(); }
+$("grU").addEventListener("input",e=>{ gr.u0=+e.target.value; grUpd(); });
+[1,2,3].forEach(k=>$("grA"+k).addEventListener("input",e=>{ gr.ph[k-1]=+e.target.value; grUpd(); }));
+$("grCur").addEventListener("input",e=>{ gr.cur=+e.target.value; grUpd(); });
+$("grNew").addEventListener("click",()=>{ grNew(); grUpd(); });
+$("grHide").addEventListener("click",()=>{ gr.show=!gr.show; $("grHide").textContent=gr.show?"Hide target":"Show target"; grUpd(); });
+// Derivations
+const dv = { eq:1, u:4, a:2, t:5 };
+const DV_TXT = {1:"Acceleration is the slope of the v–t graph: a = (v − u) / t. Multiply both sides by t: at = v − u. Add u to both sides: <b>v = u + at</b>.",
+  2:"Displacement = area under the v–t graph. Rectangle: u × t = ut. Triangle: ½ × base × height = ½ × t × (v − u) = ½ × t × at = ½at². Add them: <b>s = ut + ½at²</b>.",
+  3:"Area of the trapezium: s = ½(u + v)t. From equation 1, t = (v − u) / a. Substitute: s = ½(u + v)(v − u) / a = (v² − u²) / 2a. Multiply by 2a: 2as = v² − u², so <b>v² = u² + 2as</b>."};
+function dvUpd(){ const {u,a,t}=dv, v=u+a*t, s=u*t+0.5*a*t*t;
+  $("dvUo").textContent=u+" m/s"; $("dvAo").textContent=a+" m/s²"; $("dvTo").textContent=t+" s";
+  setReadout($("dvOut"),[["v = u + at",`${u} + ${a} × ${t} = ${s3(v)} m/s`],["s = ut + ½at²",`${u} × ${t} + ½ × ${a} × ${t}² = ${s3(s)} m`],["v² = u² + 2as",`${s3(v)}² = ${s3(v*v)} · ${u}² + 2 × ${a} × ${s3(s)} = ${s3(u*u+2*a*s)}`],["Check","All three agree ✓"]]);
+  $("dvWork").innerHTML = DV_TXT[dv.eq]; dvC.redraw(); }
+$("dvE").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; dv.eq=+b.dataset.e; pressGroup([...$("dvE").querySelectorAll("button")],b); dvUpd(); });
+[["dvU","u"],["dvA","a"],["dvT","t"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ dv[k]=+e.target.value; dvUpd(); }));
+// Light-gate experiment
+const ex = { mode:"acc", s:0.60, data:[], run:false, p:0, tRun:0, tMeas:null, revealed:false, msg:"" };
+function exNewHidden(){ ex.a=pick([1.2,1.5,1.8,2.1,2.4]); ex.v=pick([0.40,0.50,0.60,0.75]); ex.data=[]; ex.revealed=false; ex.tMeas=null; ex.msg=""; ex.run=false; ex.p=0; }
+exNewHidden();
+const exTrue = s => ex.mode==="acc"? Math.sqrt(2*s/ex.a) : s/ex.v;
+function exFinish(){ ex.run=false; ex.p=1; ex.data=ex.data.filter(d=>Math.abs(d[0]-ex.s)>1e-9); ex.data.push([ex.s,ex.tMeas]); ex.data.sort((a,b)=>a[0]-b[0]); ex.msg=`Recorded: s = ${ex.s.toFixed(2)} m, t = ${ex.tMeas.toFixed(3)} s.`; exTable(); exUpd(); }
+function exUpd(){ $("exSo").textContent=ex.s.toFixed(2)+" m";
+  setReadout($("exOut"),[["Set-up",ex.mode==="acc"?"released from rest on a steeper ramp":"pushed on a friction-compensated runway; timer starts at the start gate"],["Light gate at",ex.s.toFixed(2)+" m"],["Data logger",ex.run?"timing…":ex.tMeas==null?"–":ex.tMeas.toFixed(3)+" s"],["Readings",ex.data.length+(ex.msg?" · "+ex.msg:"")]]);
+  exC.redraw(); }
+function exTable(){
+  $("exH3").textContent = ex.mode==="acc"? "t² (s²)" : "s/t (m/s)";
+  $("exTable").innerHTML = ex.data.map(([s,t],k)=>`<tr><td>${s.toFixed(2)}</td><td>${t.toFixed(3)}</td><td>${ex.mode==="acc"?(t*t).toFixed(3):(s/t).toFixed(3)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("exEmpty").hidden = ex.data.length>0; if(exGraph) exGraph.redraw(); }
+$("exTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ ex.data.splice(+k,1); exTable(); } });
+$("exS").addEventListener("input",e=>{ ex.s=+e.target.value; if(!ex.run){ ex.p=0; ex.tMeas=null; } exUpd(); });
+$("exM").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ex.mode=b.dataset.m; pressGroup([...$("exM").querySelectorAll("button")],b); ex.data=[]; ex.tMeas=null; ex.p=0; ex.run=false; ex.msg=""; exTable(); exUpd(); });
+$("exGo").addEventListener("click",()=>{ if(ex.run) return; ex.tMeas=Math.max(0.05,exTrue(ex.s)+(Math.random()*2-1)*0.01); ex.msg=""; ex.p=0; ex.tRun=0; ex.run=true; if(reduce) exFinish(); else exUpd(); });
+$("exClear").addEventListener("click",()=>{ ex.data=[]; ex.msg=""; exTable(); exUpd(); });
+$("exNew").addEventListener("click",()=>{ exNewHidden(); exTable(); exUpd(); });
+$("exReveal").addEventListener("click",()=>{ ex.revealed=!ex.revealed; exTable(); });
+// Vectors
+const VK = [{n:"Pulling a sled",sym:"F",unit:"N",sx:"Fx",sy:"Fy",F:20,ang:30},{n:"Kicking a ball",sym:"v",unit:"m/s",sx:"vx",sy:"vy",F:25,ang:40},{n:"A hiker's displacement",sym:"s",unit:"km",sx:"east",sy:"north",F:10,ang:53}];
+const vc = { k:0, F:20, ang:30 };
+$("vcK").innerHTML = VK.map((v,k)=>`<button data-k="${k}" aria-pressed="${k===vc.k}">${v.n}</button>`).join("");
+function vcUpd(){ const K=VK[vc.k], x=vc.F*Math.cos(rad(vc.ang)), y=vc.F*Math.sin(rad(vc.ang));
+  $("vcMo").textContent=vc.F+" "+K.unit; $("vcAo").textContent=vc.ang+"°"; $("vcM").value=vc.F; $("vcA").value=vc.ang;
+  setReadout($("vcOut"),[["Vector",`${K.sym} = ${vc.F} ${K.unit} at ${vc.ang}°`],["Horizontal component",`${K.sym} cos θ = ${s3(x)} ${K.unit}`],["Vertical component",`${K.sym} sin θ = ${s3(y)} ${K.unit}`],["Check: √(x² + y²)",`${s3(Math.hypot(x,y))} ${K.unit}`]]);
+  $("vcWork").innerHTML = `Horizontal = ${vc.F} × cos ${vc.ang}° = ${vc.F} × ${Math.cos(rad(vc.ang)).toFixed(3)} = <b>${s3(x)} ${K.unit}</b>. Vertical = ${vc.F} × sin ${vc.ang}° = ${vc.F} × ${Math.sin(rad(vc.ang)).toFixed(3)} = <b>${s3(y)} ${K.unit}</b>. The two components together have exactly the same effect as the original vector.`;
+  vcC.redraw(); }
+$("vcK").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; vc.k=+b.dataset.k; vc.F=VK[vc.k].F; vc.ang=VK[vc.k].ang; pressGroup([...$("vcK").querySelectorAll("button")],b); vcUpd(); });
+$("vcM").addEventListener("input",e=>{ vc.F=+e.target.value; vcUpd(); });
+$("vcA").addEventListener("input",e=>{ vc.ang=+e.target.value; vcUpd(); });
+const SV = [["Mass","s","Size only (kg)."],["Displacement","v","Distance in a direction."],["Speed","s","How fast, with no direction."],["Velocity","v","Speed in a direction."],["Time","s","No direction."],["Acceleration","v","Has a direction (can be negative)."],["Force","v","Pushes or pulls in a direction."],["Energy","s","No direction (J)."],["Distance","s","Length of path, no direction."],["Momentum","v","Mass × velocity: has direction."],["Temperature","s","No direction."],["Weight","v","A force, acting downwards."]];
+const SVN = {s:"Scalar",v:"Vector"}, svS = { order:[], ans:{} };
+const svRender=()=>sorter("svList","svOut",SV,SVN,svS);
+function svNew(){ svS.order=shuffle(SV.map((s,k)=>k)); svS.ans={}; svRender(); }
+$("svList").addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b) return; svS.ans[+b.dataset.k]=b.dataset.v; svRender(); });
+$("svReset").addEventListener("click",svNew);
+// Force table
+const ft = { F1:3, F2:4, th:90, F3:2, ph:180, data:[], msg:"" };
+function ftUpd(){ const net=ftNet(ft), bal=net.m<FT_TOL;
+  $("ftF1o").textContent=ft.F1.toFixed(1)+" N"; $("ftF2o").textContent=ft.F2.toFixed(1)+" N"; $("ftTho").textContent=ft.th+"°"; $("ftF3o").textContent=ft.F3.toFixed(1)+" N"; $("ftPho").textContent=ft.ph+"°"; $("ftTh").value=ft.th;
+  setReadout($("ftOut"),[["F₁",`${ft.F1.toFixed(1)} N at 0°`],["F₂",`${ft.F2.toFixed(1)} N at ${ft.th}°`],["Your F₃",`${ft.F3.toFixed(1)} N at ${ft.ph}°`],["Leftover force on the ring",net.m.toFixed(2)+" N"],["Ring",bal?"centred: balanced ✓":"off centre: adjust F₃"],["Readings",ft.data.length+(ft.msg?" · "+ft.msg:"")]]);
+  ftC.redraw(); }
+[["ftF1","F1"],["ftF2","F2"],["ftTh","th"],["ftF3","F3"],["ftPh","ph"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ ft[k]=+e.target.value; ft.msg=""; ftUpd(); }));
+$("ftPre").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ft.th=+b.dataset.t; ft.msg=""; ftUpd(); });
+$("ftRec").addEventListener("click",()=>{ const net=ftNet(ft);
+  if(net.m>=FT_TOL){ ft.msg="The ring isn't centred yet. Adjust F₃ and its angle."; ftUpd(); return; }
+  ft.data.push([ft.F1,ft.F2,ft.th,ft.F3,ftR(ft.F1,ft.F2,ft.th)]); ft.msg="Recorded."; ftTable(); ftUpd(); });
+$("ftClear").addEventListener("click",()=>{ ft.data=[]; ft.msg=""; ftTable(); ftUpd(); });
+function ftTable(){
+  $("ftTable").innerHTML = ft.data.map(([a,b,t,f3,R])=>`<tr><td>${a.toFixed(1)}</td><td>${b.toFixed(1)}</td><td>${t}°</td><td>${f3.toFixed(1)}</td><td>${R.toFixed(2)}</td><td>${R>0.05?((f3-R)/R*100).toFixed(1)+"%":"–"}</td></tr>`).join("");
+  $("ftEmpty").hidden = ft.data.length>0; if(ftGraph) ftGraph.redraw(); }
+
+/* ================= CREATE CANVASES ================= */
+let exGraph=null, ftGraph=null;
+const hero = makeCanvas($("heroCanvas"), 0.7, 240, s => { const T=reduce? 4 : (heroT%7.5); drawTrack(s.ctx,s.w,s.h,{u:0,a:1,t:Math.min(TRK_T,T),inset:true}); }, 420);
+const trkC = makeCanvas($("trkC"), 0.42, 240, s => { const M=MOTIONS[tt.m]; drawTrack(s.ctx,s.w,s.h,{u:M.u,a:M.a,t:tt.t}); }, 360);
+const grC = makeCanvas($("grC"), 0.55, 380, s => drawGraphs(s.ctx,s.w,s.h,{u0:gr.u0,ph:gr.ph,cur:gr.cur,target:gr.show?gr.target:null}), 540);
+const dvC = makeCanvas($("dvC"), 0.48, 260, s => drawDerive(s.ctx,s.w,s.h,dv), 400);
+const exC = makeCanvas($("exC"), 0.38, 220, s => drawRamp(s.ctx,s.w,s.h,{mode:ex.mode,s:ex.s,p:ex.p,tShow:ex.run?null:ex.tMeas}), 340);
+const vcC = makeCanvas($("vcC"), 0.5, 260, s => drawVector(s.ctx,s.w,s.h,{F:vc.F,ang:vc.ang,unit:VK[vc.k].unit,sym:VK[vc.k].sym,sx:VK[vc.k].sx,sy:VK[vc.k].sy}), 420);
+const ftC = makeCanvas($("ftC"), 0.55, 290, s => drawForceTable(s.ctx,s.w,s.h,ft), 460);
+exGraph = makeCanvas($("exGraph"), 0.72, 190, s => {
+  const acc=ex.mode==="acc", pts=ex.data.map(([sd,t])=>[acc?t*t:t, sd]), spread=pts.length? Math.max(...pts.map(p=>p[0]))-Math.min(...pts.map(p=>p[0])) : 0;
+  const fit = pts.length>=3 && spread>0.05 ? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,acc?1.2:1.5],yr:[0,1.2],xl:acc?"t² (s²)":"t (s)",yl:"s (m)",fit});
+  const truth = ex.revealed? ` True value: ${acc?`a = <b>${ex.a.toFixed(2)} m/s²</b>`:`v = <b>${ex.v.toFixed(2)} m/s</b>`}.` : "";
+  if(!fit){ $("exResult").innerHTML="Record three or more distances to draw the line."+truth; return; }
+  $("exResult").innerHTML = (acc? `s = ½at², so slope = a/2 = ${fit[0].toFixed(3)} m/s² and <b>a = ${(2*fit[0]).toFixed(2)} m/s²</b>.` : `s = vt, so slope = <b>v = ${fit[0].toFixed(3)} m/s</b>.`) + ` Intercept = ${fit[1].toFixed(3)} m (should be close to 0). A straight line through the origin shows ${acc?"uniform acceleration":"constant velocity"}.`+truth;
+}, 300);
+ftGraph = makeCanvas($("ftGraph"), 0.72, 190, s => {
+  const pts=ft.data.map(d=>[d[4],d[3]]), fit = pts.length>=2 && (Math.max(...pts.map(p=>p[0]))-Math.min(...pts.map(p=>p[0])))>0.5 ? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,10],yr:[0,10],xl:"R calculated (N)",yl:"F₃ measured (N)",fit});
+  $("ftResult").innerHTML = !pts.length? "Record readings at several angles to compare F₃ with R." : fit? `Slope = <b>${fit[0].toFixed(2)}</b>, intercept = ${fit[1].toFixed(2)} N. A straight line through the origin with slope 1 means F₃ = R every time: the law of addition of vectors is verified.` : "Record readings with different resultants (change the angle) to draw the line.";
+}, 300);
+predC = makeCanvas($("predC"), 0.5, 180, s => drawShape(s.ctx,s.w,s.h,{g:pd.g,k:pd.k,bgc:C["surface-2"]}), 300);
+pdNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    track:s=>drawTrack(s.ctx,s.w,s.h,{...o,compact:true}),
+    graphs:s=>drawGraphs(s.ctx,s.w,s.h,{...o,compact:true}),
+    derive:s=>drawDerive(s.ctx,s.w,s.h,{...o,compact:true}),
+    ramp:s=>drawRamp(s.ctx,s.w,s.h,{...o,compact:true}),
+    vector:s=>drawVector(s.ctx,s.w,s.h,{...o,compact:true}),
+    para:s=>{ bg(s.ctx,s.w,s.h); drawPara(s.ctx,6,6,s.w-12,s.h-12,o.F1,o.F2,o.th,true); },
+  };
+  makeCanvas(el, kind==="graphs"? 0.75 : 0.55, 150, draws[kind], 380);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-shape]").forEach(el=>{ const [g,k]=SHAPES[+el.dataset.shape]; makeCanvas(el,0.55,130,s=>drawShape(s.ctx,s.w,s.h,{g,k,compact:true,bgc:C["surface-2"]}),220); });
+document.querySelectorAll("canvas[data-mini=area]").forEach(el=>makeCanvas(el,0.7,160,s=>drawDerive(s.ctx,s.w,s.h,{u:2,a:1.5,t:4,eq:2,compact:true,bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=vec]").forEach(el=>makeCanvas(el,0.7,160,s=>drawVector(s.ctx,s.w,s.h,{F:20,ang:35,compact:true,bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=ft]").forEach(el=>makeCanvas(el,0.7,160,s=>{ bg(s.ctx,s.w,s.h,C["surface-2"]); drawPara(s.ctx,8,8,s.w-16,s.h-16,3,4,90,true); }));
+grNew(); trkUpd(); grUpd(); dvUpd(); exTable(); exUpd(); vcUpd(); svNew(); ftTable(); ftUpd();
+
+/* ================= LOOP / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(view==="labs" && !reduce){
+    if(lab==="motion" && tt.play){ tt.t=Math.min(TRK_T,tt.t+dt); if(tt.t>=TRK_T) tt.play=false; trkUpd(); }
+    if(lab==="investigate" && ex.run){ ex.tRun+=dt; const T=exTrue(ex.s); if(ex.tRun>=T) exFinish(); else { const d = ex.mode==="acc"? 0.5*ex.a*ex.tRun*ex.tRun : ex.v*ex.tRun; ex.p=Math.min(1,d/ex.s); exC.redraw(); } }
+  }
+  requestAnimationFrame(loop);
+})(performance.now());
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>

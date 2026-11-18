@@ -1,0 +1,57 @@
+# Leaving Cert Spanish interactive course
+
+Interactive, visual study pages for Irish Leaving Certificate Spanish, one page per syllabus unit
+("General Activity/Theme"). Same design and page format as the sister courses in `..\physics`, `..\business`,
+`..\applied-maths` and `..\english` (see Physics CLAUDE.md for the full format rules).
+
+Course progress and build order: `COURSE-PLAN.md`. Update it whenever a page is built.
+
+Built so far: `s1-1-meeting-people.html` (Unit I.1 Meeting and getting to know people). No hub `index.html` yet.
+
+## Run it locally
+
+```
+node server.js
+```
+Then open http://localhost:5184. `/` serves `index.html` if it exists, otherwise `s1-1-meeting-people.html`.
+The preview config is named "spanish" (in this folder's and the Physics folder's `.claude/launch.json`).
+
+## The syllabus (source of truth)
+
+- *Leaving Certificate Spanish Syllabus* (Ordinary and Higher Levels), part of the common modern-languages framework.
+  As of November 2026 curriculumonline has no newer senior-cycle specification for Spanish (only Junior Cycle MFL).
+  Page: https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/spanish/
+  PDF path: `/getmedia/07bbdb0e-e958-4eac-8629-31557e34bac0/SCSEC32_Spanish_syllabus_eng.pdf` (26 pages, scanned:
+  the text layer has OCR errors such as "of" for "or", "[egion" for "region"; tidy them when quoting and say so).
+  Read it with the pdf.js-in-the-browser method from Physics CLAUDE.md.
+- Structure (behavioural objectives): I Basic communicative proficiency (I.1–I.11, pages 7–18), II Language awareness
+  (II.1–II.3), III Cultural awareness (III.1–III.5). Each unit has Performance Targets, Linguistic Skills and
+  Structures and Grammar. Quote performance targets verbatim (after OCR tidy-up).
+- Assessment (syllabus p24–26): Higher Level speaking 25%, listening 20%, reading 30%, writing 25%;
+  Ordinary Level 20 / 25 / 40 / 15. Oral: general conversation (optional literary work) and a role-play, 15 minutes.
+  Listening answered in English or Irish. Check the SEC for current arrangements (orals may have changed since the
+  syllabus was written). Label practice questions as not official SEC papers; marks shown on practice tasks are illustrative.
+
+## Page format differences from Physics
+
+- File name `s<section>-<unit>-<slug>.html` (I.1 → `s1-1-…`, II.2 → `s2-2-…`, III.3 → `s3-3-…`).
+- Head/CSS = Physics `refraction-lenses.html` lines 1–395; body/script spliced from
+  `..\applied-maths\s1-1-mathematical-modelling.html` (shared code between fixed markers) plus page data and labs.
+- Last tab is "Phrase bank" (hash still `#formulae`): verb tables, question words, key phrases.
+- The trainer is a typed grammar trainer (present tense, numbers in words, age, agreement, question words) with an
+  accent keyboard; answers without accents are marked "almost". The drill is "Who's being addressed?".
+- Glossary entries are Spanish word → English meaning → usage note.
+- All Spanish dialogues, people and survey data are invented for practice.
+- localStorage prefix `es11-` for I.1 (use `es<section><unit>-`); theme/font keys `es-theme` / `es-font`.
+
+## Quality checks
+
+Same as Physics: `node --check` the script, open the page, no console errors, every tab and lab has sized canvases,
+no horizontal scroll at 375 px, check every quiz answer, trainer answer and Spanish sentence (accents, agreement).
+If the browser pane tab is hidden, canvases measure 0 wide: front the tab or set a viewport size first.
+
+## Usage budget
+
+The user is on the Pro plan and needs most of the weekly allowance for other work. Build only when the user asks,
+or with credit that would otherwise expire. Since 2026-11-18 Spanish is in both scheduled build tasks
+(`courses-five-hour-build`, `physics-course-weekly-build`), rotating with Physics, Business, Applied Maths and English.

@@ -1,0 +1,1788 @@
+<title>Electromagnetic Energy Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<style>
+:root{--band-ink:#3b2b21}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.cases.seven{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.sortq{font-size:1.05rem;font-weight:700;margin:4px 0 8px}
+.bandbtns{display:flex;flex-wrap:wrap;gap:8px}
+.bandbtns button.right{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+.bandbtns button.wrong{background:var(--bad);border-color:var(--bad);color:var(--on-accent)}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--surface)}
+.xlink:hover{border-color:var(--terra)}
+.working.wrap{white-space:normal;font-family:var(--f-body);font-size:.9rem}
+.spec-bullets{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+</style>
+
+<!-- ================= TOP BAR ================= -->
+
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c1.5-5 3-5 4.5 0s3 5 4.5 0 2.2-4 3.4 0 1.7 3 2.6 0 1.2-2 2 0"/></svg></div>
+        <div style="min-width:0"><b>Electromagnetic Energy</b><span>Leaving Cert Physics · Strand 2 · Section 2.4</span></div>
+      </div>
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details open><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="here"><span class="mono">2.4</span>Electromagnetic energy</li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 2 · Section 2.4 · Electromagnetic energy</span>
+          <h1 style="margin-top:12px">Seven kinds of light.<br>One speed.<br>One <em>Sun</em>.</h1>
+          <p class="lede">Radio waves, microwaves, infrared, visible light, ultraviolet, X-rays and gamma rays are all the same kind of wave. Sort them, split white light into colours, and measure the power of sunlight.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="The electromagnetic spectrum from radio waves to gamma rays, with a wave whose wavelength gets shorter from left to right"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/3</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">2.4.1</span><span>categorise electromagnetic waves by their wavelength, frequency, ionising ability and everyday use</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">2.4.2</span><span>demonstrate dispersion and explain the phenomenon</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">2.4.3</span><span>investigate solar irradiance and its impact on life on earth using secondary sources</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">Students learn about:</p>
+        <ul class="spec-bullets">
+          <li>electromagnetic spectrum and sources of electromagnetic energy; ionising radiation</li>
+          <li>dispersion</li>
+          <li>irradiance as the solar power falling on a surface per unit area: I = P / A</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Slide, sort and record data. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="spectrum">
+        <div class="labhead"><span class="pill t">Spectrum explorer</span><p class="goal">Slide from radio waves to gamma rays. Watch the wavelength, frequency, sources and uses change.</p></div>
+        <div class="panel sim">
+          <canvas id="emC" aria-label="The electromagnetic spectrum with a marker you can move along it"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="spL">Wavelength <output id="spLo">500 nm</output></label><input type="range" id="spL" min="-3" max="13" step="0.01" value="6.3"></div>
+            <div class="ctl"><span class="lbl">Jump to</span><div class="btns" id="spPresets"><button data-l="0.477">FM radio</button><button data-l="-0.903">Wi-Fi</button><button data-l="-5">Body heat</button><button data-l="-6.276">Green light</button><button data-l="-10.3">Dental X-ray</button></div></div>
+          </div>
+          <div class="readout" id="spOut"></div>
+          <div class="working wrap" id="spWork"></div>
+        </div>
+        <p class="result">Each band is drawn the same width so you can see it. On a true scale the visible band would be a thin sliver.</p>
+        <div class="tries"><div class="try"><b>1</b>Jump to Wi-Fi. Is its wavelength longer or shorter than visible light?</div><div class="try"><b>2</b>Check the readout with c = fλ by hand.</div><div class="try"><b>3</b>Slide until the radiation becomes ionising. Which band is that in?</div></div>
+      </div>
+
+      <div class="lab" data-lab="sources" hidden>
+        <div class="labhead"><span class="pill t">Sorting challenge</span><p class="goal">Read the clue, then pick the band it belongs to. The spectrum lights up to show the answer.</p></div>
+        <div class="panel sim">
+          <canvas id="sortC" aria-label="The electromagnetic spectrum. The correct band is highlighted after you answer."></canvas>
+          <div class="controls" style="grid-template-columns:minmax(0,1fr)">
+            <div class="ctl"><span class="lbl" id="srType">Clue</span><p class="sortq" id="srQ"></p><div class="bandbtns" id="srBtns"></div></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="srNext">Next clue</button><button id="srMode">Clues: all</button></div></div>
+          </div>
+          <div class="readout" id="srOut"></div>
+          <div class="working wrap" id="srWhy"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Get five in a row right.</div><div class="try"><b>2</b>Switch to "Clues: uses". Can you name a use for every band?</div><div class="try"><b>3</b>For each band, say one source and one use out loud.</div></div>
+      </div>
+
+      <div class="lab" data-lab="ionising" hidden>
+        <div class="labhead"><span class="pill t">Photon vs atom</span><p class="goal">Fire photons at atoms. Only photons with enough energy each can knock out an electron and make an ion.</p></div>
+        <div class="panel sim">
+          <canvas id="ionC" aria-label="Photons travelling towards a grid of atoms. Ionising photons knock electrons out."></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Radiation</span><div class="btns" id="ioBtns"></div></div>
+            <div class="ctl"><label for="ioR">Brightness (photons per second) <output id="ioRo">×3</output></label><input type="range" id="ioR" min="1" max="6" step="1" value="3"></div>
+            <div class="ctl"><span class="lbl">Animation</span><div class="btns"><button id="ioPlay" aria-pressed="true">Pause</button><button id="ioReset">Restart count</button></div></div>
+          </div>
+          <div class="readout" id="ioOut"></div>
+        </div>
+        <p class="result">About 10 eV is a typical energy needed to remove an electron from an atom (1 eV = 1.6 × 10⁻¹⁹ J). Photon energy E = hf is covered fully in section 4.2.</p>
+        <div class="tries"><div class="try"><b>1</b>Pick red light and turn the brightness to maximum. Any ions?</div><div class="try"><b>2</b>Find the first radiation in the list that ionises.</div><div class="try"><b>3</b>Why does UV-A still damage skin even though it doesn't ionise?</div></div>
+      </div>
+
+      <div class="lab" data-lab="dispersion" hidden>
+        <div class="labhead"><span class="pill t">Prism</span><p class="goal">Shine white light into a prism. Change the material and the angle, and watch the colours spread out.</p></div>
+        <div class="panel sim">
+          <canvas id="prC" aria-label="A ray of white light entering a triangular prism and leaving as a spread of colours"></canvas>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Material</span><div class="btns" id="dpMat"><button data-v="water">Water</button><button data-v="crown" aria-pressed="true">Crown glass</button><button data-v="flint">Flint glass</button><button data-v="diamond">Diamond</button></div></div>
+            <div class="ctl"><span class="lbl">Light</span><div class="btns" id="dpLight"><button data-v="white" aria-pressed="true">White</button><button data-v="red">Red laser</button><button data-v="blue">Blue laser</button></div></div>
+            <div class="ctl"><label for="dpI">Angle of incidence <output id="dpIo">50°</output></label><input type="range" id="dpI" min="20" max="85" step="1" value="50"></div>
+            <div class="ctl"><label for="dpA">Prism angle <output id="dpAo">60°</output></label><input type="range" id="dpA" min="30" max="70" step="1" value="60"></div>
+            <div class="ctl"><span class="lbl">View</span><div class="btns"><button id="dpMag" aria-pressed="true">Spread magnified ×5</button></div></div>
+          </div>
+          <div class="readout" id="dpOut"></div>
+          <div class="working wrap" id="dpWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Which colour bends most? Which bends least?</div><div class="try"><b>2</b>Switch to a red laser. Why is there no spectrum now?</div><div class="try"><b>3</b>Turn off the magnifier. Is the real spread big or small?</div></div>
+      </div>
+
+      <div class="lab" data-lab="irradiance" hidden>
+        <div class="labhead"><span class="pill t">Experiment</span><p class="goal">A lamp's light output is unknown. Measure the irradiance at different distances with a light meter, then use the graph to find the lamp's power.</p></div>
+        <div class="panel sim">
+          <canvas id="lampC" aria-label="A lamp and a light meter on a metre stick"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="irD">Distance from lamp <output id="irDo">0.40 m</output></label><input type="range" id="irD" min="0.2" max="1" step="0.05" value="0.4"></div>
+            <div class="ctl" style="grid-column:1/-1"><div class="btns"><button class="primary" id="irRec">Record reading</button><button id="irClear">Clear</button><button id="irNew">New lamp</button><button id="irReveal">Reveal answers</button></div></div>
+          </div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>d (m)</th><th>I (W/m²)</th><th>1/d² (m⁻²)</th><th></th></tr></thead><tbody id="irTable"></tbody></table><div class="empty" id="irEmpty">No readings yet. Record at five or more distances between 0.20 m and 1.00 m.</div></div>
+            <div class="graphbox"><canvas id="irGraph" aria-label="Graph of irradiance I against 1/d²"></canvas><p class="result" id="irResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Light spreads over a sphere of area 4πd², so I = P / A becomes I = P / (4πd²). A graph of I against 1/d² is a straight line of slope P / 4π. The small intercept is light from the room.</p>
+        <div class="tries"><div class="try"><b>1</b>Double the distance. What happens to the irradiance?</div><div class="try"><b>2</b>Take readings from 0.20 m to 1.00 m and plot the graph.</div><div class="try"><b>3</b>Use the slope to find the lamp's power, then reveal it.</div></div>
+      </div>
+
+      <div class="lab" data-lab="life" hidden>
+        <div class="labhead"><span class="pill t">Sun and seasons</span><p class="goal">Change the place and the date. See how high the noon Sun gets, how far its light spreads, and how much energy reaches the ground.</p></div>
+        <div class="panel sim">
+          <canvas id="sunC" aria-label="The noon Sun's height above the ground, and a graph of noon irradiance over the year"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="snLat">Latitude <output id="snLato">53° N</output></label><input type="range" id="snLat" min="0" max="75" step="1" value="53"></div>
+            <div class="ctl"><label for="snDay">Date <output id="snDayo">21 Jun</output></label><input type="range" id="snDay" min="1" max="365" step="1" value="172"></div>
+            <div class="ctl"><span class="lbl">Places</span><div class="btns" id="snPlaces"><button data-l="53">Ireland</button><button data-l="0">Equator</button><button data-l="23">Tropic of Cancer</button><button data-l="70">North Norway</button></div></div>
+          </div>
+          <div class="readout" id="snOut"></div>
+        </div>
+        <p class="result">Clear-sky model: it allows for the Sun's angle and the thickness of air the light passes through, but not for clouds. Real Irish values are often much lower.</p>
+        <div class="tries"><div class="try"><b>1</b>Compare Ireland in June and December. How many times bigger is the noon irradiance?</div><div class="try"><b>2</b>Move to the equator. Why are its seasons so small?</div><div class="try"><b>3</b>Find a date and place with no Sun at all at noon.</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of electromagnetic energy"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Categorise · LO 2.4.1</p><h2>Seven bands, one family</h2></div><p>Longest wavelength first. All travel at 3.0 × 10⁸ m/s in a vacuum.</p></div>
+      <div class="cases seven" id="cases"></div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Solar energy · LO 2.4.3</p><h2>What the Sun sends us</h2></div><p>Modelled as a body at 5800 K, before it passes through the atmosphere.</p></div>
+        <canvas class="mini" data-mini="sun"></canvas>
+        <div class="chips" style="margin-top:12px"><span class="chip neutral">Peak in the visible, near 500 nm</span><span class="chip real">About half the energy is infrared</span><span class="chip alert">A small share is UV</span></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Dispersion · LO 2.4.2</p><h2>One colour, or many?</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="prism" data-k="0"></canvas><h3>Red laser: no spectrum</h3><p>Light of one colour bends, but there is nothing to separate.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="prism" data-k="1"></canvas><h3>White light, crown glass</h3><p>Each colour bends a slightly different amount. Violet bends most.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="prism" data-k="2"></canvas><h3>White light, flint glass</h3><p>Flint glass disperses more, so the spectrum is wider.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">By the numbers</p><h2>How much solar power reaches a surface?</h2></div><p>Irradiance on flat ground at noon, clear sky unless stated.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Impact on life · LO 2.4.3</p><h2>Sunlight and life on Earth</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Write the formula first, then substitute, then the answer <b>with its unit</b>.</li>
+            <li>Learn the order: <b>radio, microwave, infrared, visible, UV, X-ray, gamma</b>. Wavelength falls, frequency rises.</li>
+            <li>Convert first: nm × 10⁻⁹ = m, cm ÷ 100 = m, MHz × 10⁶ = Hz, GHz × 10⁹ = Hz.</li>
+            <li>All EM waves travel at <b>c = 3.0 × 10⁸ m/s</b> in a vacuum (and almost the same in air).</li>
+            <li>Ionising means it can <b>remove electrons from atoms</b>. Name X-rays and gamma rays; for UV say "high-energy UV".</li>
+            <li>To explain dispersion: <b>n depends on colour</b>, so each colour refracts differently: <b>violet most, red least</b>.</li>
+            <li>Irradiance is in <b>W/m²</b>; power is in W. I = P / A, so P = I × A.</li>
+            <li>For "impact on life", give a specific effect, its cause, and say where your information came from.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The verb tells you what the examiner wants. The learning outcomes for this section use categorise, demonstrate, explain and investigate.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="text" placeholder="e.g. 4.6e14 or 0.12" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Ionising or not?</h2></div></div>
+          <canvas id="predC" aria-label="The electromagnetic spectrum with a marker showing where this radiation sits"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns" data-g="0"><button data-a="Ionising">Ionising</button><button data-a="Non-ionising">Non-ionising</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next radiation</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: irradiance, gamma, nm, ionising…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>The first two are on your course for this section. The rest are useful extras and links to other sections.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Wave equation</span><span class="big">c = fλ</span><dl><dt>c</dt><dd>speed of light, 3.0 × 10⁸ m/s</dd><dt>f</dt><dd>frequency in Hz</dd><dt>λ</dt><dd>wavelength in m</dd></dl><div class="ex">Wi-Fi 2.4 GHz: λ = 3.0 × 10⁸ / 2.4 × 10⁹ = 0.125 m</div></div>
+        <div class="panel fcell"><span class="pill">Irradiance</span><span class="big">I = P / A</span><dl><dt>I</dt><dd>irradiance in W/m²</dd><dt>P</dt><dd>power in W</dd><dt>A</dt><dd>area in m²</dd></dl><div class="ex">1500 W on 2.0 m²: I = 750 W/m²</div></div>
+        <div class="panel fcell"><span class="pill">Rearranged</span><span class="big">P = I × A</span><dl><dt>P</dt><dd>power falling on the surface</dd></dl><div class="ex">900 W/m² × 1.6 m² = 1440 W</div></div>
+        <div class="panel fcell"><span class="pill">Refractive index (2.3)</span><span class="big">n = c / v</span><dl><dt>v</dt><dd>speed of light in the material</dd><dt>n</dt><dd>bigger for violet than for red</dd></dl><div class="ex">n = 1.53: v = 3.0 × 10⁸ / 1.53 = 1.96 × 10⁸ m/s</div></div>
+        <div class="panel fcell"><span class="pill a">Extra</span><span class="big">I = P / (4πd²)</span><dl><dt>d</dt><dd>distance from a small source</dd><dt>4πd²</dt><dd>area of the sphere the light spreads over</dd></dl><div class="ex">Sun: 3.8 × 10²⁶ W at 1.5 × 10¹¹ m → about 1340 W/m²</div></div>
+        <div class="panel fcell"><span class="pill a">Extra</span><span class="big">P<sub>out</sub> = η × I × A</span><dl><dt>η</dt><dd>efficiency of a solar panel (about 0.2)</dd></dl><div class="ex">0.20 × 900 × 1.6 = 288 W</div></div>
+        <div class="panel fcell"><span class="pill a">Extra (4.2)</span><span class="big">E = hf = hc / λ</span><dl><dt>E</dt><dd>energy of one photon in J</dd><dt>h</dt><dd>6.63 × 10⁻³⁴ J s</dd><dt>1 eV</dt><dd>1.6 × 10⁻¹⁹ J</dd></dl><div class="ex">100 nm UV: E ≈ 12 eV, enough to ionise</div></div>
+        <div class="panel fcell"><span class="pill a">Useful values</span><span class="big">1361 W/m²</span><dl><dt>above air</dt><dd>solar irradiance (solar constant)</dd><dt>visible</dt><dd>400 nm to 700 nm</dd></dl><div class="ex">Clear-sky noon at the ground: up to about 1000 W/m²</div></div>
+      </div>
+      <footer>
+        <p>Built on section 2.4 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes are quoted from the specification. Experiment data is simulated with small random errors. Band boundaries are approximate: neighbouring bands overlap.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const D2R = Math.PI/180, R2D = 180/Math.PI;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent","--band-ink"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  spectrum:'<path d="M2 12c1.5-5 3-5 4.5 0s3 5 4.5 0 2.2-4 3.4 0 1.7 3 2.6 0 1.2-2 2 0"/>',
+  sources:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',
+  ionising:'<circle cx="12" cy="12" r="1.8"/><ellipse cx="12" cy="12" rx="9.5" ry="3.6"/><ellipse cx="12" cy="12" rx="9.5" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="3.6" transform="rotate(120 12 12)"/>',
+  dispersion:'<path d="M10 4L3 19h14z"/><path d="M1 12l6.5 0"/><path d="M13.5 11.5l8.5-3M14 13l8 0M14.5 14.5l7.5 3"/>',
+  irradiance:'<circle cx="6" cy="6" r="3"/><path d="M9.5 9.5l3 3M7.5 11.5l2.5 2.5M11.5 7.5l2.5 2.5"/><path d="M11 16l8-3 3 6-8 3z"/>',
+  life:'<path d="M5 19C5 10 10 5 20 4c-1 10-6 15-15 15z"/><path d="M5 19l8-8"/>',
+  radio:'<path d="M12 9l-5 13M12 9l5 13M9 16h6"/><circle cx="12" cy="7" r="2"/><path d="M7.5 3.5a6 6 0 000 7M16.5 3.5a6 6 0 010 7"/>',
+  wifi:'<path d="M2 9a15 15 0 0120 0M5 12.5a10 10 0 0114 0M8.5 16a5 5 0 017 0"/><circle cx="12" cy="19" r="1"/>',
+  fire:'<path d="M12 3c3 4 6 6 6 11a6 6 0 01-12 0c0-3 2-5 3-7 1 2 2 3 3 3 0-3-1-5 0-7z"/>',
+  eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  bone:'<path d="M8 6.5L17.5 16"/><circle cx="6.5" cy="5" r="2"/><circle cx="5" cy="7.5" r="2"/><circle cx="19" cy="17.5" r="2"/><circle cx="16.5" cy="19" r="2"/>',
+  hazard:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/>',
+  thermo:'<path d="M10 14V5a2 2 0 014 0v9a4 4 0 11-4 0z"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"spectrum", name:"The EM spectrum", short:"Seven families of waves with one speed: c = fλ.", tint:"var(--blush)"},
+  {id:"sources", name:"Sources & uses", short:"Where each kind comes from and what we use it for.", tint:"var(--apricot)"},
+  {id:"ionising", name:"Ionising radiation", short:"Why X-rays and gamma rays can damage cells.", tint:"var(--sage)"},
+  {id:"dispersion", name:"Dispersion", short:"A prism splits white light into a spectrum.", tint:"var(--cream)"},
+  {id:"irradiance", name:"Solar irradiance", short:"Power per unit area: I = P / A.", tint:"var(--blush)"},
+  {id:"life", name:"Sunlight & life", short:"Seasons, climate, photosynthesis and UV.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary data: [term, also known as / symbol, definition, topic, formula] ---------- */
+const GLOSS = [
+  ["Electromagnetic wave","EM wave","A transverse wave of changing electric and magnetic fields. It needs no medium and travels at 3.0 × 10⁸ m/s in a vacuum.","spectrum","c = fλ"],
+  ["Electromagnetic spectrum","EM spectrum","The whole family of EM waves in order of wavelength: radio, microwave, infrared, visible, ultraviolet, X-ray, gamma.","spectrum"],
+  ["Speed of light","c","3.0 × 10⁸ m/s in a vacuum. Every EM wave travels at this speed in a vacuum.","spectrum","c = 3.0 × 10⁸ m/s"],
+  ["Wavelength","λ","The distance between two neighbouring crests. Unit: metre.","spectrum","λ = c / f"],
+  ["Frequency","f","The number of waves passing a point each second. Unit: hertz (Hz).","spectrum","f = c / λ"],
+  ["Hertz","Hz","The unit of frequency: one wave per second. 1 MHz = 10⁶ Hz, 1 GHz = 10⁹ Hz.","spectrum"],
+  ["Nanometre","nm","10⁻⁹ m. Visible light is about 400 nm to 700 nm.","spectrum"],
+  ["Micrometre","μm","10⁻⁶ m. Infrared from warm objects is around 10 μm.","spectrum"],
+  ["Transverse wave","","A wave whose vibrations are at right angles to the direction it travels. All EM waves are transverse.","spectrum"],
+  ["Vacuum","","Empty space with no particles. EM waves can cross it; sound can't.","spectrum"],
+  ["Band","","A range of wavelengths given one name, such as microwaves. Neighbouring bands overlap a little.","spectrum"],
+  ["Radio waves","","The longest-wavelength EM waves (about 10 cm to many km). Used for radio, TV and long-range communication.","sources"],
+  ["Microwaves","","EM waves of about 1 mm to 10 cm. Used for cooking, mobile phones, Wi-Fi, satellites and radar.","sources"],
+  ["Infrared","IR","EM waves just longer than red light (700 nm to 1 mm). Given out by all warm objects. Used in remote controls and thermal cameras.","sources"],
+  ["Visible light","","The narrow band our eyes detect, from violet (about 400 nm) to red (about 700 nm).","sources"],
+  ["Ultraviolet","UV","EM waves just shorter than violet light (about 10 nm to 400 nm). From the Sun and UV lamps. Causes sunburn; makes vitamin D.","sources"],
+  ["X-rays","","Short-wavelength, ionising EM waves (about 0.01 nm to 10 nm), made when fast electrons hit a metal target. Used for medical images.","sources"],
+  ["Gamma rays","γ","The shortest-wavelength, highest-frequency EM waves. Given out by unstable nuclei. Used to treat cancer and sterilise equipment.","sources"],
+  ["Source","","Anything that gives out EM radiation, such as the Sun, a hot object, an aerial, an X-ray tube or a radioactive nucleus.","sources"],
+  ["Aerial","antenna","A conductor in which oscillating currents send out (or pick up) radio waves and microwaves.","sources"],
+  ["Thermal camera","","A camera that detects infrared, so it shows how warm things are, even in the dark or through smoke.","sources"],
+  ["Sterilise","","Kill bacteria and other microbes, for example using gamma rays or UV.","sources"],
+  ["Radiotherapy","","Treating cancer by aiming ionising radiation, such as gamma rays or X-rays, at a tumour.","sources"],
+  ["Ionising radiation","","Radiation with enough energy to knock electrons out of atoms, turning them into ions.","ionising"],
+  ["Non-ionising radiation","","Radiation without enough energy per photon to ionise atoms: radio, microwave, infrared, visible and most UV.","ionising"],
+  ["Ion","","An atom or molecule that has lost or gained one or more electrons, so it has an electric charge.","ionising"],
+  ["Ionisation","","The process of removing (or adding) electrons to make ions.","ionising"],
+  ["Photon","","A tiny packet of EM energy. Higher frequency means more energy per photon.","ionising","E = hf"],
+  ["Electronvolt","eV","A tiny unit of energy: 1 eV = 1.6 × 10⁻¹⁹ J. About 10 eV is needed to ionise a typical atom.","ionising"],
+  ["Planck constant","h","6.63 × 10⁻³⁴ J s. Links a photon's energy to its frequency (section 4.2).","ionising","E = hf"],
+  ["DNA damage","","Changes to the genetic material in cells, caused by ionising radiation or UV. It can kill cells or lead to cancer.","ionising"],
+  ["Shielding","","Material that absorbs radiation, such as lead or concrete for X-rays and gamma rays.","ionising"],
+  ["Dispersion","","The splitting of white light into its colours, because the refractive index is different for each colour.","dispersion"],
+  ["Prism","","A block of glass or plastic with flat faces at an angle, often a triangle. It refracts and disperses light.","dispersion"],
+  ["Spectrum","","The band of colours made when white light is dispersed: red, orange, yellow, green, blue, indigo, violet.","dispersion"],
+  ["White light","","A mixture of all the colours of visible light, such as sunlight.","dispersion"],
+  ["Monochromatic light","","Light of one wavelength (one colour), such as laser light. It can't be dispersed.","dispersion"],
+  ["Refraction","","The change in direction of a wave as it passes from one medium into another and changes speed.","dispersion"],
+  ["Refractive index","n","A measure of how much a material slows and bends light. In glass it is slightly bigger for violet than for red.","dispersion","n = c / v"],
+  ["Deviation","","The total angle a ray is turned through by a prism. Violet is deviated most, red least.","dispersion"],
+  ["Rainbow","","A spectrum formed when sunlight is refracted, dispersed and reflected inside raindrops.","dispersion"],
+  ["ROYGBIV","","A way to remember the order of colours: red, orange, yellow, green, blue, indigo, violet.","dispersion"],
+  ["Irradiance","I","The power falling on a surface per unit area. Unit: W/m².","irradiance","I = P / A"],
+  ["Power","P","The energy transferred per second. Unit: watt (W), where 1 W = 1 J/s.","irradiance","P = I × A"],
+  ["Watt per square metre","W/m²","The unit of irradiance. Also written W m⁻².","irradiance"],
+  ["Solar constant","","The solar irradiance just above Earth's atmosphere, about 1361 W/m².","irradiance","1361 W/m²"],
+  ["Light meter","pyranometer","An instrument that measures irradiance. A phone light sensor gives a rough reading in lux.","irradiance"],
+  ["Inverse square law","","For a small source, irradiance falls with the square of distance: twice as far gives a quarter of the irradiance.","irradiance","I = P / (4πd²)"],
+  ["Solar panel","photovoltaic panel, PV","A device that turns sunlight into electricity, typically about 20% efficiently.","irradiance"],
+  ["Efficiency","η","Useful power out ÷ total power in, often given as a %.","irradiance","P_out = η × I × A"],
+  ["Photosynthesis","","Plants and algae using visible light to make food from carbon dioxide and water. The start of almost every food chain.","life"],
+  ["Ozone layer","","A layer of ozone gas high in the atmosphere that absorbs most of the Sun's harmful UV.","life"],
+  ["Greenhouse effect","","Gases such as CO₂ absorb infrared given out by Earth and keep the planet warm. More of them causes global warming.","life"],
+  ["Vitamin D","","A vitamin made in your skin when UV-B falls on it. Needed for healthy bones.","life"],
+  ["Skin cancer","","A cancer caused mainly by too much UV. Sunscreen, shade and covering up reduce the risk.","life"],
+  ["Latitude","","How far north or south of the equator a place is, in degrees. Ireland is about 51° to 55° N.","life"],
+  ["Solar elevation","Sun height","The angle of the Sun above the horizon. A higher Sun gives a higher irradiance.","life"],
+  ["Secondary source","","Information collected by someone else, such as Met Éireann data, articles or data sets. Say where it came from.","life"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["transverse","Transverse wave"],["frequency","Frequency"],["wavelength","Wavelength"],["medium","Vacuum"],["infrared","Infrared"],["microwaves","Microwaves"],["gamma rays","Gamma rays"],["X-rays","X-rays"],["ions","Ion"],["ionising","Ionising radiation"],["photon","Photon"],["dispersion","Dispersion"],["refractive index","Refractive index"],["irradiance","Irradiance"],["photosynthesis","Photosynthesis"],["ozone layer","Ozone layer"],["W/m²","Watt per square metre"]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const grp = x => Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const s3 = x => (+x.toPrecision(3)).toString();
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
+const sup = n => String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(x,d=3){ if(x===0) return "0"; let e=Math.floor(Math.log10(Math.abs(x))), ms=(x/Math.pow(10,e)).toFixed(d-1);
+  if(Math.abs(+ms)>=10){ e++; ms=(x/Math.pow(10,e)).toFixed(d-1); } return e===0? ms : `${ms} × 10${sup(e)}`; }
+const PRE=[[1e21,"Z"],[1e18,"E"],[1e15,"P"],[1e12,"T"],[1e9,"G"],[1e6,"M"],[1e3,"k"],[1,""],[1e-3,"m"],[1e-6,"μ"],[1e-9,"n"],[1e-12,"p"],[1e-15,"f"]];
+function si(x,u,d=3){ const a=Math.abs(x); for(const [v,p] of PRE){ if(a>=v*0.9995) return `${+(x/v).toPrecision(d)} ${p}${u}`; } return sci(x)+" "+u; }
+function lamRGB(l){ let r=0,g=0,b=0; l=Math.max(380,Math.min(780,l));
+  if(l<440){ r=(440-l)/60; b=1; } else if(l<490){ g=(l-440)/50; b=1; } else if(l<510){ g=1; b=(510-l)/20; } else if(l<580){ r=(l-510)/70; g=1; } else if(l<645){ r=1; g=(645-l)/65; } else r=1;
+  const a = l<420? 0.35+0.65*(l-380)/40 : l>700? 0.35+0.65*(780-l)/80 : 1;
+  return `rgb(${Math.round(255*r*a)},${Math.round(255*g*a)},${Math.round(255*b*a)})`; }
+
+/* ================= EM MODELS + DRAWINGS ================= */
+const C0 = 3.0e8;
+// [id, name, short label, tiny label, fill token, typical λ text, size of, sources, uses, risk, ionising: 0 no, 1 partly, 2 yes, short sources for the chart]
+const BANDS = [
+  {id:"radio", name:"Radio waves", short:"Radio", tiny:"Radio", col:"sage", lam:"1 m to km", size:"a person or a building", src:"Radio and TV transmitters, stars, lightning", use:"Radio and TV broadcasts, long-range communication", risk:"No known harm at normal levels", ion:0, s2:["radio","masts"], ico:"radio"},
+  {id:"micro", name:"Microwaves", short:"Micro", tiny:"Micro", col:"olive", lam:"1 cm", size:"a bee", src:"Microwave ovens, phone masts, Wi-Fi routers, satellites", use:"Cooking, mobile phones, Wi-Fi, satellite TV, radar", risk:"Heats body tissue at high power", ion:0, s2:["ovens","Wi-Fi"], ico:"wifi"},
+  {id:"ir", name:"Infrared", short:"IR", tiny:"IR", col:"apricot", lam:"10 μm", size:"a cell", src:"Anything warm: the Sun, fires, heaters, your body", use:"Remote controls, thermal cameras, grills, fibre-optic links", risk:"Burns at high intensity", ion:0, s2:["warm","things"], ico:"fire"},
+  {id:"vis", name:"Visible light", short:"Visible", tiny:"Vis", col:null, lam:"400–700 nm", size:"a bacterium", src:"The Sun, bulbs, LEDs, lasers, flames", use:"Seeing, photography, photosynthesis, lasers", risk:"Very bright light can damage the eye", ion:0, s2:["Sun,","bulbs"], ico:"eye"},
+  {id:"uv", name:"Ultraviolet", short:"UV", tiny:"UV", col:"blush", lam:"100 nm", size:"a virus", src:"The Sun, UV lamps, sunbeds, welding arcs", use:"Sterilising water, security marks, making vitamin D", risk:"Sunburn, skin cancer, eye damage", ion:1, s2:["Sun,","sunbeds"], ico:"sources"},
+  {id:"xray", name:"X-rays", short:"X-ray", tiny:"X", col:"cream", lam:"0.1 nm", size:"an atom", src:"X-ray tubes, very hot gas in space", use:"Medical images, airport scanners, studying crystals", risk:"Ionising: can damage cells and DNA", ion:2, s2:["X-ray","tubes"], ico:"bone"},
+  {id:"gamma", name:"Gamma rays", short:"Gamma", tiny:"γ", col:"terra", lam:"1 pm", size:"much smaller than an atom", src:"Radioactive nuclei, nuclear reactions, exploding stars", use:"Cancer treatment, sterilising equipment, medical tracers", risk:"Ionising and the most penetrating", ion:2, s2:["radio-","active"], ico:"hazard"},
+];
+const EDGES=[4,-1,-3,Math.log10(7e-7),Math.log10(4e-7),-8,-11,-14];
+const L_ION=Math.log10(1.24e-7); // photons shorter than 124 nm carry more than 10 eV
+const bandOf = L => { for(let k=0;k<7;k++) if(L>=EDGES[k+1]) return k; return 6; };
+function emX(L,x0,bw){ const k=bandOf(L), fr=(EDGES[k]-L)/(EDGES[k]-EDGES[k+1]); return x0+(k+Math.max(0,Math.min(1,fr)))*bw; }
+function bandFill(ctx,k,x,y,w,h){ if(BANDS[k].col==null){ const g=ctx.createLinearGradient(x,0,x+w,0); for(let l=700;l>=400;l-=20) g.addColorStop((700-l)/300,lamRGB(l)); ctx.fillStyle=g; } else ctx.fillStyle=C[BANDS[k].col]; ctx.fillRect(x,y,w,h); }
+const SIZES=[[3,"a town"],[2,"a football pitch"],[0,"a person"],[-1,"a football"],[-2,"a bee"],[-3,"a pinhead"],[-4,"a hair's width"],[-5,"a cell"],[-6,"a bacterium"],[-7,"a virus"],[-8,"a big molecule"],[-9,"a small molecule"],[-10,"an atom"],[-11.5,"much smaller than an atom"],[-13,"close to an atomic nucleus"]];
+const sizeOf = L => SIZES.reduce((a,b)=>Math.abs(b[0]-L)<Math.abs(a[0]-L)?b:a)[1];
+function ionText(L){ if(L<L_ION) return "Yes"; if(bandOf(L)===4) return "No, but UV still harms skin and eyes"; return "No"; }
+// The spectrum: a wave whose wavelength shrinks from left to right, the seven bands, scale and the ionising region.
+function drawEM(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc);
+  const cp=o.compact, x0=cp?6:12, x1=w-x0, bw=(x1-x0)/7, W=x1-x0;
+  const wt=cp?4:8, wh=h*(cp?(o.sources?0.28:0.34):0.30), by=wt+wh+(cp?6:12), bh=Math.max(cp?18:26,h*(cp?0.22:0.16));
+  const a=bw*1.25, r=2.6/a, lr=Math.log(r), ph=(o.t||0)*5, amp=wh*0.4, my=wt+wh/2;
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=cp?1.5:2; ctx.lineJoin="round"; ctx.beginPath();
+  for(let x=x0;x<=x1;x+=0.5){ const u=(x-x0)/W, phi=2*Math.PI*W/a*(Math.pow(r,-u)-1)/(-lr), y=my-amp*Math.sin(phi-ph); if(x===x0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }
+  ctx.stroke(); ctx.restore();
+  BANDS.forEach((b,k)=>{ const x=x0+k*bw; ctx.save(); if(o.hi!=null&&o.hi!==k) ctx.globalAlpha=0.35; bandFill(ctx,k,x,by,bw,bh); ctx.restore();
+    text(ctx,cp?b.tiny:b.short,x+bw/2,by+bh/2+1,b.col==="terra"?C["on-accent"]:C["band-ink"],F(cp?10:Math.max(9,Math.min(13,bw/5))),"center","middle"); });
+  ctx.save(); ctx.strokeStyle=C.line; ctx.lineWidth=1; ctx.strokeRect(x0,by,W,bh); ctx.restore();
+  if(o.hi!=null){ ctx.save(); ctx.strokeStyle=C.ink; ctx.lineWidth=3; ctx.strokeRect(x0+o.hi*bw+1.5,by-1.5,bw-3,bh+3); ctx.restore(); }
+  let y=by+bh;
+  if(!cp){ [[3,"1 km"],[0,"1 m"],[-3,"1 mm"],[-6,"1 μm"],[-9,"1 nm"],[-12,"1 pm"]].forEach(([L,s])=>{ const x=emX(L,x0,bw); line(ctx,x,y,x,y+5,C.muted,1.2); text(ctx,s,x,y+16,C.muted,M(bw<60?9:10),"center"); }); y+=20; }
+  if(o.sources){ BANDS.forEach((b,k)=>{ const x=x0+k*bw+bw/2; b.s2.forEach((s,j)=>text(ctx,s,x,y+(cp?11:14)+j*(cp?11:13),C.ink,F(cp||bw<70?9:11,600),"center")); }); y+=(cp?11:14)+(cp?11:13)+2; }
+  if(!cp || o.ion){ const xi=emX(L_ION,x0,bw), yy=y+10; line(ctx,xi,yy,x1,yy,C.bad,3); line(ctx,xi,yy-5,xi,yy+5,C.bad,2); text(ctx,"ionising",xi-6,yy+4,C.bad,F(cp?10:12),"right"); y=yy+8; }
+  if(!cp){ const ya=Math.max(y+22,h-10); text(ctx,"← longer wavelength",x0,ya,C.muted,F(11)); text(ctx,"higher frequency & energy →",x1,ya,C.muted,F(11),"right"); }
+  else text(ctx,"λ shorter · f higher →",x1,h-4,C.muted,F(10),"right");
+  if(o.marker!=null){ const x=emX(o.marker,x0,bw); ctx.save(); ctx.globalAlpha=0.55; line(ctx,x,wt,x,by,C.ink,1.5,[4,4]); ctx.restore();
+    ctx.fillStyle=C.ink; ctx.beginPath(); ctx.moveTo(x,by-1); ctx.lineTo(x-7,by-12); ctx.lineTo(x+7,by-12); ctx.closePath(); ctx.fill(); line(ctx,x,by,x,by+bh,C.ink,2.5); }
+}
+// One band on its own: a wave with a wavelength typical of that band
+function drawBandCard(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const k=o.k, b=BANDS[k];
+  bandFill(ctx,k,0,0,w,8);
+  const lp=[0.95,0.5,0.28,0.16,0.09,0.05,0.03][k]*w, my=h*0.48, amp=h*0.22;
+  ctx.save(); ctx.lineWidth=2.2; ctx.lineJoin="round";
+  if(b.col==null){ const g=ctx.createLinearGradient(0,0,w,0); for(let l=700;l>=400;l-=30) g.addColorStop((700-l)/300,lamRGB(l)); ctx.strokeStyle=g; } else ctx.strokeStyle=k===6? C.terra : C.ink;
+  ctx.beginPath(); for(let x=6;x<=w-6;x+=0.5){ const y=my-amp*Math.sin(2*Math.PI*(x-6)/lp); if(x===6) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.stroke(); ctx.restore();
+  text(ctx,"λ ≈ "+b.lam,8,h-10,C.ink,M(11)); text(ctx,b.size,w-8,h-10,C.muted,F(11),"right");
+}
+// Photons hitting atoms. Stateless: everything follows from the time t.
+const PHOT=[["Radio",1],["Microwave",0.012],["Infrared",1e-5],["Red light",6.5e-7],["Violet light",4e-7],["UV-A",3.5e-7],["Far UV",1e-7],["X-ray",1e-10],["Gamma",1e-12]];
+const eVof = lam => 1.23984e-6/lam;  // photon energy in eV
+const ION_E = 10;
+const ION_TGT=[1,3,0,2];
+function fmtE(E){ return E>=1e6? s3(E/1e6)+" MeV" : E>=1e3? s3(E/1e3)+" keV" : E>=0.1? s3(E)+" eV" : sci(E,3)+" eV"; }
+function ionGeom(w,h){ const cols=5, rows=4, ax0=w*0.46, ax1=w*0.92, ay0=h*0.24, ay1=h*0.84; return {cols,rows,ax:c=>ax0+c*(ax1-ax0)/(cols-1), ay:r=>ay0+r*(ay1-ay0)/(rows-1), sx:Math.max(40,w*0.1), v:w*0.45}; }
+function ionRow(r,o,g){ return { P:2.4/o.rate, ph:r*0.55, T:(g.ax(ION_TGT[r])-g.sx)/g.v }; }
+function packet(ctx,x,y,lv,col,len){ ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=2.2; ctx.beginPath(); let first=true;
+  for(let s=-len;s<=0;s+=0.7){ const env=Math.sin(Math.PI*(s+len)/len), yy=y-env*6*Math.sin(2*Math.PI*s/lv); if(first){ ctx.moveTo(x+s,yy); first=false; } else ctx.lineTo(x+s,yy); } ctx.stroke(); ctx.restore(); }
+function drawIon(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const g=ionGeom(w,h), t=o.t||0, lam=PHOT[o.k][1], E=eVof(lam), ionising=E>=ION_E, cp=o.compact;
+  ctx.fillStyle=C.ink; ctx.beginPath(); ctx.roundRect(g.sx-30,h/2-26,22,52,6); ctx.fill();
+  if(!cp) text(ctx,"source",g.sx-19,h/2+44,C.muted,F(11),"center");
+  const hit={}; let ions=0;
+  for(let r=0;r<g.rows;r++){ const {P,ph,T}=ionRow(r,o,g), a=Math.floor((t-ph-T)/P); if(a>=0){ hit[r]=t-(ph+a*P+T); if(ionising) ions+=a+1; } }
+  const R=cp?8:12;
+  for(let r=0;r<g.rows;r++) for(let c=0;c<g.cols;c++){ const x=g.ax(c), y=g.ay(r), tg=(ION_TGT[r]===c && hit[r]!=null && hit[r]<1.4)? hit[r] : null;
+    const dx=(tg!=null && !ionising)? Math.sin(tg*40)*3*(1-tg/1.4) : 0;
+    ctx.save(); ctx.fillStyle= tg!=null? (ionising? C.blush : C.apricot) : C["surface-2"]; ctx.strokeStyle=C.olive; ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(x+dx,y,R,0,7); ctx.fill(); ctx.stroke(); ctx.restore();
+    if(tg!=null && ionising){ text(ctx,"+",x,y+1,C.bad,F(cp?12:16,800),"center","middle"); const ex=x+tg*70, ey=y-tg*55; ctx.save(); ctx.globalAlpha=Math.max(0,1-tg/1.4); ctx.fillStyle=C.ink; ctx.beginPath(); ctx.arc(ex,ey,3.5,0,7); ctx.fill(); ctx.restore(); if(!cp && tg<1) text(ctx,"e⁻",ex+6,ey-4,C.ink,F(11)); }
+    else { ctx.fillStyle=C.olive; ctx.beginPath(); ctx.arc(x+dx,y,2.5,0,7); ctx.fill(); }
+  }
+  const lv=3+Math.max(0,Math.min(1,(Math.log10(lam)+12)/12))*15, col=(lam>3.8e-7&&lam<7.5e-7)? lamRGB(lam*1e9) : (ionising? C.bad : C.terra);
+  for(let r=0;r<g.rows;r++){ const {P,ph,T}=ionRow(r,o,g), n=Math.floor((t-ph)/P); for(let m=n;m>=n-3&&m>=0;m--){ const s=t-(ph+m*P); if(s<0||s>=T) continue; packet(ctx,g.sx+s*g.v,g.ay(r),lv,col,cp?18:28); } }
+  if(!cp){ text(ctx,PHOT[o.k][0]+": "+fmtE(E)+" per photon",12,20,C.ink,F(13)); text(ctx,ionising?"Enough to knock out an electron":"Not enough to ionise: the atom just warms up",12,38,ionising?C.bad:C.muted,F(12)); }
+  else text(ctx,PHOT[o.k][0],8,15,C.ink,F(11));
+  return ions;
+}
+// Prism. Angles: i = incidence on the first face, A = apex angle. n(λ) from Cauchy's equation.
+const MATS={water:{name:"Water",A:1.3242,B:3060},crown:{name:"Crown glass",A:1.5046,B:4200},flint:{name:"Flint glass",A:1.6000,B:10000},diamond:{name:"Diamond",A:2.3800,B:14000}};
+const nOf=(m,l,mag)=>{ const Mt=MATS[m], n=Mt.A+Mt.B/(l*l); if(!mag) return n; const n0=Mt.A+Mt.B/(550*550); return n0+(n-n0)*5; };
+function prismRay(n,i,A){ const r1=Math.asin(Math.sin(i*D2R)/n)*R2D, r2=A-r1, s=n*Math.sin(r2*D2R); if(s>1) return {r1,r2,tir:true}; const e=Math.asin(s)*R2D; return {r1,r2,e,D:i+e-A,tir:false}; }
+const LIGHTS={white:[400,425,450,475,500,525,550,575,600,625,650,675,700],red:[650],blue:[450]};
+function drawPrism(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, A=o.A||60, i=o.i, ls=LIGHTS[o.light||"white"], white=(o.light||"white")==="white";
+  const yb=h*(cp?0.9:0.86); let H=h*(cp?0.76:0.7), hb=H*Math.tan(A/2*D2R); const lim=w*0.24; if(hb>lim){ H*=lim/hb; hb=lim; }
+  const cx=w*0.36, P=[cx,yb-H], L=[cx-hb,yb], R=[cx+hb,yb];
+  ctx.save(); ctx.fillStyle=C.glass; ctx.strokeStyle=C["glass-edge"]; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(P[0],P[1]); ctx.lineTo(L[0],L[1]); ctx.lineTo(R[0],R[1]); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
+  const E=[L[0]+0.5*(P[0]-L[0]), L[1]+0.5*(P[1]-L[1])], dir=a=>[Math.cos(a*D2R),-Math.sin(a*D2R)];
+  const ain=-A/2+i, din=dir(ain), sa=Math.sin(ain*D2R); let len=(E[0]-4)/din[0]; if(sa>0) len=Math.min(len,(h-4-E[1])/sa); else if(sa<0) len=Math.min(len,(E[1]-4)/(-sa));
+  const S=[E[0]-din[0]*len,E[1]-din[1]*len], incol= white? C.ink : lamRGB(ls[0]);
+  line(ctx,S[0],S[1],E[0],E[1],incol,cp?2.4:3); arrowHead(ctx,(S[0]+E[0])/2,(S[1]+E[1])/2,Math.atan2(din[1],din[0]),incol,9);
+  if(!cp){ const nn=dir(180-A/2); line(ctx,E[0]+nn[0]*34,E[1]+nn[1]*34,E[0]-nn[0]*34,E[1]-nn[1]*34,C.muted,1.2,[4,4]); text(ctx,white?"white light":ls[0]+" nm laser",S[0]+6,S[1]-8,C.ink,F(12)); }
+  const xs=w-(cp?8:14); ctx.fillStyle=C.line; ctx.fillRect(xs-3,0,6,h);
+  const ex=R[0]-P[0], ey=R[1]-P[1]; let tirAny=false;
+  ls.forEach(l=>{ const n=nOf(o.mat,l,o.mag), pr=prismRay(n,i,A), d2=dir(-A/2+pr.r1), col=lamRGB(l);
+    const den=d2[0]*ey-d2[1]*ex, px=P[0]-E[0], py=P[1]-E[1], t=(px*ey-py*ex)/den, s=(px*d2[1]-py*d2[0])/den;
+    if(!(t>0) || s<0 || s>1){ const tb=d2[1]>0? (yb-E[1])/d2[1] : 40; line(ctx,E[0],E[1],E[0]+d2[0]*tb,E[1]+d2[1]*tb,col,1.6); return; }
+    const X=[E[0]+d2[0]*t, E[1]+d2[1]*t]; line(ctx,E[0],E[1],X[0],X[1],col,white?1.4:2.4);
+    if(pr.tir){ tirAny=true; const nr=dir(A/2), dt=d2[0]*nr[0]+d2[1]*nr[1], rf=[d2[0]-2*dt*nr[0], d2[1]-2*dt*nr[1]]; line(ctx,X[0],X[1],X[0]+rf[0]*36,X[1]+rf[1]*36,col,1.6); return; }
+    const d3=dir(A/2-pr.e); if(d3[0]<=0) return; let t3=(xs-3-X[0])/d3[0]; const yy=X[1]+d3[1]*t3;
+    if(yy<0) t3=(0-X[1])/d3[1]; else if(yy>h) t3=(h-X[1])/d3[1];
+    const Y=[X[0]+d3[0]*t3, X[1]+d3[1]*t3]; line(ctx,X[0],X[1],Y[0],Y[1],col,white?2:2.6);
+    if(Y[0]>=xs-4){ ctx.fillStyle=col; ctx.fillRect(xs-4,Y[1]-3,8,6); }
+  });
+  if(!cp){ const n5=MATS[o.mat].A+MATS[o.mat].B/(550*550); text(ctx,`${MATS[o.mat].name} · n ≈ ${n5.toFixed(3)}`,cx,Math.min(h-4,yb+18),C.muted,F(12),"center"); if(tirAny) text(ctx,"Total internal reflection at the second face",12,20,C.bad,F(12)); text(ctx,"screen",xs-8,16,C.muted,F(11),"right"); }
+  return {tir:tirAny};
+}
+// Lamp and light meter (full) or the inverse-square picture (compact)
+function glowLamp(ctx,x,y,r){ ctx.save(); ctx.fillStyle=C.apricot; for(let k=3;k>=1;k--){ ctx.globalAlpha=0.12; ctx.beginPath(); ctx.arc(x,y,r+k*7,0,7); ctx.fill(); } ctx.globalAlpha=1; ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill(); ctx.fillStyle=C.warn; ctx.beginPath(); ctx.arc(x,y,r*0.45,0,7); ctx.fill(); ctx.restore(); }
+function drawLamp(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc);
+  if(o.compact){
+    const lx=w*0.1, ly=h*0.5, d1=w*0.36, d2=w*0.72, s1=h*0.16;
+    ctx.save(); ctx.fillStyle=C.apricot; ctx.globalAlpha=0.2; ctx.beginPath(); ctx.moveTo(lx,ly); ctx.lineTo(lx+d2,ly-2*s1); ctx.lineTo(lx+d2,ly+2*s1); ctx.closePath(); ctx.fill(); ctx.restore();
+    line(ctx,lx,ly,lx+d2,ly-2*s1,C.warn,1.3); line(ctx,lx,ly,lx+d2,ly+2*s1,C.warn,1.3);
+    glowLamp(ctx,lx,ly,9);
+    ctx.fillStyle=C.terra; ctx.fillRect(lx+d1-3,ly-s1,6,2*s1); ctx.fillStyle=C.olive; ctx.fillRect(lx+d2-3,ly-2*s1,6,4*s1);
+    text(ctx,"d",lx+d1,ly+s1+15,C.ink,F(12),"center"); text(ctx,"2d",lx+d2,ly+2*s1+15,C.ink,F(12),"center");
+    text(ctx,"area A: I",lx+d1,ly-s1-7,C.terra,F(11),"center"); text(ctx,"area 4A: I / 4",Math.min(w-40,lx+d2),ly-2*s1-7,C.olive,F(11),"center");
+    return;
+  }
+  const lx=46, ly=h*0.45, pxm=(w-lx-70)/1.0, mx=lx+o.d*pxm, sh=34;
+  ctx.save(); ctx.strokeStyle=C.grid; ctx.lineWidth=1.2; for(let k=1;k<=10;k++){ ctx.beginPath(); ctx.arc(lx,ly,k*0.1*pxm,-0.5,0.5); ctx.stroke(); } ctx.restore();
+  ctx.save(); ctx.strokeStyle=C.olive; ctx.lineWidth=2; ctx.setLineDash([6,4]); ctx.beginPath(); ctx.arc(lx,ly,o.d*pxm,-0.6,0.6); ctx.stroke(); ctx.restore();
+  ctx.save(); ctx.fillStyle=C.apricot; ctx.globalAlpha=0.28; ctx.beginPath(); ctx.moveTo(lx,ly); ctx.lineTo(mx,ly-sh/2); ctx.lineTo(mx,ly+sh/2); ctx.closePath(); ctx.fill(); ctx.restore();
+  glowLamp(ctx,lx,ly,14);
+  ctx.fillStyle=C.ink; ctx.fillRect(mx,ly-sh/2,7,sh); ctx.fillRect(mx+7,ly-7,18,14);
+  const a=0.6, tx=lx+o.d*pxm*Math.cos(a), ty=ly-o.d*pxm*Math.sin(a);
+  text(ctx,"sphere area 4πd²",Math.min(w-110,tx+6),Math.max(64,ty),C.olive,F(11));
+  const bw=150, bx=Math.min(w-bw-6,Math.max(6,mx-bw/2)), by=8, bh=46;
+  ctx.fillStyle=C["surface-2"]; ctx.strokeStyle=C.line; ctx.lineWidth=1.5; ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,10); ctx.fill(); ctx.stroke();
+  text(ctx,"light meter",bx+10,by+16,C.muted,F(11)); text(ctx,o.reading!=null? o.reading.toFixed(2)+" W/m²" : "— W/m²",bx+10,by+38,C.ink,M(17));
+  const ry=h-24; line(ctx,lx,ry,lx+pxm,ry,C.muted,1.4);
+  for(let k=0;k<=10;k++){ const x=lx+k*0.1*pxm; line(ctx,x,ry,x,ry-(k%2?4:8),C.muted,1.2); if(k%2===0) text(ctx,(k/10).toFixed(1),x,ry+14,C.muted,M(10),"center"); }
+  text(ctx,"m",lx+pxm+8,ry+4,C.muted,F(11)); line(ctx,lx,ry-16,mx,ry-16,C.terra,2); arrowHead(ctx,mx,ry-16,0,C.terra,8); text(ctx,"d = "+o.d.toFixed(2)+" m",(lx+mx)/2,ry-22,C.terra,F(12),"center");
+}
+// Solar elevation, irradiance and day length (simple clear-sky model)
+const decl = d => 23.44*Math.sin(2*Math.PI*(d-81)/365);
+const noonElev = (lat,d) => 90-Math.abs(lat-decl(d));
+function Ih(e){ if(e<=0) return 0; const s=Math.sin(e*D2R); return 1.1*1361*Math.pow(0.7,Math.pow(1/s,0.678))*s; }
+function dayLen(lat,d){ const x=-Math.tan(lat*D2R)*Math.tan(decl(d)*D2R); if(x>=1) return 0; if(x<=-1) return 24; return 2*Math.acos(x)*R2D/15; }
+function dayEnergy(lat,d){ const p=lat*D2R, de=decl(d)*D2R, H=dayLen(lat,d)/2*15; if(H<=0) return 0; let sum=0; const N=60;
+  for(let k=0;k<N;k++){ const hh=(-H+(k+0.5)*2*H/N)*D2R, se=Math.sin(p)*Math.sin(de)+Math.cos(p)*Math.cos(de)*Math.cos(hh); sum+=Ih(Math.asin(Math.max(-1,Math.min(1,se)))*R2D); }
+  return sum/N*(2*H/15)/1000; }
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"], MLEN=[31,28,31,30,31,30,31,31,30,31,30,31];
+function dayLabel(d){ let m=0; while(d>MLEN[m]){ d-=MLEN[m]; m++; } return d+" "+MON[m]; }
+function drawSeason(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact, e=noonElev(o.lat,o.day), hs=cp? h : Math.round(h*0.5);
+  const gy=hs-(cp?20:30), cx=w*0.55, Rr=Math.max(20,Math.min(w*0.42, gy-(cp?24:16)));
+  ctx.save(); ctx.strokeStyle=C.grid; ctx.lineWidth=1.5; ctx.setLineDash([4,5]); ctx.beginPath(); ctx.arc(cx,gy,Rr,Math.PI,2*Math.PI); ctx.stroke(); ctx.restore();
+  ctx.fillStyle=C["surface-2"]; ctx.fillRect(0,gy,w,hs-gy); line(ctx,0,gy,w,gy,C.olive,2);
+  if(e>0){
+    const a=e*D2R, Sx=cx-Rr*Math.cos(a), Sy=gy-Rr*Math.sin(a), u=[Math.cos(a),Math.sin(a)], p=[Math.sin(a),-Math.cos(a)], W=cp?22:34;
+    const hitX=(x,y)=> x+(gy-y)/u[1]*u[0];
+    const S1=[Sx+p[0]*W/2,Sy+p[1]*W/2], S2=[Sx-p[0]*W/2,Sy-p[1]*W/2], G1=hitX(S1[0],S1[1]), G2=hitX(S2[0],S2[1]);
+    ctx.save(); ctx.fillStyle=C.apricot; ctx.globalAlpha=0.35; ctx.beginPath(); ctx.moveTo(S1[0],S1[1]); ctx.lineTo(G1,gy); ctx.lineTo(G2,gy); ctx.lineTo(S2[0],S2[1]); ctx.closePath(); ctx.fill(); ctx.restore();
+    line(ctx,S1[0],S1[1],G1,gy,C.warn,1.4); line(ctx,S2[0],S2[1],G2,gy,C.warn,1.4);
+    line(ctx,Math.max(0,Math.min(G1,G2)),gy,Math.min(w,Math.max(G1,G2)),gy,C.terra,5);
+    ctx.fillStyle=C.warn; ctx.beginPath(); ctx.arc(Sx,Sy,cp?9:13,0,7); ctx.fill();
+    ctx.save(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(cx,gy,cp?18:28,Math.PI,Math.PI+a); ctx.stroke(); ctx.restore();
+    text(ctx,Math.round(e)+"°",cx-(cp?22:34)*Math.cos(a/2)-(cp?14:18),gy-(cp?22:34)*Math.sin(a/2),C.ink,F(cp?11:13),"center","middle");
+    if(!cp) text(ctx,`Spread over ${(1/Math.sin(a)).toFixed(2)}× the area of an overhead Sun`,10,gy+20,C.muted,F(11));
+  } else text(ctx,"The Sun stays below the horizon at noon (polar night)",10,gy-12,C.bad,F(cp?11:13));
+  if(cp){ text(ctx,o.label||dayLabel(o.day),8,15,C.ink,F(11)); return; }
+  text(ctx,`${o.lat}° N · ${dayLabel(o.day)} · noon`,10,18,C.ink,F(13));
+  const gx0=46, gx1=w-12, gy0=hs+24, gy1=h-24, GX=d=>gx0+(d-1)/364*(gx1-gx0), GY=v=>gy1-v/1400*(gy1-gy0);
+  line(ctx,gx0,gy1,gx1,gy1,C.muted,1.2); line(ctx,gx0,gy0,gx0,gy1,C.muted,1.2);
+  [0,500,1000].forEach(v=>{ line(ctx,gx0,GY(v),gx1,GY(v),C.grid,1); text(ctx,v,gx0-5,GY(v)+4,C.muted,M(10),"right"); });
+  line(ctx,gx0,GY(1361),gx1,GY(1361),C.olive,1.4,[5,4]); text(ctx,"above the atmosphere: 1361",gx1,GY(1361)-4,C.olive,F(10),"right");
+  text(ctx,"noon irradiance (W/m²)",gx0+6,gy0-8,C.ink,F(11));
+  [15,46,74,105,135,166,196,227,258,288,319,349].forEach((d,k)=>text(ctx,"JFMAMJJASOND"[k],GX(d),gy1+14,C.muted,M(10),"center"));
+  ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2.6; ctx.lineJoin="round"; ctx.beginPath(); for(let d=1;d<=365;d+=2){ const x=GX(d), y=GY(Ih(noonElev(o.lat,d))); if(d===1) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.stroke(); ctx.restore();
+  ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(GX(o.day),GY(Ih(e)),5.5,0,7); ctx.fill();
+}
+// Solar spectrum modelled as a 5800 K hot body
+function drawSun(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const x0=40, x1=w-12, y0=16, y1=h-30, L0=100, L1=2500, T=5800;
+  const B=l=>{ const m=l*1e-9; return 1/(Math.pow(m,5)*(Math.exp(0.014388/(m*T))-1)); }, Bmax=B(500);
+  const X=l=>x0+(l-L0)/(L1-L0)*(x1-x0), Y=v=>y1-v/Bmax*0.92*(y1-y0);
+  for(let x=Math.ceil(x0);x<=x1;x++){ const l=L0+(x-x0)/(x1-x0)*(L1-L0); ctx.fillStyle= l<400? C.blush : l<=700? lamRGB(l) : C.apricot; ctx.fillRect(x,Y(B(l)),1.2,y1-Y(B(l))); }
+  ctx.save(); ctx.strokeStyle=C.ink; ctx.lineWidth=2; ctx.beginPath(); for(let x=x0;x<=x1;x+=1){ const l=L0+(x-x0)/(x1-x0)*(L1-L0), y=Y(B(l)); if(x===x0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.stroke(); ctx.restore();
+  line(ctx,x0,y1,x1,y1,C.muted,1.2); line(ctx,x0,y0,x0,y1,C.muted,1.2);
+  [500,1000,1500,2000,2500].forEach(l=>text(ctx,l,X(l),y1+14,C.muted,M(10),"center")); text(ctx,"wavelength (nm)",x1,y1+27,C.muted,F(11),"right");
+  text(ctx,"power",x0+6,y0+4,C.ink,F(11)); text(ctx,"UV",X(250),y1-8,C.ink,F(11),"center"); text(ctx,"visible",X(550),Y(B(550))-8,C.ink,F(12),"center"); text(ctx,"infrared",X(1300),Y(B(1300))-10,C.ink,F(12),"center");
+}
+
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "spectrum", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3"]; const loState=store.get("s24-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s24-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s24-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  spectrum:{ vis:[["em",{marker:-6.3}]], cap:"One family, seven bands. Each band is drawn the same width here; in reality the visible band is a thin sliver.",
+    keys:[["≈","EM waves are transverse waves of electric and magnetic fields. They need no medium, so they cross empty space."],["c","In a vacuum every EM wave travels at c = 3.0 × 10⁸ m/s."],["↔","From radio waves to gamma rays, the wavelength gets shorter and the frequency (and energy) gets higher."]],
+    f:"c = fλ", mistake:"Thinking radio waves are sound. Radio waves are electromagnetic and travel at the speed of light; sound is a mechanical wave that needs a medium." },
+  sources:{ vis:[["em",{sources:true}]], cap:"A typical source for each band",
+    keys:[["🔥","Warm objects give out infrared. Very hot ones, like the Sun, also give out visible light and UV."],["📡","Oscillating currents in aerials make radio waves and microwaves."],["☢","X-rays come from fast electrons hitting a metal target. Gamma rays come from unstable nuclei."]],
+    f:"Radio · Microwave · Infrared · Visible · UV · X-ray · Gamma", mistake:"Mixing up the order. Try: Rich Men In Vegas Use X-ray Glasses." },
+  ionising:{ vis:[["ion",{k:7,t:2.6,rate:3}],["ion",{k:3,t:2.6,rate:3}]], grid:"vis2", cap:"X-ray photons knock electrons out of atoms (left). Light photons can't, however many there are (right).",
+    keys:[["⚡","Ionising radiation has enough energy to knock electrons out of atoms, turning them into ions."],["☢","X-rays, gamma rays and the highest-energy UV are ionising. They can damage cells and DNA."],["🔅","The energy of each photon decides it. A brighter beam of visible light still can't ionise."]],
+    f:"higher frequency → more energy per photon", mistake:"Calling all radiation ionising. Radio, microwaves, infrared and visible light are non-ionising." },
+  dispersion:{ vis:[["prism",{mat:"flint",i:50,A:60,light:"white",mag:true}]], cap:"White light in, a spectrum out (spread magnified 5× so you can see it)", link:["refraction-lenses.html#learn","More on refraction in 2.3"],
+    keys:[["🌈","Dispersion is the splitting of white light into its colours."],["n","Glass has a slightly different refractive index for each colour, so each colour refracts by a different amount."],["V","Violet slows down most in glass, so it bends most. Red bends least."]],
+    f:"n = c / v, and n is bigger for violet than for red", mistake:"Thinking the prism adds the colours. They were all in the white light already; the prism only separates them." },
+  irradiance:{ vis:[["lamp",{}]], cap:"The same light spread over four times the area: the irradiance falls to a quarter.",
+    keys:[["☀","Irradiance is the power falling on a surface per unit area."],["I","I = P / A, measured in watts per square metre (W/m²)."],["1361","Above the atmosphere sunlight delivers about 1361 W/m². At the ground on a clear day it's up to about 1000 W/m²."]],
+    f:"I = P / A", mistake:"Mixing up power (W) and irradiance (W/m²). A bigger panel catches more power, but the irradiance is the same." },
+  life:{ vis:[["season",{lat:53,day:172,label:"Ireland, June noon"}],["season",{lat:53,day:355,label:"Ireland, December noon"}]], grid:"vis2", cap:"A low winter Sun spreads the same beam over much more ground.",
+    keys:[["🌱","Visible light drives photosynthesis, the start of almost every food chain."],["🌡","Sunlight warms Earth and drives weather and climate. A low Sun in winter gives a lower irradiance."],["🛡","UV makes vitamin D in skin but also causes sunburn and skin cancer. The ozone layer absorbs most of it."]],
+    f:"low Sun → same power over a bigger area → lower I", mistake:"Saying winter is colder because Earth is further from the Sun. Earth is actually closest to the Sun in early January." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div class="${L.grid||""}" style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:var(--band-ink)">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button>${L.link?`<a class="xlink" href="${L.link[0]}">${L.link[1]} →</a>`:""}</div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = BANDS.map((b,k)=>({k, t:b.name, chips:[[b.ion===2?"Ionising":b.ion===1?"High-energy UV ionises":"Non-ionising",b.ion?"alert":"neutral"],[b.use.split(",")[0],"real"]], use:[b.ico,b.src.split(",")[0]]}));
+$("cases").innerHTML = CASES.map((c,k)=>`<div class="panel case"><canvas class="mini" data-case="${k}"></canvas><h3>${c.t}</h3><div class="chips">${chipsHTML(c.chips)}</div><div class="use">${svg(c.use[0])}${c.use[1]}</div></div>`).join("");
+const PRISM3 = [{mat:"crown",i:50,A:60,light:"red",mag:true},{mat:"crown",i:50,A:60,light:"white",mag:true},{mat:"flint",i:50,A:60,light:"white",mag:true}];
+const BARS = [["Above the atmosphere","no air in the way",1361],["Equator, noon","Sun overhead",Ih(90)],["Ireland, 21 June noon",`Sun at ${Math.round(noonElev(53.3,172))}°`,Ih(noonElev(53.3,172))],["Ireland, 21 March noon",`Sun at ${Math.round(noonElev(53.3,80))}°`,Ih(noonElev(53.3,80))],["Ireland, 21 Dec noon",`Sun at ${Math.round(noonElev(53.3,355))}°`,Ih(noonElev(53.3,355))],["Thick cloud, Ireland","typical",100]];
+$("bars").innerHTML = BARS.map(([n,sub,v])=>`<div class="barrow"><span><b>${n}</b><br><small style="color:var(--muted)">${sub}</small></span><div class="track"><i style="width:${(v/1400*100).toFixed(1)}%;background:${v>900?"var(--terra)":v>400?"var(--apricot)":"var(--blush)"}"></i></div><span class="v">≈ ${Math.round(v/10)*10} W/m²</span></div>`).join("");
+const AROUND = [
+  ["life","Photosynthesis","Plants and algae turn visible light into food. Almost every food chain starts here.",[["Visible","neutral"]],"var(--sage)"],
+  ["thermo","Warming the planet","Sunlight keeps Earth's average temperature near 15 °C and drives wind, rain and ocean currents.",[["IR + visible","neutral"]],"var(--apricot)"],
+  ["globe","Seasons and climate","A higher Sun and longer days in summer mean more energy. Near the poles irradiance is low all year.",[["Sun angle","real"]],"var(--blush)"],
+  ["shield","Ozone and UV","The ozone layer absorbs most UV. What gets through makes vitamin D but can cause sunburn and skin cancer.",[["UV","alert"]],"var(--cream)"],
+  ["irradiance","Solar power","Solar panels turn about 20% of the irradiance into electricity, even under Irish skies.",[["Renewable","real"]],"var(--sage)"],
+  ["eye","Seeing and body clocks","Our eyes see the band where sunlight is strongest. Daylight also sets our sleep cycle.",[["Visible","neutral"]],"var(--blush)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"spectrum",label:"EM spectrum",col:"var(--blush)",leaves:[["Seven bands","Radio, microwave, infrared, visible, UV, X-ray, gamma."],["c = fλ","All travel at 3.0 × 10⁸ m/s in a vacuum."],["No medium","EM waves can cross empty space."],["Transverse","Electric and magnetic fields vibrating."]]},
+  {id:"sources",label:"Sources & uses",col:"var(--apricot)",leaves:[["Hot objects","Give out infrared, visible and UV."],["Aerials","Oscillating currents make radio waves and microwaves."],["X-ray tubes","Fast electrons hit a metal target."],["Nuclei","Unstable nuclei give out gamma rays."]]},
+  {id:"ionising",label:"Ionising",col:"var(--sage)",leaves:[["Ions","Atoms that have lost or gained electrons."],["X and gamma","The main ionising EM waves."],["Per photon","Energy per photon decides it, not brightness."]]},
+  {id:"dispersion",label:"Dispersion",col:"var(--cream)",leaves:[["Prism","Splits white light into colours."],["n varies","A different n for each colour."],["Violet most","Violet bends most, red least."],["Rainbows","Dispersion in raindrops."]]},
+  {id:"irradiance",label:"Irradiance",col:"var(--blush)",leaves:[["I = P / A","Power per unit area, in W/m²."],["1361 W/m²","Sunlight above the atmosphere."],["Light meter","Measures irradiance."],["Inverse square","Twice as far: a quarter of the irradiance."]]},
+  {id:"life",label:"Sun & life",col:"var(--sage)",leaves:[["Photosynthesis","Visible light makes food."],["Climate","Sunlight warms Earth and drives weather."],["Seasons","The Sun's height changes the irradiance."],["UV","Vitamin D, but also sunburn and skin cancer."]]},
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">EM</text><text x="${cx}" y="${cy+22}" text-anchor="middle">energy</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["spectrum","Name the seven parts of the EM spectrum, longest wavelength first.","Radio waves, microwaves, infrared, visible light, ultraviolet, X-rays, gamma rays."],
+  ["spectrum","What speed do all EM waves travel at in a vacuum?","3.0 × 10⁸ m/s, the speed of light, c."],
+  ["spectrum","State the wave equation for EM waves.","c = fλ: speed = frequency × wavelength."],
+  ["spectrum","Going from radio waves to gamma rays, what happens to λ and f?","The wavelength gets shorter; the frequency (and energy) gets higher."],
+  ["spectrum","Do EM waves need a medium?","No. They travel through a vacuum, which is how sunlight reaches us."],
+  ["spectrum","Are EM waves transverse or longitudinal?","Transverse: changing electric and magnetic fields at right angles to the direction of travel."],
+  ["spectrum","What is the wavelength range of visible light?","About 400 nm (violet) to 700 nm (red)."],
+  ["sources","Give a source and a use of microwaves.","Source: a microwave oven, phone mast or Wi-Fi router. Use: cooking, mobile phones, Wi-Fi, radar."],
+  ["sources","Give a source and a use of infrared.","Source: any warm object, such as a heater or your body. Use: remote controls, thermal cameras, grills."],
+  ["sources","Give a source and a use of ultraviolet.","Source: the Sun or a UV lamp. Use: sterilising water, security marks, making vitamin D."],
+  ["sources","How are X-rays produced?","By firing fast electrons at a metal target in an X-ray tube."],
+  ["sources","Where do gamma rays come from?","Unstable (radioactive) nuclei, nuclear reactions and violent events in space."],
+  ["sources","Give two uses of gamma rays.","Killing cancer cells (radiotherapy) and sterilising medical equipment or food."],
+  ["sources","Which EM waves carry radio and TV broadcasts?","Radio waves."],
+  ["ionising","What is ionising radiation?","Radiation with enough energy to knock electrons out of atoms, creating ions."],
+  ["ionising","Which EM waves are ionising?","X-rays, gamma rays and the highest-energy (extreme) ultraviolet."],
+  ["ionising","Why is ionising radiation dangerous?","Ions formed in cells can damage DNA, which can kill cells or cause cancer."],
+  ["ionising","Does a brighter red light become ionising?","No. Brighter means more photons, but each photon still has too little energy."],
+  ["ionising","Give two ways to protect yourself from X-rays or gamma rays.","Any two: lead or concrete shielding, keeping your distance, limiting the time exposed."],
+  ["dispersion","What is dispersion?","The splitting of white light into its colours (a spectrum)."],
+  ["dispersion","Why does a prism cause dispersion?","Glass has a different refractive index for each colour, so each colour refracts by a different amount."],
+  ["dispersion","Which colour is deviated most by a prism? Which least?","Violet most, red least."],
+  ["dispersion","How would you demonstrate dispersion in the lab?","In a dim room, shine a narrow beam of white light from a ray box into a glass prism and catch the spectrum on a white screen."],
+  ["dispersion","Give a natural example of dispersion.","A rainbow: raindrops refract and disperse sunlight."],
+  ["irradiance","Define irradiance.","The power falling on a surface per unit area: I = P / A."],
+  ["irradiance","What is the unit of irradiance?","Watts per square metre: W/m² (or W m⁻²)."],
+  ["irradiance","What is the solar irradiance above Earth's atmosphere?","About 1361 W/m² (the solar constant)."],
+  ["irradiance","Sunlight of 900 W/m² falls on a 2.0 m² panel. What power falls on it?","P = I × A = 900 × 2.0 = 1800 W."],
+  ["irradiance","Why is the irradiance at the ground less than above the atmosphere?","Some sunlight is absorbed or scattered by gases, dust and clouds."],
+  ["life","Why is the solar irradiance in Ireland lower in winter?","The Sun is lower, so the same beam spreads over a bigger area and passes through more air. Days are shorter too."],
+  ["life","Give two good effects of sunlight on life.","Any two: photosynthesis, warming Earth, making vitamin D, driving the water cycle and weather."],
+  ["life","Give one harmful effect of solar UV.","Sunburn, skin cancer or eye damage (cataracts)."],
+  ["life","What does the ozone layer do?","It absorbs most of the Sun's harmful UV before it reaches the ground."],
+];
+let fcKnown = store.get("s24-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s24-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s24-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s24-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["spectrum","Which of these has the longest wavelength?",["X-rays","Visible light","Radio waves","Ultraviolet"],2,"Radio waves are at the long-wavelength end of the spectrum, from about 10 cm to many kilometres."],
+  ["spectrum","In a vacuum, all electromagnetic waves travel at:",["A speed that depends on their frequency","The same speed, 3.0 × 10⁸ m/s","The speed of sound","Faster if they have more energy"],1,"Every EM wave travels at c = 3.0 × 10⁸ m/s in a vacuum. Only f and λ differ."],
+  ["spectrum","What is the frequency of light with a wavelength of 600 nm? (c = 3.0 × 10⁸ m/s)",["1.8 × 10¹⁷ Hz","2.0 × 10⁻¹⁵ Hz","5.0 × 10¹⁴ Hz","5.0 × 10⁸ Hz"],2,"f = c / λ = 3.0 × 10⁸ / 600 × 10⁻⁹ = 5.0 × 10¹⁴ Hz."],
+  ["spectrum","Which list is in order of increasing frequency?",["X-ray, visible, microwave, radio","Radio, microwave, visible, X-ray","Visible, radio, X-ray, microwave","Microwave, radio, X-ray, visible"],1,"Frequency rises from radio waves to gamma rays: radio, microwave, infrared, visible, UV, X-ray, gamma."],
+  ["sources","A thermal camera detects:",["Ultraviolet","X-rays","Radio waves","Infrared"],3,"All warm objects give out infrared. Warmer objects give out more."],
+  ["sources","Which waves are used to treat cancer and to sterilise sealed medical equipment?",["Gamma rays","Radio waves","Infrared","Microwaves"],0,"Gamma rays are very penetrating and ionising, so they kill cells and bacteria."],
+  ["sources","A microwave oven heats food mainly by:",["Ionising the food","Making water molecules in the food vibrate","Making the food radioactive","Producing ultraviolet"],1,"Microwaves are absorbed by water molecules, which vibrate faster, so the food heats up. They are non-ionising."],
+  ["sources","X-rays are produced when:",["Fast electrons hit a metal target","A warm object cools","Current flows in an aerial","A nucleus splits in two"],0,"In an X-ray tube, electrons are accelerated and fired at a metal target."],
+  ["ionising","Ionising radiation is radiation that:",["Is always visible","Travels faster than light","Has enough energy to remove electrons from atoms","Only comes from the Sun"],2,"Removing electrons turns atoms into ions, which is why it can damage cells."],
+  ["ionising","Which of these is ionising?",["Microwaves","X-rays","Infrared","Visible light"],1,"X-rays and gamma rays are ionising. The others carry too little energy per photon."],
+  ["ionising","Turning up the brightness of a red lamp makes its light:",["Ionising","Turn into ultraviolet","Give out more photons, but still not ionise","Travel faster"],2,"More photons, but each one still has the same, too-small energy. It's the energy per photon that matters."],
+  ["dispersion","Dispersion is:",["The bouncing of light off a mirror","The splitting of white light into its colours","The bending of light around corners","The fading of light with distance"],1,"A prism or raindrop separates white light into a spectrum."],
+  ["dispersion","White light passes through a glass prism. Which colour is refracted most?",["Red","Green","Violet","They all refract equally"],2,"Glass has the biggest refractive index for violet, so violet bends most. Red bends least."],
+  ["dispersion","Dispersion happens because the refractive index of glass:",["Is the same for all colours","Depends on the wavelength (colour) of the light","Is less than 1","Depends on how bright the light is"],1,"A different n for each colour means a different angle of refraction for each colour."],
+  ["irradiance","Sunlight delivers 1200 W to a 1.5 m² panel. The irradiance is:",["1800 W/m²","1.25 W/m²","1200 W/m²","800 W/m²"],3,"I = P / A = 1200 / 1.5 = 800 W/m²."],
+  ["irradiance","The unit of irradiance is:",["W","W/m²","J","W m"],1,"Irradiance is power per unit area: watts per square metre."],
+  ["life","The noon irradiance in Ireland is lower in winter mainly because:",["The Sun is further from Earth","The Sun gives out less power","The Sun is lower, so its light spreads over a bigger area and passes through more air","Clouds reflect all the light"],2,"A low Sun spreads the same beam over more ground. Earth is actually closest to the Sun in January."],
+  ["life","Which process uses visible light from the Sun to make food for nearly all life on Earth?",["Respiration","Photosynthesis","Evaporation","Ionisation"],1,"Plants and algae use light energy to make sugar from carbon dioxide and water."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s24-best",null); if(best==null||pct>best) store.set("s24-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/[<>&"]/g,"")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Define","Give the exact meaning in one full, precise sentence.","Define irradiance."],
+  ["State","Give a short fact, law or value. No explanation needed.","State the speed of EM waves in a vacuum."],
+  ["Categorise","Sort things into groups using clear features, and say which feature you used.","Categorise these waves as ionising or non-ionising."],
+  ["Explain","Say what happens and why, using the physics behind it.","Explain why a prism disperses white light."],
+  ["Describe","Give the steps or features in a clear order.","Describe how you would show that sunlight contains infrared."],
+  ["Demonstrate","Show it happening: the equipment, the method and what you observe.","Demonstrate dispersion using a glass prism."],
+  ["Calculate","Write the formula, substitute the numbers, give the answer with a unit.","Calculate the wavelength of a 2.4 GHz Wi-Fi signal."],
+  ["Investigate","Plan, collect data or use secondary sources, analyse it and draw a conclusion.","Investigate solar irradiance and its impact on life on Earth."],
+  ["Evaluate","Judge strengths and weaknesses, then reach a conclusion.","Evaluate a website's claim that solar panels don't work in Ireland."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+
+// Calculation trainer
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+function parseNum(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,ch=>({"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-"})[ch]);
+  s=s.replace(/[x×*]10\^?/i,"e");
+  return parseFloat(s);
+}
+const toM = (v,u) => ({m:1,cm:1e-2,mm:1e-3,"μm":1e-6,nm:1e-9})[u]*v;
+const LAMS=[
+  ()=>{ const v=rnd(28,36)/10; return ["An FM radio wave",v,`${v} m`,null]; },
+  ()=>{ const v=rnd(10,15); return ["A microwave",toM(v,"cm"),`${v} cm`,`λ = ${v} cm = ${v/100} m`]; },
+  ()=>{ const v=rnd(85,95)*10; return ["Infrared from a TV remote",toM(v,"nm"),`${v} nm`,`λ = ${v} nm = ${sci(v*1e-9,3)} m`]; },
+  ()=>{ const v=rnd(50,57)*10; return ["Green light",toM(v,"nm"),`${v} nm`,`λ = ${v} nm = ${sci(v*1e-9,3)} m`]; },
+  ()=>{ const v=rnd(62,70)*10; return ["Red light",toM(v,"nm"),`${v} nm`,`λ = ${v} nm = ${sci(v*1e-9,3)} m`]; },
+  ()=>{ const v=rnd(25,38)*10; return ["Ultraviolet light",toM(v,"nm"),`${v} nm`,`λ = ${v} nm = ${sci(v*1e-9,3)} m`]; },
+  ()=>{ const v=rnd(1,9); return ["An X-ray",v*1e-11,`0.0${v} nm`,`λ = 0.0${v} nm = ${sci(v*1e-11,3)} m`]; },
+];
+const FQS=[
+  ()=>{ const v=rnd(880,1080)/10; return ["An FM radio station broadcasts",v*1e6,`${v} MHz`,`f = ${v} MHz = ${sci(v*1e6,4)} Hz`]; },
+  ()=>{ const v=pick([2.4,5.0]); return ["A Wi-Fi router transmits",v*1e9,`${v.toFixed(1)} GHz`,`f = ${v.toFixed(1)} GHz = ${sci(v*1e9,2)} Hz`]; },
+  ()=>["A microwave oven works",2.45e9,"2.45 GHz","f = 2.45 GHz = 2.45 × 10⁹ Hz"],
+  ()=>{ const v=rnd(8,26)/10; return ["A mobile phone transmits",v*1e9,`${v} GHz`,`f = ${v} GHz = ${sci(v*1e9,2)} Hz`]; },
+  ()=>{ const v=rnd(43,75)/10; return ["A laser gives out light",v*1e14,`${v.toFixed(1)} × 10¹⁴ Hz`,null]; },
+];
+const PTYPES = {
+  freq:{ name:"Find f", gen(){ const [nm,lam,disp,conv]=pick(LAMS)(), f=C0/lam;
+    return { q:`${nm} has a wavelength of <b>${disp}</b>. Calculate its frequency. (c = 3.0 × 10⁸ m/s)`, ans:f, unit:"Hz",
+      steps:[conv||`λ = ${disp}`, "c = fλ  →  f = c / λ", `f = 3.0 × 10⁸ / ${sci(lam,3)}`, `f = ${sci(f,3)} Hz`] }; } },
+  wave:{ name:"Find λ", gen(){ const [src,f,disp,conv]=pick(FQS)(), lam=C0/f;
+    return { q:`${src} at a frequency of <b>${disp}</b>. Calculate the wavelength. (c = 3.0 × 10⁸ m/s)`, ans:lam, unit:"m",
+      steps:[conv||`f = ${disp}`, "c = fλ  →  λ = c / f", `λ = 3.0 × 10⁸ / ${sci(f,3)}`, `λ = ${lam<0.01? sci(lam,3) : s3(lam)} m`] }; } },
+  irr:{ name:"I = P / A", gen(){ const A=rnd(10,40)/10, P=rnd(8,60)*25, I=P/A;
+    return { q:`A solar panel of area <b>${A} m²</b> receives <b>${P} W</b> of solar power. Calculate the solar irradiance on the panel.`, ans:I, unit:"W/m²",
+      steps:["I = P / A", `I = ${P} / ${A}`, `I = ${s3(I)} W/m²`] }; } },
+  pow:{ name:"P = I × A", gen(){ const I=rnd(20,100)*10, A=rnd(5,40)/10, P=I*A;
+    return { q:`Sunlight with an irradiance of <b>${I} W/m²</b> falls on a roof panel of area <b>${A} m²</b>. Calculate the solar power falling on the panel.`, ans:P, unit:"W",
+      steps:["I = P / A  →  P = I × A", `P = ${I} × ${A}`, `P = ${s3(P)} W`] }; } },
+  area:{ name:"Find A", gen(){ const I=rnd(40,100)*10, P=rnd(2,30)*100, A=P/I;
+    return { q:`A greenhouse needs <b>${P} W</b> of sunlight. The irradiance is <b>${I} W/m²</b>. Calculate the area of glass the sunlight must fall on.`, ans:A, unit:"m²",
+      steps:["I = P / A  →  A = P / I", `A = ${P} / ${I}`, `A = ${s3(A)} m²`] }; } },
+  eff:{ name:"Panel output (extra)", gen(){ const I=rnd(50,100)*10, A=rnd(12,20)/10, eta=rnd(15,23), Pin=I*A, Pout=eta/100*Pin;
+    return { q:`Sunlight of irradiance <b>${I} W/m²</b> falls on a <b>${A} m²</b> solar panel that is <b>${eta}%</b> efficient. Calculate its electrical power output.`, ans:Pout, unit:"W",
+      steps:["Power in: P = I × A", `P = ${I} × ${A} = ${s3(Pin)} W`, `Power out = ${eta}% × ${s3(Pin)} = ${(eta/100).toFixed(2)} × ${s3(Pin)}`, `Power out = ${s3(Pout)} W`] }; } },
+  inv:{ name:"Lamp, 4πd² (extra)", gen(){ const P=rnd(10,60), d=rnd(2,20)/10, A=4*Math.PI*d*d, I=P/A;
+    return { q:`A small lamp gives out <b>${P} W</b> of light equally in all directions. Calculate the irradiance <b>${d} m</b> from the lamp.`, ans:I, unit:"W/m²",
+      steps:["The light spreads over a sphere: A = 4πd²", `A = 4π × ${d}² = ${s3(A)} m²`, "I = P / A", `I = ${P} / ${s3(A)} = ${s3(I)} W/m²`] }; } },
+  phot:{ name:"Photon energy (extra)", gen(){ const v=rnd(5,70)*10, lam=v*1e-9, EJ=6.63e-34*3e8/lam, E=EJ/1.6e-19;
+    return { q:`Calculate the energy, in eV, of one photon of wavelength <b>${v} nm</b>. Is it ionising (more than about 10 eV)? (h = 6.63 × 10⁻³⁴ J s, c = 3.0 × 10⁸ m/s, 1 eV = 1.6 × 10⁻¹⁹ J)`, ans:E, unit:"eV",
+      steps:["E = hf = hc / λ", `E = 6.63 × 10⁻³⁴ × 3.0 × 10⁸ / ${sci(lam,3)} = ${sci(EJ,3)} J`, `E = ${sci(EJ,3)} / 1.6 × 10⁻¹⁹ = ${s3(E)} eV`, E>=ION_E? "More than 10 eV: ionising ✓" : "Less than 10 eV: not ionising"] }; } },
+};
+let pType="freq", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseNum($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 0.125, 750 or 4.6e14 (that means 4.6 × 10¹⁴).</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.abs(pCur.ans)*0.02;
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Convert to metres and hertz first (nm × 10⁻⁹, cm ÷ 100, MHz × 10⁶, GHz × 10⁹) and check you used the right formula. Type powers of ten like 4.6e14 or 4.6 × 10^14.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Ionising or not? [situation, log10 of λ in m, answer, why]
+const PRED = [
+  ["X-rays from a dentist's machine",-10.3,"Ionising","X-ray photons carry enough energy to knock electrons out of atoms. That's why the dentist steps out of the room."],
+  ["The signal from your Wi-Fi router",-0.9,"Non-ionising","Microwave photons have far too little energy to ionise. At high power, microwaves only heat."],
+  ["Gamma rays from cobalt-60 used in radiotherapy",-12,"Ionising","Gamma rays are the most energetic EM waves. They ionise atoms and kill cancer cells."],
+  ["Infrared from a toaster",-5.5,"Non-ionising","Infrared heats things, but each photon has far too little energy to ionise."],
+  ["A very bright stage laser",-6.2,"Non-ionising","Brightness means more photons, not more energy per photon. Visible light can't ionise, though a bright laser can still damage your eye."],
+  ["An FM radio broadcast",0.5,"Non-ionising","Radio waves have the lowest energy per photon of all."],
+  ["X-rays given out by very hot gas in space",-9.5,"Ionising","All X-rays are ionising, wherever they come from. Luckily our atmosphere absorbs these ones."],
+  ["Gamma rays from a radioactive nucleus",-12.5,"Ionising","Gamma rays from nuclei are highly penetrating ionising radiation."],
+  ["UV-A from a sunbed",-6.46,"Non-ionising","UV-A can't ionise atoms, but it still damages skin cells and DNA. That's why sunbeds raise the risk of skin cancer."],
+  ["Extreme UV (30 nm) from the Sun's outer layers",-7.5,"Ionising","Extreme UV photons carry more than 10 eV. They ionise gases high in the atmosphere, making the ionosphere."],
+  ["A 1000 W microwave oven",-0.9,"Non-ionising","High power heats water in food, but each photon still has far too little energy to ionise."],
+  ["An airport baggage scanner",-10,"Ionising","Baggage scanners use X-rays, which are ionising. The machine is shielded to protect staff."],
+];
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k && PRED.length>1); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>${PRED[k][0]}.</b> Is it ionising or non-ionising?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick Ionising or Non-ionising first.</div>`; return; }
+  const [,,ans,why]=PRED[pd.k], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true;
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${ans}. ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+  if(predC) predC.redraw();
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"The electromagnetic spectrum", intro:"The electromagnetic spectrum is a family of waves: radio waves, microwaves, infrared, visible light, ultraviolet, X-rays and gamma rays.",
+    parts:[["a","State two properties shared by all electromagnetic waves.",6,"Any two (3 each): travel at 3.0 × 10⁸ m/s in a vacuum · need no medium / can travel through a vacuum · transverse waves · carry energy · can be reflected and refracted."],
+      ["b","Put these in order of increasing frequency: gamma rays, microwaves, radio waves, visible light.",3,"Radio waves, microwaves, visible light, gamma rays (3). Any error: 0."],
+      ["c","A Wi-Fi router transmits at 2.4 GHz. Calculate the wavelength of its signal.",6,"λ = c / f (3) · λ = 3.0 × 10⁸ / 2.4 × 10⁹ = 0.125 m (3)."],
+      ["d","What is meant by ionising radiation? Name two types of EM wave that are ionising.",9,"Radiation with enough energy to remove electrons from atoms (3) / forming ions (3) · X-rays and gamma rays (3). Accept high-energy UV as one of them."],
+      ["e","Explain why ionising radiation is a hazard to living things, and give one precaution.",6,"It ionises molecules in cells / damages DNA, which can cause cancer or kill cells (3) · shielding with lead or concrete / distance / limited exposure time (3)."]] },
+  { title:"Dispersion of white light", intro:"A narrow beam of white light falls on a triangular glass prism. A band of colours appears on a white screen on the far side.",
+    parts:[["a","What is dispersion?",3,"The splitting of white light into its colours (3)."],
+      ["b","Describe how you would demonstrate dispersion in the laboratory.",9,"Ray box with a narrow slit as a source of white light (3) · beam directed at one face of a glass prism (3) · spectrum seen on a white screen in a darkened room, prism turned to get the clearest spectrum (3)."],
+      ["c","Explain why the colours separate.",9,"The refractive index of glass depends on the wavelength (colour) of the light (3) · so each colour is refracted through a different angle (3) · violet is deviated most and red least (3)."],
+      ["d","The refractive index of the glass for red light is 1.51. Calculate the speed of red light in the glass.",6,"n = c / v → v = c / n (3) · v = 3.0 × 10⁸ / 1.51 = 1.99 × 10⁸ m/s (3)."],
+      ["e","Name a natural example of dispersion.",3,"A rainbow (3)."]] },
+  { title:"Solar irradiance and life on Earth", intro:"Above Earth's atmosphere the solar irradiance is about 1361 W/m². On a clear June day in Ireland the irradiance on a flat roof at noon is about 880 W/m².",
+    parts:[["a","Define irradiance and give its unit.",6,"The power falling on a surface per unit area (3) · W/m² (3)."],
+      ["b","Calculate the solar power falling on a 1.6 m² solar panel on the roof at noon in June.",6,"P = I × A (3) · P = 880 × 1.6 = 1408 W ≈ 1.4 kW (3)."],
+      ["c","The panel is 20% efficient. Calculate its electrical power output.",3,"0.20 × 1408 = 282 W (3)."],
+      ["d","Give two reasons why the noon irradiance in Ireland is much lower in December.",6,"Any two (3 each): the Sun is lower in the sky, so the same beam spreads over a bigger area · the light passes through more atmosphere, so more is absorbed and scattered · (for daily energy) days are shorter · more cloud."],
+      ["e","Why is the irradiance at the ground always less than 1361 W/m²?",3,"Some of the light is absorbed or scattered by the atmosphere and clouds (3)."],
+      ["f","Using secondary sources, a student investigated the impact of solar radiation on life on Earth. Describe two impacts and suggest one source the student could use.",6,"Any two impacts (2 each): photosynthesis and food chains · warms the planet and drives weather and climate · UV makes vitamin D · UV causes sunburn and skin cancer · ozone layer protects life from UV. Source, e.g. Met Éireann, SEAI, NASA or a named science website (2)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist (red / amber / green)
+const RAG = ["Name the seven bands of the EM spectrum in order","State that all EM waves travel at 3.0 × 10⁸ m/s in a vacuum","Use c = fλ, converting nm, MHz and GHz first","Give a source and a use for every band","Explain what ionising radiation is and name the ionising bands","Explain why ionising radiation is harmful and how to protect yourself","Define dispersion","Describe how to demonstrate dispersion with a prism","Explain dispersion using the refractive index","Define irradiance and use I = P / A","Explain why irradiance changes with the seasons","Describe two impacts of solar radiation on life on Earth"];
+const ragState=store.get("s24-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s24-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Plan a fair test","Name the independent (distance), dependent (irradiance) and controlled variables (same lamp, dark room).","Irradiance lab"],["Collect primary data","Take readings at five or more distances over a good range, and repeat them.","Irradiance lab"],["Record data properly","Use a table with quantities and units in the column headings.","Irradiance lab"],["Linearise","Plot I against 1/d² so the graph is a straight line.","Irradiance lab"],["Use the graph","Get the lamp's power from the slope.","Irradiance lab"],["Demonstrate a phenomenon","Set up, observe and describe dispersion clearly.","Prism lab"],["Use secondary sources","Find solar data (e.g. Met Éireann) and say where it came from and how reliable it is.","Sun and seasons lab"],["Evaluate","Say how reliable your conclusion is and how you'd improve the method.","Any lab"]];
+const skState=store.get("s24-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s24-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+function playBtn(id,st){ $(id).addEventListener("click",()=>{ st.play=!st.play; $(id).setAttribute("aria-pressed",st.play); $(id).textContent=st.play?"Pause":"Play"; }); }
+// Spectrum explorer
+const sp = { L:-6.3, t:0 };
+function spUpd(){ $("spL").value=-sp.L; $("spLo").textContent=si(Math.pow(10,sp.L),"m"); emC.redraw(); }
+$("spL").addEventListener("input",e=>{ sp.L=-(+e.target.value); spUpd(); });
+$("spPresets").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sp.L=+b.dataset.l; spUpd(); });
+// Sorting challenge [clue, band index, type, why]
+const SORT = [
+  ["A microwave oven",1,"sources","Microwave ovens use a magnetron to make microwaves of about 12 cm."],
+  ["Your warm body",2,"sources","Everything warm gives out infrared. Your body peaks near 10 μm."],
+  ["A radioactive nucleus decaying",6,"sources","Unstable nuclei give out gamma rays."],
+  ["An X-ray tube in a hospital",5,"sources","Fast electrons hitting a metal target make X-rays."],
+  ["A radio station's transmitter mast",0,"sources","Oscillating currents in a tall aerial send out radio waves."],
+  ["A sunbed",4,"sources","Sunbeds give out UV, mostly UV-A."],
+  ["A red LED",3,"sources","Red light is visible light of about 620–700 nm."],
+  ["A Wi-Fi router",1,"sources","Wi-Fi uses microwaves at 2.4 GHz or 5 GHz."],
+  ["Killing cancer cells in radiotherapy",6,"uses","Gamma rays (and high-energy X-rays) are aimed at tumours."],
+  ["Seeing a broken bone",5,"uses","X-rays pass through soft tissue but are absorbed by bone."],
+  ["A thermal camera finding someone in smoke",2,"uses","Thermal cameras detect the infrared that warm bodies give out."],
+  ["Heating the water in food",1,"uses","Microwaves are absorbed by water molecules, which heats the food."],
+  ["Checking banknotes with a security lamp",4,"uses","Security inks glow under UV."],
+  ["Photosynthesis in leaves",3,"uses","Plants absorb visible light, mostly red and blue."],
+  ["AM radio broadcasts across the country",0,"uses","Long radio waves travel long distances and bend around hills."],
+  ["Satellite TV",1,"uses","Satellite dishes receive microwaves of a few centimetres."],
+  ["An airport baggage scanner",5,"uses","X-rays show what's inside bags."],
+  ["Making vitamin D in your skin",4,"uses","UV-B from sunlight lets your skin make vitamin D."],
+  ["A TV remote control",2,"uses","Remotes flash near-infrared (about 940 nm) that the TV detects."],
+  ["Sterilising sealed packs of syringes",6,"uses","Gamma rays pass through the packaging and kill bacteria."],
+  ["The longest wavelength in the spectrum",0,"properties","Radio waves can be kilometres long."],
+  ["The highest frequency in the spectrum",6,"properties","Gamma rays have the highest frequency and energy."],
+  ["A wavelength of about 500 nm",3,"properties","Visible light runs from about 400 nm to 700 nm."],
+  ["A wavelength of about 12 cm",1,"properties","Microwaves run from about 1 mm to 10 cm or so."],
+  ["Just beyond the violet end of the visible spectrum",4,"properties","Ultra-violet means 'beyond violet'."],
+  ["Just beyond the red end of the visible spectrum",2,"properties","Infra-red means 'below red'."],
+  ["A wavelength about the size of an atom (0.1 nm)",5,"properties","X-rays have wavelengths around 0.01–10 nm."],
+];
+const SMODES=["all","sources","uses","properties"];
+const sr = { k:-1, done:false, sel:null, score:0, tried:0, streak:0, mode:"all" };
+$("srBtns").innerHTML = BANDS.map((b,k)=>`<button data-k="${k}">${b.name}</button>`).join("");
+function srNew(){ const pool=SORT.map((s,k)=>k).filter(k=>sr.mode==="all"||SORT[k][2]===sr.mode); let k; do{ k=pick(pool); }while(k===sr.k && pool.length>1);
+  sr.k=k; sr.done=false; sr.sel=null; $("srQ").textContent=SORT[k][0]; $("srType").textContent= {sources:"Which band does this give out?",uses:"Which band is used for this?",properties:"Which band is this?"}[SORT[k][2]];
+  $("srBtns").querySelectorAll("button").forEach(b=>{ b.className=""; b.disabled=false; }); $("srWhy").innerHTML="Pick a band."; srOut(); sortC.redraw(); }
+function srOut(){ setReadout($("srOut"),[["Score",`${sr.score} / ${sr.tried}`],["Streak",sr.streak+(sr.streak>=5?" 🔥":"")],["Clues",sr.mode]]); }
+$("srBtns").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||sr.done) return; const j=+b.dataset.k, right=SORT[sr.k][1], ok=j===right;
+  sr.done=true; sr.sel=j; sr.tried++; if(ok){ sr.score++; sr.streak++; } else sr.streak=0;
+  $("srBtns").querySelectorAll("button").forEach((x,i)=>{ if(i===right) x.className="right"; else if(i===j) x.className="wrong"; x.disabled=true; });
+  const B=BANDS[right]; $("srWhy").innerHTML=`<b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${B.name}. ${SORT[sr.k][3]} <br>Sources: ${B.src}. Uses: ${B.use}.`;
+  srOut(); sortC.redraw(); });
+$("srNext").addEventListener("click",srNew);
+$("srMode").addEventListener("click",()=>{ sr.mode=SMODES[(SMODES.indexOf(sr.mode)+1)%SMODES.length]; $("srMode").textContent="Clues: "+sr.mode; srNew(); });
+// Photon vs atom
+const io = { k:7, rate:3, t:0, play:true, ions:0 };
+$("ioBtns").innerHTML = PHOT.map((p,k)=>`<button data-k="${k}" aria-pressed="${k===io.k}">${p[0]}</button>`).join("");
+$("ioBtns").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; io.k=+b.dataset.k; io.t=0; pressGroup([...$("ioBtns").querySelectorAll("button")],b); ionC.redraw(); });
+$("ioR").addEventListener("input",e=>{ io.rate=+e.target.value; io.t=0; $("ioRo").textContent="×"+io.rate; ionC.redraw(); });
+$("ioReset").addEventListener("click",()=>{ io.t=0; ionC.redraw(); });
+playBtn("ioPlay",io);
+// Prism
+const dp = { mat:"crown", light:"white", i:50, A:60, mag:true };
+function dpUpd(){ $("dpIo").textContent=dp.i+"°"; $("dpAo").textContent=dp.A+"°"; prC.redraw(); }
+(()=>{ const mb=[...$("dpMat").querySelectorAll("button")], lb=[...$("dpLight").querySelectorAll("button")];
+  mb.forEach(b=>b.addEventListener("click",()=>{ dp.mat=b.dataset.v; pressGroup(mb,b); dpUpd(); }));
+  lb.forEach(b=>b.addEventListener("click",()=>{ dp.light=b.dataset.v; pressGroup(lb,b); dpUpd(); })); pressGroup(mb,mb[1]); })();
+$("dpI").addEventListener("input",e=>{ dp.i=+e.target.value; dpUpd(); });
+$("dpA").addEventListener("input",e=>{ dp.A=+e.target.value; dpUpd(); });
+$("dpMag").addEventListener("click",()=>{ dp.mag=!dp.mag; $("dpMag").setAttribute("aria-pressed",dp.mag); $("dpMag").textContent=dp.mag?"Spread magnified ×5":"True spread"; dpUpd(); });
+// Irradiance experiment: hidden lamp power and room light
+const ir = { d:0.4, data:[], reading:null, revealed:false };
+function newLamp(){ ir.P=rnd(20,45); ir.b=+(0.3+Math.random()*0.7).toFixed(2); ir.data=[]; ir.reading=null; ir.revealed=false; }
+newLamp();
+$("irD").addEventListener("input",e=>{ ir.d=+e.target.value; ir.reading=null; $("irDo").textContent=ir.d.toFixed(2)+" m"; lampC.redraw(); });
+$("irRec").addEventListener("click",()=>{ const I=ir.P/(4*Math.PI*ir.d*ir.d)+ir.b, Im=I*(1+(Math.random()-.5)*0.03)+(Math.random()-.5)*0.1;
+  ir.reading=Im; ir.data.push([ir.d,Im]); irTable(); lampC.redraw(); });
+$("irClear").addEventListener("click",()=>{ ir.data=[]; ir.reading=null; irTable(); lampC.redraw(); });
+$("irNew").addEventListener("click",()=>{ newLamp(); irTable(); lampC.redraw(); });
+$("irReveal").addEventListener("click",()=>{ ir.revealed=!ir.revealed; irTable(); });
+function irTable(){
+  $("irTable").innerHTML = ir.data.map(([d,I],k)=>`<tr><td>${d.toFixed(2)}</td><td>${I.toFixed(2)}</td><td>${(1/(d*d)).toFixed(2)}</td><td><button data-k="${k}" aria-label="Delete reading">×</button></td></tr>`).join("");
+  $("irEmpty").hidden = ir.data.length>0; if(irGraph) irGraph.redraw();
+}
+$("irTable").addEventListener("click",e=>{ const k=e.target.dataset.k; if(k!=null){ ir.data.splice(+k,1); irTable(); } });
+// Sun and seasons
+const sn = { lat:53, day:172 };
+function snUpd(){ $("snLat").value=sn.lat; $("snDay").value=sn.day; $("snLato").textContent=sn.lat+"° N"; $("snDayo").textContent=dayLabel(sn.day); sunC.redraw(); }
+$("snLat").addEventListener("input",e=>{ sn.lat=+e.target.value; snUpd(); });
+$("snDay").addEventListener("input",e=>{ sn.day=+e.target.value; snUpd(); });
+$("snPlaces").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sn.lat=+b.dataset.l; snUpd(); });
+
+/* ================= CREATE CANVASES ================= */
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  if(x0<=0&&x1>=0) line(ctx,X(0),padT,X(0),h-padB,C.muted,1);
+  if(y0<=0&&y1>=0) line(ctx,padL,Y(0),w-padR,Y(0),C.muted,1);
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); });
+}
+let irGraph=null;
+const hero = makeCanvas($("heroCanvas"), 0.7, 280, s => drawEM(s.ctx,s.w,s.h,{t:reduce?0:heroT,sources:true}), 420);
+const emC = makeCanvas($("emC"), 0.42, 290, s => {
+  drawEM(s.ctx,s.w,s.h,{marker:sp.L,sources:true,t:sp.t});
+  const lam=Math.pow(10,sp.L), f=C0/lam, k=bandOf(sp.L), B=BANDS[k];
+  setReadout($("spOut"),[["Band",B.name],["Wavelength λ",si(lam,"m")],["Frequency f",si(f,"Hz")],["f in powers of ten",sci(f,2)+" Hz"],["About the size of",sizeOf(sp.L)],["Ionising?",ionText(sp.L)]]);
+  $("spWork").innerHTML = `c = fλ: f = 3.0 × 10⁸ / ${sci(lam,3)} = <b>${sci(f,3)} Hz</b><br>Sources: ${B.src}. Uses: ${B.use}. Risks: ${B.risk}.`;
+}, 440);
+const sortC = makeCanvas($("sortC"), 0.34, 210, s => drawEM(s.ctx,s.w,s.h,{hi: sr.done? SORT[sr.k][1] : null}), 320);
+const ionC = makeCanvas($("ionC"), 0.5, 260, s => {
+  io.ions = drawIon(s.ctx,s.w,s.h,{k:io.k,rate:io.rate,t:io.t});
+  const lam=PHOT[io.k][1], E=eVof(lam);
+  setReadout($("ioOut"),[["Wavelength",si(lam,"m")],["Frequency",sci(C0/lam,2)+" Hz"],["Energy per photon",fmtE(E)],["Needed to ionise","≈ 10 eV"],["Ions made",io.ions],["Verdict",E>=ION_E?"Ionising":"Non-ionising"]]);
+  $("ioOut").lastElementChild.querySelector("b").style.color = E>=ION_E? C.bad : C.good;
+}, 440);
+const prC = makeCanvas($("prC"), 0.5, 260, s => {
+  drawPrism(s.ctx,s.w,s.h,{mat:dp.mat,i:dp.i,A:dp.A,light:dp.light,mag:dp.mag});
+  const nr=nOf(dp.mat,700), nv=nOf(dp.mat,400), pr=prismRay(nr,dp.i,dp.A), pv=prismRay(nv,dp.i,dp.A), dv=a=>a.tir? "TIR" : a.D.toFixed(2)+"°";
+  setReadout($("dpOut"),[["n for red (700 nm)",nr.toFixed(4)],["n for violet (400 nm)",nv.toFixed(4)],["Red deviated",dv(pr)],["Violet deviated",dv(pv)],["Spread",(pr.tir||pv.tir)? "—" : (pv.D-pr.D).toFixed(2)+"°"],["Red light in it",sci(C0/nr,3)+" m/s"]]);
+  $("dpWork").innerHTML = `n is bigger for violet (${nv.toFixed(3)}) than red (${nr.toFixed(3)}), so violet slows more and bends more. Readouts are true values; the drawing ${dp.mag?"magnifies the spread 5×":"shows the true spread"}. <a href="refraction-lenses.html#labs">Snell's law and refractive index are in 2.3 →</a>`;
+}, 460);
+const lampC = makeCanvas($("lampC"), 0.36, 220, s => drawLamp(s.ctx,s.w,s.h,{d:ir.d,reading:ir.reading}), 340);
+irGraph = makeCanvas($("irGraph"), 0.72, 190, s => {
+  const pts=ir.data.map(([d,I])=>[1/(d*d),I]), spread=pts.length? Math.max(...pts.map(p=>p[0]))-Math.min(...pts.map(p=>p[0])) : 0;
+  const fit = pts.length>=2 && spread>1 ? linfit(pts) : null;
+  scatter(s,pts,{xr:[0,26],yr:[0,10],xl:"1/d² (m⁻²)",yl:"I (W/m²)",fit});
+  const truth = ir.revealed? ` True values: P = <b>${ir.P} W</b>, room light = <b>${ir.b} W/m²</b>.` : "";
+  if(!fit){ $("irResult").innerHTML="Record readings at three or more different distances to draw the line."+truth; return; }
+  const PE=4*Math.PI*fit[0];
+  $("irResult").innerHTML = `Slope = <b>${fit[0].toFixed(2)}</b> W, so P = 4π × slope = <b>${PE.toFixed(1)} W</b>. Intercept = <b>${fit[1].toFixed(2)} W/m²</b> (room light).`+truth;
+}, 300);
+irTable();
+const sunC = makeCanvas($("sunC"), 0.62, 340, s => {
+  drawSeason(s.ctx,s.w,s.h,{lat:sn.lat,day:sn.day});
+  const e=noonElev(sn.lat,sn.day), I=Ih(e), E=dayEnergy(sn.lat,sn.day);
+  setReadout($("snOut"),[["Noon Sun height",e>0? e.toFixed(1)+"°" : "below horizon"],["Day length",dayLen(sn.lat,sn.day).toFixed(1)+" h"],["Noon irradiance",Math.round(I)+" W/m²"],["Energy per m² that day",E.toFixed(1)+" kWh"],["1.7 m² panel (20%) at noon",Math.round(0.2*1.7*I)+" W"]]);
+}, 560);
+predC = makeCanvas($("predC"), 0.42, 150, s => { const k=pd.k<0?0:pd.k; drawEM(s.ctx,s.w,s.h,{compact:true,marker:PRED[k][1],ion:pd.shown,bgc:C["surface-2"]}); }, 260);
+pdNew(); srNew();
+// Learn minis
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{
+  const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k];
+  const draws = {
+    em:s=>drawEM(s.ctx,s.w,s.h,{...o,compact:true,ion:true}),
+    ion:s=>drawIon(s.ctx,s.w,s.h,{...o,compact:true}),
+    prism:s=>drawPrism(s.ctx,s.w,s.h,{...o,compact:true}),
+    lamp:s=>drawLamp(s.ctx,s.w,s.h,{compact:true}),
+    season:s=>drawSeason(s.ctx,s.w,s.h,{...o,compact:true}),
+  };
+  const ratio = {em:o.sources?0.62:0.5, ion:0.8, prism:0.62, lamp:0.55, season:0.8}[kind];
+  makeCanvas(el, ratio, 120, draws[kind], 380);
+});
+// Infographic minis
+document.querySelectorAll("canvas[data-case]").forEach(el=>{ const c=CASES[+el.dataset.case]; makeCanvas(el,0.5,110,s=>drawBandCard(s.ctx,s.w,s.h,{k:c.k,bgc:C["surface-2"]}),200); });
+document.querySelectorAll("canvas[data-mini=prism]").forEach(el=>makeCanvas(el,0.62,140,s=>drawPrism(s.ctx,s.w,s.h,{...PRISM3[+el.dataset.k],compact:true,bgc:C["surface-2"]})));
+document.querySelectorAll("canvas[data-mini=sun]").forEach(el=>makeCanvas(el,0.4,220,s=>drawSun(s.ctx,s.w,s.h,{}),380));
+
+/* ================= LOOP / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(view==="labs"){
+    if(lab==="spectrum" && !reduce){ sp.t+=dt; emC.redraw(); }
+    if(lab==="ionising" && io.play){ io.t+=dt; ionC.redraw(); }
+  }
+  requestAnimationFrame(loop);
+})(performance.now());
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+spUpd(); dpUpd(); snUpd();
+})();
+</script>
