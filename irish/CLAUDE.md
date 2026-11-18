@@ -35,5 +35,5 @@ Built so far: `t1-an-scolaire-fein.html` (Topaic 1: An Scoláire Féin agus a Th
 
 ## Quality checks
 
-Same as Physics. Topic 1 was built on 2026-11-18. It passed `node --check`; the browser checks were run after the
-merge into this project (see the run log).
+Same as Physics. Topic 1 (2026-11-18) passed `node --check` and, after the merge, the full browser checks
+(all tabs and labs, no errors, 375 px, generated Irish checked).
