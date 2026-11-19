@@ -236,3 +236,4 @@ to the weekly "physics-course-weekly-build" task. Skipped runs add one line to t
 - 2026-11-18 21:02 (weekly run): 5-hour 29%, weekly 83%. Weekly build skipped: weekly usage is above the 70% limit. Weekly resets 2026-11-19 09:00.
 - 2026-11-19 01:09 (5-hour run): 5-hour 2%, weekly 89%. 5-hour run skipped: weekly usage is above the 60% cap. Weekly resets 2026-11-19 09:00.
 - 2026-11-19 06:09 (5-hour run): 5-hour 2%, weekly 89%. 5-hour run skipped: weekly usage is above the 60% cap. Weekly resets 2026-11-19 09:00.
+- 2026-11-19 11:09-11:45 (5-hour run, 1 page): 5-hour 30%, weekly 3% at start. Business 2.7 built as s2-7-risk.html (see the Business run log). 5-hour 30% -> 51%; weekly 3% -> 6%. Stopped: 5-hour window above 40%. Next: Physics 3.4 (s3-4-magnetic-fields.html), then Business 3.1 (s3-1-leading.html).

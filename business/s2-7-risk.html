@@ -1,0 +1,1609 @@
+<title>Managing Risk</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.sh-card{display:grid;gap:8px;padding:16px}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card p b{color:var(--terra)}
+.fbbox{padding:0 16px 14px}
+.offers{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 14px}
+.predopts .btns button{min-width:110px}
+.qmvb{display:flex;flex-wrap:wrap;gap:5px}
+.qmvb button{font-size:.78rem;padding:5px 9px}
+.qmvb button[aria-pressed="false"]{opacity:.7;text-decoration:line-through}
+.srt .row .ctl{flex:0 1 170px}
+</style>
+
+
+
+
+<!-- ================= TOP BAR ================= -->
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <div style="min-width:0"><b>Managing Risk</b><span>Leaving Cert Business · Strand 2 · Topic 7</span></div>
+      </div>
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html" class="on" aria-current="page">Business</a><a href="../maths/index.html">Maths</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Cheat sheet</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>U · Investigating Business</summary><ol><li><span class="mono">U</span>Research skills (all year)</li></ol></details>
+      <details><summary>1 · Business Environment</summary><ol><li class="link"><a href="s1-1-stakeholders.html"><span class="mono">1.1</span>Key stakeholders</a></li><li class="link"><a href="s1-2-forms-of-business.html"><span class="mono">1.2</span>Forms of business &amp; governance</a></li><li class="link"><a href="s1-3-economy.html"><span class="mono">1.3</span>Business &amp; the economy</a></li><li class="link"><a href="s1-4-policy.html"><span class="mono">1.4</span>National &amp; EU policy</a></li><li class="link"><a href="s1-5-global.html"><span class="mono">1.5</span>Irish business globally</a></li><li><span class="mono">1.6</span>Applying my learning</li></ol></details>
+      <details open><summary>2 · Understanding Enterprise</summary><ol><li class="link"><a href="s2-1-enterprise.html"><span class="mono">2.1</span>Enterprise</a></li><li class="link"><a href="s2-2-ideas.html"><span class="mono">2.2</span>Idea development</a></li><li class="link"><a href="s2-3-planning.html"><span class="mono">2.3</span>Business planning</a></li><li class="link"><a href="s2-4-target-market.html"><span class="mono">2.4</span>The target market</a></li><li class="link"><a href="s2-5-operations-finance.html"><span class="mono">2.5</span>Operations &amp; finance</a></li><li class="link"><a href="s2-6-growth.html"><span class="mono">2.6</span>Growth &amp; expansion</a></li><li class="here"><span class="mono">2.7</span>Managing risk</li><li><span class="mono">2.8</span>Applying my learning</li></ol></details>
+      <details><summary>3 · Leading in Business</summary><ol><li><span class="mono">3.1</span>Leading an organisation</li><li><span class="mono">3.2</span>Leading people</li><li><span class="mono">3.3</span>Communication</li><li><span class="mono">3.4</span>Planning</li><li><span class="mono">3.5</span>Applying my learning</li></ol></details>
+      <details><summary>4 · Informed Decisions</summary><ol><li><span class="mono">4.1</span>Informed consumer</li><li><span class="mono">4.2</span>Informed financial decisions</li><li><span class="mono">4.3</span>Informed employee</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 2 · Understanding enterprise</span>
+          <h1 style="margin-top:12px">What could go wrong?<br>How likely? How bad?<br><em>What will you do about it?</em></h1>
+          <p class="lede">Every enterprise takes risks: money can run out, customers can stay away, equipment can break and people can get hurt. You can't remove all risk, but you can manage it. Spot the risks, rate how likely and how serious each one is, then avoid it, spread it, prevent it or insure against it.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="A risk matrix of likelihood against impact, with risks lighting up in turn and their rating shown"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/3</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">2.7.1</span><span>outline the challenges and risks associated with enterprise and entrepreneurship.</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">2.7.2</span><span>outline the importance of assessing and managing risks in business.</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">2.7.3</span><span>analyse a range of risk management strategies that can be used to respond to the challenges and risks in business.</span></label></li>
+        </ul>
+        <div class="result" style="margin-top:10px"><p><b>Students learn about:</b></p>
+          <ul style="margin:6px 0 0 18px;display:grid;gap:4px">
+            <li>the nature of risk within entrepreneurship and the importance of risk management in business.</li>
+            <li>a range of risk management strategies including avoidance, spread, prevention and the importance of choosing suitable insurance products.</li>
+          </ul>
+          <p style="margin-top:8px">Diversification as a growth strategy is covered in <a href="s2-6-growth.html">2.6 Growth and expansion</a>; cash flow and sources of finance in <a href="s2-5-operations-finance.html">2.5 Operations and finance</a>.</p></div>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Sort the risks a kayak-hire start-up faces, rate them on a risk matrix, choose a strategy for each, simulate spreading risk over many seasons, plan prevention on a budget and work out an insurance claim.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="nature">
+        <div class="labhead"><span class="pill t">Risks of enterprise</span><p class="goal">Aoife is starting Tonnta Kayaks (illustrative), a kayak and paddleboard hire business near Clifden. She has put her savings and a bank loan into it. Sort each challenge she faces into a type of risk. The columns fill as you go.</p></div>
+        <div class="panel sim">
+          <canvas id="naC" aria-label="Five columns for financial, market, operational, people and external risks, filling with Tonnta Kayaks' risks as you sort them"></canvas>
+          <div class="srt" id="naList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="naReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="naOut"></div>
+        </div>
+        <p class="result">Tonnta Kayaks and its figures are illustrative. Many risks fit more than one type; the feedback gives the best fit and why.</p>
+        <div class="tries"><div class="try"><b>1</b>Which risks could Aoife lose most money on? Which are most likely?</div><div class="try"><b>2</b>Which risks are personal to Aoife as an entrepreneur, not just to the business?</div><div class="try"><b>3</b>Which risks can she control, and which come from outside?</div></div>
+      </div>
+
+      <div class="lab" data-lab="assess" hidden>
+        <div class="labhead"><span class="pill t">Risk matrix</span><p class="goal">Rate each of Tonnta's risks for likelihood (how likely it is to happen) and impact (how bad it would be), from 1 to 5. Risk score = likelihood × impact. The matrix shows which risks to deal with first.</p></div>
+        <div class="panel sim">
+          <canvas id="asC" aria-label="A five by five risk matrix of likelihood against impact, coloured from low to high, with Tonnta Kayaks' risks placed on it"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Risk</span><div class="btns" id="asPick"></div></div>
+            <div class="ctl"><label for="asL">Likelihood <output id="asLo"></output></label><input type="range" id="asL" min="1" max="5" step="1" value="3"></div>
+            <div class="ctl"><label for="asI">Impact <output id="asIo"></output></label><input type="range" id="asI" min="1" max="5" step="1" value="3"></div>
+          </div>
+          <div class="readout" id="asOut"></div>
+          <div class="working wrap" id="asWork"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Ratings</span><div class="btns"><button id="asSugg">Use suggested ratings</button></div></div></div>
+        </div>
+        <p class="result">The suggested ratings are a starting point for discussion. A real risk register is reviewed regularly, because risks change as the business grows.</p>
+        <div class="tries"><div class="try"><b>1</b>Which risk has the highest score? Is it the most likely one?</div><div class="try"><b>2</b>Find a risk that is unlikely but would be a disaster. Why can't Aoife ignore it?</div><div class="try"><b>3</b>How would hiring qualified instructors change the rating of a customer injury?</div></div>
+      </div>
+
+      <div class="lab" data-lab="strat" hidden>
+        <div class="labhead"><span class="pill t">Choose a strategy</span><p class="goal">For each risk, choose the best way to manage it: <b>avoid</b> it (don't do the risky thing), <b>spread</b> it (don't depend on one thing), <b>prevent</b> it (make it less likely or less serious) or <b>insure</b> against it (pay a premium so an insurer covers the loss).</p></div>
+        <div class="panel sim">
+          <canvas id="stC" aria-label="The risk matrix divided into zones showing where each strategy usually fits, with your sorted risks placed in their zones"></canvas>
+          <div class="srt" id="stList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="stReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="stOut"></div>
+        </div>
+        <p class="result">The zones are a rule of thumb, not a law: most businesses combine strategies, for example preventing fires <b>and</b> insuring the building.</p>
+        <div class="tries"><div class="try"><b>1</b>Which strategy suits risks that are unlikely but very costly?</div><div class="try"><b>2</b>Why can't Aoife avoid every risk? What would she give up?</div><div class="try"><b>3</b>Find a risk where two strategies together work better than one.</div></div>
+      </div>
+
+      <div class="lab" data-lab="spread" hidden>
+        <div class="labhead"><span class="pill t">Spread the risk</span><p class="goal">Bad weather can wipe out a kayak season. Aoife can spread her risk by adding other income streams (school groups, a café, online sales). Pick the number of streams and how closely they are linked, then run 40 seasons. Collect a result for each number of streams and see the graph.</p></div>
+        <div class="panel sim">
+          <canvas id="spC" aria-label="Profit in each of 40 simulated seasons, with the average and the €30 000 bad-year line"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="spN">Income streams <output id="spNo"></output></label><input type="range" id="spN" min="1" max="5" step="1" value="1"></div>
+            <div class="ctl"><label for="spR">How linked are the streams? <output id="spRo"></output></label><input type="range" id="spR" min="0" max="0.8" step="0.2" value="0"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Seasons</span><div class="btns"><button class="primary" id="spRun">Run 40 seasons and record</button><button id="spClear">Clear results</button></div></div>
+          </div>
+          <div class="readout" id="spOut"></div>
+          <canvas id="spG" aria-label="Your recorded results: how much profit varies from season to season against the number of income streams, with a fitted curve"></canvas>
+          <div class="working wrap" id="spWork"></div>
+        </div>
+        <p class="result">Simulated data. Every stream is expected to earn the same in total (€60 000 a year between them); only how much it swings from year to year changes. "Spread" is the standard deviation of yearly profit.</p>
+        <div class="tries"><div class="try"><b>1</b>Record a result for 1, 2, 3, 4 and 5 streams. How does the number of bad years change?</div><div class="try"><b>2</b>Clear, set "linked" to 0.8 (all streams depend on the weather) and repeat. What happens to the benefit of spreading?</div><div class="try"><b>3</b>What real choices would make Tonnta's streams less linked?</div></div>
+      </div>
+
+      <div class="lab" data-lab="prevent" hidden>
+        <div class="labhead"><span class="pill t">Prevention on a budget</span><p class="goal">Each risk has a chance of happening this year and a cost if it does. Expected loss = probability × cost. Switch on prevention measures. Each costs money every year but makes a risk less likely. Find the plan with the lowest total cost of risk.</p></div>
+        <div class="panel sim">
+          <canvas id="pvC" aria-label="Expected yearly loss for each of five risks before and after your prevention plan, and the total cost of risk"></canvas>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Prevention measures (tap to switch on or off)</span><div class="btns" id="pvAct"></div></div></div>
+          <div class="readout" id="pvOut"></div>
+          <div class="working wrap" id="pvWork"></div>
+        </div>
+        <p class="result">Figures are illustrative. Expected loss is an average over many years: in most years nothing happens, and in a bad year the loss is far bigger. That's why the big, rare risks are also insured.</p>
+        <div class="tries"><div class="try"><b>1</b>Which measure saves more than it costs by the widest margin?</div><div class="try"><b>2</b>Switch on the security guard. Why does the total cost of risk go up?</div><div class="try"><b>3</b>Fire is rare and prevention only halves it. What else should Aoife do about fire?</div></div>
+      </div>
+
+      <div class="lab" data-lab="insure" hidden>
+        <div class="labhead"><span class="pill t">Insurance</span><p class="goal">A storm floods Tonnta's boathouse. Set the true value of the contents, the sum insured on the policy, the loss and the excess. See how much the insurer pays and how much Aoife pays herself. Then match each risk to the right insurance product.</p></div>
+        <div class="panel sim">
+          <canvas id="inC" aria-label="Bars comparing the value of the contents with the sum insured, and the loss split into what the insurer pays, the excess and the shortfall from under-insurance"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="inV">True value of contents <output id="inVo"></output></label><input type="range" id="inV" min="20000" max="100000" step="5000" value="60000"></div>
+            <div class="ctl"><label for="inS">Sum insured <output id="inSo"></output></label><input type="range" id="inS" min="10000" max="100000" step="5000" value="45000"></div>
+            <div class="ctl"><label for="inL">Loss in the flood <output id="inLo"></output></label><input type="range" id="inL" min="2000" max="60000" step="1000" value="20000"></div>
+            <div class="ctl"><label for="inE">Excess <output id="inEo"></output></label><input type="range" id="inE" min="0" max="2000" step="250" value="500"></div>
+          </div>
+          <div class="readout" id="inOut"></div>
+          <div class="working wrap" id="inWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="head" style="padding:14px 16px 0"><h3>Which insurance product?</h3></div>
+          <div class="srt" id="ipList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="ipReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="ipOut"></div>
+        </div>
+        <p class="result">Figures are illustrative. This lab applies the average clause first, then takes off the excess; policies differ, so always read the policy wording. Insurers in Ireland are regulated by the Central Bank of Ireland.</p>
+        <div class="tries"><div class="try"><b>1</b>Set the sum insured equal to the true value. What changes?</div><div class="try"><b>2</b>Why would a business choose a higher excess?</div><div class="try"><b>3</b>Why does the insurer reduce the payout when a business is under-insured?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of managing risk"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it · LO 2.7.1 to 2.7.3</p><h2>Risk in the real world</h2></div><p>Real events and what they teach about risk, in general terms. Check a current source before using one in your own work.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>Rate, spread, prevent</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="matrix"></canvas><h3>Rate every risk</h3><p>Likelihood × impact. The top-right corner gets your attention first.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="zones"></canvas><h3>Match the strategy</h3><p>Avoid, prevent, insure or accept, depending on where the risk sits. Spreading helps across the board.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="prev"></canvas><h3>Prevention pays (up to a point)</h3><p>Good measures cut expected losses by more than they cost. Too much spending costs more than the risk.</p></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Digital transformation</p><h2>New risks in a digital business</h2></div><p>Technology helps a business grow, and brings risks of its own.</p></div>
+      <div class="cases" id="impacts"></div>
+
+      <div class="head"><div><p class="eyebrow">In Ireland</p><h2>Who helps businesses manage risk?</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% Business Alive Investigative Study">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>Higher or Ordinary level, set by the SEC. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Business Alive Investigative Study · 40%</b><p>An investigation based on a common brief from the SEC. The same brief for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Risk = the chance that something goes wrong and the business <b>loses money or fails</b>. Name the <b>type</b>: financial, market, operational, people, external (legal, economic, weather).</li>
+            <li>Challenges for an entrepreneur include <b>personal</b> risks too: losing savings, stress, long hours, a secure job given up.</li>
+            <li>Assessing risk = <b>likelihood × impact</b>. Say which risks come first and <b>why</b>.</li>
+            <li>The spec's strategies: <b>avoidance</b>, <b>spread</b>, <b>prevention</b> and choosing suitable <b>insurance</b>. For "analyse", give the strategy, apply it to the business, and weigh its <b>cost and limits</b>.</li>
+            <li>Insurance: name the <b>product</b> (public liability, employer's liability, property, motor, business interruption, cyber, product liability, key person) and the risk it covers.</li>
+            <li>Know the words <b>premium</b>, <b>excess</b>, <b>sum insured</b>, <b>under-insurance</b> and <b>average clause</b>; and the principles of <b>utmost good faith</b>, <b>insurable interest</b> and <b>indemnity</b>.</li>
+            <li>Not every risk can be insured: a business can't insure against <b>making a loss</b> or a rival opening next door. Those risks are managed by planning, spreading and adapting.</li>
+            <li>Show every <b>formula and working</b>: risk score, expected loss, premium, compensation.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Action verbs</h2></div><p>Meanings from the specification's glossary of action verbs, which will be aligned with the exam's command words.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Business and financial literacy</p><h2>Numbers trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which strategy is it?</h2></div></div>
+          <canvas id="predC" aria-label="The risk management strategy, shown after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns" data-g="0"><button data-a="AV">Avoid</button><button data-a="SP">Spread</button><button data-a="PR">Prevent</button><button data-a="IN">Insure</button><button data-a="AC">Accept</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Skills the Business Alive Investigative Study rewards (from the Investigating Business strand). Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term in this chapter. Learn the definitions: "define" and "outline" questions reward precise wording.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: premium, excess, avoidance…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= CHEAT SHEET ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Cheat sheet</h2></div><p>The whole chapter on one page, plus the numbers you might meet in a risk and insurance question.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Risks of enterprise (LO 2.7.1)</span><span class="big">Financial · Market · Operational · People · External</span><dl><dt>For the entrepreneur</dt><dd>losing savings or a home used as security, stress, long hours, giving up a secure job, damage to reputation</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Why manage risk? (LO 2.7.2)</span><span class="big">Survive · protect people and assets · keep cash flow steady · win finance · meet the law</span><dl><dt>Process</dt><dd>identify → assess (likelihood × impact) → choose a strategy → act → monitor and review</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Strategies (LO 2.7.3)</span><span class="big">Avoid · Spread · Prevent · Insure</span><dl><dt>Also</dt><dd>accept (retain) small risks; combine strategies for big ones</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Spreading risk</span><span class="big">More products · markets · customers · suppliers</span><dl><dt>Limit</dt><dd>only works if the streams aren't all hit by the same thing</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Prevention</span><span class="big">Training · safety equipment · maintenance · security · cyber security · credit control</span><dl><dt>Test</dt><dd>is the saving in expected loss bigger than the cost?</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Insurance products</span><span class="big">Public liability · Employer's liability · Property · Motor · Business interruption · Product liability · Cyber · Key person</span><dl><dt>Principles</dt><dd>utmost good faith, insurable interest, indemnity, contribution, subrogation</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Risk score = likelihood × impact</span><div class="ex">4 × 5 = 20 (high: act now)</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Expected loss = probability × cost</span><div class="ex">10% × €80 000 = €8 000 a year</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Premium = value ÷ €1 000 × rate per €1 000</span><div class="ex">€60 000 ÷ 1 000 × €8 = €480</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Average clause: compensation = sum insured ÷ true value × loss</span><div class="ex">€45 000 ÷ €60 000 × €20 000 = €15 000</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Claim paid = loss (after average) − excess</span><div class="ex">€15 000 − €500 = €14 500</div></div>
+      </div>
+      <footer>
+        <p>Built on Strand 2, topic 7 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/business/" target="_blank" rel="noopener">Leaving Certificate Business Specification</a> (NCCA, for introduction September 2025). Learning outcomes and the "students learn about" points are quoted from the specification. Tonnta Kayaks, scenarios and euro figures are illustrative unless stated.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("bs-theme","auto"), font = store.get("bs-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("bs-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("bs-font",font); applyFont(); });
+/* ---------- icons + topics ---------- */
+const ICON = {
+  nature:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
+  assess:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
+  strat:'<path d="M6 3v18"/><path d="M6 5h11l-2 4 2 4H6"/>',
+  spread:'<circle cx="6" cy="17" r="2.5"/><circle cx="12" cy="7" r="2.5"/><circle cx="18" cy="17" r="2.5"/><path d="M7.5 15l3-6M13.5 9l3 6M8.5 17h7"/>',
+  prevent:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  insure:'<path d="M3 12a9 9 0 0118 0z"/><path d="M12 12v7a2 2 0 01-4 0"/><path d="M12 3v1"/>',
+  plane:'<path d="M2 13l8-2 4-8 2 1-2 7 6 1 2 2-8 1-3 6-2-1 1-5-8 0z"/>',
+  car:'<path d="M3 16v-4l2-5h14l2 5v4z"/><circle cx="7.5" cy="16.5" r="1.8"/><circle cx="16.5" cy="16.5" r="1.8"/>',
+  lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>',
+  shop:'<path d="M3 9l2-5h14l2 5"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/>',
+  camera:'<rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l2-3h4l2 3"/>',
+  gov:'<path d="M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M12 3l9 5H3z"/>',
+  people:'<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0112 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20a5 5 0 016-4.8"/>',
+  cloud:'<path d="M7 18a5 5 0 01-.5-10A6 6 0 0118 9a4.5 4.5 0 01-1 9z"/>',
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+  scale:'<path d="M12 3v18M7 21h10M4 7h16"/><path d="M4 7l-2.5 6a3 3 0 005 0zM20 7l-2.5 6a3 3 0 005 0z"/>',
+  chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"nature", name:"Risks of enterprise", short:"The challenges and risks of starting and running a business: financial, market, operational, people and external.", tint:"var(--blush)"},
+  {id:"assess", name:"Assessing risk", short:"Why risk management matters, and how to rate each risk by likelihood and impact on a risk matrix.", tint:"var(--apricot)"},
+  {id:"strat", name:"Risk strategies", short:"Avoid it, spread it, prevent it or insure against it: choosing the right response for each risk.", tint:"var(--sage)"},
+  {id:"spread", name:"Spreading risk", short:"Don't put all your eggs in one basket: more products, markets, customers and suppliers.", tint:"var(--cream)"},
+  {id:"prevent", name:"Prevention", short:"Make risks less likely or less serious: training, safety, maintenance, security and good controls.", tint:"var(--blush)"},
+  {id:"insure", name:"Insurance", short:"Choosing suitable insurance products, the key terms and principles, and how a claim is worked out.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Risk","","The chance that something will go wrong and cause a loss, harm or failure to reach a goal.","nature"],
+  ["Uncertainty","","Not knowing what will happen. Some uncertainty can be measured as a risk; some can't be measured at all.","nature"],
+  ["Entrepreneur","","A person who sets up a business, taking on the risk of losing money in the hope of making a profit.","nature"],
+  ["Challenge","","A difficulty a business must overcome, e.g. raising finance, finding customers, competition or a lack of experience.","nature"],
+  ["Financial risk","","The risk of running out of cash, failing to repay loans or making a loss, e.g. customers paying late or interest rates rising.","nature"],
+  ["Market risk","","The risk that customers don't buy enough, e.g. low demand, a new competitor or tastes changing.","nature"],
+  ["Operational risk","","The risk that day-to-day activities go wrong, e.g. equipment breaking, a supplier failing or a data breach.","nature"],
+  ["People risk","","The risk linked to staff and owners, e.g. accidents, losing a key person, lack of skills or illness.","nature"],
+  ["External risk","","A risk from outside the business it can't control, e.g. weather, a recession, new laws or a pandemic.","nature"],
+  ["Personal guarantee","","A promise by the owner to repay a business loan from their own money if the business can't.","nature"],
+  ["Limited liability","","Owners can lose only what they invested in the company, not their personal assets. A sole trader has unlimited liability.","nature"],
+  ["Risk management","","Identifying, assessing and responding to risks so a business can survive and reach its goals.","assess"],
+  ["Risk assessment","","Rating each risk for how likely it is and how serious it would be, to decide which to deal with first.","assess"],
+  ["Likelihood","probability","How likely a risk is to happen, often rated from 1 (rare) to 5 (almost certain).","assess"],
+  ["Impact","severity","How serious the effect would be if the risk happened, rated from 1 (minor) to 5 (catastrophic).","assess"],
+  ["Risk score","","Likelihood × impact, from 1 to 25 on a 5 × 5 matrix.","assess","Risk score = likelihood × impact"],
+  ["Risk matrix","heat map","A grid of likelihood against impact, coloured to show which risks are low, medium or high.","assess"],
+  ["Risk register","","A list of a business's risks with their ratings, the response chosen, who is responsible and when it will be reviewed.","assess"],
+  ["Risk appetite","","How much risk a business or owner is willing to take to reach its goals.","assess"],
+  ["Contingency plan","plan B","A plan for what to do if a risk happens, e.g. a backup supplier or a cash reserve.","assess"],
+  ["Risk avoidance","avoid","Not doing the activity that causes the risk, e.g. not offering night-time trips.","strat"],
+  ["Risk spreading","spread","Reducing dependence on one product, market, customer or supplier so one problem can't sink the business.","strat"],
+  ["Risk prevention","risk reduction","Taking action to make a risk less likely or less serious, e.g. training, safety equipment, maintenance.","strat"],
+  ["Risk transfer","","Passing the cost of a risk to someone else, mainly by insurance (also by contracts).","strat"],
+  ["Risk acceptance","retention","Deciding to live with a small risk and pay for any loss yourself because managing it costs more than it saves.","strat"],
+  ["Diversification","","Adding new products or markets. As a risk strategy it spreads risk across different activities.","spread"],
+  ["Income stream","revenue stream","A separate source of money coming into a business, e.g. hire, lessons, café sales, online sales.","spread"],
+  ["Correlation","linked risks","How far two things move together. Spreading works best when income streams are not hit by the same thing.","spread"],
+  ["Supplier dependency","","Relying on one supplier, so a problem there stops the business. Spread it with backup suppliers.","spread"],
+  ["Customer concentration","","Relying on a few big customers for most sales, so losing one is a serious blow.","spread"],
+  ["Hedging","","Fixing a price in advance (e.g. for fuel or currency) to reduce the risk of price changes.","spread"],
+  ["Expected loss","","The average yearly cost of a risk: probability × cost if it happens.","prevent","Expected loss = probability × cost"],
+  ["Health and safety statement","safety statement","A written plan every employer in Ireland must have, setting out the hazards, the risks and how they are controlled.","prevent"],
+  ["Hazard","","Anything that could cause harm, e.g. deep water, a slippery slipway, faulty wiring.","prevent"],
+  ["Cyber security","","Protecting computers, data and online systems from attacks, e.g. strong passwords, two-factor log-in, backups, staff training.","prevent"],
+  ["Credit control","","Checking customers before giving credit and chasing late payments, to reduce bad debts.","prevent"],
+  ["Insurance","","A contract where the insured pays a premium and the insurer agrees to pay for losses from the risks covered.","insure"],
+  ["Insurer","","The insurance company that accepts the risk in return for premiums.","insure"],
+  ["Insured","policyholder","The person or business that buys the insurance.","insure"],
+  ["Premium","","The price paid for insurance, usually each year.","insure","Premium = value ÷ €1 000 × rate per €1 000"],
+  ["Policy","","The contract document setting out what is covered, what is excluded and the conditions.","insure"],
+  ["Proposal form","","The form a business fills in to apply for insurance, giving the facts the insurer needs.","insure"],
+  ["Excess","","The first part of any claim, which the insured pays themselves.","insure","Claim paid = loss − excess"],
+  ["Sum insured","","The maximum amount the insurer will pay, set by the insured on the policy.","insure"],
+  ["Under-insurance","","Insuring something for less than its true value.","insure"],
+  ["Average clause","","If a business is under-insured, the insurer pays only the same fraction of the loss as the sum insured is of the true value.","insure","Compensation = sum insured ÷ true value × loss"],
+  ["No-claims bonus","no-claims discount","A cheaper premium for a policyholder who has made no claims.","insure"],
+  ["Utmost good faith","","Both sides must tell the whole truth. The insured must disclose all material facts, or the policy can be cancelled.","insure"],
+  ["Insurable interest","","You can only insure something if you would lose money if it was damaged or lost.","insure"],
+  ["Indemnity","","Insurance puts you back in the same financial position as before the loss, no better off.","insure"],
+  ["Contribution","","If something is insured with two insurers, they share the claim; you can't claim twice.","insure"],
+  ["Subrogation","","After paying a claim, the insurer takes over the insured's rights, e.g. to sue whoever caused the loss or keep the salvage.","insure"],
+  ["Public liability insurance","","Covers claims from members of the public injured or whose property is damaged because of the business.","insure"],
+  ["Employer's liability insurance","","Covers claims from employees injured at work because of the employer's negligence.","insure"],
+  ["Business interruption insurance","","Covers lost profit and ongoing costs while a business can't trade after an insured event such as a fire or flood.","insure"],
+  ["Product liability insurance","","Covers claims for injury or damage caused by a product the business made or sold.","insure"],
+  ["Cyber insurance","","Covers the costs of a cyber attack or data breach, e.g. restoring systems and notifying customers.","insure"],
+  ["Key person insurance","","Pays the business if a vital person (often the owner) dies or can't work for a long time.","insure"],
+  ["Motor insurance","","Required by law for vehicles on public roads; at least third-party cover.","insure"],
+  ["Uninsurable risk","","A risk an insurer won't cover because it can't be measured or is too likely, e.g. making a loss or a rival opening nearby.","insure"],
+];
+GLOSS.forEach((g,i)=>{ GLOSS[i]={t:g[0],aka:g[1],d:g[2],topic:g[3],f:g[4],id:"g-"+g[0].toLowerCase().replace(/[^a-z0-9]+/g,"-")}; });
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["financial risk","Financial risk"],["market risk","Market risk"],["operational risk","Operational risk"],["external risk","External risk"],["personal guarantee","Personal guarantee"],["limited liability","Limited liability"],["likelihood","Likelihood"],["risk matrix","Risk matrix"],["risk register","Risk register"],["contingency plan","Contingency plan"],["avoid","Risk avoidance"],["diversif","Diversification"],["income stream","Income stream"],["expected loss","Expected loss"],["safety statement","Health and safety statement"],["cyber security","Cyber security"],["credit control","Credit control"],["premium","Premium"],["excess","Excess"],["sum insured","Sum insured"],["under-insur","Under-insurance"],["average clause","Average clause"],["utmost good faith","Utmost good faith"],["insurable interest","Insurable interest"],["indemnity","Indemnity"],["public liability","Public liability insurance"],["employer's liability","Employer's liability insurance"],["business interruption","Business interruption insurance"],["uninsurable","Uninsurable risk"],["hedging","Hedging"]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function arrow(ctx,x1,y1,x2,y2,col,w=3,dash){ line(ctx,x1,y1,x2,y2,col,w,dash); const a=Math.atan2(y2-y1,x2-x1), s=8+w; ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-s*Math.cos(a-0.45),y2-s*Math.sin(a-0.45)); ctx.lineTo(x2-s*Math.cos(a+0.45),y2-s*Math.sin(a+0.45)); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const n0 = x => Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const eur = x => "€"+n0(x);
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+function wrapText(ctx,str,maxW){ const words=str.split(" "), out=[]; let cur=""; words.forEach(wd=>{ const t=cur?cur+" "+wd:wd; if(ctx.measureText(t).width>maxW && cur){ out.push(cur); cur=wd; } else cur=t; }); if(cur) out.push(cur); return out; }
+const f2 = x => x.toFixed(2);
+// box with centred (wrapped) label
+function box(ctx,cx,cy,bw,bh,label,fill,stroke,col,fs){ rrect(ctx,cx-bw/2,cy-bh/2,bw,bh,12,fill,stroke,2); ctx.save(); ctx.font=F(fs); const ls=wrapText(ctx,label,bw-10); ctx.restore(); ls.forEach((s,i)=>text(ctx,s,cx,cy+(i-(ls.length-1)/2)*(fs+3)+fs*0.35,col,F(fs),"center")); }
+const fm = x => f2(x).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const sgn = v => (v>0?"+€":v<0?"−€":"€")+Math.abs(Math.round(v*100)/100);
+
+
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "nature", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3"]; const loState=store.get("b27-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("b27-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("b27-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+/* ================= LEARN ================= */
+const LEARN = {
+  nature:{ vis:[["cats",{all:true}]], cap:"Tonnta Kayaks' fifteen risks sorted into five types. Most new businesses face risks of every type at once.",
+    keys:[["⚠","Risk is the chance that something goes wrong: the business loses money, fails to reach its goals or closes. Enterprise always involves risk, because the future is uncertain."],["🧩","Types of risk: financial (cash, loans), market (customers, competitors), operational (equipment, suppliers, systems), people (staff, the owner's health) and external (weather, the economy, new laws)."],["🙋","Challenges for the entrepreneur: raising finance, lack of experience, long hours and stress, giving up a secure job, and possibly losing savings or a home given as a personal guarantee. Limited liability protects company owners from some of this."]],
+    f:"Financial · Market · Operational · People · External", mistake:"Writing \"the risk is that the business might fail\". Say what could cause it (a wet summer, a new rival, running out of cash) and what the loss would be." },
+  assess:{ vis:[["matrix",{}]], cap:"Tonnta's eight risks on a risk matrix. A wet summer (likely and serious) is top priority; a fire is rare but would be a disaster.",
+    keys:[["🎯","Why manage risk? To survive shocks, protect people and assets, keep cash flow steady, meet the law (e.g. health and safety), and reassure banks, investors and insurers."],["📐","Assess each risk: likelihood (1 rare to 5 almost certain) × impact (1 minor to 5 catastrophic) = a risk score from 1 to 25. Plot it on a risk matrix."],["📋","Record risks in a risk register: the rating, the response, who is responsible and a review date. Have a contingency plan for the biggest ones, and review the register as the business changes."]],
+    f:"Risk score = likelihood × impact", mistake:"Only worrying about likely risks. A rare risk with a huge impact (fire, a serious injury) can close a business, so it must be managed too." },
+  strat:{ vis:[["zones",{}]], cap:"Where each strategy usually fits on the risk matrix. Spreading helps everywhere, especially with market and external risks.",
+    keys:[["🚫","Avoid: don't do the risky activity at all (no night trips). Best for risks that are both likely and severe, but it can mean giving up profit."],["🧺","Spread: don't depend on one product, market, customer or supplier. Prevent: make the risk less likely or less serious (training, maintenance, security)."],["☂","Insure: pay a premium so an insurer covers the loss. Best for rare but costly risks. Small, unlikely risks may simply be accepted (paid for yourself)."]],
+    f:"Avoid · Spread · Prevent · Insure (· Accept)", mistake:"Saying \"insure against everything\". You can't insure against making a loss or a new rival, and insuring tiny risks costs more than it saves." },
+  spread:{ vis:[["spreadG",{theory:true}]], cap:"How much yearly profit swings as Tonnta adds income streams. If the streams are independent the swings shrink fast; if they all depend on the weather, spreading helps far less.",
+    keys:[["🧺","Spread risk by having more products, more markets, more customers and more suppliers, so one problem can't sink the whole business."],["🔗","Spreading works best when the streams aren't hit by the same thing. Indoor activities or online sales are less weather-dependent than more water sports."],["⚖","The costs: new activities need money, skills and time, and can take the owner's focus away from what the business does best."]],
+    f:"Don't put all your eggs in one basket", mistake:"Thinking any extra product spreads risk. A second water sport is hit by the same bad weather; spreading needs streams that behave differently." },
+  prevent:{ vis:[["prev",{on:["safe","cctv","fire","cyber","storm"]}]], cap:"Five sensible prevention measures cost €7 600 a year but cut Tonnta's expected losses from €18 600 to €6 500 a year.",
+    keys:[["🦺","Prevention makes a risk less likely or less serious: training, safety equipment, maintenance, security, cyber security, credit control, a cash reserve."],["📄","Some prevention is the law: every employer in Ireland must have a safety statement, and businesses holding personal data must protect it under GDPR."],["🧮","Compare the cost with the saving: expected loss = probability × cost. A measure is worthwhile if it cuts expected losses by more than it costs, and if it protects people."]],
+    f:"Expected loss = probability × cost", mistake:"Thinking prevention means a risk can't happen. It makes it less likely; big rare risks still need insurance or a contingency plan." },
+  insure:{ vis:[["claim",{V:60000,S:45000,L:20000,E:500}]], cap:"Contents worth €60 000 insured for €45 000. After a €20 000 flood the average clause cuts the payout to €15 000, less a €500 excess.",
+    keys:[["☂","Choose suitable products: public liability, employer's liability, property (fire, flood, theft), business interruption, motor, product liability, cyber and key person insurance."],["💶","Key terms: the premium is the price; the excess is the part you pay on each claim; the sum insured is the most the insurer will pay. Under-insure and the average clause cuts your claim."],["📜","Principles: utmost good faith (tell the truth), insurable interest (you must stand to lose), indemnity (back to where you were, no profit), contribution and subrogation."]],
+    f:"Compensation = sum insured ÷ true value × loss", mistake:"Under-insuring to save on the premium. A small saving each year can cost thousands when the average clause is applied to a claim." },
+};
+/* ================= INFOGRAPHICS ================= */
+const TINTS = ["var(--blush)","var(--apricot)","var(--sage)","var(--cream)"];
+const BIZ = [
+  {n:"Ireland's health service (HSE), 2021", ic:"lock", chip:["Cyber risk","real"], who:"Ireland's public health service.", job:"A ransomware attack in May 2021 shut down most of its IT systems for weeks, disrupting appointments and tests across the country.", ie:"Even huge organisations face cyber risk. Prevention (security, backups, training) and a recovery plan matter."},
+  {n:"Irish pubs and business interruption cover", ic:"scale", chip:["Insurance wording","real"], who:"Publicans whose pubs were closed by Covid-19 restrictions in 2020.", job:"Many claimed on business interruption policies. In 2021 the High Court ruled in a test case that one insurer's policy wording did cover the closures.", ie:"Read the policy wording carefully: what is covered and what is excluded decides the claim."},
+  {n:"Carmakers and the 2011 earthquake in Japan", ic:"car", chip:["Supplier risk","real"], who:"Car manufacturers around the world.", job:"The earthquake and tsunami cut supplies of key parts, stopping some production lines far from Japan. Many firms then mapped their suppliers and added backups.", ie:"Relying on one supplier or region is a risk. Spread it with backup suppliers and some safety stock."},
+  {n:"Airlines and fuel prices", ic:"plane", chip:["Hedging","general"], who:"Airlines in general.", job:"Fuel is one of an airline's biggest costs. Many airlines agree prices for some of their future fuel in advance (hedging), so a sudden price rise doesn't wreck their budget.", ie:"Fixing prices in advance reduces uncertainty, though you lose out if prices fall."},
+  {n:"Kodak", ic:"camera", chip:["Market risk","real"], who:"An American company that dominated camera film for most of the 20th century.", job:"It was slow to move its business away from film as digital cameras and phones took over, and it filed for bankruptcy protection in 2012.", ie:"Some of the biggest risks are uninsurable: customers changing what they want. Managing them means watching the market and adapting."},
+  {n:"Farm and food businesses", ic:"star", chip:["Spreading risk","general"], who:"Farms and food producers in Ireland and elsewhere.", job:"Many earn from more than one source: different crops or livestock, a farm shop, tourism, or contracts with several buyers.", ie:"Several income streams mean one bad price or one bad season doesn't sink the business."},
+];
+$("cases").innerHTML = BIZ.map((c,k)=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${TINTS[k%4]}">${svg(c.ic)}</div><h3>${c.n}</h3></div><div class="chips">${chipsHTML([c.chip])}</div><p><b>Who:</b> ${c.who}</p><p><b>What happened:</b> ${c.job}</p><p><b>Lesson:</b> ${c.ie}</p></div>`).join("");
+const IMPACTS = [
+  ["lock","Cyber attacks","Ransomware can lock every computer until a payment is demanded. Prevent: strong passwords, two-factor log-in, updates, offline backups, staff training. Insure: cyber insurance.","var(--blush)"],
+  ["people","Data protection","Customer data must be kept safe under GDPR. A breach can mean fines, claims and lost trust. Collect only the data you need and limit who can see it.","var(--apricot)"],
+  ["chat","Online reputation","One viral complaint or a wave of bad reviews can hit bookings overnight. Respond quickly and honestly, and fix the cause.","var(--sage)"],
+  ["cloud","System outages","If the booking site or card machine goes down, sales stop. Have a backup: a phone line, a paper record, a second payment method.","var(--cream)"],
+];
+$("impacts").innerHTML = IMPACTS.map(([i,t,p,tn])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${t}</h3></div><p>${p}</p></div>`).join("");
+const AROUND = [
+  ["prevent","Health and Safety Authority (HSA)","The State body for workplace safety. It publishes guidance and tools to help businesses carry out risk assessments and write a safety statement.",[["Safety","real"]],"var(--blush)"],
+  ["lock","National Cyber Security Centre (NCSC)","Ireland's national centre for cyber security. It gives guidance on protecting systems and responds to major incidents.",[["Cyber","real"]],"var(--apricot)"],
+  ["people","Data Protection Commission (DPC)","Ireland's data protection regulator. It enforces GDPR and gives guidance on keeping personal data safe.",[["GDPR","real"]],"var(--sage)"],
+  ["gov","Central Bank of Ireland","Regulates insurance companies and brokers in Ireland and sets rules on how they must treat customers.",[["Insurers","real"]],"var(--cream)"],
+  ["scale","Financial Services and Pensions Ombudsman","Deals with complaints from consumers and small businesses about insurers and other financial firms, free of charge.",[["Complaints","real"]],"var(--blush)"],
+  ["chart","Local Enterprise Offices (LEOs)","Training and mentoring for small businesses, including planning and financial management. Check current programmes.",[["Small firms","real"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"nature",label:"Risks of enterprise",col:"var(--blush)",leaves:[["Financial","Cash, loans, losses."],["Market","Customers, rivals, demand."],["Operational","Equipment, suppliers, systems."],["People","Staff, the owner's health."],["External","Weather, economy, laws."]]},
+  {id:"assess",label:"Assessing",col:"var(--apricot)",leaves:[["Likelihood","How likely, 1 to 5."],["Impact","How serious, 1 to 5."],["Risk matrix","Score = likelihood × impact."],["Risk register","Rating, response, owner, review."]]},
+  {id:"strat",label:"Strategies",col:"var(--sage)",leaves:[["Avoid","Don't do the risky thing."],["Spread","Don't depend on one thing."],["Prevent","Make it less likely or less serious."],["Insure","Pay a premium; the insurer pays the loss."]]},
+  {id:"spread",label:"Spreading",col:"var(--cream)",leaves:[["Products","More than one thing to sell."],["Markets","More than one place or season."],["Suppliers","A backup if one fails."],["Linked?","Spreading works if streams differ."]]},
+  {id:"prevent",label:"Prevention",col:"var(--blush)",leaves:[["Safety","Training, equipment, safety statement."],["Security","Locks, CCTV, cyber security."],["Expected loss","Probability × cost."]]},
+  {id:"insure",label:"Insurance",col:"var(--sage)",leaves:[["Products","Liability, property, interruption, cyber…"],["Terms","Premium, excess, sum insured."],["Average clause","Under-insured? Paid a fraction."],["Principles","Good faith, interest, indemnity."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["nature","What is risk in business?","The chance that something goes wrong and causes a loss, harm or failure to reach a goal."],
+  ["nature","Name five types of business risk.","Financial, market, operational, people and external (e.g. weather, the economy, new laws)."],
+  ["nature","Give three challenges an entrepreneur faces when starting a business.","Raising finance; finding customers; competition; lack of experience or skills; long hours and stress; uncertain income."],
+  ["nature","What personal risks does an entrepreneur take?","Losing savings, or a home given as security for a personal guarantee; giving up a secure job; stress and strain on health and family; damage to reputation if it fails."],
+  ["nature","Give an example of a financial risk and a market risk.","Financial: running out of cash in winter, or being unable to repay a loan. Market: a new competitor opens, or demand is lower than expected."],
+  ["nature","How does limited liability reduce an entrepreneur's risk?","Company owners can lose only what they invested, not personal assets (unless they gave a personal guarantee). Sole traders have unlimited liability."],
+  ["assess","Give four reasons why risk management is important.","Helps the business survive shocks; protects staff, customers and assets; keeps cash flow and profit steadier; meets legal duties; makes it easier to get finance and insurance."],
+  ["assess","How do you assess a risk?","Rate its likelihood (1 to 5) and its impact (1 to 5). Risk score = likelihood × impact. Deal with the highest scores first."],
+  ["assess","What is a risk register?","A list of the business's risks with their ratings, the response chosen, who is responsible and a date to review it."],
+  ["assess","What is a contingency plan?","A plan B for what to do if a risk happens, e.g. a backup supplier, a cash reserve or an arranged overdraft."],
+  ["assess","Why can't a business ignore a risk with low likelihood?","If its impact is catastrophic (a fire, a serious injury), it could still close the business. It needs prevention, insurance or a contingency plan."],
+  ["strat","Name the four risk management strategies in the specification.","Avoidance, spread, prevention and insurance (choosing suitable insurance products)."],
+  ["strat","What is risk avoidance? Give an example and a drawback.","Not doing the risky activity, e.g. no night-time kayak trips. Drawback: the business gives up the profit it could have made."],
+  ["strat","Which strategy suits a risk that is rare but very costly?","Insurance (transferring the risk), usually with prevention as well."],
+  ["strat","What is risk acceptance (retention)?","Choosing to live with a small risk and pay for any loss yourself, because managing or insuring it would cost more."],
+  ["spread","How can a business spread risk? Give four ways.","More products or services; more markets or seasons; more customers (not depending on one big one); more suppliers."],
+  ["spread","When does spreading risk work best?","When the income streams are not affected by the same thing, e.g. indoor activities as well as weather-dependent ones."],
+  ["spread","Give two drawbacks of spreading risk.","New activities cost money and need new skills; management time is split; it can weaken the focus on what the business does best."],
+  ["prevent","What is risk prevention? Give three examples.","Action that makes a risk less likely or less serious, e.g. staff training, safety equipment, maintenance, CCTV, backups, credit control."],
+  ["prevent","How do you calculate expected loss?","Expected loss = probability × cost. E.g. 10% × €80 000 = €8 000 a year."],
+  ["prevent","When is a prevention measure worth it financially?","When it cuts the expected loss by more than it costs each year (and of course when the law requires it or it protects people)."],
+  ["prevent","What must every employer in Ireland have for health and safety?","A safety statement based on a risk assessment, setting out the hazards and how they are controlled."],
+  ["insure","Name six types of business insurance.","Public liability, employer's liability, property (fire, flood, theft), business interruption, motor, product liability, cyber, key person."],
+  ["insure","Distinguish public liability and employer's liability insurance.","Public liability covers claims from members of the public (customers, passers-by). Employer's liability covers claims from employees injured at work."],
+  ["insure","Define premium, excess and sum insured.","Premium: the price of the insurance. Excess: the first part of each claim, paid by the insured. Sum insured: the most the insurer will pay."],
+  ["insure","What is the average clause?","If a business is under-insured, the insurer pays only the fraction of the loss that the sum insured is of the true value: sum insured ÷ true value × loss."],
+  ["insure","Explain utmost good faith and insurable interest.","Utmost good faith: tell the insurer all material facts truthfully. Insurable interest: you must stand to lose money if the item is lost or damaged."],
+  ["insure","What is indemnity?","Insurance puts you back where you were before the loss, no better off. You can't make a profit from a claim."],
+  ["insure","Give two risks a business cannot insure against.","Making a loss or low sales; a new competitor opening; changes in customer tastes."],
+  ["insure","How can a business choose suitable insurance?","List its risks; get the cover the law requires; match each serious risk to a product; insure for the full value; compare quotes and excesses; use a broker; read the exclusions."],
+];
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Managing</text><text x="${cx}" y="${cy+22}" text-anchor="middle">risk</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("b27-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("b27-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("b27-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("b27-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["nature","A wet summer keeps tourists away from a kayak-hire business. This is best described as:",["A financial risk","An external risk","A people risk","An insurable risk"],1,"The weather comes from outside the business and it can't control it: an external risk. (It then causes a financial problem.)"],
+  ["nature","Which of these is a personal risk for an entrepreneur rather than only a business risk?",["A supplier delivering late","Losing her savings and her home, given as security for a loan","A rival lowering prices","A van breaking down"],1,"A personal guarantee or savings put into the business put the entrepreneur's own money and home at risk."],
+  ["nature","A business relies on one customer for 70% of its sales. The main risk is:",["Operational risk","Customer concentration: losing that customer would be a serious blow","Cyber risk","No risk, because sales are guaranteed"],1,"Depending on one big customer concentrates risk. The answer is to spread it by finding more customers."],
+  ["assess","A risk has likelihood 4 and impact 5. Its risk score is:",["9","20","25","1"],1,"Risk score = likelihood × impact = 4 × 5 = 20, which is in the highest band."],
+  ["assess","Which risk should usually be dealt with first?",["Likelihood 2, impact 2","Likelihood 1, impact 3","Likelihood 4, impact 4","Likelihood 3, impact 1"],2,"Scores: 4, 3, 16 and 3. The highest score (16) is the top priority."],
+  ["assess","Which is NOT a reason why risk management is important?",["It protects staff and customers","It helps the business survive shocks","It guarantees the business will make a profit","It helps the business get finance and insurance"],2,"Risk management reduces the chance and size of losses, but nothing can guarantee a profit."],
+  ["assess","A list of a business's risks with ratings, responses, owners and review dates is a:",["Cash flow forecast","Risk register","Business model canvas","Safety statement"],1,"A risk register records each risk and what is being done about it, and is reviewed regularly."],
+  ["strat","A kayak business decides not to run trips in winter storms at all. This is:",["Risk avoidance","Risk spreading","Insurance","Risk acceptance"],0,"Not doing the risky activity at all is avoidance."],
+  ["strat","Which strategy is usually best for a risk that is rare but very expensive, such as a fire?",["Avoidance","Accept it","Insurance, with prevention as well","Spreading"],2,"Rare, costly risks are what insurance is for. Fire alarms and safe wiring (prevention) also lower the chance and can cut the premium."],
+  ["strat","A business decides to pay for a few broken paddles itself each year instead of insuring them. This is:",["Risk acceptance (retention)","Risk avoidance","Subrogation","Risk spreading"],0,"Small, predictable losses are often cheaper to pay yourself than to insure: risk acceptance."],
+  ["spread","Which change spreads Tonnta Kayaks' weather risk the most?",["Adding paddleboards","Adding kayak trips on a nearby lake","Running indoor team-building workshops for companies in winter","Hiring more kayaks in July"],2,"Paddleboards and lake trips are hit by the same bad weather. Indoor winter workshops earn money when the weather is bad."],
+  ["spread","Buying stock from two suppliers instead of one mainly reduces:",["Supplier dependency risk","Cyber risk","Interest rate risk","Market risk"],0,"If one supplier fails, the other can still deliver: the risk is spread."],
+  ["prevent","A risk has a 10% chance of happening each year and would cost €80 000. Its expected loss is:",["€800","€8 000","€80 000","€88 000"],1,"Expected loss = probability × cost = 0.10 × €80 000 = €8 000 a year."],
+  ["prevent","A safety measure costs €4 000 a year and cuts expected losses from €8 000 to €2 400. The net saving is:",["€1 600","€4 000","€5 600","€9 600"],0,"Saving in expected loss = €8 000 − €2 400 = €5 600. Net saving = €5 600 − €4 000 = €1 600."],
+  ["insure","A customer slips on a business's wet floor and sues. Which insurance covers this?",["Employer's liability","Public liability","Business interruption","Key person"],1,"Claims from members of the public are covered by public liability insurance."],
+  ["insure","Contents worth €80 000 are insured for €60 000. A fire causes €20 000 of damage. Under the average clause the insurer pays (before any excess):",["€15 000","€20 000","€60 000","€26 667"],0,"Compensation = sum insured ÷ true value × loss = €60 000 ÷ €80 000 × €20 000 = €15 000."],
+  ["insure","A business hides the fact that its boathouse flooded twice before. Which principle has it broken?",["Indemnity","Contribution","Utmost good faith","Subrogation"],2,"Utmost good faith requires the insured to disclose all material facts. The insurer could refuse the claim or cancel the policy."],
+  ["insure","Which of these risks can a business NOT insure against?",["Theft of equipment","A customer injury claim","A new competitor taking customers","A fire"],2,"Losing customers to a rival is a normal business risk that can't be measured or insured. It is managed by planning and adapting."],
+];
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Outline","Give the main points; restrict to essential points of information.","Outline the challenges and risks associated with enterprise and entrepreneurship."],
+  ["Analyse","Study or examine something in detail; break it down to bring out the essential elements; identify parts and relationships, and interpret information to reach conclusions.","Analyse a range of risk management strategies Tonnta Kayaks could use."],
+  ["Identify","Recognise patterns, facts or details; provide an answer from a number of possibilities; state briefly a distinguishing fact or feature.","Identify two insurance products Tonnta Kayaks needs."],
+  ["Explain","Give a detailed account including reasons or causes.","Explain the term \"average clause\"."],
+  ["Discuss","Offer a considered, balanced review that includes a range of arguments, factors or hypotheses, supported by appropriate evidence.","Discuss whether a small business should insure against every risk."],
+  ["Appreciate","Recognise the meaning, value or importance of, or have a practical understanding of.","Appreciate the importance of assessing risk before expanding."],
+  ["Demonstrate","Prove or make clear by reasoning or evidence, illustrating with examples or practical application.","Demonstrate how a risk matrix helps a business set priorities."],
+  ["Conduct","To perform an activity.","Conduct a risk assessment of a local business."],
+  ["Calculate","Obtain a numerical answer showing the relevant stages in the working.","Calculate the compensation paid under the average clause."],
+  ["Suggest","Propose solution(s), hypothesis, or other possible answer(s).","Suggest two ways Tonnta Kayaks could spread its risk."],
+];
+// Numbers trainer
+const r1 = x => Math.round(x*10)/10, r2 = x => Math.round(x*100)/100;
+const mf = x => Number.isInteger(r2(x))? n0(x) : fm(x);
+const pct = x => (Number.isInteger(r2(x))? String(r2(x)) : f2(x)).replace("-","−")+"%";
+const band = s => s<=4?"low":s<=9?"medium":s<=15?"high":"very high";
+const eurM = x => (x<0?"−€":"€")+mf(Math.abs(x));
+const PTYPES = {
+  score:{ name:"Risk score", gen(){ const L=rnd(1,5), I=rnd(1,5), x=L*I;
+    return { q:`A risk is rated <b>${L}</b> for likelihood and <b>${I}</b> for impact on a 5 × 5 risk matrix. Calculate its risk score.`, ans:x, unit:"", steps:["Risk score = likelihood × impact",`= ${L} × ${I}`,`= <b>${x}</b> (${band(x)}: ${x>=16?"act now":x>=10?"act soon":x>=5?"manage and monitor":"monitor"})`] }; } },
+  eloss:{ name:"Expected loss", gen(){ const p=pick([2,5,10,20,25,30]), c=pick([8000,12000,20000,50000,80000,150000]), x=p/100*c;
+    return { q:`There is a <b>${p}%</b> chance each year that a risk happens. If it does, it will cost <b>€${n0(c)}</b>. Calculate the expected loss per year.`, ans:x, unit:"€", steps:["Expected loss = probability × cost",`= ${p}% × €${n0(c)} = ${f2(p/100)} × €${n0(c)}`,`= <b>${eurM(x)}</b>`] }; } },
+  premium:{ name:"Premium", gen(){ const v=pick([40000,60000,85000,120000,250000]), r=pick([4,6,7.5,8,12]), x=v/1000*r;
+    return { q:`An insurer charges <b>€${String(r)}</b> per €1 000 insured. A business insures its equipment for <b>€${n0(v)}</b>. Calculate the annual premium.`, ans:x, unit:"€", steps:["Premium = sum insured ÷ €1 000 × rate per €1 000",`= €${n0(v)} ÷ 1 000 × €${r} = ${n0(v/1000)} × €${r}`,`= <b>${eurM(x)}</b>`] }; } },
+  ncd:{ name:"No-claims discount", gen(){ const b=pick([480,900,1250,2400]), d=pick([10,20,25,40]), x=b*(1-d/100);
+    return { q:`A business's motor insurance premium is <b>€${n0(b)}</b> before discounts. It has earned a <b>${d}%</b> no-claims discount. Calculate the premium it pays.`, ans:x, unit:"€", steps:[`Discount = ${d}% × €${n0(b)} = ${eurM(b*d/100)}`,`Premium paid = €${n0(b)} − ${eurM(b*d/100)}`,`= <b>${eurM(x)}</b>`] }; } },
+  excess:{ name:"Claim less excess", gen(){ const l=pick([3500,8000,12000,20000]), e=pick([250,500,1000]), x=l-e;
+    return { q:`A business is fully insured. Equipment worth <b>€${n0(l)}</b> is stolen. The policy has an excess of <b>€${n0(e)}</b>. Calculate the amount the insurer pays.`, ans:x, unit:"€", steps:["Fully insured, so the average clause doesn't apply","Claim paid = loss − excess",`= €${n0(l)} − €${n0(e)} = <b>${eurM(x)}</b>`] }; } },
+  average:{ name:"Average clause", gen(){ const v=pick([60000,80000,100000,200000]), f=pick([0.5,0.6,0.75,0.8]), s=v*f, l=pick([10000,20000,24000,40000]), x=s/v*l;
+    return { q:`Stock worth <b>€${n0(v)}</b> is insured for only <b>€${n0(s)}</b>. A flood causes a loss of <b>€${n0(l)}</b>. Calculate the compensation under the average clause (ignore any excess).`, ans:x, unit:"€", steps:["Compensation = sum insured ÷ true value × loss",`= €${n0(s)} ÷ €${n0(v)} × €${n0(l)} = ${f2(f)} × €${n0(l)}`,`= <b>${eurM(x)}</b>`] }; } },
+  avgex:{ name:"Average clause and excess", gen(){ const v=pick([50000,80000,120000]), f=pick([0.5,0.75,0.8]), s=v*f, l=pick([8000,16000,30000]), e=pick([250,500,1000]), c=s/v*l, x=c-e;
+    return { q:`Contents worth <b>€${n0(v)}</b> are insured for <b>€${n0(s)}</b>. A fire causes a loss of <b>€${n0(l)}</b>. The policy has an excess of <b>€${n0(e)}</b>. Apply the average clause, then the excess. Calculate the amount the insurer pays.`, ans:x, unit:"€", steps:[`Average clause: €${n0(s)} ÷ €${n0(v)} × €${n0(l)} = ${eurM(c)}`,`Less the excess: ${eurM(c)} − €${n0(e)}`,`= <b>${eurM(x)}</b>`] }; } },
+  prevnet:{ name:"Prevention: net saving", gen(){ const [c,p1,p2,m]=pick([[80000,10,3,4000],[12000,30,10,1500],[150000,2,1,800],[20000,10,3,600],[12000,30,5,18000],[50000,20,5,6000]]), e1=p1/100*c, e2=p2/100*c, x=e1-e2-m;
+    return { q:`A risk costs <b>€${n0(c)}</b> if it happens. Its chance each year is <b>${p1}%</b>. A prevention measure costing <b>€${n0(m)}</b> a year cuts the chance to <b>${p2}%</b>. Calculate the net saving per year (negative if the measure costs more than it saves).`, ans:x, unit:"€", steps:[`Expected loss before = ${p1}% × €${n0(c)} = ${eurM(e1)}; after = ${p2}% × €${n0(c)} = ${eurM(e2)}`,`Saving in expected loss = ${eurM(e1)} − ${eurM(e2)} = ${eurM(e1-e2)}`,`Net saving = ${eurM(e1-e2)} − €${n0(m)} = <b>${eurM(x)}</b>`] }; } },
+};
+// Which strategy is it? [statement, key, why]
+const PNAME = {AV:["Avoid","Don't do the risky activity at all.","blush"],SP:["Spread","Don't depend on one product, market, customer or supplier.","cream"],PR:["Prevent","Make the risk less likely or less serious.","sage"],IN:["Insure","Pay a premium so an insurer pays for the loss.","apricot"],AC:["Accept","Live with a small risk and pay for any loss yourself.","sage"]};
+const PRED = [
+  ["A café decides not to sell food at all so it has no allergy risk.","AV","Removing the activity removes the risk: avoidance (and the café gives up food sales)."],
+  ["A start-up decides not to export to a country at war.","AV","Staying out of a market that is too risky: avoidance."],
+  ["A builder refuses a job that needs work on a high roof with no safe access.","AV","Turning down the risky work: avoidance."],
+  ["A dairy sells to three supermarket chains instead of one.","SP","Not depending on one customer: spreading."],
+  ["A farm adds a holiday cottage and a farm shop.","SP","New income streams that aren't hit by the same problems: spreading."],
+  ["A clothes shop buys stock from suppliers in two different countries.","SP","A backup if one supplier or country has a problem: spreading."],
+  ["A restaurant trains every staff member in food safety.","PR","Training makes food poisoning less likely: prevention."],
+  ["A shop installs CCTV and an alarm.","PR","Security makes theft less likely: prevention."],
+  ["A business backs up its data every night and uses two-factor log-in.","PR","Makes a cyber attack less likely and less damaging: prevention."],
+  ["A firm checks customers' credit history before selling on credit.","PR","Credit control makes bad debts less likely: prevention."],
+  ["A gym takes out public liability cover in case a member is injured.","IN","The insurer pays any claim: insurance."],
+  ["A business buys business interruption cover in case a fire closes it.","IN","The insurer pays lost profit and ongoing costs: insurance."],
+  ["A company insures the life of its founder, who holds key customer contacts.","IN","Key person insurance: the business is paid if the founder dies or can't work."],
+  ["A café pays for the odd broken cup itself instead of insuring its crockery.","AC","Small, predictable losses: accepting (retaining) the risk is cheaper."],
+  ["A shop owner decides a few cent of lost stock a week isn't worth a security guard.","AC","Managing the risk would cost more than the loss: acceptance."],
+  ["A small office lives with the risk of a printer breaking and would simply buy a new one.","AC","A minor, affordable loss: accept it."],
+];
+// Long questions
+const LONGQ = [
+  { title:"Tonnta Kayaks: starting out", intro:"Aoife has left her job as a teacher to start Tonnta Kayaks (illustrative), a kayak and paddleboard hire business near Clifden. She has invested €25 000 of her savings and borrowed €40 000, giving the bank a personal guarantee. Most customers are tourists in June, July and August.",
+    parts:[["a","Outline the challenges and risks Aoife faces as an entrepreneur.",12,"4 × 3 (risk named 1 + explained 1 + applied to Aoife 1), e.g. financial: €40 000 loan to repay in bad seasons; personal: savings and personal guarantee, gave up a secure job; market: tourists may not come, rivals; external: weather; operational: equipment breakdowns, theft; people: she may be the only instructor, stress and long hours."],
+      ["b","Outline the importance of assessing and managing risks for Tonnta Kayaks.",9,"3 × 3, e.g. survival (one wet summer or one injury claim could close it); protects customers and staff (legal duty, safety statement); steadier cash flow to repay the loan; needed for insurance and finance; helps set priorities so money is spent where it matters."],
+      ["c","Explain how Aoife could use a risk matrix to assess the risks of her business.",9,"List the risks (2); rate likelihood and impact 1 to 5 (2); multiply to get a score (2); plot on the matrix, deal with high scores first, e.g. a wet summer 4 × 4 = 16 (2); review regularly (1)."]] },
+  { title:"Managing Tonnta's risks", intro:"Tonnta Kayaks has completed its first season. Aoife's risk register shows: a customer injury on the water (likelihood 2, impact 5); a wet summer (4, 4); theft of kayaks (3, 2); a cyber attack on the booking system (2, 3); and a fire in the boathouse (1, 5).",
+    parts:[["a","Analyse a range of risk management strategies Aoife could use to respond to these risks.",16,"4 × 4 (strategy 1 + applied to a named risk 2 + a cost or limit 1). Avoid: no trips in strong winds or at night (gives up some sales). Spread: school groups, indoor winter workshops, online sales (needs money and skills; same weather risk if too similar). Prevent: qualified instructors, briefings, buoyancy aids; locked racks and CCTV; backups and two-factor log-in (costs money each year; can't remove the risk). Insure: public liability, property, business interruption, cyber (premium and excess; can't insure the wet summer)."],
+      ["b","Calculate the risk score of each risk in the register and rank them in order of priority.",6,"Injury 2 × 5 = 10; wet summer 4 × 4 = 16; theft 3 × 2 = 6; cyber 2 × 3 = 6; fire 1 × 5 = 5 (1 each = 5). Ranking: wet summer, injury, theft and cyber (equal), fire (1)."],
+      ["c","Aoife says: \"I'll just insure against everything.\" Discuss.",8,"For (2 × 2): insurance covers big rare losses (fire, injury claims) and is required for some risks; it gives peace of mind. Against (2 × 2): premiums and excesses cost money; the wet summer and rivals are uninsurable; insuring small risks costs more than accepting them; prevention can lower premiums. Conclusion (0)."]] },
+  { title:"Insurance and a claim", intro:"Tonnta Kayaks insures the contents of its boathouse for €45 000. Their true value is €60 000. A storm floods the boathouse, causing €20 000 of damage. The policy has an excess of €500. The insurer charges €8 per €1 000 insured.",
+    parts:[["a","Identify four insurance products Tonnta Kayaks should have and explain why each is needed.",12,"4 × 3 (product 1 + reason applied 2), e.g. public liability (customers injured on the water could sue); employer's liability (instructors injured at work); property/contents (boathouse, kayaks: fire, flood, theft); business interruption (closed after a flood in peak season); motor (the van and trailer, required by law); cyber (online bookings and card data); key person (Aoife)."],
+      ["b","Calculate (i) the annual premium, (ii) the amount the insurer pays for the flood.",9,"(i) €45 000 ÷ 1 000 × €8 = €360 (3). (ii) Average clause: €45 000 ÷ €60 000 × €20 000 = €15 000 (4); less excess: €15 000 − €500 = €14 500 (2)."],
+      ["c","Explain the principles of utmost good faith and indemnity, referring to Tonnta Kayaks.",6,"2 × 3. Utmost good faith: Aoife must disclose all material facts, e.g. that the boathouse is close to the shore and has flooded before; otherwise the claim could be refused. Indemnity: she is put back in the same position, e.g. paid the value of the damaged kayaks, not the price of brand-new better ones; she can't profit from the flood."]] },
+];
+const RAG = ["Define risk and explain why enterprise always involves risk","Name and give examples of five types of business risk","Outline the personal challenges and risks for an entrepreneur","Outline why assessing and managing risk is important","Use likelihood × impact to rate risks on a risk matrix","Explain a risk register and a contingency plan","Explain and apply risk avoidance, with a drawback","Explain and apply spreading risk, and when it works best","Explain and apply prevention, and calculate expected loss","Match risks to suitable insurance products","Define premium, excess, sum insured and under-insurance","Calculate compensation using the average clause and excess","Explain the principles of insurance","Identify risks that can't be insured and how to manage them"];
+const SKILLS = [["Spot the risks","Choose a local business and list its risks under the five types.","Risks lab"],["Rate and rank","Build a simple risk register with likelihood, impact and score for each risk.","Risk matrix lab"],["Interview","Ask a local business owner how they manage their biggest risk. Record the answer carefully.","Strategies lab"],["Use secondary data","Find official guidance (e.g. the HSA or the NCSC) on one risk and summarise it, noting the source and date.","Infographics"],["Collect and graph data","Run the spreading simulation and graph how the spread of profit changes with more income streams.","Spreading lab"],["Compare options with numbers","Compare the cost of a prevention measure with the fall in expected loss.","Prevention lab"],["Read the small print","Compare two insurance quotes: premium, excess, sum insured and exclusions.","Insurance lab"],["Recommend with reasons","End your study with clear recommendations supported by your evidence.","Long questions"]];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("b27-best",null); if(best==null||pct>best) store.set("b27-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+let pType="score", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const raw=$("paIn").value.replace(/[€%£$\sm]/g,"").replace(/years?/i,"").replace(/[−–]/g,"-").replace(/,(?=\d{3}(\D|$))/g,"").replace(",",".");
+  const x=parseFloat(raw);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 1500 or 59.3.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(0.05, Math.abs(pCur.ans)*0.005);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: write the formula first. Risk score = likelihood × impact; expected loss = probability × cost; average clause = sum insured ÷ true value × loss. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p>${L.table?`<div style="overflow-x:auto;margin-top:8px">${L.table}</div>`:""}</header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k && PRED.length>1); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>${PRED[k][0]}</b> Which strategy is it?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const [,ans,why]=PRED[pd.k], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> Answer: ${PNAME[ans][0]}. ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+const ragState=store.get("b27-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("b27-rag",ragState); ragRender(); });
+ragRender();
+const skState=store.get("b27-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("b27-skills",skState); });
+/* ================= LAB STATE + WIRING ================= */
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+/* ================= LAB DATA ================= */
+// 1. Types of risk [text, key, note, short]
+const NAT=[["Aoife's €40 000 bank loan must be repaid even after a bad season","FI","Money owed whatever happens: a financial risk.","Loan repayments"],["Rent, insurance and loan bills arrive in winter when there is almost no income","FI","A cash flow problem: financial risk.","Winter cash flow"],["Aoife put in her savings and gave a personal guarantee on the loan","FI","Her own money and assets are at stake: a financial risk for the entrepreneur.","Savings at stake"],["Fewer people want to kayak than her research suggested","MA","Demand lower than expected: market risk.","Low demand"],["A large adventure company opens a hire base on the same beach","MA","A new competitor: market risk.","New rival"],["Tourists think €45 for two hours is too expensive","MA","Customers may not buy at that price: market risk.","Price too high"],["The van that tows the kayak trailer breaks down in July","OP","Day-to-day equipment failing: operational risk.","Van breaks down"],["The online booking system crashes or is hacked","OP","Systems failing or attacked: operational (cyber) risk.","Booking system"],["Kayaks are stolen from the yard","OP","Losing equipment: operational risk.","Theft"],["Aoife is the only qualified sea-kayak instructor; if she's ill, trips stop","PE","Depending on one key person: people risk.","Owner ill"],["She can't find qualified seasonal staff for July","PE","A shortage of skilled staff: people risk.","No staff"],["Aoife works 70-hour weeks all summer and burns out","PE","The owner's health and stress: people risk.","Burn-out"],["A wet, windy summer keeps customers away","EX","Weather is outside her control: external risk.","Wet summer"],["New water-safety rules require extra equipment","EX","A change in the law: external risk.","New rules"],["A recession means people spend less on holidays","EX","The economy is outside her control: external risk.","Recession"]];
+const NATN={FI:"Financial",MA:"Market",OP:"Operational",PE:"People",EX:"External"}, NATK=Object.keys(NATN), NATC=["blush","apricot","sage","cream","olive"];
+// 2. Risk register [name, short, L, I, response]
+const RISK=[["A customer is injured on the water","Injury",2,5,"Prevent (qualified instructors, safety briefings, buoyancy aids, weather checks) and insure (public liability)."],["A wet summer cuts bookings","Wet summer",4,4,"Spread (school groups, indoor winter workshops, online sales) and keep a cash reserve as a contingency."],["Kayaks are stolen","Theft",3,2,"Prevent (locked racks, CCTV) and insure the equipment."],["A fire in the boathouse","Fire",1,5,"Insure (property and business interruption) and prevent (alarms, extinguishers, safe wiring)."],["Cash runs out in winter","Cash",3,4,"Prevent (cash flow forecast, cut winter costs) and plan a contingency (arranged overdraft)."],["The booking system is hacked","Hack",2,3,"Prevent (backups, two-factor log-in, training) and consider cyber insurance."],["Aoife is ill for a month in summer","Owner ill",2,4,"Train a second instructor (spread) and consider key person or income protection insurance."],["A rival hire firm opens nearby","Rival",3,3,"Can't be insured: differentiate (guided tours, service) and spread into other activities."]];
+const RATEL=["","rare","unlikely","possible","likely","almost certain"], RATEI=["","minor","moderate","serious","major","catastrophic"];
+// 3. Strategies [text, key, note, short]
+const STR=[["Night-time kayak trips have a high risk of serious accidents, so Aoife won't offer them","AV","She removes the risk by not doing the activity: avoidance.","No night trips"],["A route past dangerous sea cliffs is dropped from the tour list","AV","Not doing the risky activity: avoidance.","No cliff route"],["Aoife decides not to sign a five-year lease on a second base until after her first season","AV","Avoiding a big financial commitment while demand is unknown.","No second lease"],["Adding school groups in spring and autumn so income doesn't depend on summer tourists","SP","A new income stream in other seasons: spreading.","School groups"],["Buying kayaks and spare parts from two suppliers instead of one","SP","A backup if one supplier fails: spreading.","Two suppliers"],["Selling paddleboards and wetsuits online to customers all over Ireland","SP","An income stream that doesn't depend on local weather: spreading.","Online sales"],["All instructors are qualified, and every customer gets a safety briefing and a buoyancy aid","PR","Makes an injury less likely and less serious: prevention.","Safety training"],["Kayaks are locked in racks and CCTV covers the yard","PR","Makes theft less likely: prevention.","Locks and CCTV"],["Daily backups and two-factor log-in for the booking system","PR","Makes a cyber attack less likely and less damaging: prevention.","Backups"],["Cover in case a customer is injured and sues the business","IN","Public liability insurance transfers the cost of a claim to the insurer.","Liability cover"],["Cover for the boathouse and equipment against fire, flood and theft","IN","Property insurance: the insurer pays for the loss.","Property cover"],["Cover so Tonnta can pay its bills while closed after a fire","IN","Business interruption insurance pays lost profit and ongoing costs.","Interruption cover"]];
+const STRN={AV:"Avoid",SP:"Spread",PR:"Prevent",IN:"Insure"};
+function zoneOf(L,I){ if(L>=4&&I>=4) return "AV"; if(I>=4) return "IN"; if(L<=2&&I<=2) return "AC"; return "PR"; }
+const ZNAME={AV:"Avoid",IN:"Insure",PR:"Prevent",AC:"Accept"}, ZCOL={AV:"terra",IN:"apricot",PR:"sage",AC:"cream"}, ZANCH={AV:[4.5,4.5],IN:[2,4.5],PR:[4,2],AC:[1.5,1.5]};
+// 5. Prevention [key, name, probability %, cost]; measures [key, name, cost a year, risk, new probability %]
+const PRISK=[["injury","Customer injury claim",10,80000],["theft","Theft of kayaks",30,12000],["fire","Fire in the boathouse",2,150000],["hack","Booking system hacked",10,20000],["storm","Storm damage to boards",25,8000]];
+const MEAS=[["safe","Qualified instructors, briefings, buoyancy aids",4000,"injury",3],["cctv","Locked racks and CCTV",1500,"theft",10],["guard","Night-time security guard",18000,"theft",5],["fire","Fire alarm, extinguishers, wiring check",800,"fire",1],["cyber","Backups, two-factor log-in, staff training",600,"hack",3],["storm","Storm tie-downs and weather alerts",700,"storm",10]];
+function pvCalc(on){ const ks=new Set(on), M=MEAS.filter(m=>ks.has(m[0])), spend=M.reduce((a,m)=>a+m[2],0);
+  const rows=PRISK.map(([k,n,p,c])=>{ const np=Math.min(p,...M.filter(m=>m[3]===k).map(m=>m[4])); return {k,n,p,np,c,before:p/100*c,after:np/100*c}; });
+  const before=rows.reduce((a,r)=>a+r.before,0), after=rows.reduce((a,r)=>a+r.after,0); return {M,spend,rows,before,after,total:spend+after}; }
+// 6. Insurance
+function claimCalc(V,S,L,E){ const comp = S>=V? L : S/V*L, c2=Math.min(comp,S), paid=Math.max(0,c2-E); return {comp:c2,paid,exc:c2-paid,short:L-c2}; }
+const IP=[["A customer trips on the slipway and sues for her injuries","PL","A member of the public: public liability."],["A hired kayak drifts and damages a moored yacht","PL","Damage to someone else's property: public liability."],["An instructor injures her back lifting boats at work","EL","An employee hurt at work: employer's liability."],["A staff member is hurt because a trailer hitch was faulty","EL","Employee injured through the employer's negligence: employer's liability."],["Fire destroys the boathouse and twenty kayaks","PR","Damage to the business's own property: property insurance."],["Paddleboards are stolen from the yard at night","PR","Theft of the business's own property: property insurance."],["After a flood the business is closed for six weeks but still pays rent and loan repayments","BI","Lost profit and ongoing costs while closed: business interruption."],["A fire closes the shop for two months in peak season","BI","Lost profit during the closure: business interruption."],["Hackers lock the booking system and demand a payment","CY","A cyber attack: cyber insurance."],["Customers' card details are stolen from the website","CY","A data breach: cyber insurance."],["Aoife breaks her leg and can't run the business for four months","KP","The business loses its key person: key person insurance."],["The business's only qualified guide is seriously ill for a year","KP","Losing a vital person: key person insurance."]];
+const IPN={PL:"Public liability",EL:"Employer's liability",PR:"Property",BI:"Interruption",CY:"Cyber",KP:"Key person"};
+
+/* ================= DRAWINGS ================= */
+function niceStep(x){ if(!(x>0)) return 1; const p=10**Math.floor(Math.log10(x)), m=x/p; return (m<1.5?1:m<3.5?2:m<7.5?5:10)*p; }
+const kfmt = v => { const a=Math.abs(v), s=v<0?"−":""; return s+"€"+(a>=1000? r1(a/1000)+"k" : Math.round(a)); };
+const eurS = v => (v<0?"−€":"€")+n0(Math.abs(v));
+function fitTxt(ctx,str,maxW,font){ ctx.save(); ctx.font=font; let s=str; while(s.length>3 && ctx.measureText(s).width>maxW) s=s.slice(0,-2); ctx.restore(); return s===str? s : s.replace(/\s+$/,"")+"…"; }
+function chip(ctx,x,y,cw,chh,label,ok,fs){ rrect(ctx,x,y,cw,chh,7,C.surface,ok===false?C.bad:ok===true?C.good:C.line,1.5); const f=F(fs,700); text(ctx,fitTxt(ctx,label,cw-8,f),x+cw/2,y+chh/2+fs*0.36,C.ink,f,"center"); }
+// 1. Risk-type columns
+function drawCats(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<560, gap=cp?4:8, cw=(w-gap*6)/5, hh=cp?26:38, fs=cp?(w<400?8:9):11.5, chh=cp?17:24;
+  NATK.forEach((k,i)=>{ const x=gap+i*(cw+gap); rrect(ctx,x,gap,cw,h-gap*2,10,C["surface-2"],C.line,1); rrect(ctx,x,gap,cw,hh,10,C[NATC[i]],null);
+    const f=F(cp?(w<400?8.5:10):13,800); text(ctx,fitTxt(ctx,NATN[k],cw-6,f),x+cw/2,gap+hh/2+4,"#3b2b21",f,"center");
+    const its=o.items.filter(t=>t[1]===k), maxN=Math.max(1,Math.floor((h-gap*2-hh-8)/(chh+4)));
+    its.slice(0,its.length>maxN?maxN-1:maxN).forEach((t,j)=>chip(ctx,x+3,gap+hh+6+j*(chh+4),cw-6,chh,t[0],o.all?null:t[2],fs));
+    if(its.length>maxN) text(ctx,`+${its.length-maxN+1} more`,x+cw/2,gap+hh+6+(maxN-1)*(chh+4)+chh*0.7,C.muted,F(fs,700),"center");
+    if(!its.length && !cp) text(ctx,"…",x+cw/2,gap+hh+24,C.muted,F(14),"center"); });
+}
+// 2/3. Risk matrix (x = impact, y = likelihood)
+function bandCol(s){ return s<=4?C.sage:s<=9?C.cream:s<=15?C.apricot:C.terra; }
+function drawMatrix(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, L=cp?22:46, R=cp?6:12, T=cp?6:12, rb=o.zones?(cp?24:36):0, B=(cp?20:38)+rb, W=w-L-R, H=h-T-B, cwd=W/5, chg=H/5;
+  const X=i=>L+(i-1)*cwd, Y=l=>T+(5-l)*chg;
+  for(let l=1;l<=5;l++) for(let i=1;i<=5;i++){ const s=l*i; ctx.save(); ctx.globalAlpha=o.zones?0.5:0.62; rrect(ctx,X(i)+1.5,Y(l)+1.5,cwd-3,chg-3,cp?5:8,o.zones?C[ZCOL[zoneOf(l,i)]]:bandCol(s),null); ctx.restore();
+    if(!o.zones) text(ctx,String(s),X(i)+cwd-(cp?4:7),Y(l)+(cp?10:15),C.muted,M(cp?8:10),"right"); }
+  const af=F(cp?8.5:11,700);
+  for(let i=1;i<=5;i++){ text(ctx,String(i),X(i)+cwd/2,T+H+(cp?11:15),C.muted,M(cp?9:11),"center"); text(ctx,String(i),L-(cp?7:10),Y(i)+chg/2+4,C.muted,M(cp?9:11),"right"); }
+  text(ctx,cp?"impact →":"Impact: 1 minor → 5 catastrophic",L+W/2,T+H+(cp?19:31),C.ink,af,"center");
+  ctx.save(); ctx.translate(cp?7:13,T+H/2); ctx.rotate(-Math.PI/2); text(ctx,cp?"likelihood →":"Likelihood: 1 rare → 5 almost certain",0,0,C.ink,af,"center"); ctx.restore();
+  if(o.zones){ const chh=cp?14:20, fs=cp?8:10.5;
+    Object.keys(ZNAME).forEach(z=>{ const [l,i]=ZANCH[z], cx=X(i)+cwd/2, its=(o.placed||[]).filter(p=>p[1]===z), zw=(z==="PR"?3:2)*cwd-10, top=its.length? Y(l)+chg/2-((its.length*(chh+3))+16)/2 : Y(l)+chg/2-6;
+      text(ctx,ZNAME[z],cx,top+(cp?9:13),"#3b2b21",F(cp?11:15,800),"center");
+      its.forEach((p,j)=>chip(ctx,cx-zw/2,top+(cp?13:19)+j*(chh+3),zw,chh,p[0],p[2],fs)); });
+    const ry=h-rb+2, sp=(o.placed||[]).filter(p=>p[1]==="SP"); rrect(ctx,L,ry,W,rb-6,8,C.cream,C.line,1);
+    const lab=cp?"Spread":"Spread: works across the matrix", lf=F(cp?9:12,800); text(ctx,lab,L+8,ry+(rb-6)/2+4,"#3b2b21",lf);
+    ctx.save(); ctx.font=lf; const lw=ctx.measureText(lab).width+16; ctx.restore(); const n=Math.max(1,sp.length), cwc=Math.min(150,(W-lw-6)/Math.max(3,n)-4);
+    sp.forEach((p,j)=>chip(ctx,L+lw+j*(cwc+4),ry+3,cwc,rb-12,p[0],p[2],fs)); return; }
+  const groups={}; (o.risks||[]).forEach((r,k)=>{ const key=r.L+"-"+r.I; (groups[key]=groups[key]||[]).push({...r,k}); });
+  Object.values(groups).forEach(g=>g.forEach((r,j)=>{ const cx=X(r.I)+cwd/2, cy=Y(r.L)+chg/2+(j-(g.length-1)/2)*(cp?11:18), rr=cp?(r.sel?5:3.5):(r.sel?8:6);
+    circle(ctx,cx-(cp?0:cwd*0.32),cy,rr,r.sel?C.ink:C["terra-ink"]||C.ink,C.surface,cp?1:2);
+    if(!cp||w>300){ const f=F(cp?8:(w<420?9.5:11.5),r.sel?800:700); text(ctx,fitTxt(ctx,r.lab,cwd*(cp?0.95:0.6),f),cp?cx:cx-cwd*0.32+rr+4,cp?cy-rr-2:cy+4,C.ink,f,cp?"center":"left"); } }));
+}
+// 4. Spreading: seasons and recorded results
+function drawSeasons(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, L=cp?36:52, R=10, T=cp?10:16, B=cp?18:30, W=w-L-R, H=h-T-B, lo=-40000, hi=160000;
+  const X=i=>L+(i+0.5)/40*W, Y=v=>T+(hi-Math.max(lo,Math.min(hi,v)))/(hi-lo)*H;
+  for(let v=lo; v<=hi; v+=40000){ line(ctx,L,Y(v),L+W,Y(v),C.grid,1); text(ctx,kfmt(v),L-5,Y(v)+4,C.muted,M(cp?9:10),"right"); }
+  line(ctx,L,Y(0),L+W,Y(0),C.ink,1.4); line(ctx,L,Y(30000),L+W,Y(30000),C.bad,1.6,[6,5]); text(ctx,"bad year: below €30k",L+W-4,Y(30000)+14,C.bad,F(cp?9:11,700),"right");
+  if(!o.data||!o.data.length){ text(ctx,"Press Run",L+W/2,T+H/2,C.muted,F(14),"center"); return; }
+  const mean=o.data.reduce((a,b)=>a+b,0)/o.data.length; line(ctx,L,Y(mean),L+W,Y(mean),C.terra,2); text(ctx,`average ${kfmt(mean)}`,L+4,Y(mean)-6,C.terra,F(cp?9:11,800));
+  o.data.forEach((v,i)=>{ line(ctx,X(i),Y(mean),X(i),Y(v),C.line,1); circle(ctx,X(i),Y(v),cp?3:4.5,v<30000?C.bad:C.olive,null); });
+  text(ctx,"Season (1 to 40)",L+W/2,h-(cp?4:8),C.ink,F(cp?9:11.5),"center");
+}
+const SIG1=30000, theo=(n,rho)=>SIG1*Math.sqrt(rho+(1-rho)/n);
+function drawSpreadG(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, L=cp?36:56, R=cp?10:16, T=cp?12:30, B=cp?20:34, W=w-L-R, H=h-T-B, hi=36000;
+  const X=n=>L+(n-1)/4*W, Y=v=>T+(hi-v)/hi*H;
+  for(let v=0; v<=hi; v+=6000){ line(ctx,L,Y(v),L+W,Y(v),C.grid,1); text(ctx,kfmt(v),L-5,Y(v)+4,C.muted,M(cp?9:10),"right"); }
+  for(let n=1;n<=5;n++) text(ctx,String(n),X(n),T+H+(cp?13:16),C.muted,M(cp?9:11),"center");
+  line(ctx,L,T+H,L+W,T+H,C.ink,1.4); line(ctx,L,T,L,T+H,C.ink,1.4);
+  const curve=(f,col,wd,dash)=>{ ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=wd; if(dash) ctx.setLineDash(dash); ctx.beginPath(); for(let i=0;i<=80;i++){ const n=1+i/20, y=Y(f(n)); i?ctx.lineTo(X(n),y):ctx.moveTo(X(n),y); } ctx.stroke(); ctx.restore(); };
+  if(o.theory){ [[0,C.olive,"independent streams"],[0.8,C.terra,"streams all hit by the weather"]].forEach(([rho,col,lab])=>{ curve(n=>theo(n,rho),col,cp?2.2:3); text(ctx,lab,X(5)-4,Y(theo(5,rho))-6,col,F(cp?8.5:11,800),"right"); }); }
+  (o.pts||[]).forEach(p=>{ ctx.save(); ctx.globalAlpha=p.cur?1:0.3; circle(ctx,X(p.n),Y(Math.min(hi,p.sd)),cp?3.5:5.5,p.cur?C.terra:C.muted,C.surface,1.5); ctx.restore(); });
+  if(o.fit) curve(n=>o.fit.b+o.fit.k/Math.sqrt(n),C.ink,2,[6,5]);
+  if(!cp){ text(ctx,"Number of income streams",L+W/2,h-6,C.ink,F(12),"center"); text(ctx,"Spread of yearly profit (standard deviation)",L,T-12,C.ink,F(Math.min(12,w/34)),"left"); }
+}
+// 5. Prevention bars
+function drawPrev(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, r=pvCalc(o.on||[]), LW=cp?64:Math.min(190,w*0.34), R=cp?34:60, T=cp?6:12, W=w-LW-R;
+  const topH=(h-T)*0.6, rowH=topH/PRISK.length, mx=8000, fs=cp?8.5:11.5;
+  r.rows.forEach((x,i)=>{ const y=T+i*rowH, bh=Math.min(cp?10:16,rowH*0.42);
+    text(ctx,fitTxt(ctx,x.n,LW-6,F(fs,700)),LW-6,y+rowH/2+4,C.ink,F(fs,700),"right");
+    ctx.save(); ctx.globalAlpha=0.35; rrect(ctx,LW,y+rowH/2-bh-1,Math.max(2,x.before/mx*W),bh,4,C.blush,null); ctx.restore();
+    rrect(ctx,LW,y+rowH/2+1,Math.max(2,x.after/mx*W),bh,4,x.after<x.before?C.terra:C.blush,null);
+    text(ctx,kfmt(x.after),LW+Math.max(2,x.after/mx*W)+4,y+rowH/2+bh,C.ink,M(cp?8.5:10.5)); });
+  const y0=T+topH+(cp?4:10), bh2=Math.min(cp?14:24,(h-y0-(cp?6:22))/2-4), mt=Math.max(18600,r.total), Wt=W;
+  [["No plan",0,r.before],["Your plan",r.spend,r.after]].forEach(([lab,sp,el],j)=>{ const y=y0+j*(bh2+6);
+    text(ctx,lab,LW-6,y+bh2/2+4,C.ink,F(fs,800),"right");
+    if(sp>0) rrect(ctx,LW,y,sp/mt*Wt,bh2,4,C.olive,null);
+    rrect(ctx,LW+sp/mt*Wt,y,Math.max(2,el/mt*Wt),bh2,4,C.terra,null);
+    text(ctx,kfmt(sp+el),LW+(sp+el)/mt*Wt+4,y+bh2/2+4,C.ink,M(cp?8.5:11)); });
+  if(!cp){ const ly=h-6; rrect(ctx,LW,ly-9,10,10,2,C.olive,null); text(ctx,"prevention spend",LW+14,ly,C.muted,F(10.5,700)); rrect(ctx,LW+120,ly-9,10,10,2,C.terra,null); text(ctx,"expected loss (a year)",LW+134,ly,C.muted,F(10.5,700)); }
+}
+// 6. Insurance claim bars
+function drawClaim(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, {V,S,L,E}=o, c=claimCalc(V,S,L,E), LW=cp?52:104, R=cp?40:64, T=cp?6:10, W=w-LW-R, mx=Math.max(V,S);
+  const rows=cp?3:4, rh=(h-T-(cp?4:26))/rows, bh=Math.min(cp?14:26,rh*0.6), fs=cp?8.5:11.5, Xs=v=>v/mx*W;
+  const bar=(i,lab,segs)=>{ const y=T+i*rh+(rh-bh)/2; text(ctx,lab,LW-6,y+bh/2+4,C.ink,F(fs,800),"right"); let x=LW; segs.forEach(([v,col])=>{ if(v>0) rrect(ctx,x,y,Math.max(2,Xs(v)),bh,4,col,null); x+=Xs(v); }); text(ctx,kfmt(segs.reduce((a,s)=>a+s[0],0)),x+4,y+bh/2+4,C.ink,M(cp?8.5:11)); };
+  bar(0,cp?"Value":"True value",[[V,C.sage]]); bar(1,cp?"Insured":"Sum insured",[[S,S<V?C.apricot:C.olive]]);
+  bar(2,"Loss",[[c.paid,C.olive],[c.exc,C.cream],[c.short,C.terra]]);
+  if(!cp){ const y=T+3*rh+(rh-bh)/2; text(ctx,`Aoife pays ${kfmt(c.exc+c.short)} herself`,LW,y+bh/2+4,C.ink,F(12,800));
+    const ly=h-8; [["insurer pays",C.olive],["excess",C.cream],["shortfall (under-insured)",C.terra]].forEach(([t,col],k)=>{ const lx=LW+k*Math.min(130,W/3); rrect(ctx,lx,ly-9,10,10,2,col,C.line,1); text(ctx,t,lx+14,ly,C.muted,F(10.5,700)); }); }
+}
+function drawWhichP(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const [n,d,c]=PNAME[o.ans], bw=Math.min(w-30,340);
+  rrect(ctx,w/2-bw/2,h/2-44,bw,88,18,C[c],C.ink,1.5); text(ctx,n,w/2,h/2-8,"#3b2b21",F(22),"center");
+  ctx.save(); ctx.font=F(12,600); const ls=wrapText(ctx,d,bw-20); ctx.restore(); ls.forEach((s,i)=>text(ctx,s,w/2,h/2+16+i*15,"#3b2b21",F(12,600),"center")); }
+
+/* ================= LAB WIRING ================= */
+const wireSorter = (listId, S, render) => $(listId).addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; S.ans[b.dataset.k]=b.dataset.v; render(); });
+// 1. Types of risk
+const naS={order:[],ans:{}};
+function naRender(){ sorter("naList","naOut",NAT,NATN,naS); naC.redraw(); }
+function naNew(){ naS.order=shuffle(NAT.map((s,k)=>k)); naS.ans={}; naRender(); }
+wireSorter("naList",naS,naRender); $("naReset").addEventListener("click",naNew);
+// 2. Risk matrix
+const as={i:0, r:RISK.map(r=>[r[2],r[3]])};
+$("asPick").innerHTML = RISK.map((r,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${r[1]}</button>`).join("");
+$("asPick").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pressGroup([...$("asPick").querySelectorAll("button")],b); as.i=+b.dataset.i; $("asL").value=as.r[as.i][0]; $("asI").value=as.r[as.i][1]; asRender(); });
+["asL","asI"].forEach(id=>$(id).addEventListener("input",()=>{ as.r[as.i]=[+$("asL").value,+$("asI").value]; asRender(); }));
+$("asSugg").addEventListener("click",()=>{ as.r=RISK.map(r=>[r[2],r[3]]); $("asL").value=as.r[as.i][0]; $("asI").value=as.r[as.i][1]; asRender(); });
+function asRisks(sel){ return RISK.map((r,k)=>({lab:r[1],L:as.r[k][0],I:as.r[k][1],sel:k===sel})); }
+function asRender(){ const [l,i]=as.r[as.i], s=l*i, R=RISK[as.i];
+  $("asLo").textContent=`${l} (${RATEL[l]})`; $("asIo").textContent=`${i} (${RATEI[i]})`;
+  const rank=RISK.map((r,k)=>[k,as.r[k][0]*as.r[k][1]]).sort((a,b)=>b[1]-a[1]), pos=rank.findIndex(x=>x[0]===as.i)+1;
+  setReadout($("asOut"),[["Risk",R[1]],["Score",`${l} × ${i} = ${s}`],["Rating",band(s)],["Priority",`${pos} of ${RISK.length}`],["Suggested",`${R[2]} × ${R[3]} = ${R[2]*R[3]}`]]);
+  $("asWork").innerHTML = `<b>${R[0]}.</b> Possible response: ${R[4]}<br><b>Top three priorities:</b> ` + rank.slice(0,3).map(([k,sc],j)=>`${j+1}. ${RISK[k][1]} (${sc})`).join(" · ") + (l<=2&&i>=5? "<br>Unlikely but catastrophic: don't ignore it just because it is rare." : "");
+  asC.redraw(); }
+// 3. Strategies
+const stS={order:[],ans:{}};
+function stRender(){ sorter("stList","stOut",STR,STRN,stS); stC.redraw(); }
+function stNew(){ stS.order=shuffle(STR.map((s,k)=>k)); stS.ans={}; stRender(); }
+wireSorter("stList",stS,stRender); $("stReset").addEventListener("click",stNew);
+// 4. Spreading
+function gauss(){ let u=0,v=0; while(!u) u=Math.random(); while(!v) v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+const sp={data:[], pts:[]};
+function spSim(){ const n=+$("spN").value, rho=+$("spR").value; sp.data=[];
+  for(let y=0;y<40;y++){ let zi=0; for(let k=0;k<n;k++) zi+=gauss(); sp.data.push(60000+SIG1*(Math.sqrt(rho)*gauss()+Math.sqrt(1-rho)*zi/n)); } }
+function sd(a){ const m=a.reduce((x,y)=>x+y,0)/a.length; return Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/(a.length-1)); }
+function spFit(){ const rho=+$("spR").value, P=sp.pts.filter(p=>p.rho===rho); if(new Set(P.map(p=>p.n)).size<2) return null;
+  const xs=P.map(p=>1/Math.sqrt(p.n)), ys=P.map(p=>p.sd), mx=xs.reduce((a,b)=>a+b,0)/xs.length, my=ys.reduce((a,b)=>a+b,0)/ys.length;
+  const k=xs.reduce((s,x,i)=>s+(x-mx)*(ys[i]-my),0)/xs.reduce((s,x)=>s+(x-mx)**2,0); return {k,b:my-k*mx,N:P.length}; }
+function spRender(){ const n=+$("spN").value, rho=+$("spR").value, d=sp.data, m=d.reduce((a,b)=>a+b,0)/d.length, s=sd(d), fit=spFit();
+  $("spNo").textContent=n; $("spRo").textContent=rho===0?"0 (independent)":rho>=0.8?rho+" (all depend on the weather)":String(rho);
+  setReadout($("spOut"),[["Average profit",eurS(m)],["Spread (SD)",eurS(s)],["Worst season",eurS(Math.min(...d))],["Bad years (< €30 000)",`${d.filter(v=>v<30000).length} / 40`],["Loss-making years",`${d.filter(v=>v<0).length} / 40`],["Results recorded",String(sp.pts.length)]]);
+  $("spWork").innerHTML = `With ${n} stream${n>1?"s":""} and linking ${rho}, theory says the spread is €30 000 × √(${rho} + ${f2(1-rho)} ÷ ${n}) = <b>${eurS(theo(n,rho))}</b>. Your 40 seasons gave ${eurS(s)}.<br>` +
+    (fit? `<b>Fitted to your ${fit.N} results at this linking:</b> spread ≈ ${eurS(fit.b)} + ${eurS(fit.k)} ÷ √(streams). ` + (fit.b<3000? "The first part is close to €0: with independent streams, spreading removes almost all of the swing." : `The first part (about ${eurS(fit.b)}) is risk that spreading can't remove, because every stream is hit by the same thing.`) : `Record results for at least two different numbers of streams (same linking) to fit a curve.`);
+  spC.redraw(); spG.redraw(); }
+["spN","spR"].forEach(id=>$(id).addEventListener("input",()=>{ spSim(); spRender(); }));
+$("spRun").addEventListener("click",()=>{ spSim(); sp.pts.push({n:+$("spN").value,rho:+$("spR").value,sd:sd(sp.data)}); spRender(); });
+$("spClear").addEventListener("click",()=>{ sp.pts=[]; spRender(); });
+// 5. Prevention
+const pv={on:new Set()};
+$("pvAct").innerHTML = MEAS.map(m=>`<button data-k="${m[0]}" aria-pressed="false">${m[1]} (${eur(m[2])})</button>`).join("");
+$("pvAct").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const k=b.dataset.k; if(pv.on.has(k)) pv.on.delete(k); else pv.on.add(k); b.setAttribute("aria-pressed",pv.on.has(k)); pvRender(); });
+function pvRender(){ const r=pvCalc(pv.on);
+  setReadout($("pvOut"),[["Expected loss, no plan",eur(r.before)],["Prevention spend",eur(r.spend)],["Expected loss, your plan",eur(r.after)],["Total cost of risk",eur(r.total)],["Saving v. no plan",eurS(r.before-r.total)]]);
+  $("pvWork").innerHTML = (r.M.length? r.M.map(m=>{ const R=PRISK.find(x=>x[0]===m[3]), sv=(R[2]-m[4])/100*R[3]; return `· ${m[1]}: cuts ${R[1].toLowerCase()} from ${R[2]}% to ${m[4]}%, saving ${R[2]}% × ${eur(R[3])} − ${m[4]}% × ${eur(R[3])} = ${eur(sv)} for ${eur(m[2])}: net <b>${eurS(sv-m[2])}</b>${pv.on.has("cctv")&&pv.on.has("guard")&&m[3]==="theft"?" (on its own; together, theft falls only to 5%)":""}`; }).join("<br>") : "Switch on a measure to see its saving.") +
+    `<br>Total cost of risk = prevention spend + expected loss = ${eur(r.spend)} + ${eur(r.after)} = <b>${eur(r.total)}</b>.` + (r.total>r.before? " <b>That's more than doing nothing:</b> some measures cost more than they save." : "");
+  pvC.redraw(); }
+// 6. Insurance
+function inRender(){ const V=+$("inV").value, S=+$("inS").value; if(+$("inL").value>V) $("inL").value=V; const L=+$("inL").value, E=+$("inE").value, c=claimCalc(V,S,L,E);
+  $("inVo").textContent=eur(V); $("inSo").textContent=eur(S); $("inLo").textContent=eur(L); $("inEo").textContent=eur(E);
+  setReadout($("inOut"),[["Cover",S>=V?(S>V?"over-insured":"full"):`${Math.round(S/V*100)}% (under-insured)`],["After average clause",eur(c.comp)],["Insurer pays",eur(c.paid)],["Aoife pays",eur(c.exc+c.short)],["Premium at €8 per €1 000",eur(S/1000*8)],["Premium for full cover",eur(V/1000*8)]]);
+  $("inWork").innerHTML = (S>=V? `Fully insured, so the average clause doesn't apply: compensation = the loss = ${eur(L)}.` + (S>V?" Insuring for more than the true value wastes premium: under indemnity you are only paid the actual loss.":"") : `Under-insured: compensation = sum insured ÷ true value × loss = ${eur(S)} ÷ ${eur(V)} × ${eur(L)} = <b>${eur(c.comp)}</b>.`) +
+    `<br>Insurer pays = ${eur(c.comp)} − excess ${eur(E)} = <b>${eur(c.paid)}</b>. Aoife pays ${eur(c.exc)} excess` + (c.short>0? ` + ${eur(c.short)} shortfall = <b>${eur(c.exc+c.short)}</b>.` : ".") +
+    (S<V? `<br>Under-insuring saves ${eur((V-S)/1000*8)} a year on the premium, but cost Aoife ${eur(c.short)} on this one claim.` : "");
+  inC.redraw(); }
+["inV","inS","inL","inE"].forEach(id=>$(id).addEventListener("input",inRender));
+const ipS={order:[],ans:{}};
+function ipRender(){ sorter("ipList","ipOut",IP,IPN,ipS); }
+function ipNew(){ ipS.order=shuffle(IP.map((s,k)=>k)); ipS.ans={}; ipRender(); }
+wireSorter("ipList",ipS,ipRender); $("ipReset").addEventListener("click",ipNew);
+
+/* ================= CREATE CANVASES ================= */
+const hero = makeCanvas($("heroCanvas"), 0.8, 260, s => drawMatrix(s.ctx,s.w,s.h,{risks:RISK.map((r,k)=>({lab:r[1],L:r[2],I:r[3],sel:!reduce && k===Math.floor(heroT/1.6)%RISK.length}))}), 420);
+const naC = makeCanvas($("naC"), 0.5, 250, s => drawCats(s.ctx,s.w,s.h,{items:Object.entries(naS.ans).map(([k,v])=>[NAT[k][3],v,v===NAT[k][1]])}), 380);
+const asC = makeCanvas($("asC"), 0.72, 300, s => drawMatrix(s.ctx,s.w,s.h,{risks:asRisks(as.i)}), 460);
+const stC = makeCanvas($("stC"), 0.78, 330, s => drawMatrix(s.ctx,s.w,s.h,{zones:true,placed:Object.entries(stS.ans).map(([k,v])=>[STR[k][3],v,v===STR[k][1]])}), 500);
+const spC = makeCanvas($("spC"), 0.45, 230, s => drawSeasons(s.ctx,s.w,s.h,{data:sp.data}), 340);
+const spG = makeCanvas($("spG"), 0.5, 230, s => { const rho=+$("spR").value; drawSpreadG(s.ctx,s.w,s.h,{pts:sp.pts.map(p=>({...p,cur:p.rho===rho})),fit:spFit()}); }, 340);
+const pvC = makeCanvas($("pvC"), 0.6, 300, s => drawPrev(s.ctx,s.w,s.h,{on:[...pv.on]}), 420);
+const inC = makeCanvas($("inC"), 0.42, 210, s => drawClaim(s.ctx,s.w,s.h,{V:+$("inV").value,S:+$("inS").value,L:+$("inL").value,E:+$("inE").value}), 300);
+predC = makeCanvas($("predC"), 0.5, 180, s => { const ans=PRED[pd.k<0?0:pd.k][1];
+  if(pd.shown) drawWhichP(s.ctx,s.w,s.h,{ans,bgc:C["surface-2"]});
+  else { bg(s.ctx,s.w,s.h,C["surface-2"]); text(s.ctx,"?",s.w/2,s.h/2+18,C.muted,F(56),"center"); text(s.ctx,"The answer appears here",s.w/2,s.h-14,C.muted,F(11,600),"center"); } }, 300);
+pdNew();
+// Learn and infographic minis
+const MINI = {
+  cats:o=>s=>drawCats(s.ctx,s.w,s.h,{compact:true,items:NAT.map(x=>[x[3],x[1],true]),...o}),
+  matrix:o=>s=>drawMatrix(s.ctx,s.w,s.h,{compact:true,risks:RISK.map(r=>({lab:r[1],L:r[2],I:r[3]})),...o}),
+  zones:o=>s=>drawMatrix(s.ctx,s.w,s.h,{compact:true,zones:true,placed:STR.map(x=>[x[3],x[1],null]).filter((x,k)=>k%3===0),...o}),
+  spreadG:o=>s=>drawSpreadG(s.ctx,s.w,s.h,{compact:true,theory:true,...o}),
+  prev:o=>s=>drawPrev(s.ctx,s.w,s.h,{compact:true,on:["safe","cctv","fire","cyber","storm"],...o}),
+  claim:o=>s=>drawClaim(s.ctx,s.w,s.h,{compact:true,V:60000,S:45000,L:20000,E:500,...o}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, 0.62, 230, MINI[kind](o), 380); });
+document.querySelectorAll("canvas[data-mini]").forEach(el=>makeCanvas(el,0.75,200,s=>MINI[el.dataset.mini]({bgc:C["surface-2"]})(s)));
+naNew(); asRender(); stNew(); spSim(); spRender(); pvRender(); inRender(); ipNew();
+/* ================= LOOP / THEME / START ================= */
+
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>
