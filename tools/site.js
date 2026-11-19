@@ -24,7 +24,8 @@ const CSS = `${START}<style id="subj-css">
 @media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
 </style>${END}`;
 const nav = (cur, prefix) => `${START}<nav class="subj" aria-label="Subjects"><a href="${prefix}index.html"${cur==="home"?' class="on" aria-current="page"':""}>Home</a>${SUBJECTS.map(([id,name])=>`<a href="${prefix}${id}/index.html"${cur===id?' class="on" aria-current="page"':""}>${name}</a>`).join("")}</nav>${END}`;
-const strip = h => h.split(START).map((part,i)=> i===0? part : part.slice(part.indexOf(END)+END.length)).join("");
+// Remove each marked block plus the line break (and indentation) we added after it, so reruns don't add blank lines.
+const strip = h => h.split(START).map((part,i)=> i===0? part : part.slice(part.indexOf(END)+END.length).replace(/^\r?\n[ \t]*/,"")).join("");
 function inject(file, cur, prefix){
   let h = strip(fs.readFileSync(file,"utf8"));
   if(!h.includes('<div class="tools">')) { console.warn("no tools div:", file); return; }
