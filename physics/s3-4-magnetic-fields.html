@@ -1,0 +1,1764 @@
+<title>Magnetic Fields</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.predopts .btns button{min-width:92px}
+</style>
+
+<style>
+:root{--band-ink:#3b2b21}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.xlink{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--surface)}
+.xlink:hover{border-color:var(--terra)}
+.working.wrap{white-space:normal;font-family:var(--f-body);font-size:.9rem}
+.spec-bullets{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+</style>
+<style>
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.rc-card{display:grid;gap:8px;padding:16px}
+.rc-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.rc-card .ico svg{width:24px;height:24px}
+.rc-card p{font-size:.9rem;margin:0}
+.rc-card p b{color:var(--terra)}
+</style>
+<style>
+.cases .rc-card canvas{width:100%;display:block;border-radius:12px}
+.sec td,.sec th{padding:4px 8px;text-align:right;font-family:var(--f-mono);font-size:.85rem;white-space:nowrap}
+.sec{border-collapse:collapse;width:100%}
+.sec tr+tr td{border-top:1px solid var(--line)}
+.secwrap{overflow-x:auto}
+.srt .row .btns button{padding:6px 10px;font-size:.85rem}
+.predopts .btns button{min-width:84px}
+</style>
+
+
+
+<!-- ================= TOP BAR ================= -->
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v9a6 6 0 0012 0V3"/><path d="M10 3v9a2 2 0 004 0V3"/></svg></div>
+        <div style="min-width:0"><b>Magnetic Fields</b><span>Leaving Cert Physics · Strand 3 · Section 3.4</span></div>
+      </div>
+      
+      
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html" class="on" aria-current="page">Physics</a><a href="../business/index.html">Business</a><a href="../maths/index.html">Maths</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12M6 20h12M8 4l6 8-6 8"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>1 · Forces &amp; Motion</summary><ol><li class="link"><a href="s1-1-motion.html"><span class="mono">1.1</span>Motion in a straight line</a></li><li class="link"><a href="s1-2-forces.html"><span class="mono">1.2</span>Forces on a particle</a></li><li class="link"><a href="s1-3-hookes-law.html"><span class="mono">1.3</span>Stretching &amp; compressing</a></li><li class="link"><a href="s1-4-work-energy.html"><span class="mono">1.4</span>Work and energy</a></li><li class="link"><a href="s1-5-gravity.html"><span class="mono">1.5</span>Gravitational fields</a></li><li class="link"><a href="s1-6-circular-motion.html"><span class="mono">1.6</span>Circular motion</a></li></ol></details>
+      <details><summary>2 · Waves &amp; Energy</summary><ol><li class="link"><a href="s2-1-heat.html"><span class="mono">2.1</span>Heat &amp; temperature</a></li><li class="link"><a href="s2-2-travelling-waves.html"><span class="mono">2.2</span>Travelling waves</a></li><li class="link"><a href="refraction-lenses.html"><span class="mono">2.3</span>Refraction &amp; lenses</a></li><li class="link"><a href="s2-4-electromagnetic-energy.html"><span class="mono">2.4</span>Electromagnetic energy</a></li><li class="link"><a href="s2-5-sound-energy.html"><span class="mono">2.5</span>Sound</a></li><li class="link"><a href="s2-6-superposition.html"><span class="mono">2.6</span>Superposition</a></li><li class="link"><a href="s2-7-doppler.html"><span class="mono">2.7</span>Doppler effect</a></li></ol></details>
+      <details open><summary>3 · Electricity &amp; Magnetism</summary><ol><li class="link"><a href="s3-1-charge.html"><span class="mono">3.1</span>Charge interactions</a></li><li class="link"><a href="s3-2-electric-fields.html"><span class="mono">3.2</span>Electric fields</a></li><li class="link"><a href="s3-3-circuits.html"><span class="mono">3.3</span>Electric circuits</a></li><li class="here"><span class="mono">3.4</span>Magnetic fields</li><li><span class="mono">3.5</span>Force on a current</li><li><span class="mono">3.6</span>Induction</li></ol></details>
+      <details><summary>4 · Modern Physics</summary><ol><li><span class="mono">4.1</span>The electron</li><li><span class="mono">4.2</span>Photoelectric effect</li><li><span class="mono">4.3</span>Models of the atom</li><li><span class="mono">4.4</span>Radioactivity</li><li><span class="mono">4.5</span>E = mc²</li><li><span class="mono">4.6</span>Nuclear energy</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 3 · Section 3.4 · Magnetic fields</span>
+          <h1 style="margin-top:12px">Feel the pull.<br>Follow the lines.<br><em>Bend the beam.</em></h1>
+          <p class="lede">Magnets and electric currents both fill the space around them with a magnetic field. Map the field of one magnet and two magnets close together, measure how the field round a wire falls with distance, make a solenoid stronger with an iron core, watch two currents pull together, steer charged particles into circles with F = Bqv, and find out where permanent and temporary magnets are used.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Field lines round a bar magnet with a plotting compass moving along one line"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/2</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">3.4.1</span><span>model the relative strength and direction of magnetic fields around • a single permanent magnet and permanent magnets in close proximity • current carrying wire • current carrying solenoid with and without ferrous core</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">3.4.2</span><span>investigate the use of permanent and temporary magnets in real life situations using secondary sources</span></label></li>
+        </ul>
+        <p class="result" style="margin-top:10px">Students learn about:</p>
+        <ul class="spec-bullets"><li>Magnetic fields around permanent and temporary magnets</li><li>the interaction of magnetic fields</li><li>magnetic effect of an electric current</li><li>force exerted by a magnetic field on a moving charge</li><li>the effect of a ferrous core on the magnetic field around a solenoid</li></ul>
+        <p class="result" style="margin-top:10px">Equation in the specification for 3.4: F = Bqv. Builds on 3.1 to 3.3 (charge and current) and 1.6 (circular motion); leads on to 3.5 (the force on a current-carrying conductor and the motor) and 3.6 (induction and the generator). B ∝ I/r for a wire and B ∝ nI for a solenoid are used here to model relative field strength.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Map magnet fields with a plotting compass, measure the field round a wire, strengthen a solenoid with an iron core, watch two currents attract, steer charged particles with F = Bqv and run a scrapyard electromagnet. Every number updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="magnets">
+        <div class="labhead"><span class="pill t">Field lines round magnets</span><p class="goal">Pick one magnet or two magnets close together. Switch between field lines and a grid of plotting compasses, and tap anywhere to drop a compass and read the relative strength of the field there.</p></div>
+        <div class="panel sim">
+          <canvas id="mgC" aria-label="Magnetic field lines around the chosen magnets; tap to place a compass"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Magnets</span><div class="btns" id="mgSet"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Show</span><div class="btns" id="mgShow"><button data-m="lines" aria-pressed="true">Field lines</button><button data-m="grid" aria-pressed="false">Compass grid</button></div></div>
+          </div>
+          <div class="readout" id="mgOut"></div>
+        </div>
+        <div class="panel sim">
+          <div class="labhead" style="padding:14px 16px 0"><span class="pill">True or false?</span><p class="goal">Rules for magnetic field lines. Sort each one.</p></div>
+          <div class="srt" id="tfList"></div>
+          <div class="readout" id="tfOut"></div>
+          <div class="btns" style="padding:0 16px 14px"><button id="tfReset">Shuffle and restart</button></div>
+        </div>
+        <p class="result">Model: each pole is treated as a point source of field (N) or sink (S), which gives the right shape of pattern. Strength is relative to the field just below the middle of a single magnet. Earth's field is ignored.</p>
+        <div class="tries"><div class="try"><b>1</b>Where round a single magnet is the field strongest? How can you tell from the lines?</div><div class="try"><b>2</b>With like poles facing, find the neutral point. What does a compass do there?</div><div class="try"><b>3</b>Why is the field between the poles of a horseshoe magnet nearly uniform?</div></div>
+      </div>
+
+      <div class="lab" data-lab="wire" hidden>
+        <div class="labhead"><span class="pill t">Experiment: field round a wire</span><p class="goal">Looking down on a long straight wire. Set the current and its direction, then move the Hall probe away from the wire and record B at several distances. Plot B against 1/r to find how the field depends on distance.</p></div>
+        <div class="panel sim">
+          <canvas id="wfC" aria-label="Top view of a wire carrying current, with circular field lines and a compass and Hall probe at distance r"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="wfI">Current I <output id="wfIo"></output></label><input type="range" id="wfI" min="0" max="10" step="0.5" value="5"></div>
+            <div class="ctl"><label for="wfR">Distance from the wire r <output id="wfRo"></output></label><input type="range" id="wfR" min="1" max="10" step="0.5" value="4"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Current direction</span><div class="btns" id="wfDir"><button data-d="out" aria-pressed="true">Out of the page (•)</button><button data-d="in" aria-pressed="false">Into the page (×)</button></div></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="wfGo">Take a reading</button><button id="wfSweep">Readings from 1 to 10 cm</button><button id="wfClear">Clear table</button></div></div>
+          </div>
+          <div class="readout" id="wfOut"></div>
+          <div class="working wrap" id="wfWork"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>r (cm)</th><th>1/r (m⁻¹)</th><th>B (μT)</th></tr></thead><tbody id="wfTable"></tbody></table><div class="empty" id="wfEmpty">No readings yet. Record B at six or more distances.</div></div>
+            <div class="graphbox"><canvas id="wfGraph" aria-label="Graph of B against 1 over r"></canvas><p class="result" id="wfResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Simulated Hall probe readings with about ±3% scatter, for a long straight wire. Changing the current clears the table, so each data set has one current. Earth's field (about 50 μT) is subtracted by zeroing the probe first.</p>
+        <div class="tries"><div class="try"><b>1</b>Double r. What happens to B? Double I. What happens to B?</div><div class="try"><b>2</b>Is the graph of B against r a straight line? Is B against 1/r?</div><div class="try"><b>3</b>Reverse the current. What does the compass do? Use the right-hand grip rule to check.</div></div>
+      </div>
+
+      <div class="lab" data-lab="solenoid" hidden>
+        <div class="labhead"><span class="pill t">Experiment: solenoid and iron core</span><p class="goal">A solenoid 20 cm long, cut through along its axis so you see each turn as • (current out) on top and × (current in) underneath. Change the current, the number of turns and the core. Record B at the centre against the current, with and without a soft iron core.</p></div>
+        <div class="panel sim">
+          <canvas id="slC" aria-label="Cross-section of a solenoid with its field lines, poles and optional iron core"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="slI">Current I <output id="slIo"></output></label><input type="range" id="slI" min="0" max="5" step="0.25" value="2"></div>
+            <div class="ctl"><label for="slN">Number of turns N <output id="slNo"></output></label><input type="range" id="slN" min="100" max="1000" step="50" value="500"></div>
+            <div class="ctl"><span class="lbl">Core</span><div class="btns" id="slCore"><button data-c="air" aria-pressed="true">Air (no core)</button><button data-c="iron" aria-pressed="false">Soft iron core</button></div></div>
+            <div class="ctl"><span class="lbl">Current direction</span><div class="btns" id="slDir"><button data-d="1" aria-pressed="true">• on top</button><button data-d="-1" aria-pressed="false">× on top</button></div></div>
+            <div class="ctl"><div class="btns"><button class="primary" id="slGo">Take a reading</button><button id="slSweep">Readings from 0.5 to 5 A</button><button id="slClear">Clear table</button></div></div>
+          </div>
+          <div class="readout" id="slOut"></div>
+          <div class="working wrap" id="slWork"></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>I (A)</th><th>B (mT)</th></tr></thead><tbody id="slTable"></tbody></table><div class="empty" id="slEmpty">No readings yet. Record B at six or more currents.</div></div>
+            <div class="graphbox"><canvas id="slGraph" aria-label="Graph of B against current"></canvas><p class="result" id="slResult"></p></div>
+          </div>
+        </div>
+        <p class="result">Simplified model: air core B = μ₀nI; the soft iron core multiplies the field about 200 times at low currents and saturates near 1.6 T. Simulated Hall probe readings with about ±2% scatter. Changing the turns or the core clears the table.</p>
+        <div class="tries"><div class="try"><b>1</b>With an air core, double the current and then double the turns. What happens to B each time?</div><div class="try"><b>2</b>Put in the iron core. How many times stronger is the field at 0.5 A? At 5 A?</div><div class="try"><b>3</b>Reverse the current. Which end is N now? Check with the right-hand grip rule.</div></div>
+      </div>
+
+      <div class="lab" data-lab="interact" hidden>
+        <div class="labhead"><span class="pill t">Two currents side by side</span><p class="goal">Two long parallel wires seen end on. Set each current (positive = out of the page) and the gap between them. Watch how the two fields combine, find the neutral point, and see whether the wires attract or repel.</p></div>
+        <div class="panel sim">
+          <canvas id="twC" aria-label="Combined magnetic field of two parallel wires with force arrows"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="twI1">Current I₁ <output id="twI1o"></output></label><input type="range" id="twI1" min="-10" max="10" step="1" value="6"></div>
+            <div class="ctl"><label for="twI2">Current I₂ <output id="twI2o"></output></label><input type="range" id="twI2" min="-10" max="10" step="1" value="6"></div>
+            <div class="ctl"><label for="twD">Gap d <output id="twDo"></output></label><input type="range" id="twD" min="2" max="10" step="0.5" value="4"></div>
+            <div class="ctl"><span class="lbl">Quick set</span><div class="btns" id="twPre"><button data-p="same">Same direction</button><button data-p="opp">Opposite directions</button></div></div>
+          </div>
+          <div class="readout" id="twOut"></div>
+          <div class="working wrap" id="twWork"></div>
+        </div>
+        <p class="result">Long straight wires in air. The force per metre uses F/L = μ₀I₁I₂/2πd, which is not one of the spec equations: what matters is the pattern, F ∝ I₁I₂ and F ∝ 1/d.</p>
+        <div class="tries"><div class="try"><b>1</b>Same direction: where is the field zero? Is the field stronger between the wires or outside them?</div><div class="try"><b>2</b>Switch to opposite directions. Where is the field strongest now? Which way do the wires move?</div><div class="try"><b>3</b>Double both currents. How many times bigger is the force?</div></div>
+      </div>
+
+      <div class="lab" data-lab="charge" hidden>
+        <div class="labhead"><span class="pill t">Force on a moving charge</span><p class="goal">Fire an electron, a proton or an alpha particle into a uniform magnetic field at right angles. The force F = Bqv is always at right angles to the velocity, so the particle curves. Change the speed, the field and its direction.</p></div>
+        <div class="panel sim">
+          <canvas id="pcC" aria-label="A charged particle curving in a uniform magnetic field"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Particle</span><div class="btns" id="pcP"></div></div>
+            <div class="ctl"><label for="pcV">Speed v <output id="pcVo"></output></label><input type="range" id="pcV" min="0.5" max="10" step="0.5" value="5"></div>
+            <div class="ctl"><label for="pcB">Flux density B <output id="pcBo"></output></label><input type="range" id="pcB" min="1" max="500" step="1" value="100"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Field direction</span><div class="btns" id="pcDir"><button data-d="in" aria-pressed="true">Into the page (×)</button><button data-d="out" aria-pressed="false">Out of the page (•)</button></div></div>
+          </div>
+          <div class="readout" id="pcOut"></div>
+          <div class="working wrap" id="pcWork"></div>
+        </div>
+        <p class="result">Charges: e = 1.6 × 10⁻¹⁹ C (alpha: 2e). Masses: electron 9.11 × 10⁻³¹ kg, proton 1.67 × 10⁻²⁷ kg, alpha 6.64 × 10⁻²⁷ kg. The field region is 2 cm wide for electrons and 1 m wide for protons and alphas. Speeds well below the speed of light.</p>
+        <div class="tries"><div class="try"><b>1</b>Double B. What happens to the force and to the radius of the path?</div><div class="try"><b>2</b>Switch from a proton to an electron at the same speed. Which way does it curve, and why is its circle so much smaller?</div><div class="try"><b>3</b>The speed never changes. Why not, when there is a force on the particle?</div></div>
+      </div>
+
+      <div class="lab" data-lab="uses" hidden>
+        <div class="labhead"><span class="pill t">Permanent and temporary magnets</span><p class="goal">Run a scrapyard electromagnet. Switch the current on to lift steel scrap, then off to drop it. Compare a soft iron core with a steel core. Then sort real devices: permanent magnet or electromagnet?</p></div>
+        <div class="panel sim">
+          <canvas id="crC" aria-label="A crane with an electromagnet above steel scrap, an aluminium can and a copper pipe"></canvas>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Electromagnet</span><div class="btns"><button class="primary" id="crOn" aria-pressed="false">Switch current ON</button></div></div>
+            <div class="ctl"><label for="crI">Current when on <output id="crIo"></output></label><input type="range" id="crI" min="0" max="10" step="0.5" value="6"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Core material</span><div class="btns" id="crCore"><button data-c="soft" aria-pressed="true">Soft iron</button><button data-c="steel" aria-pressed="false">Steel</button></div></div>
+          </div>
+          <div class="readout" id="crOut"></div>
+          <div class="working wrap" id="crWork"></div>
+        </div>
+        <div class="panel sim">
+          <div class="labhead" style="padding:14px 16px 0"><span class="pill">Sort it</span><p class="goal">Does each device use a permanent magnet or an electromagnet (a temporary magnet)?</p></div>
+          <div class="srt" id="usList"></div>
+          <div class="readout" id="usOut"></div>
+          <div class="btns" style="padding:0 16px 14px"><button id="usReset">Shuffle and restart</button></div>
+        </div>
+        <p class="result">Simplified model: the steel scrap needs about 0.6 T to lift. When the current stops, soft iron keeps about 2% of its field and steel about 60%.</p>
+        <div class="tries"><div class="try"><b>1</b>Find the smallest current that lifts the scrap with each core.</div><div class="try"><b>2</b>Lift the scrap with the steel core, then switch off. What goes wrong?</div><div class="try"><b>3</b>Why are the aluminium can and copper pipe never lifted, however big the current?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of magnetic fields"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Three big pictures · LO 3.4.1</p><h2>Magnetic fields at a glance</h2></div><p>Two magnets, a wire and a solenoid, and charges steered by a field.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Relative strength · LO 3.4.1</p><h2>How strong is that field?</h2></div><p>Typical values of magnetic flux density, from Earth's field to the strongest lab magnets.</p></div>
+        <div class="secwrap"><table class="sec" id="strT"></table></div>
+        <p class="result" style="margin-top:10px">Typical rounded values for comparison; real fields vary with distance and design. The tesla is a big unit, so everyday fields are usually given in mT (10⁻³ T) or μT (10⁻⁶ T).</p>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Magnets in real life · LO 3.4.2</p><h2>Permanent and temporary magnets at work</h2></div><p>Starting points for your own research with secondary sources.</p></div>
+      <div class="around" id="around"></div>
+    </section>
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% investigation">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>June of 6th year. Higher or Ordinary level. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Physics in Practice Investigation · 40%</b><p>One investigation from a brief set by the SEC, done in 6th year. The same task for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>Outside a magnet, field lines go from <b>N to S</b>. They never cross, and closer lines mean a <b>stronger field</b>.</li>
+            <li>Between like poles, mark the <b>neutral point</b>, where the fields cancel.</li>
+            <li>Round a straight wire the lines are <b>concentric circles</b>. Use the <b>right-hand grip rule</b> for their direction. B ∝ I and B ∝ 1/r.</li>
+            <li>Solenoid: <b>uniform</b> field inside, bar-magnet pattern outside. Seen from an end, anticlockwise current means that end is <b>N</b>.</li>
+            <li>A <b>soft iron core</b> makes the field hundreds of times stronger, until the iron <b>saturates</b>.</li>
+            <li>F = <b>Bqv</b> when v is at right angles to B. F = 0 if the charge is at rest or moves along the field.</li>
+            <li><b>Fleming's left-hand rule</b>: Field, Current, Motion. For an electron, the current is opposite to its motion.</li>
+            <li>The force on a moving charge is <b>perpendicular</b> to its velocity: no work is done, the speed stays the same and the path is a circle.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Command words</h2></div><p>The learning outcomes for this section use model and investigate.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Unlimited practice</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="text" placeholder="e.g. 0.25 or 8e-14" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which way?</h2></div></div>
+          <canvas id="predC" aria-label="A wire, solenoid or moving charge for a direction question"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" data-g="0"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The labs on this page practise the skills the Physics in Practice Investigation rewards. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Learn the definitions: "define" questions want them word for word.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: tesla, solenoid, neutral point, domain…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>The 3.4 equation from the specification, the direction rules, and the patterns used to model field strength.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Force on a moving charge</span><span class="big">F = Bqv</span><dl><dt>F</dt><dd>force, N</dd><dt>B</dt><dd>magnetic flux density, T</dd><dt>q</dt><dd>charge, C</dd><dt>v</dt><dd>speed at right angles to B, m s⁻¹</dd></dl><div class="ex">Proton, 2.0 × 10⁶ m s⁻¹, 0.25 T: F = 8.0 × 10⁻¹⁴ N</div></div>
+        <div class="panel fcell"><span class="pill">The tesla</span><span class="big">1 T = 1 N s C⁻¹ m⁻¹</span><dl><dt>meaning</dt><dd>1 C moving at 1 m s⁻¹ at right angles feels 1 N</dd><dt>also</dt><dd>1 T = 1 N A⁻¹ m⁻¹</dd></dl><div class="ex">Earth's field ≈ 50 μT = 5 × 10⁻⁵ T</div></div>
+        <div class="panel fcell"><span class="pill">Direction of force</span><span class="big">Fleming's left-hand rule</span><dl><dt>First finger</dt><dd>Field (N to S)</dd><dt>seCond finger</dt><dd>Current (+ charge motion)</dd><dt>thuMb</dt><dd>Motion (force)</dd></dl><div class="ex">Electron: point the second finger against its motion</div></div>
+        <div class="panel fcell"><span class="pill">Direction of field</span><span class="big">Right-hand grip rule</span><dl><dt>wire</dt><dd>thumb = current, fingers = field</dd><dt>solenoid</dt><dd>fingers = current, thumb = N end</dd></dl><div class="ex">Current out of the page: field anticlockwise</div></div>
+        <div class="panel fcell"><span class="pill a">Long straight wire</span><span class="big">B ∝ I / r</span><dl><dt>model</dt><dd>B = μ₀I / 2πr</dd><dt>μ₀</dt><dd>4π × 10⁻⁷ T m A⁻¹</dd></dl><div class="ex">5 A at 2 cm: B = 50 μT</div></div>
+        <div class="panel fcell"><span class="pill a">Solenoid</span><span class="big">B ∝ nI</span><dl><dt>model</dt><dd>B = μ₀nI (air core)</dd><dt>n</dt><dd>turns per metre, N/L</dd><dt>iron core</dt><dd>× hundreds, until saturation</dd></dl><div class="ex">500 turns on 0.20 m, 2 A: B = 6.3 mT</div></div>
+        <div class="panel fcell"><span class="pill a">Circular path</span><span class="big">r = mv / Bq</span><dl><dt>from</dt><dd>Bqv = mv²/r (section 1.6)</dd><dt>speed</dt><dd>constant: the force does no work</dd></dl><div class="ex">Proton above: r = 8.4 cm</div></div>
+        <div class="panel fcell"><span class="pill a">Interacting fields</span><span class="big">Unlike poles attract · like poles repel</span><dl><dt>currents</dt><dd>same direction attract, opposite repel</dd><dt>force</dt><dd>∝ I₁I₂ / d</dd></dl><div class="ex">Double both currents: force × 4</div></div>
+        <div class="panel fcell"><span class="pill a">Constants</span><span class="big">e = 1.6 × 10⁻¹⁹ C</span><dl><dt>proton mass</dt><dd>1.67 × 10⁻²⁷ kg</dd><dt>electron mass</dt><dd>9.11 × 10⁻³¹ kg</dd><dt>alpha</dt><dd>charge 2e, mass 6.64 × 10⁻²⁷ kg</dd></dl><div class="ex">1 mT = 10⁻³ T · 1 μT = 10⁻⁶ T</div></div>
+      </div>
+      <footer>
+        <p>Built on section 3.4 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/" target="_blank" rel="noopener">Leaving Certificate Physics Specification</a> (NCCA, for introduction September 2025). Learning outcomes, content and the equation F = Bqv are quoted from the specification. Experiment readings are simulated; field strengths are typical rounded values.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font (shared keys with the other pages) ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent","--band-ink"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("rl-theme","auto"), font = store.get("rl-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("rl-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("rl-font",font); applyFont(); });
+/* ---------- icons + topics ---------- */
+const ICON = {
+  magnets:'<path d="M6 3v9a6 6 0 0012 0V3"/><path d="M10 3v9a2 2 0 004 0V3"/><path d="M6 7h4M14 7h4"/>',
+  wire:'<circle cx="12" cy="12" r="2"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="10" stroke-dasharray="3 3"/>',
+  solenoid:'<path d="M1 12h3M20 12h3"/><ellipse cx="7" cy="12" rx="2" ry="6"/><ellipse cx="12" cy="12" rx="2" ry="6"/><ellipse cx="17" cy="12" rx="2" ry="6"/>',
+  interact:'<circle cx="7" cy="12" r="3"/><circle cx="17" cy="12" r="3"/><path d="M11 6l2 0M11 18h2"/><path d="M3 12a4 4 0 014-7M21 12a4 4 0 00-4-7"/>',
+  charge:'<path d="M3 19c7 0 12-5 12-12"/><circle cx="15" cy="5" r="2"/><path d="M19 13l2 2M19 17l2-2"/>',
+  uses:'<path d="M4 21V5h14"/><path d="M14 5v5"/><rect x="11" y="10" width="6" height="3" rx="1"/><path d="M2 21h8"/>',
+  speaker:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 010 6M19 6a8 8 0 010 12"/>',
+  mri:'<circle cx="12" cy="11" r="8"/><circle cx="12" cy="11" r="3.5"/><path d="M3 21h18"/>',
+  compass:'<circle cx="12" cy="12" r="9"/><path d="M12 5l2.5 7h-5z"/><path d="M12 19l-2.5-7h5z"/>',
+  bell:'<path d="M6 16v-5a6 6 0 0112 0v5l2 2H4z"/><path d="M10 21h4"/>',
+  lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>',
+  disk:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 12l6 5"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"magnets", name:"Magnets and field lines", short:"The field round one bar magnet and two magnets close together: direction, relative strength and neutral points.", tint:"var(--blush)"},
+  {id:"wire", name:"Field round a current", short:"The magnetic effect of a current: circles round a wire, the right-hand grip rule and B ∝ I/r.", tint:"var(--apricot)"},
+  {id:"solenoid", name:"Solenoids and iron cores", short:"A coil makes a bar-magnet field. A ferrous core multiplies it, until the iron saturates.", tint:"var(--sage)"},
+  {id:"interact", name:"Interacting fields", short:"Overlapping fields add: why magnets attract or repel, and why parallel currents do too.", tint:"var(--cream)"},
+  {id:"charge", name:"Force on a moving charge", short:"F = Bqv, Fleming's left-hand rule, and why charged particles move in circles in a field.", tint:"var(--blush)"},
+  {id:"uses", name:"Permanent and temporary magnets", short:"Soft iron or steel? Cranes, relays, MRI scanners, loudspeakers and compasses.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+const MU0=4*Math.PI*1e-7, EC=1.6e-19, MP=1.67e-27, ME=9.11e-31, MA=6.64e-27, TAU=2*Math.PI;
+
+/* ---------- glossary: [term, also known as, definition, topic, formula] ---------- */
+const GLOSS = [
+  ["Magnet","","An object that produces a magnetic field and attracts iron, steel, nickel and cobalt.","magnets"],
+  ["Magnetic pole","","A region near the end of a magnet where its field is strongest. Every magnet has a north (N) and a south (S) pole.","magnets"],
+  ["North pole","N","The pole of a freely hanging magnet that points towards Earth's geographic north. Field lines leave it.","magnets"],
+  ["South pole","S","The pole of a freely hanging magnet that points south. Field lines enter it.","magnets"],
+  ["Magnetic field","","A region of space in which a magnetic pole, a magnetic material or a moving charge experiences a force.","magnets"],
+  ["Magnetic field line","line of force","A line showing the direction a compass N pole would point at each place in a field. Closer lines show a stronger field.","magnets"],
+  ["Plotting compass","","A small compass used to trace the direction of a magnetic field, point by point.","magnets"],
+  ["Neutral point","","A point where two or more magnetic fields cancel, so the resultant field there is zero.","magnets"],
+  ["Earth's magnetic field","","The field round the Earth, about 50 μT in Ireland. Earth's geographic North Pole is near a magnetic S pole, which is why compass N poles point to it.","magnets"],
+  ["Iron filings","","Tiny pieces of iron that line up with a magnetic field and show the pattern of its lines.","magnets"],
+  ["Magnetic flux density","B","The strength of a magnetic field. A vector, measured in tesla (T).","charge","F = Bqv"],
+  ["Tesla","T","The unit of magnetic flux density. B is 1 T if a charge of 1 C moving at 1 m s⁻¹ at right angles to the field feels a force of 1 N.","charge"],
+  ["Magnetic effect of a current","","Every electric current produces a magnetic field round it. Discovered by Hans Christian Ørsted in 1820.","wire"],
+  ["Right-hand grip rule","","Grip the wire with your right hand, thumb along the conventional current: your fingers curl the way the field lines go. For a solenoid, curl your fingers along the current and your thumb points to the N end.","wire"],
+  ["Hall probe","","A sensor that measures magnetic flux density.","wire"],
+  ["Permeability of free space","μ₀","A constant that sets the strength of magnetic fields made by currents: μ₀ = 4π × 10⁻⁷ T m A⁻¹.","wire","B = μ₀I / 2πr"],
+  ["Dot and cross","• and ×","Symbols for a current or field coming out of the page (•, the point of an arrow) or going into the page (×, the tail of an arrow).","wire"],
+  ["Conventional current","","The direction of current taken as the way positive charge would flow: from + to − round the circuit, opposite to electron flow.","wire"],
+  ["Solenoid","","A long coil of wire. With a current it makes a field like a bar magnet's, strong and uniform inside.","solenoid","B = μ₀nI"],
+  ["Turns per metre","n","The number of turns of a solenoid divided by its length.","solenoid","n = N / L"],
+  ["Uniform field","","A field with the same strength and direction everywhere: parallel, evenly spaced lines.","solenoid"],
+  ["Ferrous core","iron core","A rod of iron (or another ferromagnetic material) inside a solenoid. It makes the field many times stronger.","solenoid"],
+  ["Ferromagnetic material","ferrous","A material strongly attracted by a magnet that can itself be magnetised: iron, steel, nickel and cobalt.","solenoid"],
+  ["Magnetic domain","","A tiny region in a ferromagnetic material in which the atoms' magnetic fields all point the same way.","solenoid"],
+  ["Relative permeability","μᵣ","How many times a core material multiplies the field compared with air. Soft iron: hundreds to thousands.","solenoid"],
+  ["Saturation","","When almost all the domains in a core are lined up, so more current adds very little extra field.","solenoid"],
+  ["Interaction of magnetic fields","","Where two fields overlap they add as vectors. The combined field explains the forces between magnets and between currents.","interact"],
+  ["Resultant field","","The single field you get by adding two or more fields at a point.","interact"],
+  ["Attraction","","Unlike poles, and parallel currents in the same direction, pull towards each other.","interact"],
+  ["Repulsion","","Like poles, and parallel currents in opposite directions, push away from each other.","interact"],
+  ["Force on a moving charge","","A charge q moving with speed v at right angles to a magnetic field B feels a force F = Bqv, at right angles to both v and B.","charge","F = Bqv"],
+  ["Fleming's left-hand rule","","First finger: Field. Second finger: Current (the direction a + charge moves). Thumb: Motion (the force).","charge"],
+  ["Electron","e⁻","A negative particle: charge −1.6 × 10⁻¹⁹ C, mass 9.11 × 10⁻³¹ kg.","charge"],
+  ["Proton","p","A positive particle: charge +1.6 × 10⁻¹⁹ C, mass 1.67 × 10⁻²⁷ kg.","charge"],
+  ["Alpha particle","α","A helium nucleus (two protons and two neutrons): charge +3.2 × 10⁻¹⁹ C, mass 6.64 × 10⁻²⁷ kg.","charge"],
+  ["Centripetal force","","The force towards the centre that keeps a body moving in a circle (section 1.6). For a charge in a field it is Bqv.","charge","Bqv = mv² / r"],
+  ["Aurora","northern lights","Light in the sky near the poles, made when charged particles from the Sun, steered by Earth's magnetic field, hit gases high in the atmosphere.","charge"],
+  ["Mass spectrometer","","An instrument that bends moving ions in a magnetic field; ions of different mass follow paths of different radius.","charge","r = mv / Bq"],
+  ["Permanent magnet","","A magnet that keeps its magnetism, made from a hard magnetic material such as steel, alnico or a neodymium alloy.","uses"],
+  ["Temporary magnet","","A material that is magnetic only while it is in a magnetic field, such as the soft iron core of an electromagnet.","uses"],
+  ["Electromagnet","","A coil with a soft iron core. It is a magnet only while a current flows.","uses"],
+  ["Soft iron","","Iron that magnetises easily and loses its magnetism easily: used for the cores of electromagnets.","uses"],
+  ["Steel","","An alloy of iron that is harder to magnetise but keeps its magnetism: used for permanent magnets.","uses"],
+  ["Neodymium magnet","NdFeB","A very strong permanent magnet made of neodymium, iron and boron, used in headphones, motors and wind turbines.","uses"],
+  ["Relay","","A switch worked by an electromagnet: a small current in its coil switches a separate, larger current.","uses"],
+  ["Magnetic resonance imaging","MRI","A medical scanner that uses a strong electromagnet (about 1.5 T to 3 T) and radio waves to make images of the inside of the body.","uses"],
+  ["Non-magnetic material","","A material that is not attracted by a magnet, such as aluminium, copper, plastic or wood.","uses"],
+];
+GLOSS.forEach((g,i)=>{ GLOSS[i]={t:g[0],aka:g[1],d:g[2],topic:g[3],f:g[4],id:"g-"+g[0].toLowerCase().replace(/[^a-z0-9]+/g,"-")}; });
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["field line","Magnetic field line"],["neutral point","Neutral point"],["right-hand grip","Right-hand grip rule"],["solenoid","Solenoid"],["soft iron","Soft iron"],["electromagnet","Electromagnet"],["permanent magnet","Permanent magnet"],["Fleming's left-hand rule","Fleming's left-hand rule"],["domain","Magnetic domain"],["saturat","Saturation"],["ferrous","Ferromagnetic material"],["tesla","Tesla"],["conventional current","Conventional current"],["uniform","Uniform field"]];
+
+
+/* ---------- glossary links + canvas helpers ---------- */
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function arrowHead(ctx,x,y,ang,color,size=8){ ctx.save(); ctx.fillStyle=color; ctx.translate(x,y); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-size,-size*.5); ctx.lineTo(-size,size*.5); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function arrow(ctx,x1,y1,x2,y2,color,w=2.2){ line(ctx,x1,y1,x2,y2,color,w); arrowHead(ctx,x2,y2,Math.atan2(y2-y1,x2-x1),color,9); }
+function dbl(ctx,x1,y1,x2,y2,color,w=2){ line(ctx,x1,y1,x2,y2,color,w); const a=Math.atan2(y2-y1,x2-x1); arrowHead(ctx,x2,y2,a,color,8); arrowHead(ctx,x1,y1,a+Math.PI,color,8); }
+function dimArrow(ctx,xa,xb,y,label,col){ line(ctx,xa,y,xb,y,col,1.4); arrowHead(ctx,xa,y,Math.PI,col,7); arrowHead(ctx,xb,y,0,col,7); line(ctx,xa,y-5,xa,y+5,col,1.2); line(ctx,xb,y-5,xb,y+5,col,1.2); if(label) text(ctx,label,(xa+xb)/2,y-5,col,F(12),"center"); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const s3 = x => (+x.toPrecision(3)).toString();
+const SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"};
+const sup = n => String(n).split("").map(c=>SUP[c]||c).join("");
+function sci(x,d=3){ if(x===0) return "0"; let e=Math.floor(Math.log10(Math.abs(x))), ms=(x/Math.pow(10,e)).toFixed(d-1);
+  if(Math.abs(+ms)>=10){ e++; ms=(x/Math.pow(10,e)).toFixed(d-1); } return e===0? ms : `${ms} × 10${sup(e)}`; }
+function niceStep(r){ const p=Math.pow(10,Math.floor(Math.log10(r))); const m=r/p; return (m<1.5?1:m<3?2:m<7?5:10)*p; }
+function trim(v){ return Math.abs(v)<1e-9? "0" : (+v.toPrecision(3)).toString(); }
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+function coilV(ctx,x,y1,y2,n,wd,col,lw=2){ const lead=Math.min(8,(y2-y1)*0.12), a=y1+lead, b=y2-lead, seg=(b-a)/(2*n);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x,y1); ctx.lineTo(x,a);
+  for(let i=0;i<2*n;i++) ctx.lineTo(x+(i%2?-1:1)*wd/2, a+seg*(i+0.5)); ctx.lineTo(x,b); ctx.lineTo(x,y2); ctx.stroke(); ctx.restore(); }
+function coilH(ctx,x1,x2,y,n,ht,col,lw=2){ const lead=Math.min(8,(x2-x1)*0.12), a=x1+lead, b=x2-lead, seg=(b-a)/(2*n);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(a,y);
+  for(let i=0;i<2*n;i++) ctx.lineTo(a+seg*(i+0.5), y+(i%2?-1:1)*ht/2); ctx.lineTo(b,y); ctx.lineTo(x2,y); ctx.stroke(); ctx.restore(); }
+function massBlock(ctx,x,y,wd,ht,label){ rrect(ctx,x-wd/2,y,wd,ht,5,C.apricot,C.ink,1.4); text(ctx,label,x,y+ht/2+4,"#3b2b21",F(11),"center"); }
+function vdim(ctx,x,ya,yb,label,col){ line(ctx,x,ya,x,yb,col,1.4); line(ctx,x-5,ya,x+5,ya,col,1.2); line(ctx,x-5,yb,x+5,yb,col,1.2);
+  if(Math.abs(yb-ya)>16){ const d=yb>ya?1:-1; arrowHead(ctx,x,ya,-d*Math.PI/2,col,7); arrowHead(ctx,x,yb,d*Math.PI/2,col,7); }
+  if(label) text(ctx,label,x+8,(ya+yb)/2+4,col,F(12)); }
+function linfit(pts){ const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0; pts.forEach(([x,y])=>{sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;}); const m=(n*sxy-sx*sy)/(n*sxx-sx*sx); return [m,(sy-m*sx)/n]; }
+function linfit0(pts){ let sxx=0,sxy=0; pts.forEach(([x,y])=>{sxx+=x*x;sxy+=x*y;}); return [sxy/sxx,0]; }
+function plus(ctx,x,y,s,col,lw=2){ line(ctx,x-s,y,x+s,y,col,lw); line(ctx,x,y-s,x,y+s,col,lw); }
+function minus(ctx,x,y,s,col,lw=2.2){ line(ctx,x-s,y,x+s,y,col,lw); }
+function qsym(ctx,x,y,sg,s=4.5){ if(sg>0) plus(ctx,x,y,s,C.terra,2.2); else if(sg<0) minus(ctx,x,y,s,C.ray2,2.6); }
+function earthSym(ctx,x,y,col){ line(ctx,x-12,y,x+12,y,col,2); line(ctx,x-8,y+5,x+8,y+5,col,2); line(ctx,x-4,y+10,x+4,y+10,col,2); }
+const fq = q => (q>0?"+":q<0?"−":"")+s3(Math.abs(q));
+
+function scatter(s, pts, o){
+  const {ctx,w,h}=s; bg(ctx,w,h,o.bgc);
+  const padL=46,padR=12,padT=12,padB=34;
+  const xs=pts.map(p=>p[0]).concat(o.xr), ys=pts.map(p=>p[1]).concat(o.yr);
+  let x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  if(x1-x0<1e-9) x1+=1; if(y1-y0<1e-9) y1+=1;
+  const X=v=>padL+(v-x0)/(x1-x0)*(w-padL-padR), Y=v=>h-padB-(v-y0)/(y1-y0)*(h-padT-padB);
+  const ticks=(a,b)=>{ const st=niceStep((b-a)/4); const out=[]; for(let v=Math.ceil(a/st)*st; v<=b+1e-9; v+=st) out.push(+v.toFixed(10)); return out; };
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1;
+  ticks(x0,x1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(X(v),padT); ctx.lineTo(X(v),h-padB); ctx.stroke(); text(ctx,trim(v),X(v),h-padB+14,C.muted,M(10),"center"); });
+  ticks(y0,y1).forEach(v=>{ ctx.beginPath(); ctx.moveTo(padL,Y(v)); ctx.lineTo(w-padR,Y(v)); ctx.stroke(); text(ctx,trim(v),padL-5,Y(v)+3,C.muted,M(10),"right"); });
+  text(ctx,o.xl,w-padR,h-6,C.ink,F(11),"right"); text(ctx,o.yl,padL+4,padT+10,C.ink,F(11));
+  if(o.fit){ const [m,c]=o.fit; ctx.save(); ctx.beginPath(); ctx.rect(padL,padT,w-padL-padR,h-padT-padB); ctx.clip(); line(ctx,X(x0),Y(m*x0+c),X(x1),Y(m*x1+c),C.olive,2,[6,4]); ctx.restore(); }
+  pts.forEach(p=>{ if(p[2]) circle(ctx,X(p[0]),Y(p[1]),4.5,null,C.olive,2); else { ctx.fillStyle=C.terra; ctx.beginPath(); ctx.arc(X(p[0]),Y(p[1]),4.5,0,7); ctx.fill(); } });
+}
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "magnets", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+const loIds=["lo1","lo2"]; const loState=store.get("s34-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("s34-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("s34-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+/* ================= LEARN ================= */
+const LEARN = {
+  magnets:{ vis:[["mags",{set:1}]], cap:"Unlike poles facing: the field lines run straight across the gap from N to S, and the two magnets attract.",
+    keys:[["N→S","Field lines show the way a compass N pole points: out of a N pole and into a S pole outside the magnet. Inside the magnet they run S to N, so every line is a closed loop."],["≡","Closer lines mean a stronger field, so the field is strongest near the poles. Lines never cross: the field has only one direction at each point."],["⊕","Put two magnets close together and their fields add. Unlike poles: lines join across the gap. Like poles: lines push apart and leave a neutral point where the field is zero."]],
+    f:"B in tesla (T) · lines N → S", mistake:"Drawing field lines from S to N outside a magnet. Outside, they leave the N pole and enter the S pole." },
+  wire:{ vis:[["wire",{I:5,out:true,r:4}]], cap:"A wire carrying 5 A out of the page, seen from above. The field lines are circles centred on the wire, spreading out with distance. At 4 cm, B = 25 μT.",
+    keys:[["⟳","A current makes a magnetic field (Ørsted, 1820). Round a long straight wire the field lines are concentric circles."],["✊","Right-hand grip rule: thumb along the conventional current, fingers curl the way the field goes. Reverse the current and the field reverses."],["1/r","More current makes a stronger field; moving away makes it weaker: B ∝ I and B ∝ 1/r."]],
+    f:"B ∝ I / r   (B = μ₀I / 2πr)", mistake:"Thinking the field round a wire points along the wire or straight out from it. It goes round the wire in circles." },
+  solenoid:{ vis:[["sol",{I:3,N:600,core:"air",dir:1}]], cap:"A solenoid cut along its axis: • current out of the page on top, × into the page below. Inside, the lines are parallel and evenly spaced (uniform); outside, the pattern is a bar magnet's.",
+    keys:[["▥","A solenoid is a long coil. With a current it has a N pole at one end and a S pole at the other, just like a bar magnet."],["✊","Curl your right-hand fingers along the current: your thumb points to the N end. Seen from an end, anticlockwise current means that end is N."],["Fe","More current, more turns per metre or a ferrous core give a stronger field. A soft iron core multiplies it hundreds of times, until the iron saturates."]],
+    f:"B ∝ nI   (B = μ₀nI)", mistake:"Thinking any metal core helps. Only ferrous materials (iron, steel, nickel, cobalt) strengthen the field; a copper or aluminium core does almost nothing." },
+  interact:{ vis:[["two",{I1:6,I2:6,d:4}]], cap:"Two wires with currents in the same direction. Between them the fields cancel (a neutral point); outside they add, and the wires pull together.",
+    keys:[["+","Where two magnetic fields overlap they add as vectors. The combined pattern shows where the field is strong and where it cancels."],["⇆","Magnets: unlike poles attract and like poles repel. Parallel currents: the same direction attract, opposite directions repel."],["×","The force grows with each current and gets weaker as the wires move apart: F ∝ I₁I₂/d. Double both currents and the force is four times bigger."]],
+    f:"Same direction: attract · opposite: repel", mistake:"Using the magnet rule for currents (\"like repels like\"). Currents in the same direction attract." },
+  charge:{ vis:[["charge",{p:1,v:5,B:100,into:true,ph:0.3}]], cap:"A proton at 5 × 10⁶ m s⁻¹ in a 0.10 T field into the page: F = Bqv = 8.0 × 10⁻¹⁴ N, always at right angles to its velocity, so it moves on a circle of radius 0.52 m.",
+    keys:[["F","A charge q moving at speed v at right angles to a field B feels a force F = Bqv. No force if the charge is at rest or moves along the field lines."],["✋","Fleming's left-hand rule: First finger = Field, seCond finger = Current (the way a + charge moves), thuMb = Motion (the force). For an electron, point the second finger the other way."],["○","The force is always at right angles to the velocity, so it does no work. The speed stays the same and the path curves into a circle: Bqv = mv²/r."]],
+    f:"F = Bqv", mistake:"Pointing the \"current\" finger along an electron's motion. Conventional current is opposite to electron flow, so the force on an electron is the other way." },
+  uses:{ vis:[["crane",{on:true,I:6,core:"soft",held:true,B:1.45}]], cap:"A scrapyard electromagnet. Current on: the soft iron core is strongly magnetised and lifts the steel. Current off: it lets go. The aluminium can and copper pipe are never lifted.",
+    keys:[["P","Permanent magnets keep their magnetism: compasses, fridge door seals, loudspeakers, guitar pickups and many motors. They are made of steel or alloys such as alnico and neodymium-iron-boron."],["E","Temporary magnets work only while a current flows: cranes, relays, electric bells, door locks and MRI scanners. Their cores are soft iron."],["⚙","Soft iron magnetises easily and loses it when the current stops. Steel is harder to magnetise but keeps it. Pick the material for the job."]],
+    f:"Soft iron: temporary · steel: permanent", mistake:"Thinking a magnet picks up any metal. Only ferromagnetic materials (iron, steel, nickel, cobalt) are attracted." },
+};
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  ["pair","Two magnets, two patterns","Unlike poles facing: lines cross the gap and the magnets attract. Like poles facing: lines push apart, leaving a neutral point midway, and the magnets repel.","magnets","var(--blush)"],
+  ["ws","Wire and solenoid","Circles round a straight wire, weaker further out. A solenoid adds the fields of many turns: uniform inside, a bar magnet's pattern outside.","solenoid","var(--apricot)"],
+  ["beam","Charges curve in a field","Electrons and protons fired the same way curve in opposite directions. Light electrons curve far more tightly (r = mv/Bq). Earth's field steers particles from the Sun the same way, towards the poles.","charge","var(--sage)"],
+];
+$("cases").innerHTML = CASES.map(([k,t,p,topic,tint])=>`<div class="panel rc-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tint}">${svg(topic)}</div><h3>${t}</h3></div><canvas data-case="${k}" aria-label="${t}"></canvas><p>${p}</p><div class="btns"><button data-go="labs" data-lab="${topic}">Open the lab</button></div></div>`).join("");
+const STR = [["Earth's magnetic field in Ireland","about 50 μT",5e-5],["1 cm from a wire carrying 10 A","200 μT",2e-4],["Close to a fridge magnet","about 5 mT",5e-3],["At a pole of a school bar magnet","about 50 mT",5e-2],["Surface of a neodymium magnet","about 1 T",1],["Hospital MRI scanner","1.5 T to 3 T",3],["Strongest steady lab magnets","about 45 T",45]];
+$("strT").innerHTML = `<tr><th style="text-align:left">Field</th><th>Typical B</th><th>× Earth's field</th></tr>` + STR.map(([n,s,B])=>{ const r=B/5e-5; return `<tr><td style="text-align:left;white-space:normal">${n}</td><td>${s}</td><td>${r>=1e4?sci(r,2):s3(r)}</td></tr>`; }).join("");
+const AROUND = [
+  ["mri","MRI scanners","A superconducting electromagnet makes a steady field of 1.5 T to 3 T, tens of thousands of times Earth's field. Research: why the coils are cooled with liquid helium.",[["Temporary","real"]],"var(--blush)"],
+  ["uses","Scrapyard cranes","A soft iron electromagnet lifts steel scrap and drops it when the current is switched off. Magnets also separate steel from aluminium in recycling plants.",[["Temporary","real"]],"var(--apricot)"],
+  ["speaker","Loudspeakers and headphones","A permanent magnet and a coil: the changing current in the coil makes the cone vibrate (the motor effect, section 3.5). Research: how neodymium magnets made earphones smaller.",[["Permanent","real"]],"var(--sage)"],
+  ["bell","Relays and electric bells","A small current magnetises a soft iron core, which pulls an iron armature to close a switch or strike a bell. Research: how a car's starter relay works.",[["Temporary","real"]],"var(--cream)"],
+  ["compass","Compasses and Earth's field","A compass needle is a small permanent magnet that lines up with Earth's field. Research: how Earth's field protects us from charged particles from the Sun.",[["Permanent","real"]],"var(--blush)"],
+  ["sun","The aurora","Charged particles from the Sun are steered by Earth's field towards the poles (F = Bqv) and make the upper air glow. Research: when the aurora was last widely seen from Ireland, and why.",[["Moving charges","real"]],"var(--sage)"],
+  ["lock","Magnetic door locks","An electromagnet holds a steel plate on the door. Cut the power, for example when a fire alarm sounds, and the door is released.",[["Temporary","real"]],"var(--apricot)"],
+  ["disk","Hard drives and bank cards","Data is stored as tiny regions of magnetised material that keep their magnetism until they are rewritten. Research: why a strong magnet can wipe a card's magnetic stripe.",[["Permanent","real"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"magnets",label:"Magnets",col:"var(--blush)",leaves:[["N → S","Outside the magnet."],["Close lines","Stronger field."],["Never cross","One direction at each point."],["Neutral point","Fields cancel."]]},
+  {id:"wire",label:"Current in a wire",col:"var(--apricot)",leaves:[["Circles","Centred on the wire."],["Grip rule","Thumb along the current."],["B ∝ I/r","More current, closer in."]]},
+  {id:"solenoid",label:"Solenoid",col:"var(--sage)",leaves:[["Bar magnet","Pattern outside."],["Uniform","Field inside."],["Iron core","× hundreds."],["Saturation","Domains all lined up."]]},
+  {id:"interact",label:"Interaction",col:"var(--cream)",leaves:[["Unlike poles","Attract."],["Like poles","Repel."],["Parallel currents","Same way: attract."],["F ∝ I₁I₂/d","Bigger, closer."]]},
+  {id:"charge",label:"Moving charge",col:"var(--blush)",leaves:[["F = Bqv","v at right angles to B."],["Left hand","Field, current, motion."],["Circle","r = mv/Bq."],["No work","Speed stays the same."]]},
+  {id:"uses",label:"Uses",col:"var(--sage)",leaves:[["Permanent","Steel, NdFeB alloys."],["Temporary","Soft iron core."],["Crane, relay","Switch off to release."],["MRI","1.5 T to 3 T."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["magnets","What is a magnetic field?","A region of space in which a magnetic pole, a magnetic material or a moving charge experiences a force."],
+  ["magnets","Which way do field lines point outside a magnet?","From the N pole to the S pole: the way a compass N pole points."],
+  ["magnets","What does the spacing of field lines tell you?","Closer lines mean a stronger field. The lines are closest at the poles."],
+  ["magnets","Why can magnetic field lines never cross?","The field has only one direction at each point, so two lines can't pass through the same point."],
+  ["magnets","What is a neutral point?","A point where two fields cancel, so the resultant field is zero. For example, midway between two like poles."],
+  ["magnets","Earth's geographic North Pole is near which kind of magnetic pole?","A magnetic S pole. That is why the N pole of a compass needle is attracted towards it."],
+  ["wire","Describe the field round a long straight current-carrying wire.","Concentric circles centred on the wire, further apart (weaker) as you move away."],
+  ["wire","State the right-hand grip rule for a wire.","Grip the wire with your right hand with your thumb along the conventional current: your fingers curl in the direction of the field."],
+  ["wire","How does the field of a wire depend on the current and the distance?","B ∝ I and B ∝ 1/r: double the current, double the field; double the distance, half the field."],
+  ["wire","How can you show the field round a wire in the lab?","Pass the wire vertically through a horizontal card, switch on a large current and use iron filings or plotting compasses on the card."],
+  ["wire","The current in a wire flows out of the page. Which way does the field go?","Anticlockwise (right-hand grip rule, thumb towards you)."],
+  ["solenoid","Describe the field of a current-carrying solenoid.","Like a bar magnet's outside; inside, strong and uniform (parallel, evenly spaced lines)."],
+  ["solenoid","How do you find which end of a solenoid is N?","Curl your right-hand fingers along the current: your thumb points to N. Or: the end where the current looks anticlockwise is N."],
+  ["solenoid","Give three ways to make a solenoid's field stronger.","Increase the current, increase the number of turns per metre, and put a ferrous (soft iron) core inside."],
+  ["solenoid","Why does a soft iron core make the field stronger?","The domains in the iron line up with the coil's field and add their own field to it, multiplying it hundreds of times."],
+  ["solenoid","What is saturation of an iron core?","When nearly all the domains are lined up, so increasing the current adds very little more field."],
+  ["interact","Two parallel wires carry currents in the same direction. What happens?","They attract. Their fields cancel between the wires and add outside."],
+  ["interact","Two parallel wires carry currents in opposite directions. What happens?","They repel. Their fields add between the wires."],
+  ["interact","What happens to the force between two parallel currents if both currents double?","It becomes four times bigger (F ∝ I₁I₂)."],
+  ["charge","Give the equation for the force on a charge moving in a magnetic field.","F = Bqv, with v at right angles to B."],
+  ["charge","Define the tesla.","The magnetic flux density in which a charge of 1 C moving at 1 m s⁻¹ at right angles to the field feels a force of 1 N."],
+  ["charge","What force acts on a charge moving parallel to a magnetic field?","None: F = 0 when the velocity is along the field."],
+  ["charge","Why does a charged particle move in a circle in a uniform magnetic field?","The force Bqv is always at right angles to its velocity, so it acts as a centripetal force: Bqv = mv²/r."],
+  ["charge","Why does the speed of a charge in a magnetic field stay constant?","The force is perpendicular to the motion, so it does no work and the kinetic energy doesn't change."],
+  ["charge","State Fleming's left-hand rule.","First finger: Field. Second finger: Current (+ charge motion). Thumb: Motion (force). All at right angles."],
+  ["uses","What is the difference between a permanent and a temporary magnet?","A permanent magnet keeps its magnetism. A temporary magnet is magnetic only while it is in a field, for example while current flows in a coil."],
+  ["uses","Why is soft iron used for electromagnet cores?","It magnetises strongly and easily, and loses its magnetism when the current is switched off."],
+  ["uses","Why is steel used for permanent magnets?","It is hard to magnetise but keeps its magnetism once magnetised."],
+  ["uses","How does a relay work?","A small current in the coil magnetises a soft iron core, which pulls an armature to close a switch in a second circuit carrying a larger current."],
+  ["uses","What kind of magnet is in an MRI scanner, and how strong is it?","A superconducting electromagnet, usually 1.5 T to 3 T."],
+  ["uses","Name two materials a magnet cannot pick up.","Any two of: aluminium, copper, brass, plastic, wood, glass."],
+];
+
+
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Magnetic</text><text x="${cx}" y="${cy+22}" text-anchor="middle">fields</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("s34-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("s34-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("s34-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("s34-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["magnets","Outside a bar magnet, the field lines go:",["From S to N","From N to S","In circles round the middle","Straight out from the centre"],1,"Field lines leave the N pole and enter the S pole outside the magnet (the way a compass N pole points)."],
+  ["magnets","Two N poles are brought close together. They:",["Attract","Repel","Feel no force","Attract, then repel"],1,"Like poles repel: their field lines push apart."],
+  ["magnets","At a neutral point between two magnets:",["The field is strongest","The resultant field is zero","Field lines cross","A compass always points north"],1,"The two fields are equal and opposite there, so they cancel."],
+  ["wire","The magnetic field lines round a long straight current-carrying wire are:",["Parallel straight lines","Concentric circles centred on the wire","Lines pointing out from the wire","Lines along the wire"],1,"A straight current makes circular field lines centred on the wire."],
+  ["wire","The field 3 cm from a long straight wire is 40 μT. At 6 cm from the wire it is:",["80 μT","20 μT","10 μT","40 μT"],1,"B ∝ 1/r: doubling the distance halves the field, 40 ÷ 2 = 20 μT."],
+  ["wire","A current flows out of the page. Seen from above the page, its field lines go:",["Clockwise","Anticlockwise","Outwards","Inwards"],1,"Right-hand grip rule: thumb towards you, fingers curl anticlockwise."],
+  ["solenoid","The magnetic field inside a long current-carrying solenoid is:",["Zero","Strong and uniform","Strongest at the ends","Circles round the axis"],1,"Inside a long solenoid the lines are parallel and evenly spaced: a uniform field."],
+  ["solenoid","A soft iron rod is pushed into a current-carrying solenoid. The field:",["Becomes weaker","Becomes many times stronger","Reverses","Is unchanged"],1,"The iron's domains line up with the coil's field and add to it."],
+  ["solenoid","Which of these would NOT make a solenoid's field stronger?",["A bigger current","More turns per metre","A soft iron core","An aluminium core"],3,"Aluminium is not ferromagnetic, so it has almost no effect on the field."],
+  ["solenoid","At large currents the field of an iron-cored solenoid stops rising in proportion to the current because:",["The iron melts","Nearly all the domains are already lined up (saturation)","The current falls","The coil's resistance drops"],1,"Once the domains are lined up, the iron can add little more: it is saturated."],
+  ["interact","Two long parallel wires carry currents in the same direction. The wires:",["Attract","Repel","Feel no force","Twist round each other"],0,"Parallel currents in the same direction attract; opposite directions repel."],
+  ["interact","Both currents in two parallel wires are doubled. The force between them is multiplied by:",["2","4","½","1"],1,"F ∝ I₁I₂, so 2 × 2 = 4 times bigger."],
+  ["charge","A proton (q = 1.6 × 10⁻¹⁹ C) moves at 3.0 × 10⁶ m s⁻¹ at right angles to a 0.20 T field. The force on it is:",["9.6 × 10⁻¹⁴ N","6.0 × 10⁵ N","1.1 × 10⁻²⁵ N","3.2 × 10⁻²⁰ N"],0,"F = Bqv = 0.20 × 1.6 × 10⁻¹⁹ × 3.0 × 10⁶ = 9.6 × 10⁻¹⁴ N."],
+  ["charge","A charge moves parallel to a uniform magnetic field. The magnetic force on it is:",["Maximum","Zero","Along the field","Twice Bqv"],1,"There is no magnetic force on a charge moving along the field lines."],
+  ["charge","The magnetic force on a moving charge does no work because:",["The force is very small","The force is always at right angles to the velocity","The charge is small","The field is uniform"],1,"A force at right angles to the motion does no work, so the speed stays the same."],
+  ["charge","In Fleming's left-hand rule, the thumb shows the direction of the:",["Field","Current","Force (motion)","Voltage"],2,"First finger Field, seCond finger Current, thuMb Motion (force)."],
+  ["charge","The unit of magnetic flux density is the:",["Weber","Tesla","Newton","Ampere"],1,"B is measured in tesla (T)."],
+  ["uses","The best material for the core of a scrapyard electromagnet is:",["Steel","Soft iron","Copper","Aluminium"],1,"Soft iron magnetises strongly and loses its magnetism when the current is switched off, so the crane can drop the scrap."],
+  ["uses","Which of these uses a permanent magnet?",["A relay","An electric bell","A loudspeaker","An MRI scanner"],2,"A loudspeaker has a permanent magnet (and a coil). Relays, bells and MRI scanners use electromagnets."],
+];
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Model","Represent a physical situation with a relationship, equation, diagram or simulation that can be used to make predictions.","Model the magnetic field round a current-carrying solenoid with and without a ferrous core."],
+  ["Investigate","Observe, study or make a detailed and systematic examination to establish facts and reach new conclusions.","Investigate the use of permanent and temporary magnets in real life."],
+  ["Sketch","Draw a quick diagram showing the main features, with labels and arrows where needed.","Sketch the magnetic field between two like poles and mark the neutral point."],
+  ["Describe","Give a detailed account of the main points, using words, diagrams and examples.","Describe an experiment to show the magnetic field round a straight wire."],
+  ["Explain","Give a detailed account including reasons or causes.","Explain why a soft iron core makes the field of a solenoid stronger."],
+  ["Calculate","Obtain a numerical answer, showing the relevant stages in the working.","Calculate the force on a proton moving at 2 × 10⁶ m s⁻¹ in a 0.3 T field."],
+  ["State","Give a short answer with no explanation needed.","State Fleming's left-hand rule."],
+  ["Use","Apply knowledge or a method to a situation.","Use the right-hand grip rule to find which end of a solenoid is the N pole."],
+];
+
+
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("s34-best",null); if(best==null||pct>best) store.set("s34-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+function parseNum(s){
+  s=String(s).trim().replace(/\s+/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,ch=>({"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁻":"-"})[ch]);
+  s=s.replace(/[x×*]10\^?/i,"e");
+  return parseFloat(s);
+}
+// Calculation trainer
+const Acap = n => /^[aeiou]/i.test(n)? "An" : "A";
+const PARTQ = [["proton",EC,MP],["electron",EC,ME],["alpha particle",2*EC,MA]];
+const PTYPES = {
+  fbqv:{ name:"F = Bqv", gen(){ const [n,q]=pick(PARTQ), v=pick([2e6,3e6,4e6,5e6,1.2e7]), B=pick([0.05,0.1,0.25,0.4,0.8]), Fo=B*q*v;
+    return { q:`${Acap(n)} <b>${n}</b> (charge ${sci(q,2)} C) moves at <b>${sci(v,2)} m s⁻¹</b> at right angles to a magnetic field of flux density <b>${B} T</b>. Calculate the force on it.`, ans:Fo, unit:"N", steps:["F = Bqv",`F = ${B} × ${sci(q,2)} × ${sci(v,2)}`,`F = ${sci(Fo)} N`] }; } },
+  fv:{ name:"Find v", gen(){ const [n,q]=pick(PARTQ.slice(0,2)), B=pick([0.1,0.2,0.5]), v0=pick([2e6,4e6,6e6]), Fo=+(B*q*v0).toPrecision(3), v=Fo/(B*q);
+    return { q:`${Acap(n)} <b>${n}</b> (charge ${sci(q,2)} C) moving at right angles to a <b>${B} T</b> field feels a force of <b>${sci(Fo)} N</b>. Calculate its speed.`, ans:v, unit:"m s⁻¹", steps:["F = Bqv, so v = F / Bq",`v = ${sci(Fo)} ÷ (${B} × ${sci(q,2)})`,`v = ${sci(v)} m s⁻¹`] }; } },
+  fB:{ name:"Find B", gen(){ const q=EC, v=pick([1e6,3e6,5e6]), B0=pick([0.02,0.15,0.3,0.6]), Fo=+(B0*q*v).toPrecision(3), B=Fo/(q*v);
+    return { q:`A proton (charge 1.6 × 10⁻¹⁹ C) moving at <b>${sci(v,2)} m s⁻¹</b> at right angles to a magnetic field feels a force of <b>${sci(Fo)} N</b>. Calculate the magnetic flux density.`, ans:B, unit:"T", steps:["F = Bqv, so B = F / qv",`B = ${sci(Fo)} ÷ (1.6 × 10⁻¹⁹ × ${sci(v,2)})`,`B = ${s3(B)} T`] }; } },
+  rad:{ name:"Radius r = mv/Bq", gen(){ const [n,q,m]=pick([PARTQ[0],PARTQ[2]]), v=pick([1e6,2e6,5e6]), B=pick([0.1,0.2,0.5]), r=m*v/(B*q);
+    return { q:`${Acap(n)} <b>${n}</b> (mass ${sci(m,3)} kg, charge ${sci(q,2)} C) moves at <b>${sci(v,2)} m s⁻¹</b> at right angles to a uniform <b>${B} T</b> field. Calculate the radius of its circular path.`, ans:r, unit:"m", steps:["Bqv = mv²/r, so r = mv / Bq",`r = ${sci(m,3)} × ${sci(v,2)} ÷ (${B} × ${sci(q,2)})`,`r = ${s3(r)} m`] }; } },
+  acc:{ name:"Acceleration", gen(){ const [n,q,m]=pick(PARTQ.slice(0,2)), v=pick([2e6,5e6]), B=pick([0.01,0.05,0.2]), Fo=B*q*v, a=Fo/m;
+    return { q:`${Acap(n)} <b>${n}</b> (mass ${sci(m,3)} kg, charge ${sci(q,2)} C) moves at <b>${sci(v,2)} m s⁻¹</b> at right angles to a <b>${B} T</b> field. Calculate its acceleration.`, ans:a, unit:"m s⁻²", steps:[`F = Bqv = ${B} × ${sci(q,2)} × ${sci(v,2)} = ${sci(Fo)} N`,"a = F / m",`a = ${sci(Fo)} ÷ ${sci(m,3)} = ${sci(a)} m s⁻²`] }; } },
+  wrat:{ name:"Wire: B ∝ I/r", gen(){ const B1=pick([20,40,60,80]);
+    if(Math.random()<0.5){ const r1=pick([2,3,4]), r2=pick([1,6,8,12]), B2=B1*r1/r2;
+      return { q:`The magnetic field <b>${r1} cm</b> from a long straight wire is <b>${B1} μT</b>. Calculate the field <b>${r2} cm</b> from the wire, with the same current.`, ans:B2, unit:"μT", steps:["B ∝ 1/r, so B₂ = B₁ × r₁ / r₂",`B₂ = ${B1} × ${r1} ÷ ${r2}`,`B₂ = ${s3(B2)} μT`] }; }
+    const I1=pick([2,4,5]), I2=pick([1,3,6,10]), B2=B1*I2/I1;
+    return { q:`The field at a point near a long straight wire is <b>${B1} μT</b> when the current is <b>${I1} A</b>. Calculate the field at the same point when the current is <b>${I2} A</b>.`, ans:B2, unit:"μT", steps:["B ∝ I, so B₂ = B₁ × I₂ / I₁",`B₂ = ${B1} × ${I2} ÷ ${I1}`,`B₂ = ${s3(B2)} μT`] }; } },
+  wireB:{ name:"Wire: B = μ₀I/2πr", gen(){ const I=pick([2,5,8,10,12]), r=pick([1,2,4,5]), B=MU0*I/(TAU*r/100)*1e6;
+    return { q:`A long straight wire carries a current of <b>${I} A</b>. Use B = μ₀I/2πr (μ₀ = 4π × 10⁻⁷ T m A⁻¹) to calculate the field <b>${r} cm</b> from the wire, in μT.`, ans:B, unit:"μT", steps:["B = μ₀I / 2πr",`B = 4π × 10⁻⁷ × ${I} ÷ (2π × ${s3(r/100)})`,`B = ${sci(B*1e-6)} T = ${s3(B)} μT`] }; } },
+  solB:{ name:"Solenoid: B = μ₀nI", gen(){ const N=pick([200,400,500,800]), L=pick([0.1,0.2,0.25]), I=pick([0.5,1,2,3]), n=N/L, B=MU0*n*I*1000;
+    return { q:`A solenoid <b>${L} m</b> long has <b>${N} turns</b> and carries <b>${I} A</b>. Use B = μ₀nI to calculate the field inside it (air core), in mT.`, ans:B, unit:"mT", steps:[`n = N / L = ${N} ÷ ${L} = ${s3(n)} turns per metre`,`B = μ₀nI = 4π × 10⁻⁷ × ${s3(n)} × ${I}`,`B = ${sci(B/1000)} T = ${s3(B)} mT`] }; } },
+  core:{ name:"Iron core", gen(){ const Ba=pick([1.5,2,2.5,4]), k=pick([150,200,250,400]), B=Ba*k/1000;
+    return { q:`A solenoid makes a field of <b>${Ba} mT</b> with an air core. A soft iron core multiplies the field by <b>${k}</b> (the iron is not saturated). Calculate the new field in tesla.`, ans:B, unit:"T", steps:[`B = ${k} × ${Ba} mT`,`B = ${s3(Ba*k)} mT`,`B = ${s3(B)} T`] }; } },
+};
+
+
+let pType="fbqv", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseNum($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 0.25 or 8e-14.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.abs(pCur.ans)*0.02;
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: convert cm to m and mT or μT to T first, use the right charge and mass, and type powers of ten as e.g. 8e-14. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+// Drill: which way?
+const WOPTS = { wire:["Clockwise","Anticlockwise"], sol:["Left end is N","Right end is N"], charge:["Up the page","Down the page","To the left","To the right"] };
+const VDIR = { right:[1,0], left:[-1,0], up:[0,1], down:[0,-1] };
+function wwNew(){ const type=pick(["wire","sol","charge","charge"]), q={type};
+  if(type==="wire"){ q.out=Math.random()<0.5; q.ans=q.out?1:0; q.txt=`The current flows <b>${q.out?"out of":"into"}</b> the page. Which way do the field lines go round the wire, as you look at the page?`;
+    q.why=q.out? "Right-hand grip rule: thumb towards you, so your fingers curl anticlockwise." : "Right-hand grip rule: thumb into the page, so your fingers curl clockwise."; }
+  else if(type==="sol"){ q.up=Math.random()<0.5; q.ans=q.up?0:1; q.txt=`The current flows <b>${q.up?"up":"down"}</b> the front of each turn (the solid strands). Which end of the solenoid is the N pole?`;
+    q.why=`Curl your right-hand fingers along the current (${q.up?"up":"down"} the front of each turn): your thumb points ${q.up?"left":"right"}, to the N pole. Seen from that end, the current goes anticlockwise.`; }
+  else { q.pos=Math.random()<0.5; q.into=Math.random()<0.5; q.v=pick(Object.keys(VDIR)); const V=VDIR[q.v], s=q.pos?1:-1, Fm=q.into? [-V[1]*s, V[0]*s] : [V[1]*s, -V[0]*s];
+    q.F=Fm; q.ans= Fm[1]>0?0 : Fm[1]<0?1 : Fm[0]<0?2 : 3;
+    q.txt=`${q.pos?"A proton":"An electron"} moves <b>${q.v==="up"?"up the page":q.v==="down"?"down the page":"to the "+q.v}</b> through a magnetic field <b>${q.into?"into":"out of"}</b> the page. Which way is the force on it?`;
+    q.why=`Fleming's left-hand rule: first finger ${q.into?"into":"out of"} the page (field), second finger ${q.pos?"along":"opposite to"} the motion (conventional current${q.pos?"":", because the electron is negative"}), thumb ${WOPTS.charge[q.ans].toLowerCase()} (force).`; }
+  return q; }
+let dq = { q:null, sel:null, shown:false, streak:0 };
+let predC=null;
+function pdNew(){ dq={...dq,q:wwNew(),sel:null,shown:false};
+  $("predQ").innerHTML=dq.q.txt;
+  $("predOpts").querySelector(".btns").innerHTML=WOPTS[dq.q.type].map((t,i)=>`<button data-a="${i}">${t}</button>`).join("");
+  $("predFb").innerHTML=""; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||dq.shown) return; dq.sel=+b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(dq.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const ok=dq.sel===dq.q.ans; dq.streak=ok?dq.streak+1:0; dq.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> Answer: <b>${WOPTS[dq.q.type][dq.q.ans]}</b>. ${dq.q.why}${ok?` Streak: ${dq.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions
+const LONGQ = [
+  { title:"Fields round magnets and a wire", intro:"A student uses plotting compasses and a Hall probe to study magnetic fields.",
+    parts:[["a","What is meant by a magnetic field?",6,"A region of space (3) in which a magnetic pole, magnetic material or moving charge experiences a force (3)."],
+      ["b","Sketch the magnetic field between two bar magnets (i) with a N pole facing a S pole, (ii) with two N poles facing. Mark the neutral point.",9,"(i) Lines run across the gap from N to S, roughly parallel (3). (ii) Lines from both N poles curve away from each other; none cross the gap (3). Neutral point marked midway between the N poles (3)."],
+      ["c","Describe how the student could show the shape of the field round a long straight wire.",9,"Wire passes vertically through a horizontal card (3); a large current is switched on and iron filings are sprinkled on the card (tap it) or plotting compasses are placed round the wire (3); the pattern is concentric circles, and the compasses reverse when the current is reversed (3)."],
+      ["d","The Hall probe reads 60 μT at 2.0 cm from the wire. Predict the reading (i) at 6.0 cm with the same current, (ii) at 2.0 cm when the current is doubled.",9,"B ∝ 1/r (3), so (i) 60 × 2 ÷ 6 = 20 μT (3). B ∝ I, so (ii) 120 μT (3)."],
+      ["e","State the right-hand grip rule for a straight wire.",6,"Grip the wire with the right hand with the thumb along the conventional current (3); the fingers curl in the direction of the magnetic field (3)."]] },
+  { title:"Solenoids and electromagnets", intro:"A coil of 400 turns is wound on a cardboard tube 20 cm long and connected to a variable dc supply. A Hall probe measures B at the centre, first with an air core and then with a soft iron core.",
+    parts:[["a","Sketch the field in and around the solenoid. How can you tell which end is the N pole?",9,"Parallel, evenly spaced lines inside (uniform field) (3); lines loop round outside like a bar magnet's field (3); N is the end where the current looks anticlockwise, or use the right-hand grip rule with the thumb pointing to N (3)."],
+      ["b","Give two ways of increasing the field inside the solenoid, apart from adding a core.",6,"Increase the current (3); increase the number of turns per metre (3)."],
+      ["c","Results: I = 0.5, 1.0, 1.5, 2.0 A gave B = 1.26, 2.51, 3.77, 5.03 mT with the air core and 0.25, 0.49, 0.70, 0.89 T with the iron core. Describe and explain the effect of the iron core.",12,"Air core: B ∝ I (doubling I doubles B) (3). Iron core: B is about 200 times bigger at 0.5 A (3); the domains in the iron line up with the coil's field and add their own field (3); B rises less than in proportion at higher currents because the iron is approaching saturation (most domains already aligned) (3)."],
+      ["d","Why is soft iron, rather than steel, used for the core of a scrapyard electromagnet?",6,"Soft iron is strongly magnetised while the current flows and loses its magnetism when it is switched off, so the scrap is released (3); steel would keep its magnetism and not let go (3)."],
+      ["e","Using secondary sources, describe one use of a permanent magnet and one use of a temporary magnet.",6,"A permanent magnet use with how it works, e.g. loudspeaker, compass, fridge door seal (3); a temporary magnet use with how it works, e.g. relay, electric bell, MRI scanner, crane, door lock (3)."]] },
+  { title:"Force on a moving charge", intro:"A proton (charge 1.6 × 10⁻¹⁹ C, mass 1.67 × 10⁻²⁷ kg) enters a uniform magnetic field of flux density 0.25 T at 2.0 × 10⁶ m s⁻¹, at right angles to the field.",
+    parts:[["a","Calculate the force on the proton.",6,"F = Bqv (3) = 0.25 × 1.6 × 10⁻¹⁹ × 2.0 × 10⁶ = 8.0 × 10⁻¹⁴ N (3)."],
+      ["b","The field points into the page and the proton moves to the right. Find the direction of the force.",6,"Fleming's left-hand rule: first finger into the page (field), second finger to the right (current, since the proton is positive) (3); the thumb points up the page, so the force is upwards (3)."],
+      ["c","Explain why the proton moves in a circle at constant speed.",9,"The force is always at right angles to the velocity (3); so it acts as a centripetal force towards a fixed centre (3); it does no work, so the kinetic energy and speed stay constant (3)."],
+      ["d","Calculate the radius of the proton's path.",9,"Bqv = mv²/r (3), so r = mv/Bq (3) = 1.67 × 10⁻²⁷ × 2.0 × 10⁶ ÷ (1.6 × 10⁻¹⁹ × 0.25) = 0.084 m (3)."],
+      ["e","An electron enters the field with the same velocity. Give two ways its path is different.",6,"It curves the opposite way (downwards) because its charge is negative (3); its radius is far smaller (about 4.6 × 10⁻⁵ m) because its mass is much smaller (3)."]] },
+];
+const RAG = ["Describe the field round a bar magnet (N to S outside)","Sketch the field between two magnets, unlike and like poles, and mark a neutral point","Explain why field lines never cross and what their spacing shows","Describe the field round a long straight current-carrying wire","Use the right-hand grip rule for a wire and for a solenoid","State how B depends on the current and on the distance from a wire","Sketch the field in and around a solenoid","Explain the effect of a ferrous core, including saturation","Describe the force between two parallel currents","Use F = Bqv with the correct units","Use Fleming's left-hand rule for positive and negative charges","Explain why a charge moving at right angles to a field moves in a circle; use r = mv/Bq","Compare permanent and temporary magnets and the materials used for each","Describe real uses of permanent magnets and electromagnets from secondary sources"];
+const SKILLS = [["Map a field","Use a plotting compass to trace field lines point by point, marking where the N end of the needle points each time.","Magnets lab"],["Change one variable","Keep the current fixed while you change the distance from the wire.","Wire lab"],["Linearise a graph","Plot B against 1/r: a straight line through the origin shows B ∝ 1/r.","Wire lab"],["Use a slope","Find μ₀ from the slope of B against 1/r, or of B against I for the solenoid.","Wire and solenoid labs"],["Compare with and without","Repeat the B–I readings with an air core and with an iron core, then describe the difference.","Solenoid lab"],["Spot the limits of a model","Notice where the straight line stops (saturation) and say why.","Solenoid lab"],["Use secondary sources","Research permanent and temporary magnets in real life; note the source and date of each fact.","Infographics"],["Work safely","Keep currents low and switch off between readings: wires and coils heat up (I²R). Keep strong magnets away from phones, bank cards and pacemakers.","All labs"]];
+
+
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+const ragState=store.get("s34-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("s34-rag",ragState); ragRender(); });
+ragRender();
+const skState=store.get("s34-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("s34-skills",skState); });
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+/* ================= DRAWINGS ================= */
+const noise = f => 1+(Math.random()*2-1)*f;
+const f2 = x => x.toFixed(2);
+const lbl = (ctx,t,x,y,col,fs,al) => text(ctx,t,x,y,col||C.ink,F(fs||12),al||"center");
+const fmtB = B => B===0? "0" : B>=0.1? `${s3(B)} T` : B>=1e-4? `${s3(B*1000)} mT` : `${s3(B*1e6)} μT`;
+const fmtLen = r => r>=1? `${s3(r)} m` : r>=0.01? `${s3(r*100)} cm` : r>=1e-4? `${s3(r*1000)} mm` : `${sci(r)} m`;
+function compass(ctx,x,y,r,ang){ circle(ctx,x,y,r,C.surface,C.ink,1.3);
+  ctx.save(); ctx.translate(x,y); ctx.rotate(ang);
+  ctx.beginPath(); ctx.moveTo(r*0.82,0); ctx.lineTo(0,-r*0.28); ctx.lineTo(0,r*0.28); ctx.closePath(); ctx.fillStyle=C.terra; ctx.fill();
+  ctx.beginPath(); ctx.moveTo(-r*0.82,0); ctx.lineTo(0,-r*0.28); ctx.lineTo(0,r*0.28); ctx.closePath(); ctx.fillStyle=C.muted; ctx.fill();
+  ctx.restore(); circle(ctx,x,y,1.5,C.ink); }
+function wireSym(ctx,x,y,I,r=10){ circle(ctx,x,y,r,C.cream,C.ink,1.8); if(I>0) circle(ctx,x,y,Math.max(2,r*0.28),"#3b2b21"); else if(I<0){ const q=r*0.5; line(ctx,x-q,y-q,x+q,y+q,"#3b2b21",2); line(ctx,x-q,y+q,x+q,y-q,"#3b2b21",2); } }
+
+// 1. Magnets: each pole is a point source (N) or sink (S) of field
+const MSETS = ["Single bar magnet","Unlike poles facing","Like poles facing","Horseshoe magnet"];
+const BARS = [[{x0:-0.38,x1:0.38,nR:true}],[{x0:-0.9,x1:-0.18,nR:true},{x0:0.18,x1:0.9,nR:true}],[{x0:-0.9,x1:-0.18,nR:true},{x0:0.18,x1:0.9,nR:false}],[]];
+function polesFor(set){ if(set===3) return [{x:-0.27,y:-0.14,q:1},{x:0.27,y:-0.14,q:-1}];
+  const out=[]; BARS[set].forEach(m=>{ const a=m.x0+0.07, b=m.x1-0.07; out.push({x:m.nR?b:a,y:0,q:1},{x:m.nR?a:b,y:0,q:-1}); }); return out; }
+function Bat(ps,x,y){ let bx=0,by=0; for(const c of ps){ const dx=x-c.x, dy=y-c.y, r2=dx*dx+dy*dy+1e-6, r=Math.sqrt(r2); bx+=c.q*dx/(r2*r); by+=c.q*dy/(r2*r); } return [bx,by]; }
+const MCACHE = {};
+function magLines(set){ if(MCACHE[set]) return MCACHE[set]; const ps=polesFor(set), lines=[], ds=0.008;
+  ps.filter(c=>c.q>0).forEach(c=>{ const n=16; for(let i=0;i<n;i++){ const a=(i+0.5)*TAU/n; let x=c.x+Math.cos(a)*0.045, y=c.y+Math.sin(a)*0.045; const pts=[[x,y]];
+    for(let k=0;k<4000;k++){ const r0=Math.min(...ps.map(p=>Math.hypot(x-p.x,y-p.y))), st=ds*Math.max(1,r0/0.4), [bx,by]=Bat(ps,x,y), m=Math.hypot(bx,by)||1; x+=st*bx/m; y+=st*by/m; pts.push([x,y]);
+      if(Math.abs(x)>4||Math.abs(y)>3) break; if(ps.some(p=>p.q<0&&Math.hypot(x-p.x,y-p.y)<0.03)) break; }
+    lines.push(pts); } });
+  const long=lines.map((p,i)=>[p.length,i]).filter(a=>a[0]>140).map(a=>a[1]);
+  return (MCACHE[set]={lines,ps,long}); }
+function magFrame(w,h){ const S=Math.min(w/2.3,h/1.5); return {S, X:x=>w/2+x*S, Y:y=>h/2+y*S, iX:px=>(px-w/2)/S, iY:py=>(py-h/2)/S}; }
+function inBody(set,x,y){ if(set===3) return y<0.12? (Math.abs(Math.abs(x)-0.27)<0.1 && y>-0.22) : Math.abs(Math.hypot(x,y-0.12)-0.27)<0.1;
+  return BARS[set].some(m=>x>m.x0-0.04 && x<m.x1+0.04 && Math.abs(y)<0.13); }
+function drawBodies(ctx,set,X,Y,S,cp){ const hh=0.075*S, fs=cp?10:Math.max(11,Math.min(15,S*0.07));
+  if(set===3){ const r=0.27*S; ctx.save(); ctx.lineCap="butt"; ctx.lineWidth=0.12*S; ctx.strokeStyle=C.sage; ctx.beginPath(); ctx.moveTo(X(-0.27),Y(-0.06)); ctx.lineTo(X(-0.27),Y(0.12)); ctx.arc(X(0),Y(0.12),r,Math.PI,0,true); ctx.lineTo(X(0.27),Y(-0.06)); ctx.stroke();
+    ctx.strokeStyle=C.terra; ctx.beginPath(); ctx.moveTo(X(-0.27),Y(-0.19)); ctx.lineTo(X(-0.27),Y(-0.06)); ctx.stroke();
+    ctx.strokeStyle=C.ray2; ctx.beginPath(); ctx.moveTo(X(0.27),Y(-0.19)); ctx.lineTo(X(0.27),Y(-0.06)); ctx.stroke(); ctx.restore();
+    text(ctx,"N",X(-0.27),Y(-0.125),C["on-accent"],F(fs),"center","middle"); text(ctx,"S",X(0.27),Y(-0.125),C["on-accent"],F(fs),"center","middle"); return; }
+  BARS[set].forEach(m=>{ const xm=(m.x0+m.x1)/2;
+    rrect(ctx,X(m.x0),Y(0)-hh,(xm-m.x0)*S,2*hh,0,m.nR?C.ray2:C.terra); rrect(ctx,X(xm),Y(0)-hh,(m.x1-xm)*S,2*hh,0,m.nR?C.terra:C.ray2);
+    rrect(ctx,X(m.x0),Y(0)-hh,(m.x1-m.x0)*S,2*hh,3,null,C.ink,1.4);
+    text(ctx,m.nR?"S":"N",X(m.x0)+(cp?9:13),Y(0),C["on-accent"],F(fs),"center","middle"); text(ctx,m.nR?"N":"S",X(m.x1)-(cp?9:13),Y(0),C["on-accent"],F(fs),"center","middle"); }); }
+function drawMagnets(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const T=magLines(o.set), {S,X,Y,iX,iY}=magFrame(w,h), cp=o.compact;
+  if(o.grid){ const g=cp?38:44; for(let py=g/2;py<h;py+=g) for(let px=g/2;px<w;px+=g){ const x=iX(px), y=iY(py); if(inBody(o.set,x,y)) continue; const [bx,by]=Bat(T.ps,x,y); compass(ctx,px,py,cp?9:11,Math.atan2(by,bx)); } }
+  else { ctx.save(); ctx.strokeStyle=C.olive; ctx.lineWidth=cp?1.3:1.7;
+    T.lines.forEach(pts=>{ ctx.beginPath(); pts.forEach(([x,y],i)=>i?ctx.lineTo(X(x),Y(y)):ctx.moveTo(X(x),Y(y))); ctx.stroke();
+      const k=Math.min(pts.length-2,Math.max(6,Math.floor(pts.length*0.4))); if(k>0){ const [x1,y1]=pts[k],[x2,y2]=pts[k+1]; arrowHead(ctx,X(x1),Y(y1),Math.atan2(y2-y1,x2-x1),C.olive,cp?6:8); } });
+    ctx.restore(); }
+  drawBodies(ctx,o.set,X,Y,S,cp);
+  if(o.dot && T.long.length){ const pts=T.lines[T.long[o.dot.i%T.long.length]], n=pts.length, j=Math.min(n-2,Math.floor(o.dot.f*(n-1))), [x1,y1]=pts[j],[x2,y2]=pts[j+1]; compass(ctx,X(x1),Y(y1),cp?10:14,Math.atan2(y2-y1,x2-x1)); }
+  if(o.probe){ const [px,py]=o.probe, [bx,by]=Bat(T.ps,iX(px),iY(py)); compass(ctx,px,py,cp?11:15,Math.atan2(by,bx)); }
+}
+
+// 2. Field lines of line currents: contours of ψ = Σ I ln r (equal steps, so line density shows B)
+function psiLines(ctx,w,h,wires,c,o={}){ if(!(c>0)||!wires.some(q=>q.I)) return; const st=o.step||4, rmin=o.rmin||11, col=o.col||C.olive;
+  const f=(x,y)=>{ let s=0; for(const q of wires){ if(q.I) s+=q.I*Math.log(Math.max(rmin,Math.hypot(x-q.x,y-q.y))); } return s; };
+  const nx=Math.ceil(w/st)+1, ny=Math.ceil(h/st)+1, v=new Float64Array(nx*ny);
+  for(let j=0;j<ny;j++) for(let i=0;i<nx;i++) v[j*nx+i]=f(i*st,j*st);
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=o.lw||1.6; ctx.beginPath();
+  for(let j=0;j<ny-1;j++) for(let i=0;i<nx-1;i++){ const a=v[j*nx+i], b=v[j*nx+i+1], cc=v[(j+1)*nx+i+1], d=v[(j+1)*nx+i], lo=Math.min(a,b,cc,d), hi=Math.max(a,b,cc,d), x0=i*st, y0=j*st;
+    for(let k=Math.ceil(lo/c); k*c<hi; k++){ const L=k*c, p=[];
+      if((a<L)!==(b<L)) p.push(x0+st*(L-a)/(b-a), y0);
+      if((b<L)!==(cc<L)) p.push(x0+st, y0+st*(L-b)/(cc-b));
+      if((d<L)!==(cc<L)) p.push(x0+st*(L-d)/(cc-d), y0+st);
+      if((a<L)!==(d<L)) p.push(x0, y0+st*(L-a)/(d-a));
+      if(p.length>=4){ ctx.moveTo(p[0],p[1]); ctx.lineTo(p[2],p[3]); } if(p.length===8){ ctx.moveTo(p[4],p[5]); ctx.lineTo(p[6],p[7]); } } }
+  ctx.stroke(); ctx.restore();
+  if(!o.scan) return;
+  const Bd=(x,y)=>{ let bx=0,by=0; for(const q of wires){ const dx=x-q.x, dy=y-q.y, r2=dx*dx+dy*dy+1e-9; bx+=q.I*dy/r2; by-=q.I*dx/r2; } return [bx,by]; };
+  const row=o.scan.row!=null, N=row? w : h; let prev=null, lastAt=-99;
+  for(let t=2;t<N-2;t++){ const x=row? t : o.scan.col, y=row? o.scan.row : t;
+    if(wires.some(q=>q.I && Math.hypot(x-q.x,y-q.y)<rmin+4)){ prev=null; continue; }
+    const k=Math.floor(f(x,y)/c); if(prev!==null && k!==prev && t-lastAt>12){ const [bx,by]=Bd(x,y); arrowHead(ctx,x,y,Math.atan2(by,bx),col,o.ah||7); lastAt=t; } prev=k; } }
+
+// 2a. Straight wire seen end on
+const wfB = (I,r) => MU0*I/(TAU*r/100)*1e6; // μT, r in cm
+function drawWireField(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, cx=w/2, cy=h/2, s=(w/2-(cp?20:30))/10.5, I=o.out?o.I:-o.I, fs=cp?10:12;
+  psiLines(ctx,w,h,[{x:cx,y:cy,I}],1.6,{rmin:12,scan:{row:cy},lw:cp?1.3:1.6,ah:cp?6:7});
+  wireSym(ctx,cx,cy,I,cp?9:11);
+  if(o.r!=null){ const px=cx+o.r*s, ang=I>0? -Math.PI/2 : I<0? Math.PI/2 : -Math.PI/2;
+    dimArrow(ctx,cx+13,px-(cp?12:16),cy+(cp?24:32),`r = ${o.r} cm`,C.muted);
+    compass(ctx,px,cy,cp?11:14,ang);
+    if(!cp) lbl(ctx,o.I? `B = ${s3(wfB(o.I,o.r))} μT` : "no current: compass points north",px,cy-24,C.ink,fs, px>w-110?"right":"center"); }
+  if(!cp){ text(ctx,`I = ${o.I} A ${o.out?"out of the page (•)":"into the page (×)"}`,12,18,C.ink,F(fs)); text(ctx,"top of the page = north",12,h-10,C.muted,F(fs-1)); } }
+
+// 2b. Solenoid cross-section: • on top, × underneath (dir = +1)
+const solB = (I,N,core) => { const air=MU0*(N/0.2)*I; return core==="iron"? 1.6*Math.tanh(200*air/1.6) : air; };
+function drawSolenoid(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, cx=w/2, cy=h/2+(cp?0:6), Lh=w*0.25, a=Math.min(h*0.16,w*0.1), nT=cp?7:9, d=o.dir||1, wr=cp?5:6, fs=cp?11:14;
+  const wires=[]; for(let k=0;k<nT;k++){ const x=cx-Lh+(k+0.5)*(2*Lh/nT); wires.push({x,y:cy-a,I:d},{x,y:cy+a,I:-d}); }
+  const B=solB(o.I,o.N,o.core), iron=o.core==="iron";
+  if(iron){ ctx.save(); ctx.globalAlpha=0.6; rrect(ctx,cx-Lh-8,cy-a+wr+3,2*Lh+16,2*(a-wr-3),4,C.sage,C.olive,1.2); ctx.restore(); }
+  if(o.I>0){ const f=(x,y)=>wires.reduce((sm,q)=>sm+q.I*Math.log(Math.max(wr+1,Math.hypot(x-q.x,y-q.y))),0), D=Math.abs(f(cx,cy)-f(cx,cy-a+wr+2));
+    const n= iron? 7+Math.round(9*B/1.6) : 2+Math.round(6*Math.min(1,B/0.0314)); psiLines(ctx,w,h,wires,D/n,{rmin:wr+1,scan:{col:cx},lw:cp?1.2:1.5,step:cp?4:3,ah:cp?6:7}); }
+  line(ctx,cx-Lh,cy-a,cx+Lh,cy-a,C.muted,1,[3,3]); line(ctx,cx-Lh,cy+a,cx+Lh,cy+a,C.muted,1,[3,3]);
+  wires.forEach(q=>wireSym(ctx,q.x,q.y,q.I,wr));
+  if(o.I>0){ const nx=d>0? cx+Lh+(cp?16:24) : cx-Lh-(cp?16:24), sx=d>0? cx-Lh-(cp?16:24) : cx+Lh+(cp?16:24);
+    circle(ctx,nx,cy,cp?9:12,C.terra); text(ctx,"N",nx,cy,C["on-accent"],F(fs),"center","middle"); circle(ctx,sx,cy,cp?9:12,C.ray2); text(ctx,"S",sx,cy,C["on-accent"],F(fs),"center","middle"); }
+  if(o.clips>0){ const x0=d>0? cx+Lh+(cp?4:8) : cx-Lh-(cp?28:40); for(let i=0;i<o.clips;i++){ const x=x0+(i%4)*(cp?6:9), y=cy+(cp?14:18)+Math.floor(i/4)*(cp?7:9); ctx.save(); ctx.strokeStyle=C.muted; ctx.lineWidth=1.4; ctx.beginPath(); ctx.ellipse(x,y,2.4,4.5,0,0,TAU); ctx.stroke(); ctx.restore(); } }
+  if(!cp){ text(ctx,`${o.N} turns · ${o.I} A · ${iron?"soft iron core":"air core"}`,12,18,C.ink,F(12)); text(ctx,`B at the centre = ${fmtB(B)}`,w-12,18,C.terra,F(12),"right"); } }
+
+// 3. Two parallel wires (I > 0 out of the page)
+function drawTwoWires(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, cx=w/2, cy=h/2, s=Math.min((w-40)/16,(h-40)/8), x1=cx-o.d/2*s, x2=cx+o.d/2*s, fs=cp?10:12;
+  const ws=[{x:x1,y:cy,I:o.I1},{x:x2,y:cy,I:o.I2}];
+  psiLines(ctx,w,h,ws,1.6,{rmin:12,scan:{row:cy},lw:cp?1.3:1.6,ah:cp?6:7});
+  if(o.I1*o.I2>0){ const xn=x1+(x2-x1)*Math.abs(o.I1)/(Math.abs(o.I1)+Math.abs(o.I2)); circle(ctx,xn,cy,5,null,C.terra,2); if(!cp) lbl(ctx,"neutral point",xn,cy+26,C.terra,fs-1); }
+  const P=o.I1*o.I2, ya=cy-(cp?24:32);
+  if(P){ const fr=Math.min(1,Math.abs(P)/o.d/50), L=8+(cp?28:40)*fr, dir=P>0?1:-1; arrow(ctx,x1-dir*0,ya,x1+dir*L,ya,C.terra,2.6); arrow(ctx,x2,ya,x2-dir*L,ya,C.terra,2.6); if(!cp) lbl(ctx,P>0?"attract":"repel",cx,ya-12,C.terra,fs); }
+  wireSym(ctx,x1,cy,o.I1,cp?9:11); wireSym(ctx,x2,cy,o.I2,cp?9:11);
+  if(!cp){ lbl(ctx,`I₁ = ${Math.abs(o.I1)} A`,x1,cy+44,C.ink,fs); lbl(ctx,`I₂ = ${Math.abs(o.I2)} A`,x2,cy+44,C.ink,fs); dimArrow(ctx,x1,x2,h-12,`d = ${o.d} cm`,C.muted); } }
+
+// 4. Charged particle in a uniform field (enters moving right)
+const PARTS = [{n:"Electron",q:-EC,m:ME,W:0.02,Bd:5},{n:"Proton",q:EC,m:MP,W:1,Bd:100},{n:"Alpha particle",q:2*EC,m:MA,W:1,Bd:200}];
+function chargePath(o,xa,xb,yt,yb,cy){ const P=PARTS[o.p], v=o.v*1e6, B=o.B/1000, r=P.m*v/(Math.abs(P.q)*B), rp=Math.max(0.5,r*(xb-xa)/P.W), sg=(P.q>0?1:-1)*(o.into?1:-1);
+  const pts=[[xa,cy]], dth=Math.min(0.05,2/rp); let th=0;
+  while(th<TAU){ th+=dth; const x=xa+rp*Math.sin(th), y=cy-sg*rp*(1-Math.cos(th)); if(x<xa||x>xb||y<yt||y>yb) break; pts.push([x,y]); }
+  return {pts,r,sg,rp}; }
+function drawCharge(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, P=PARTS[o.p], xa=w*(cp?0.13:0.15), xb=w-8, yt=cp?8:28, yb=h-(cp?8:26), cy=(yt+yb)/2, fs=cp?10:12;
+  ctx.save(); ctx.globalAlpha=0.45; rrect(ctx,xa,yt,xb-xa,yb-yt,10,C.cream); ctx.restore();
+  const g=cp?24:30; for(let y=yt+g/2;y<yb;y+=g) for(let x=xa+g/2;x<xb;x+=g){ if(o.into){ line(ctx,x-3.5,y-3.5,x+3.5,y+3.5,C.muted,1.3); line(ctx,x-3.5,y+3.5,x+3.5,y-3.5,C.muted,1.3); } else circle(ctx,x,y,2.2,C.muted); }
+  const pa=chargePath(o,xa,xb,yt,yb,cy), pts=pa.pts, col=P.q>0?C.terra:C.ray2;
+  ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=cp?2:2.6; ctx.beginPath(); ctx.moveTo(xa-(cp?20:30),cy); pts.forEach(p=>ctx.lineTo(p[0],p[1])); ctx.stroke();
+  if(pts.length>2){ const [x1,y1]=pts[pts.length-2],[x2,y2]=pts[pts.length-1], an=Math.atan2(y2-y1,x2-x1); ctx.setLineDash([6,5]); ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2+Math.cos(an)*60,y2+Math.sin(an)*60); ctx.stroke(); } ctx.restore();
+  rrect(ctx,xa-(cp?30:46),cy-7,cp?20:30,14,4,C.sage,C.ink,1.2);
+  const n=pts.length, j=Math.min(n-1,Math.floor((o.ph||0)*(n-1))), [px,py]=pts[j], A=pts[Math.max(0,Math.min(j,n-2))], Bp=pts[Math.min(n-1,Math.max(j,1))], va=n>1? Math.atan2(Bp[1]-A[1],Bp[0]-A[0]) : 0;
+  const fa=Math.atan2((cy-pa.sg*pa.rp)-py, xa-px);
+  if(!cp){ arrow(ctx,px,py,px+Math.cos(va)*34,py+Math.sin(va)*34,C.olive,2.2); text(ctx,"v",px+Math.cos(va)*42,py+Math.sin(va)*42+4,C.olive,F(13),"center");
+    arrow(ctx,px,py,px+Math.cos(fa)*30,py+Math.sin(fa)*30,col,2.6); text(ctx,"F",px+Math.cos(fa)*40,py+Math.sin(fa)*40+4,col,F(13),"center"); }
+  circle(ctx,px,py,cp?6:8,C.surface,col,2); qsym(ctx,px,py,P.q,cp?3:4);
+  if(!cp){ text(ctx,`${P.n} · v = ${o.v} × 10⁶ m s⁻¹ · B = ${o.B} mT ${o.into?"into (×)":"out of (•)"} the page`,xa,yt-9,C.ink,F(fs));
+    text(ctx,`field region ${P.W>=1?P.W+" m":P.W*100+" cm"} wide · r = ${fmtLen(pa.r)}`,xa,h-8,C.muted,F(fs-1)); } }
+
+// 5. Scrapyard crane
+const craneB = (I,core) => core==="steel"? 1.4*Math.tanh(0.12*I) : 1.6*Math.tanh(0.25*I);
+function drawCrane(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, gy=h-(cp?14:22), top=cp?16:24, tx=w*0.1, mx=w*0.58, mw=cp?64:90, mh=cp?20:26, held=o.held, my=held? h*0.38 : gy-(cp?40:52), fs=cp?10:12;
+  line(ctx,8,gy,w-8,gy,C.muted,2);
+  rrect(ctx,tx-6,top,12,gy-top,2,C.olive); line(ctx,tx,top,w*0.8,top,C.olive,7); line(ctx,tx,top+34,tx+42,top,C.olive,3);
+  line(ctx,mx,top,mx,my-mh/2,C.ink,1.6);
+  if(o.B>0.05){ ctx.save(); ctx.globalAlpha=Math.min(0.45,o.B/3.2); circle(ctx,mx,my,mw*0.75,C.apricot); ctx.restore(); }
+  rrect(ctx,mx-mw/2,my-mh/2,mw,mh,4,o.core==="steel"?C.muted:C.sage,C.ink,1.4);
+  for(let i=1;i<8;i++){ const x=mx-mw/2+i*mw/8; line(ctx,x,my-mh/2,x,my+mh/2,C.terra,2); }
+  [[-34,22,14],[-6,26,18],[24,20,12]].forEach(([dx,ww,hh],i)=>{ const x=held? mx+dx*0.8-ww/2 : mx+dx-ww/2, y=held? my+mh/2+(i%2)*2 : gy-hh; rrect(ctx,x,y,ww,hh,2,C.olive,C.ink,1.2); });
+  rrect(ctx,mx+60-8,gy-24,16,24,3,C.cream,C.ink,1.2); text(ctx,"Al",mx+60,gy-8,"#3b2b21",F(fs-1),"center");
+  rrect(ctx,mx-96,gy-10,34,10,5,C.apricot,C.ink,1.2); text(ctx,"Cu",mx-79,gy-14,C.ink,F(fs-1),"center");
+  if(!cp){ text(ctx,`${o.core==="steel"?"steel":"soft iron"} core`,mx+mw/2+8,my+4,C.ink,F(fs-1)); text(ctx,`Current ${o.on?"ON":"OFF"} · B = ${s3(o.B)} T`,w-12,top+26,o.on?C.terra:C.muted,F(fs),"right"); } }
+
+// 6. Drill picture
+function drawWhich(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const q=o.q; if(!q) return; const cx=w/2, cy=h/2-6;
+  if(q.type==="wire"){ const R=Math.min(h*0.32,70); ctx.save(); ctx.setLineDash([5,5]); circle(ctx,cx,cy,R,null,C.muted,1.6); ctx.restore(); wireSym(ctx,cx,cy,q.out?1:-1,18);
+    if(o.shown) [0,1,2,3].forEach(k=>{ const a=k*Math.PI/2; arrowHead(ctx,cx+R*Math.cos(a),cy+R*Math.sin(a),q.out? a-Math.PI/2 : a+Math.PI/2,C.terra,11); });
+    lbl(ctx,`current ${q.out?"out of the page (•)":"into the page (×)"}`,cx,h-10,C.muted,12); }
+  else if(q.type==="sol"){ const nT=6, x0=w*0.28, x1=w*0.72, ry=Math.min(h*0.3,58), rx=8;
+    line(ctx,x0-28,cy+ry,x0,cy+ry,C.ink,2); line(ctx,x1,cy+ry,x1+28,cy+ry,C.ink,2);
+    for(let k=0;k<nT;k++){ const xk=x0+k*(x1-x0)/(nT-1);
+      ctx.save(); ctx.strokeStyle=C.muted; ctx.lineWidth=1.4; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.ellipse(xk,cy,rx,ry,0,Math.PI/2,3*Math.PI/2); ctx.stroke(); ctx.restore();
+      ctx.save(); ctx.strokeStyle=C.ink; ctx.lineWidth=2.4; ctx.beginPath(); ctx.ellipse(xk,cy,rx,ry,0,-Math.PI/2,Math.PI/2); ctx.stroke(); ctx.restore();
+      arrowHead(ctx,xk+rx,cy+(q.up?-5:5),q.up?-Math.PI/2:Math.PI/2,C.terra,10); }
+    if(o.shown){ const nx=q.up? x0-48 : x1+48, sx=q.up? x1+48 : x0-48; circle(ctx,nx,cy,13,C.terra); text(ctx,"N",nx,cy,C["on-accent"],F(14),"center","middle"); circle(ctx,sx,cy,13,C.ray2); text(ctx,"S",sx,cy,C["on-accent"],F(14),"center","middle"); }
+    lbl(ctx,"solid strands = front of each turn",cx,h-10,C.muted,12); }
+  else { const g=30; for(let y=14;y<h-20;y+=g) for(let x=14;x<w;x+=g){ if(q.into){ line(ctx,x-3.5,y-3.5,x+3.5,y+3.5,C.muted,1.3); line(ctx,x-3.5,y+3.5,x+3.5,y-3.5,C.muted,1.3); } else circle(ctx,x,y,2.2,C.muted); }
+    const V=VDIR[q.v], va=Math.atan2(-V[1],V[0]), col=q.pos?C.terra:C.ray2;
+    arrow(ctx,cx,cy,cx+Math.cos(va)*52,cy+Math.sin(va)*52,C.olive,2.6); text(ctx,"v",cx+Math.cos(va)*64,cy+Math.sin(va)*64+4,C.olive,F(14),"center");
+    if(o.shown){ const fa=Math.atan2(-q.F[1],q.F[0]); arrow(ctx,cx,cy,cx+Math.cos(fa)*46,cy+Math.sin(fa)*46,col,3); text(ctx,"F",cx+Math.cos(fa)*58,cy+Math.sin(fa)*58+4,col,F(14),"center"); }
+    circle(ctx,cx,cy,11,C.surface,col,2.2); qsym(ctx,cx,cy,q.pos?1:-1,5);
+    lbl(ctx,`${q.pos?"proton":"electron"} · field ${q.into?"into (×)":"out of (•)"} the page`,cx,h-8,C.muted,12); } }
+
+/* ================= LABS ================= */
+function wireSorter(listId,S,render){ $(listId).addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; S.ans[b.dataset.k]=b.dataset.v; render(); }); }
+// 1. Magnets
+const mg = { set:0, probe:null, grid:false };
+$("mgSet").innerHTML = MSETS.map((n,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${n}</button>`).join("");
+$("mgSet").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; mg.set=+b.dataset.i; mg.probe=null; pressGroup([...$("mgSet").querySelectorAll("button")],b); mgUpd(); });
+$("mgShow").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; mg.grid=b.dataset.m==="grid"; pressGroup([...$("mgShow").querySelectorAll("button")],b); mgUpd(); });
+$("mgC").addEventListener("click",e=>{ const r=$("mgC").getBoundingClientRect(); mg.probe=[e.clientX-r.left,e.clientY-r.top]; mgUpd(); });
+function mgUpd(){ const out=[["Magnets",MSETS[mg.set]],["Force between them",["–","attraction","repulsion","–"][mg.set]],["Neutral point",mg.set===2?"midway between the N poles":"none between the poles"]];
+  if(mg.probe){ const f=magFrame(mgC.w,mgC.h), T=magLines(mg.set), [bx,by]=Bat(T.ps,f.iX(mg.probe[0]),f.iY(mg.probe[1])), m=Math.hypot(bx,by), ref=Math.hypot(...Bat(magLines(0).ps,0,0.4)), ang=Math.round(Math.atan2(-by,bx)*180/Math.PI);
+    out.push(["Relative field strength",`${m/ref<0.01?"≈ 0":s3(m/ref)} ×`],["Compass N points",`${(ang+360)%360}° from →`]); }
+  else out.push(["Compass","tap the picture"]);
+  setReadout($("mgOut"),out); mgC.redraw(); }
+const TF = [["Outside a magnet, field lines go from N to S","T","True: the way a compass N pole points."],["Field lines can cross where two fields overlap","F","False: the field has one direction at each point, so lines never cross."],["The closer the lines, the stronger the field","T","True: line spacing shows strength."],["Inside a bar magnet, the lines run from S to N","T","True: every field line is a closed loop."],["Like poles attract","F","False: like poles repel; unlike poles attract."],["At a neutral point the resultant field is zero","T","True: the fields cancel there."],["Field lines start on positive charges","F","False: that is electric field lines. Magnetic field lines form closed loops."],["Cutting a bar magnet in half gives a separate N and S pole","F","False: each half is a complete magnet with its own N and S pole."],["The field between the poles of a horseshoe magnet is nearly uniform","T","True: the lines there are nearly parallel and evenly spaced."],["Earth's geographic North Pole is near a magnetic N pole","F","False: it is near a magnetic S pole, which attracts the N end of a compass."]];
+const TFN = {T:"True",F:"False"}, tfS={order:[],ans:{}};
+function tfRender(){ sorter("tfList","tfOut",TF,TFN,tfS); }
+function tfNew(){ tfS.order=shuffle(TF.map((s,k)=>k)); tfS.ans={}; tfRender(); }
+wireSorter("tfList",tfS,tfRender); $("tfReset").addEventListener("click",tfNew);
+
+// 2. Wire experiment
+const wf = { I:5, out:true, r:4, rows:[] };
+$("wfDir").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; wf.out=b.dataset.d==="out"; pressGroup([...$("wfDir").querySelectorAll("button")],b); wfUpd(); });
+function wfUpd(){ const B=wfB(wf.I,wf.r); $("wfIo").textContent=`${wf.I} A`; $("wfRo").textContent=`${wf.r} cm`;
+  setReadout($("wfOut"),[["Field B",`${s3(B)} μT`],["Compared with Earth's field",`${s3(B/50)} ×`],["Field direction",wf.I? (wf.out?"anticlockwise":"clockwise") : "no field"],["Readings",String(wf.rows.length)]]);
+  $("wfWork").innerHTML = wf.I? `B = μ₀I / 2πr = 4π × 10⁻⁷ × ${wf.I} ÷ (2π × ${s3(wf.r/100)}) = <b>${s3(B)} μT</b>. Double I and B doubles; double r and B halves.<br>Direction: right-hand grip rule. Current ${wf.out?"out of":"into"} the page, so the field goes <b>${wf.out?"anticlockwise":"clockwise"}</b> and the compass to the right of the wire points ${wf.out?"up":"down"} the page.` : "No current, no field from the wire: the compass lines up with Earth's field and points north.";
+  wfC.redraw(); }
+function wfRead(r){ wf.rows=wf.rows.filter(x=>x.r!==r); wf.rows.push({r,x:100/r,B:wfB(wf.I,r)*noise(0.03)}); wf.rows.sort((a,b)=>a.r-b.r); }
+function wfTable(){ $("wfTable").innerHTML = wf.rows.map(x=>`<tr><td>${x.r}</td><td>${s3(x.x)}</td><td>${s3(x.B)}</td></tr>`).join(""); $("wfEmpty").hidden=wf.rows.length>0;
+  let txt="";
+  if(!wf.I) txt="Switch the current on first: with no current the probe reads zero.";
+  else if(wf.rows.length<3) txt="Take readings at three or more distances to see the pattern.";
+  else { const [m]=linfit0(wf.rows.map(x=>[x.x,x.B])), mu=TAU*m*1e-6/wf.I; txt=`B against 1/r is a straight line through the origin, so <b>B ∝ 1/r</b>. Slope = ${s3(m)} μT m. Since slope = μ₀I/2π, μ₀ = 2π × slope ÷ I = <b>${sci(mu)} T m A⁻¹</b> (accepted value 1.26 × 10⁻⁶).`; }
+  $("wfResult").innerHTML=txt; wfG.redraw(); wfUpd(); }
+$("wfI").addEventListener("input",e=>{ wf.I=+e.target.value; if(wf.rows.length){ wf.rows=[]; wfTable(); } else wfUpd(); });
+$("wfR").addEventListener("input",e=>{ wf.r=+e.target.value; wfUpd(); });
+$("wfGo").addEventListener("click",()=>{ if(!wf.I) { wfTable(); return; } wfRead(wf.r); wfTable(); });
+$("wfSweep").addEventListener("click",()=>{ if(wf.I) [1,1.5,2,3,4,5,6,8,10].forEach(wfRead); wfTable(); });
+$("wfClear").addEventListener("click",()=>{ wf.rows=[]; wfTable(); });
+
+// 3. Solenoid experiment
+const sl = { I:2, N:500, core:"air", dir:1, rows:[] };
+const slClips = () => sl.I? Math.min(24,Math.floor(12*Math.pow(solB(sl.I,sl.N,sl.core),2))) : 0;
+$("slCore").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sl.core=b.dataset.c; sl.rows=[]; pressGroup([...$("slCore").querySelectorAll("button")],b); slTable(); });
+$("slDir").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sl.dir=+b.dataset.d; pressGroup([...$("slDir").querySelectorAll("button")],b); slUpd(); });
+function slUpd(){ const B=solB(sl.I,sl.N,sl.core), air=solB(sl.I,sl.N,"air"), n=sl.N/0.2, iron=sl.core==="iron";
+  $("slIo").textContent=`${sl.I} A`; $("slNo").textContent=`${sl.N}`;
+  setReadout($("slOut"),[["Turns per metre n",`${n} m⁻¹`],["Field inside B",fmtB(B)],["Core boost",iron&&air>0?`× ${s3(B/air)}`:"× 1"],["N pole",sl.I? (sl.dir>0?"right end":"left end"):"–"],["Paper clips held",String(slClips())]]);
+  $("slWork").innerHTML = sl.I? `n = N/L = ${sl.N} ÷ 0.20 m = ${n} turns per metre. Air core: B = μ₀nI = 4π × 10⁻⁷ × ${n} × ${sl.I} = <b>${fmtB(air)}</b>.` + (iron? `<br>With the soft iron core the domains line up with the coil's field and add to it: B ≈ <b>${fmtB(B)}</b>, ${s3(B/air)} times bigger${B>1.2?". The core is close to saturation: more current adds little":""}.` : "") + `<br>Right-hand grip rule: the current is ${sl.dir>0?"• on top and × underneath":"× on top and • underneath"}, so the field inside points ${sl.dir>0?"right":"left"} and the N pole is the <b>${sl.dir>0?"right":"left"} end</b>.` : "No current: no field.";
+  slC.redraw(); }
+function slRead(I){ sl.rows=sl.rows.filter(r=>r[0]!==I); sl.rows.push([I,solB(I,sl.N,sl.core)*1000*noise(0.02)]); sl.rows.sort((a,b)=>a[0]-b[0]); }
+function slTable(){ $("slTable").innerHTML = sl.rows.map(([I,B])=>`<tr><td>${I}</td><td>${s3(B)}</td></tr>`).join(""); $("slEmpty").hidden=sl.rows.length>0;
+  let txt="";
+  if(sl.rows.length<3) txt="Take readings at three or more currents to see the pattern.";
+  else if(sl.core==="air"){ const [m]=linfit0(sl.rows), n=sl.N/0.2; txt=`Straight line through the origin: <b>B ∝ I</b>. Slope = ${s3(m)} mT A⁻¹ = μ₀n, so μ₀ = slope ÷ n = <b>${sci(m*1e-3/n)} T m A⁻¹</b> (accepted value 1.26 × 10⁻⁶).`; }
+  else { const a=sl.rows[0], z=sl.rows[sl.rows.length-1]; txt=`With the iron core, B at ${a[0]} A is about ${s3(a[1]/(solB(a[0],sl.N,"air")*1000))} times the air-core value. The graph rises steeply, then levels off near 1.6 T (${s3(z[1])} mT at ${z[0]} A): the iron saturates when nearly all its domains are lined up.`; }
+  $("slResult").innerHTML=txt; slG.redraw(); slUpd(); }
+$("slI").addEventListener("input",e=>{ sl.I=+e.target.value; slUpd(); });
+$("slN").addEventListener("input",e=>{ sl.N=+e.target.value; if(sl.rows.length){ sl.rows=[]; slTable(); } else slUpd(); });
+$("slGo").addEventListener("click",()=>{ if(sl.I){ slRead(sl.I); } slTable(); });
+$("slSweep").addEventListener("click",()=>{ for(let I=0.5;I<=5.001;I+=0.5) slRead(+I.toFixed(2)); slTable(); });
+$("slClear").addEventListener("click",()=>{ sl.rows=[]; slTable(); });
+
+// 4. Two currents
+const tw = { I1:6, I2:6, d:4 };
+const twLab = I => I? `${Math.abs(I)} A ${I>0?"out (•)":"in (×)"}` : "0 A";
+function twUpd(){ $("twI1o").textContent=twLab(tw.I1); $("twI2o").textContent=twLab(tw.I2); $("twDo").textContent=`${tw.d} cm`;
+  const P=tw.I1*tw.I2, Fl=2e-7*Math.abs(P)/(tw.d/100), same=P>0;
+  setReadout($("twOut"),[["Currents",P? (same?"same direction":"opposite directions") : "one is off"],["The wires",P? (same?"attract":"repel") : "no force"],["Force per metre",P? `${sci(Fl)} N m⁻¹` : "0"],["Neutral point",same? `${s3(tw.d*Math.abs(tw.I1)/(Math.abs(tw.I1)+Math.abs(tw.I2)))} cm from wire 1` : P? "not between the wires" : "–"]]);
+  $("twWork").innerHTML = P? `F/L = μ₀I₁I₂ / 2πd = 2 × 10⁻⁷ × ${Math.abs(tw.I1)} × ${Math.abs(tw.I2)} ÷ ${s3(tw.d/100)} = <b>${sci(Fl)} N per metre</b> of wire.<br>${same? "Between the wires the two fields point opposite ways and cancel (a neutral point); outside they add. The lines wrap round both wires and pull them together." : "Between the wires the two fields point the same way and add, so the field is strongest there; the crowded lines push the wires apart."}` : "Only one wire carries a current, so there is only one field and no force between the wires.";
+  twC.redraw(); }
+[["twI1","I1"],["twI2","I2"],["twD","d"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ tw[k]=+e.target.value; twUpd(); }));
+$("twPre").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const a=Math.abs(tw.I1)||6, c=Math.abs(tw.I2)||6; tw.I1=a; tw.I2=b.dataset.p==="same"?c:-c; $("twI1").value=tw.I1; $("twI2").value=tw.I2; twUpd(); });
+
+// 5. Moving charge
+const pc = { p:1, v:5, B:100, into:true, ph:0 };
+$("pcP").innerHTML = PARTS.map((p,i)=>`<button data-i="${i}" aria-pressed="${i===1}">${p.n}</button>`).join("");
+$("pcP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pc.p=+b.dataset.i; pc.B=PARTS[pc.p].Bd; $("pcB").value=pc.B; pc.ph=0; pressGroup([...$("pcP").querySelectorAll("button")],b); pcUpd(); });
+$("pcDir").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pc.into=b.dataset.d==="in"; pressGroup([...$("pcDir").querySelectorAll("button")],b); pcUpd(); });
+function pcUpd(){ const P=PARTS[pc.p], q=Math.abs(P.q), v=pc.v*1e6, B=pc.B/1000, Fv=B*q*v, a=Fv/P.m, r=P.m*v/(q*B), sg=(P.q>0?1:-1)*(pc.into?1:-1);
+  $("pcVo").textContent=`${pc.v} × 10⁶ m s⁻¹`; $("pcBo").textContent=`${pc.B} mT`;
+  setReadout($("pcOut"),[["Force F = Bqv",`${sci(Fv)} N`],["Acceleration",`${sci(a)} m s⁻²`],["Radius r = mv/Bq",fmtLen(r)],["Speed","constant"],["Work done by the field","0 J"]]);
+  $("pcWork").innerHTML = `F = Bqv = ${s3(B)} × ${sci(q,2)} × ${sci(v,2)} = <b>${sci(Fv)} N</b>, at right angles to the velocity.<br>This is the centripetal force: Bqv = mv²/r, so r = mv/Bq = ${sci(P.m,3)} × ${sci(v,2)} ÷ (${sci(q,2)} × ${s3(B)}) = <b>${fmtLen(r)}</b>.<br>Fleming's left-hand rule: field ${pc.into?"into":"out of"} the page, current to the ${P.q>0?"right (the way the + charge moves)":"left (opposite to the electron's motion)"}, so the force at the entry point is <b>${sg>0?"up":"down"} the page</b> and the path curves ${sg>0?"anticlockwise":"clockwise"}.`;
+  pcC.redraw(); }
+$("pcV").addEventListener("input",e=>{ pc.v=+e.target.value; pcUpd(); });
+$("pcB").addEventListener("input",e=>{ pc.B=+e.target.value; pcUpd(); });
+
+// 6. Crane + sorter
+const cr = { on:false, I:6, core:"soft", B:0, last:0, held:false };
+function crStep(){ if(cr.on){ cr.B=craneB(cr.I,cr.core); cr.last=cr.B; cr.held=cr.B>=0.6; } else { cr.B=(cr.core==="steel"?0.6:0.02)*cr.last; cr.held=cr.held&&cr.B>=0.6; } }
+function crUpd(){ crStep(); const b=$("crOn"); b.textContent=cr.on?"Switch current OFF":"Switch current ON"; b.setAttribute("aria-pressed",cr.on); $("crIo").textContent=`${cr.I} A`;
+  const core=cr.core==="steel"?"steel":"soft iron";
+  setReadout($("crOut"),[["Current",cr.on?`${cr.I} A`:"0 A"],["Field at the magnet",`${s3(cr.B)} T`],["Steel scrap",cr.held?"lifted":"on the ground"],["Al can and Cu pipe","never lifted"]]);
+  let msg;
+  if(cr.on && cr.held) msg=`The current magnetises the ${core} core (B ≈ ${s3(cr.B)} T), strong enough to lift the steel scrap (about 0.6 T needed in this model).`;
+  else if(cr.on) msg=`Only ${s3(cr.B)} T: not enough to lift the steel. Increase the current${cr.core==="steel"?", or use soft iron, which magnetises more easily":""}.`;
+  else if(cr.held) msg=`Current off, but the steel core stays magnetised (${s3(cr.B)} T left), so it won't let go of the scrap. That is why cranes use soft iron cores, while permanent magnets are made of steel.`;
+  else msg= cr.last? `Current off: the ${core} core keeps only ${s3(cr.B)} T, so the scrap falls${cr.core==="soft"?". Soft iron is a temporary magnet":""}.` : "Switch the current on to magnetise the core.";
+  $("crWork").innerHTML = msg + " The aluminium can and the copper pipe are not ferromagnetic, so no magnet can lift them.";
+  crC.redraw(); }
+$("crOn").addEventListener("click",()=>{ cr.on=!cr.on; crUpd(); });
+$("crI").addEventListener("input",e=>{ cr.I=+e.target.value; crUpd(); });
+$("crCore").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; cr.core=b.dataset.c; cr.on=false; cr.B=0; cr.last=0; cr.held=false; pressGroup([...$("crCore").querySelectorAll("button")],b); crUpd(); });
+const USES = [["Compass needle","P","Permanent: a small magnetised steel needle."],["Scrapyard crane","E","Electromagnet: it must let go when switched off."],["Fridge door seal","P","Permanent: a flexible magnetic strip."],["MRI scanner","E","Electromagnet: superconducting coils make 1.5 T to 3 T."],["Loudspeaker","P","Permanent magnet (with a moving coil that carries the signal)."],["Electric bell","E","Electromagnet: it switches on and off to hit the gong."],["Relay","E","Electromagnet: a small current switches a big one."],["Electric guitar pickup","P","Permanent magnets magnetise the steel strings."],["Magnetic door lock","E","Electromagnet: the door opens when the power is cut."],["Bank card stripe","P","Permanently magnetised regions store the data."],["Bicycle dynamo","P","A permanent magnet spins inside a coil (section 3.6)."],["Particle accelerator steering","E","Electromagnets: the field must be set and changed precisely."]];
+const USN = {P:"Permanent",E:"Electromagnet"}, usS={order:[],ans:{}};
+function usRender(){ sorter("usList","usOut",USES,USN,usS); }
+function usNew(){ usS.order=shuffle(USES.map((s,k)=>k)); usS.ans={}; usRender(); }
+wireSorter("usList",usS,usRender); $("usReset").addEventListener("click",usNew);
+
+/* ================= CREATE CANVASES ================= */
+const hero = makeCanvas($("heroCanvas"), 0.8, 260, s => drawMagnets(s.ctx,s.w,s.h,{set:0,dot:reduce?null:{i:Math.floor(heroT/3.5)*3,f:(heroT/3.5)%1}}), 420);
+const mgC = makeCanvas($("mgC"), 0.62, 260, s => drawMagnets(s.ctx,s.w,s.h,mg), 460);
+const wfC = makeCanvas($("wfC"), 0.55, 260, s => drawWireField(s.ctx,s.w,s.h,wf), 420);
+const wfG = makeCanvas($("wfGraph"), 0.62, 200, s => { const pts=wf.rows.map(x=>[x.x,x.B]); scatter(s, pts, {xr:[0,100],yr:[0],xl:"1/r (m⁻¹)",yl:"B (μT)",fit:pts.length>=3? linfit0(pts) : null}); }, 340);
+const slC = makeCanvas($("slC"), 0.55, 270, s => drawSolenoid(s.ctx,s.w,s.h,{...sl,clips:slClips()}), 420);
+const slG = makeCanvas($("slGraph"), 0.62, 200, s => scatter(s, sl.rows, {xr:[0,5],yr:[0],xl:"I (A)",yl:"B (mT)",fit:sl.core==="air"&&sl.rows.length>=3? linfit0(sl.rows) : null}), 340);
+const twC = makeCanvas($("twC"), 0.55, 260, s => drawTwoWires(s.ctx,s.w,s.h,tw), 420);
+const pcC = makeCanvas($("pcC"), 0.6, 280, s => drawCharge(s.ctx,s.w,s.h,pc), 440);
+const crC = makeCanvas($("crC"), 0.5, 250, s => drawCrane(s.ctx,s.w,s.h,cr), 380);
+predC = makeCanvas($("predC"), 0.5, 200, s => drawWhich(s.ctx,s.w,s.h,{q:dq.q,shown:dq.shown,bgc:C["surface-2"]}), 300);
+pdNew();
+const MINI = {
+  mags:o=>s=>drawMagnets(s.ctx,s.w,s.h,{...o,compact:true}),
+  wire:o=>s=>drawWireField(s.ctx,s.w,s.h,{...o,compact:true}),
+  sol:o=>s=>drawSolenoid(s.ctx,s.w,s.h,{...o,compact:true}),
+  two:o=>s=>drawTwoWires(s.ctx,s.w,s.h,{...o,compact:true}),
+  charge:o=>s=>drawCharge(s.ctx,s.w,s.h,{...o,compact:true}),
+  crane:o=>s=>drawCrane(s.ctx,s.w,s.h,{...o,compact:true}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, 0.72, 220, MINI[kind](o), 400); });
+document.querySelectorAll("canvas[data-case]").forEach(el=>{ const k=el.dataset.case, bgc=()=>C["surface-2"];
+  const half=(s,top,bottom)=>{ const hh=s.h/2; s.ctx.save(); top(hh); s.ctx.translate(0,hh); bottom(hh); s.ctx.restore(); };
+  const d = k==="pair"? s=>{ half(s,hh=>drawMagnets(s.ctx,s.w,hh,{set:1,compact:true,bgc:bgc()}),hh=>drawMagnets(s.ctx,s.w,hh,{set:2,compact:true,bgc:bgc()})); text(s.ctx,"attract",s.w-8,14,C.terra,F(11),"right"); text(s.ctx,"repel",s.w-8,s.h/2+14,C.terra,F(11),"right"); line(s.ctx,0,s.h/2,s.w,s.h/2,C.line,1); }
+    : k==="ws"? s=>{ half(s,hh=>drawWireField(s.ctx,s.w,hh,{I:6,out:true,r:null,compact:true,bgc:bgc()}),hh=>drawSolenoid(s.ctx,s.w,hh,{I:3,N:600,core:"air",dir:1,compact:true,bgc:bgc()})); text(s.ctx,"straight wire",8,14,C.terra,F(11)); text(s.ctx,"solenoid",8,s.h/2+14,C.terra,F(11)); line(s.ctx,0,s.h/2,s.w,s.h/2,C.line,1); }
+    : s=>{ half(s,hh=>drawCharge(s.ctx,s.w,hh,{p:1,v:5,B:100,into:true,ph:0.35,compact:true,bgc:bgc()}),hh=>drawCharge(s.ctx,s.w,hh,{p:0,v:5,B:3,into:true,ph:0.35,compact:true,bgc:bgc()})); text(s.ctx,"proton",s.w-14,s.h/2-14,C.terra,F(11),"right"); text(s.ctx,"electron",s.w-14,s.h-14,C.ray2,F(11),"right"); };
+  makeCanvas(el, 0.9, 260, d, 460); });
+mgUpd(); tfNew(); wfTable(); slTable(); twUpd(); pcUpd(); crUpd(); usNew();
+
+/* ================= LOOP / THEME / START ================= */
+let lastT=null;
+(function loop(now){
+  const dt = lastT==null? 0 : Math.min(0.05,(now-lastT)/1000); lastT=now; heroT=now/1000;
+  if(!reduce && view==="overview" && hero.el.offsetParent) hero.redraw();
+  if(!reduce && view==="labs" && lab==="charge"){ pc.ph=(pc.ph+dt*0.3)%1; pcC.redraw(); }
+  requestAnimationFrame(loop);
+})(performance.now());
+
+
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+
+</script>
