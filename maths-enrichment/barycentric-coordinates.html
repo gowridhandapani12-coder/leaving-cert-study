@@ -1,0 +1,1459 @@
+<title>Barycentric Coordinates Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.sh-card{display:grid;gap:8px;padding:16px;align-content:start}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card ul{margin:0;padding-left:18px;font-size:.88rem;color:var(--muted);display:grid;gap:3px}
+.fbbox{padding:0 16px 14px}
+.predopts .btns button{min-width:100px}
+.ctl button[disabled]{opacity:.5}
+</style>
+
+<style>
+.qt{font-family:var(--f-display);font-size:1.05rem;line-height:1.45;padding:12px 16px;border-left:4px solid var(--terra);background:var(--surface-2);border-radius:0 12px 12px 0}
+.qt small{display:block;font-family:var(--f-body);font-size:.82rem;color:var(--muted);margin-top:4px}
+.fbbox{padding:0 16px 14px}
+</style>
+<!-- ================= TOP BAR ================= -->
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 01-14.3 4.9M4 12a8 8 0 0114.3-4.9"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg></div>
+        <div style="min-width:0"><b>Barycentric Coordinates</b><span>Maths Enrichment · Olympiad geometry</span></div>
+      </div>
+      
+      
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html">Business</a><a href="../maths/index.html">Maths</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a><a href="../maths-enrichment/index.html" class="on" aria-current="page">Maths Enrichment</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <details open><summary>Maths Enrichment</summary><ol><li class="here"><span class="mono">1</span>Barycentric coordinates</li><li class="link"><a href="olympiad.html"><span class="mono">2</span>The Maths Olympiad</a></li><li><span class="mono">3</span>Inequalities</li><li><span class="mono">4</span>Number theory</li><li><span class="mono">5</span>Combinatorics</li><li><span class="mono">6</span>Olympiad geometry</li></ol></details>
+      <p class="soon">Bold pages are ready. Others are coming soon. Enrichment material goes beyond the Leaving Certificate.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Maths Enrichment · Olympiad geometry</span>
+          <h1 style="margin-top:12px">Put masses on a triangle.<br>Find the balance point.<br><em>That's a coordinate.</em></h1>
+          <p class="lede">Barycentric coordinates describe every point in the plane of a triangle by three numbers: masses at the vertices, or ratios of areas. Triangle centres get beautiful formulas, collinearity becomes a determinant, and some hard olympiad geometry problems turn into algebra.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated triangle with masses at the vertices and their balance point"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Goals ticked</span><b id="stLO">0/8</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Enrichment goals (beyond the Leaving Cert)</p><h2>What you'll be able to do</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list" id="loList"></ul>
+        <p class="result" style="margin-top:10px">Source: these pages follow the structure and results of Zachary Abel's notes <i>Barycentric Coordinates</i> (17 August 2007), explained here in our own words with new diagrams, labs and practice. Notation: a = BC, b = CA, c = AB, s = (a + b + c)/2, r = inradius, R = circumradius, [XYZ] = signed area.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Move masses, drag points and vertices, and watch the coordinates and ratios update live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="masses">
+        <div class="labhead"><span class="pill t">Balance the masses</span><p class="goal">Put masses x, y, z at A, B, C. The balance point P = (x : y : z). Watch the cevians and the ratios they cut on the sides.</p></div>
+        <div class="panel sim">
+          <canvas id="msC" aria-label="Triangle with masses at the vertices, the cevians and their balance point"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="msX">Mass x at A <output id="msXo">2</output></label><input type="range" id="msX" min="-4" max="10" step="1" value="2"></div>
+            <div class="ctl"><label for="msY">Mass y at B <output id="msYo">3</output></label><input type="range" id="msY" min="-4" max="10" step="1" value="3"></div>
+            <div class="ctl"><label for="msZ">Mass z at C <output id="msZo">7</output></label><input type="range" id="msZ" min="-4" max="10" step="1" value="7"></div>
+          </div>
+          <div class="readout" id="msOut"></div>
+          <div class="working" id="msWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Set (2 : 3 : 7). Check BD/DC = 7/3, CE/EA = 2/7 and AF/FB = 3/2.</div><div class="try"><b>2</b>Make one mass negative. Where does P go?</div><div class="try"><b>3</b>Make x + y + z = 0. What happens to the cevians?</div></div>
+      </div>
+
+      <div class="lab" data-lab="areas" hidden>
+        <div class="labhead"><span class="pill t">Areas = coordinates</span><p class="goal">Drag P anywhere. The three coloured triangles PBC, PCA, PAB have (signed) areas in the ratio x : y : z.</p></div>
+        <div class="panel sim">
+          <canvas id="arC" aria-label="Triangle split into three coloured triangles by a draggable point P"></canvas>
+          <div class="readout" id="arOut"></div>
+          <div class="working" id="arWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Drag P to make all three areas equal. Which point is that?</div><div class="try"><b>2</b>Drag P outside the triangle across BC. Which coordinate turns negative?</div><div class="try"><b>3</b>Move P along a line parallel to BC. Which coordinate stays fixed?</div></div>
+      </div>
+
+      <div class="lab" data-lab="centres" hidden>
+        <div class="labhead"><span class="pill t">Triangle centres</span><p class="goal">Drag the vertices. The centres are computed from their barycentric formulas. Check the Euler line and the Nagel line.</p></div>
+        <div class="panel sim">
+          <canvas id="ceC" aria-label="Triangle with centroid, incentre, circumcentre, orthocentre, Spieker centre and Nagel point. Drag the vertices."></canvas>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Show</span><div class="btns" id="ceShow"><button data-k="euler" aria-pressed="true">Euler line (O, G, H)</button><button data-k="nagel" aria-pressed="true">Nagel line (Na, Sp, G, I)</button><button data-k="circles" aria-pressed="false">Circles</button></div></div></div>
+          <div class="readout" id="ceOut"></div>
+          <div class="working" id="ceWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Drag the triangle into many shapes. Does OH : OG stay 3?</div><div class="try"><b>2</b>Make the triangle right-angled. Where is H? Where is O?</div><div class="try"><b>3</b>Make it equilateral. What happens to all the centres?</div></div>
+      </div>
+
+      <div class="lab" data-lab="collinear" hidden>
+        <div class="labhead"><span class="pill t">Collinearity test</span><p class="goal">Drag P, Q and R. They are collinear exactly when the determinant of their barycentric coordinates is 0.</p></div>
+        <div class="panel sim">
+          <canvas id="clC" aria-label="Three draggable points P, Q, R in triangle ABC with a line through P and Q"></canvas>
+          <div class="controls"><div class="ctl"><span class="lbl">Points</span><div class="btns"><button id="clSnap">Put R on line PQ</button><button id="clRand">Scatter</button></div></div></div>
+          <div class="readout" id="clOut"></div>
+          <div class="working" id="clWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Drag R onto line PQ. Watch the determinant go to 0.</div><div class="try"><b>2</b>Put R at the midpoint of PQ. Is R = (P + Q)/2 in normalised coordinates?</div><div class="try"><b>3</b>Why must the coordinates be normalised for the ratio k = PR/PQ?</div></div>
+      </div>
+
+      <div class="lab" data-lab="area" hidden>
+        <div class="labhead"><span class="pill t">Collect &amp; fit</span><p class="goal">The area formula: [PQR]/[ABC] = det of the normalised coordinates. Scatter random triangles, measure their areas directly, and plot measured ratio against the determinant.</p></div>
+        <div class="panel sim">
+          <canvas id="aaC" aria-label="Triangle ABC with a random triangle PQR shaded"></canvas>
+          <div class="controls"><div class="ctl"><span class="lbl">Experiment</span><div class="btns"><button class="primary" id="aaRec">New triangle &amp; record</button><button id="aaClr">Clear data</button></div></div></div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>#</th><th>det</th><th>[PQR]/[ABC] measured</th></tr></thead><tbody id="aaTable"></tbody></table></div>
+            <div class="graphbox"><canvas id="aaG" aria-label="Graph of measured area ratio against the determinant with fitted line"></canvas><p class="result" id="aaResult"></p></div>
+          </div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Record eight triangles. What are the gradient and intercept?</div><div class="try"><b>2</b>Some determinants are negative. What does the sign tell you?</div><div class="try"><b>3</b>When is the determinant exactly 0?</div></div>
+      </div>
+
+      <div class="lab" data-lab="ceva" hidden>
+        <div class="labhead"><span class="pill t">Ceva's theorem</span><p class="goal">Choose the ratios BD/DC, CE/EA and AF/FB. The cevians meet in one point exactly when the product is 1.</p></div>
+        <div class="panel sim">
+          <canvas id="cvC" aria-label="Triangle with three cevians; they are concurrent when the ratio product is one"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="cvA">BD/DC = r<sub>a</sub> <output id="cvAo">1.5</output></label><input type="range" id="cvA" min="0.2" max="4" step="0.1" value="1.5"></div>
+            <div class="ctl"><label for="cvB">CE/EA = r<sub>b</sub> <output id="cvBo">0.8</output></label><input type="range" id="cvB" min="0.2" max="4" step="0.1" value="0.8"></div>
+            <div class="ctl"><label for="cvC2">AF/FB = r<sub>c</sub> <output id="cvCo">1</output></label><input type="range" id="cvC2" min="0.2" max="4" step="0.01" value="1"></div>
+            <div class="ctl"><span class="lbl">Fix it</span><div class="btns"><button id="cvFix">Make them concurrent</button></div></div>
+          </div>
+          <div class="readout" id="cvOut"></div>
+          <div class="working" id="cvWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Press "Make them concurrent". Check r<sub>a</sub>r<sub>b</sub>r<sub>c</sub> = 1.</div><div class="try"><b>2</b>Where is the meeting point in barycentrics? Compare with (r<sub>a</sub>r<sub>b</sub> : 1 : r<sub>a</sub>).</div><div class="try"><b>3</b>Set all three ratios to 1. Which centre do you get?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of barycentric coordinates"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>Centres at a glance</h2></div><p>The barycentric coordinates of the classic triangle centres.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three pictures</p><h2>Masses, areas, lines</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="mass"></canvas><h3>Masses</h3><p>(2 : 3 : 7): the balance point of masses 2, 3, 7 at A, B, C.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="areas"></canvas><h3>Areas</h3><p>The three areas around P are in the ratio x : y : z.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="centres"></canvas><h3>Euler and Nagel lines</h3><p>O, G, H collinear with OH = 3·OG; Na, Sp, G, I collinear.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">A 7-8-9 triangle (a = 7, b = 8, c = 9)</p><h2>Normalised first coordinate of each centre</h2></div><p>How much "weight" each centre puts on vertex A.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Where this is used</p><h2>Barycentrics beyond the triangle</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+<!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Competition ready</p><h2>Problem practice</h2></div><p>How barycentrics are used in competitions, a calculation trainer with worked steps, and full problems with solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">How to bash a problem with barycentrics</h3>
+          <ol class="tips">
+            <li><b>Choose the reference triangle</b> so the important points have simple coordinates (often the given triangle ABC).</li>
+            <li>Write known points first: vertices (1,0,0), midpoints, feet of cevians from ratios, centres from the table.</li>
+            <li>A point on line BC has x = 0. A point dividing a segment in a ratio is a <b>weighted average</b> of normalised endpoints.</li>
+            <li>Use the <b>determinant</b> for collinearity, and for areas once the points are normalised.</li>
+            <li>Keep coordinates <b>homogeneous</b> (with colons) while multiplying through; normalise only when you need areas or ratios.</li>
+            <li>Use a·cos A = (b² + c² − a²)a/(2bc) style identities to turn trigonometry into side lengths.</li>
+            <li>Check special cases (equilateral, right-angled) to catch algebra slips.</li>
+            <li>In a written olympiad solution, explain each coordinate you use. A bash is valid but must be complete and readable.</li>
+          </ol>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Key formulas to memorise</h3>
+          <ol class="tips">
+            <li>G = (1 : 1 : 1), I = (a : b : c)</li>
+            <li>Na = (s − a : s − b : s − c), Sp = (b + c : c + a : a + b)</li>
+            <li>O = (a²(b² + c² − a²) : …), H = ((a² + b² − c²)(a² − b² + c²) : …)</li>
+            <li>Traces of (x : y : z): BD/DC = z/y, CE/EA = x/z, AF/FB = y/x</li>
+            <li>Collinear ⇔ det = 0; [PQR]/[ABC] = det (normalised)</li>
+            <li>Isogonal conjugate of (x : y : z) is (a²/x : b²/y : c²/z)</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Competition words</h2></div><p>What olympiad instructions mean. Plain-English summaries.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Barycentric calculations</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="Your answer (decimal)" aria-label="Your answer" autocomplete="off"><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which centre is it?</h2></div></div>
+          <canvas id="predC" aria-label="A triangle; the centre appears after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" id="predBtns"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+<div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Full problems with worked solutions</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Skills</p><h2>Problem-solving skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Habits that strong problem solvers build. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Precise words earn marks in "define" and "explain" questions.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: centroid, Ceva, determinant…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>Barycentric coordinates on one page. a = BC, b = CA, c = AB, s = semiperimeter.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Definition</span><span class="big">P = (x : y : z) = (xA + yB + zC)/(x + y + z)</span><dl><dt>Masses</dt><dd>x, y, z at A, B, C</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Areas</span><span class="big">[PBC] : [PCA] : [PAB] = x : y : z</span><dl><dt>Signed</dt><dd>negative when P is across a side</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Traces</span><span class="big">BD/DC = z/y · CE/EA = x/z · AF/FB = y/x</span></div>
+        <div class="panel fcell"><span class="pill a">Normalise</span><span class="big">(x, y, z)/(x + y + z)</span><dl><dt>Homogeneous</dt><dd>(kx : ky : kz) is the same point</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Ceva</span><span class="big">r<sub>a</sub>r<sub>b</sub>r<sub>c</sub> = 1</span><dl><dt>Point</dt><dd>(r<sub>a</sub>r<sub>b</sub> : 1 : r<sub>a</sub>)</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Centres</span><span class="big">G (1:1:1) · I (a:b:c)</span><dl><dt>Na</dt><dd>(s−a : s−b : s−c)</dd><dt>Sp</dt><dd>(b+c : c+a : a+b)</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">O and H</span><span class="big">O = (a²(b²+c²−a²) : …)</span><dl><dt>H</dt><dd>((a²+b²−c²)(a²−b²+c²) : …), i.e. (tan A : tan B : tan C)</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Collinear</span><span class="big">det[P; Q; R] = 0</span><dl><dt>On segment</dt><dd>R = (1 − k)P + kQ, k = PR/PQ (normalised)</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Area</span><span class="big">[PQR]/[ABC] = det (normalised rows)</span></div>
+        <div class="panel fcell"><span class="pill a">Lines</span><span class="big">Euler: 3G = H + 2O</span><dl><dt>Nagel</dt><dd>Sp = (Na + I)/2, G = (Na + 2I)/3</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Isogonal</span><span class="big">P* = (a²/x : b²/y : c²/z)</span></div>
+        <div class="panel fcell"><span class="pill">Identities</span><span class="big">abc = 4rRs · [ABC] = rs</span><dl><dt>Heron</dt><dd>[ABC]² = s(s−a)(s−b)(s−c)</dd></dl></div>
+      </div>
+      <footer>
+        <p>Based on Zachary Abel, <i>Barycentric Coordinates</i> (notes, 17 August 2007), explained in our own words. Competition problems are credited to their sources (MOP 2006, USAMO 2001). This is enrichment material beyond the Leaving Certificate syllabus.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("me-theme","auto"), font = store.get("me-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("me-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("me-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  masses:'<path d="M12 3L3 20h18z"/><circle cx="12" cy="14" r="2" fill="currentColor"/>',
+  areas:'<path d="M12 3L3 20h18z"/><path d="M12 14L3 20M12 14l9 6M12 14V3"/>',
+  centres:'<path d="M12 3L3 20h18z"/><circle cx="12" cy="13" r="1.5"/><circle cx="10" cy="15" r="1.5"/><path d="M8 17l8-8"/>',
+  collinear:'<path d="M3 19L21 5"/><circle cx="6" cy="16.7" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="7.3" r="2"/>',
+  area:'<path d="M12 3L3 20h18z"/><path d="M9 16l6-1-3-6z" fill="currentColor" opacity=".35"/>',
+  ceva:'<path d="M12 3L3 20h18z"/><path d="M12 3l1 17M3 20l13-9M21 20L7 11"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18"/>',
+  screen:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+  scale:'<path d="M12 3v18M5 7h14M5 7l-3 7h6zM19 7l-3 7h6z"/>',
+  trophy:'<path d="M7 4h10v5a5 5 0 01-10 0zM5 5H3a3 3 0 003 4M19 5h2a3 3 0 01-3 4M12 14v4M8 21h8"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"masses", name:"Masses & definition", short:"(x : y : z) is the balance point of masses x, y, z at A, B, C; the cevian ratios.", tint:"var(--blush)"},
+  {id:"areas", name:"Areas & normalising", short:"Coordinates as area ratios; homogeneous coordinates and normalised form.", tint:"var(--apricot)"},
+  {id:"centres", name:"Triangle centres", short:"G, I, Sp, Na, O, H in barycentrics, and the Euler and Nagel lines.", tint:"var(--sage)"},
+  {id:"collinear", name:"Collinearity", short:"Three points are collinear exactly when a determinant is zero.", tint:"var(--cream)"},
+  {id:"area", name:"The area formula", short:"[PQR]/[ABC] is the determinant of the normalised coordinates.", tint:"var(--blush)"},
+  {id:"ceva", name:"Ceva & olympiad problems", short:"A one-line proof of Ceva, isogonal conjugates, and full competition solutions.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+const LO = [
+  ["masses","Explain barycentric coordinates as masses at the vertices, and find the cevian ratios of a point"],
+  ["areas","Interpret coordinates as signed area ratios and normalise homogeneous coordinates"],
+  ["centres","Write the coordinates of the centroid, incentre, Spieker centre and Nagel point"],
+  ["centres","Use the coordinates of the circumcentre and orthocentre, and prove the Euler line relation 3G = H + 2O"],
+  ["collinear","Test three points for collinearity with a determinant"],
+  ["area","Find the area of a triangle from the normalised coordinates of its vertices"],
+  ["ceva","Prove Ceva's theorem and find the concurrency point"],
+  ["ceva","Solve olympiad problems by setting up and computing in barycentric coordinates"],
+];
+const LO_HEAD = {masses:"Definition",areas:"Definition",centres:"Centres",collinear:"Lines",area:"Areas",ceva:"Problems"};
+
+/* ---------- glossary ---------- */
+const GLOSS = [
+  ["Barycentric coordinates","(x : y : z)","Three numbers describing a point relative to a reference triangle ABC: the masses at A, B, C whose centre of mass is the point.","masses","P = (xA + yB + zC)/(x + y + z)"],
+  ["Reference triangle","","The fixed triangle ABC that the coordinates are measured against.","masses"],
+  ["Centre of mass","balance point","The point where a system of masses balances.","masses"],
+  ["Cevian","","A line segment from a vertex to the opposite side (or its extension).","masses"],
+  ["Trace","foot of a cevian","Where the cevian through P from a vertex meets the opposite side: D on BC, E on CA, F on AB.","masses","BD/DC = z/y"],
+  ["Signed ratio","","A ratio that is negative when the point lies outside the segment.","masses"],
+  ["Signed area","[XYZ]","Area with a sign: positive if X, Y, Z go anticlockwise, negative if clockwise.","areas"],
+  ["Homogeneous coordinates","","Coordinates where (x : y : z) and (kx : ky : kz) name the same point for any k ≠ 0.","areas"],
+  ["Normalised coordinates","(x, y, z) with x + y + z = 1","Coordinates scaled to add to 1. Then x = [PBC]/[ABC], and so on.","areas"],
+  ["Point at infinity","","A \"point\" with x + y + z = 0. It corresponds to a direction: the cevians are parallel.","areas"],
+  ["Centroid","G","Where the medians meet. G = (1 : 1 : 1).","centres"],
+  ["Incentre","I","Centre of the inscribed circle. I = (a : b : c).","centres"],
+  ["Circumcentre","O","Centre of the circle through A, B, C. O = (a²(b²+c²−a²) : …) = (sin 2A : sin 2B : sin 2C).","centres"],
+  ["Orthocentre","H","Where the altitudes meet. H = (tan A : tan B : tan C).","centres"],
+  ["Spieker centre","Sp","Centre of mass of the perimeter (a uniform wire). Sp = (b + c : c + a : a + b); the incentre of the medial triangle.","centres"],
+  ["Nagel point","Na","Where the cevians to the excircle touch points meet. Na = (s − a : s − b : s − c).","centres"],
+  ["Gergonne point","Ge","Where the cevians to the incircle touch points meet. Ge = (1/(s − a) : 1/(s − b) : 1/(s − c)).","centres"],
+  ["Medial triangle","","The triangle formed by the midpoints of the sides.","centres"],
+  ["Euler line","","The line through O, G and H, with OH = 3·OG.","centres","3G = H + 2O"],
+  ["Nagel line","","The line through Na, Sp, G and I, with Sp the midpoint of NaI and G one third of the way from Na.","centres"],
+  ["Semiperimeter","s","s = (a + b + c)/2.","centres"],
+  ["Inradius","r","Radius of the incircle. [ABC] = rs.","centres"],
+  ["Circumradius","R","Radius of the circumcircle. abc = 4R[ABC] = 4rRs.","centres"],
+  ["Collinear","","Lying on one straight line.","collinear"],
+  ["Determinant","det","For three rows of coordinates, the number that is 0 exactly when the rows are linearly dependent.","collinear"],
+  ["Linearly dependent","","One row is a combination of the others. For points, it means collinear.","collinear"],
+  ["Weighted average","","R = (1 − k)P + kQ: the point dividing PQ with PR/PQ = k (normalised coordinates).","collinear"],
+  ["Area formula","","[PQR]/[ABC] = det of the three normalised rows.","area"],
+  ["Parallelepiped","","A 3D solid with parallelogram faces; its volume is a determinant. Used in the proof of the area formula.","area"],
+  ["Heron's formula","","[ABC] = √(s(s − a)(s − b)(s − c)).","area"],
+  ["Ceva's theorem","","Cevians AD, BE, CF are concurrent exactly when (BD/DC)(CE/EA)(AF/FB) = 1.","ceva"],
+  ["Concurrent","","Meeting at one point.","ceva"],
+  ["Isogonal conjugate","P*","Reflect each cevian of P in the angle bisector at its vertex; the reflections meet at P*. P* = (a²/x : b²/y : c²/z).","ceva"],
+  ["Homothety","homothecy","An enlargement from a centre with a ratio (negative ratios flip through the centre).","ceva"],
+  ["Excircle","","A circle outside the triangle tangent to one side and the extensions of the other two.","ceva"],
+  ["Bash","coordinate bash","Solving a geometry problem by direct computation in coordinates rather than a synthetic argument.","ceva"],
+  ["Synthetic proof","","A proof using classical geometry (angles, similar triangles) instead of coordinates.","ceva"],
+  ["MOP","Mathematical Olympiad Program","The US training camp for the IMO team.","ceva"],
+  ["USAMO","USA Mathematical Olympiad","The top national olympiad in the USA.","ceva"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+t.length}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["cevians","Cevian"],["cevian","Cevian"],["traces","Trace"],["homogeneous","Homogeneous coordinates"],["normalise","Normalised coordinates"],["centroid","Centroid"],["incentre","Incentre"],["circumcentre","Circumcentre"],["orthocentre","Orthocentre"],["Euler line","Euler line",1],["Nagel","Nagel point",1],["determinant","Determinant"],["concurrent","Concurrent"],["isogonal conjugate","Isogonal conjugate"],["signed","Signed area"],["Ceva","Ceva's theorem",1]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rr(ctx,x,y,w,h,r){ if(w<0){ x+=w; w=-w; } if(h<0){ y+=h; h=-h; } r=Math.max(0,Math.min(r,h/2,w/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function arrowHead(ctx,x,y,dx,dy,col,s=8){ ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x+dx*s,y+dy*s); ctx.lineTo(x-dx*s*0.6-dy*s*0.7,y-dy*s*0.6+dx*s*0.7); ctx.lineTo(x-dx*s*0.6+dy*s*0.7,y-dy*s*0.6-dx*s*0.7); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const nf = (x,d=0) => { const s=(Math.round(x*10**d)/10**d).toFixed(d); const [i,f]=s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f?"."+f:""); };
+const eur = x => "€"+nf(x, Math.abs(x-Math.round(x))>0.004?2:0);
+const niceStep = (range,n) => { const r=range/Math.max(1,n), p=10**Math.floor(Math.log10(r)), m=r/p; return (m<=1?1:m<=2?2:m<=5?5:10)*p; };
+const tick = v => String(+v.toFixed(6));
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+// Axes: returns mapping functions. o: x0,x1,y0,y1,xl,yl,compact
+function frame(ctx,w,h,o){
+  const cp=o.compact, L=cp?36:50, R=12, T=cp?12:16, B=cp?24:34, fs=cp?9:11;
+  const X=v=>L+(v-o.x0)/(o.x1-o.x0)*(w-L-R), Y=v=>h-B-(v-o.y0)/(o.y1-o.y0)*(h-B-T);
+  const xs=o.xt||niceStep(o.x1-o.x0, Math.max(3,Math.floor((w-L)/70))), ys=o.yt||niceStep(o.y1-o.y0, Math.max(3,Math.floor((h-B)/45)));
+  for(let v=Math.ceil(o.x0/xs)*xs; v<=o.x1+1e-9; v+=xs){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,tick(v),X(v),h-B+(cp?11:14),C.muted,M(fs),"center"); }
+  for(let v=Math.ceil(o.y0/ys)*ys; v<=o.y1+1e-9; v+=ys){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,tick(v),L-5,Y(v)+3,C.muted,M(fs),"right"); }
+  const y0=Y(Math.max(o.y0,Math.min(o.y1,0)));
+  line(ctx,L,y0,w-R,y0,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(o.xl) text(ctx,o.xl,w-R,h-B+(cp?22:30),C.muted,F(cp?10:12),"right");
+  if(o.yl) text(ctx,o.yl,L+6,T+(cp?10:12),C.muted,F(cp?10:12),"left");
+  return {X,Y,L,R,T,B};
+}
+function curve(ctx,f,x0,x1,X,Y,col,lw=2.5,dash,clip){ ctx.save(); if(clip){ ctx.beginPath(); ctx.rect(clip[0],clip[1],clip[2],clip[3]); ctx.clip(); } ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); const n=120; for(let i=0;i<=n;i++){ const x=x0+(x1-x0)*i/n, y=f(x); if(i) ctx.lineTo(X(x),Y(y)); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore(); }
+
+/* ================= MODELS + DRAWINGS ================= */
+function drag(el, fn){ let down=false; const pos=e=>{ const r=el.getBoundingClientRect(); return [e.clientX-r.left, e.clientY-r.top]; };
+  el.addEventListener("pointerdown",e=>{ down=true; el.setPointerCapture(e.pointerId); fn(...pos(e),true); });
+  el.addEventListener("pointermove",e=>{ if(down) fn(...pos(e),false); });
+  el.addEventListener("pointerup",()=>down=false); el.addEventListener("pointercancel",()=>down=false); }
+const pick=a=>a[Math.floor(Math.random()*a.length)], rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+// Geometry in world coordinates (y up)
+const T0 = [[1.4,4.4],[0,0],[6.2,0]];
+const dist=(p,q)=>Math.hypot(p[0]-q[0],p[1]-q[1]);
+const sarea=(p,q,r)=>((q[0]-p[0])*(r[1]-p[1])-(r[0]-p[0])*(q[1]-p[1]))/2;
+const toCart=(T,b)=>{ const s=b[0]+b[1]+b[2]; return [(b[0]*T[0][0]+b[1]*T[1][0]+b[2]*T[2][0])/s,(b[0]*T[0][1]+b[1]*T[1][1]+b[2]*T[2][1])/s]; };
+const toBary=(T,P)=>{ const S=sarea(...T); return [sarea(P,T[1],T[2])/S, sarea(T[0],P,T[2])/S, sarea(T[0],T[1],P)/S]; };
+const det3=m=>m[0][0]*(m[1][1]*m[2][2]-m[1][2]*m[2][1])-m[0][1]*(m[1][0]*m[2][2]-m[1][2]*m[2][0])+m[0][2]*(m[1][0]*m[2][1]-m[1][1]*m[2][0]);
+const norm=b=>{ const s=b[0]+b[1]+b[2]; return b.map(v=>v/s); };
+function sides(T){ return [dist(T[1],T[2]),dist(T[2],T[0]),dist(T[0],T[1])]; }
+function centres(T){ const [a,b,c]=sides(T), s=(a+b+c)/2, a2=a*a,b2=b*b,c2=c*c;
+  const B = { G:[1,1,1], I:[a,b,c], Sp:[b+c,c+a,a+b], Na:[s-a,s-b,s-c], O:[a2*(b2+c2-a2),b2*(c2+a2-b2),c2*(a2+b2-c2)], H:[(a2+b2-c2)*(a2-b2+c2),(b2+c2-a2)*(b2-c2+a2),(c2+a2-b2)*(c2-a2+b2)] };
+  const P={}; for(const k in B) P[k]=toCart(T,B[k]); return {B,P,a,b,c,s}; }
+function vmap(w,h,box,cp){ const pad=cp?14:24, s=Math.min((w-2*pad)/(box[1]-box[0]),(h-2*pad)/(box[3]-box[2])), cx=w/2-(box[0]+box[1])/2*s, cy=h/2+(box[2]+box[3])/2*s;
+  return {X:x=>cx+x*s,Y:y=>cy-y*s,inv:(px,py)=>[(px-cx)/s,(cy-py)/s],s}; }
+function lineThrough(ctx,m,p,q,col,lw=1.5,dash){ const dx=q[0]-p[0], dy=q[1]-p[1], L=Math.hypot(dx,dy)||1, ux=dx/L, uy=dy/L, k=60; line(ctx,m.X(p[0]-ux*k),m.Y(p[1]-uy*k),m.X(p[0]+ux*k),m.Y(p[1]+uy*k),col,lw,dash); }
+function triFrame(ctx,w,h,T,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, xs=T.map(p=>p[0]), ys=T.map(p=>p[1]), mx=(Math.max(...xs)-Math.min(...xs))*0.18+0.4, my=(Math.max(...ys)-Math.min(...ys))*0.18+0.4;
+  const m=vmap(w,h,o.box||[Math.min(...xs)-mx,Math.max(...xs)+mx,Math.min(...ys)-my,Math.max(...ys)+my],cp);
+  ctx.save(); ctx.beginPath(); ctx.moveTo(m.X(T[0][0]),m.Y(T[0][1])); T.slice(1).forEach(p=>ctx.lineTo(m.X(p[0]),m.Y(p[1]))); ctx.closePath(); ctx.fillStyle=o.fill||"transparent"; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=cp?1.8:2.5; ctx.stroke(); ctx.restore();
+  if(!o.noLabels) ["A","B","C"].forEach((L,i)=>{ const [x,y]=T[i], g=[(T[0][0]+T[1][0]+T[2][0])/3,(T[0][1]+T[1][1]+T[2][1])/3], dx=x-g[0], dy=y-g[1], d=Math.hypot(dx,dy)||1; text(ctx,L,m.X(x)+dx/d*(cp?10:16),m.Y(y)-dy/d*(cp?10:16)+5,C.ink,F(cp?11:15,800),"center"); });
+  return m; }
+const dot=(ctx,m,p,col,r=5,lab,cp)=>{ circle(ctx,m.X(p[0]),m.Y(p[1]),r,col,C.surface,1.5); if(lab) text(ctx,lab,m.X(p[0])+r+3,m.Y(p[1])-r-1,C.ink,F(cp?9:12,800),"left"); };
+// Lab drawings
+function traces(T,b){ const D=toCart(T,[0,b[1],b[2]]), E=toCart(T,[b[0],0,b[2]]), F2=toCart(T,[b[0],b[1],0]); return [D,E,F2]; }
+function drawMass(ctx,w,h,o){ const T=o.T||T0, b=o.m, cp=o.compact||w<440, s=b[0]+b[1]+b[2];
+  const m=triFrame(ctx,w,h,T,{...o,box:o.box||[-1.4,7.6,-1.2,5.6]});
+  if(Math.abs(s)>1e-9){ const P=toCart(T,b), tr=(b[1]+b[2]!==0&&b[0]+b[2]!==0&&b[0]+b[1]!==0)? traces(T,b) : null;
+    if(tr){ [0,1,2].forEach(i=>{ lineThrough(ctx,m,T[i],tr[i],C.line,1.2,[5,5]); line(ctx,m.X(T[i][0]),m.Y(T[i][1]),m.X(tr[i][0]),m.Y(tr[i][1]),C.olive,cp?1.5:2); dot(ctx,m,tr[i],C.olive,cp?3:4,cp?null:"DEF"[i],cp); }); }
+    dot(ctx,m,P,C.terra,cp?5:8,cp?null:`P = (${b.join(" : ")})`,cp); }
+  else { text(ctx,"x + y + z = 0: the cevians are parallel (point at infinity)",w/2,h-12,C.bad,F(cp?10:13),"center"); }
+  b.forEach((v,i)=>{ const r=Math.max(4,Math.min(cp?14:22,Math.sqrt(Math.abs(v))*(cp?5:8))); circle(ctx,m.X(T[i][0]),m.Y(T[i][1]),r,v<0?C.blush:C.apricot,C.ink,1.5); text(ctx,String(v),m.X(T[i][0]),m.Y(T[i][1])+4,"#3b2b21",F(cp?9:12,800),"center"); });
+  return m; }
+function drawAreas(ctx,w,h,o){ const T=o.T||T0, P=o.P, cp=o.compact||w<440, m=triFrame(ctx,w,h,T,{...o,box:[-1.4,7.6,-1.4,5.8],noLabels:true});
+  const cols=[C.sage,C.blush,C.apricot]; [[1,2],[2,0],[0,1]].forEach(([i,j],k)=>{ ctx.save(); ctx.beginPath(); ctx.moveTo(m.X(P[0]),m.Y(P[1])); ctx.lineTo(m.X(T[i][0]),m.Y(T[i][1])); ctx.lineTo(m.X(T[j][0]),m.Y(T[j][1])); ctx.closePath(); ctx.globalAlpha=0.55; ctx.fillStyle=cols[k]; ctx.fill(); ctx.restore(); });
+  triFrame(ctx,w,h,T,{...o,box:[-1.4,7.6,-1.4,5.8],bgc:"transparent"}); [[1,2],[2,0],[0,1]].forEach(([i,j])=>line(ctx,m.X(P[0]),m.Y(P[1]),m.X(T[i][0]),m.Y(T[i][1]),C.muted,1.2));
+  const b=toBary(T,P); if(!cp) [[1,2,"x"],[2,0,"y"],[0,1,"z"]].forEach(([i,j,l],k)=>{ const c=[(P[0]+T[i][0]+T[j][0])/3,(P[1]+T[i][1]+T[j][1])/3]; text(ctx,`${l} = ${nf(b[k],2)}`,m.X(c[0]),m.Y(c[1])+4,"#3b2b21",F(12,800),"center"); });
+  dot(ctx,m,P,C.terra,cp?5:8,"P",cp); return m; }
+function bctx(o){ return o; }
+function drawCentres(ctx,w,h,o){ const T=o.T||T0, cp=o.compact||w<440, m=triFrame(ctx,w,h,T,{...o,box:o.box||[-2,8.2,-1.6,6.2]}), Z=centres(T), sh=o.show||{euler:true,nagel:true};
+  if(sh.circles){ const R=dist(Z.P.O,T[0]); ctx.save(); ctx.strokeStyle=C.line; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(m.X(Z.P.O[0]),m.Y(Z.P.O[1]),R*m.s,0,7); ctx.stroke(); const r=Math.abs(sarea(...T))/Z.s; ctx.beginPath(); ctx.arc(m.X(Z.P.I[0]),m.Y(Z.P.I[1]),r*m.s,0,7); ctx.stroke(); ctx.restore(); }
+  if(sh.euler) lineThrough(ctx,m,Z.P.O,Z.P.H,C.terra,cp?1.2:1.8,[7,5]);
+  if(sh.nagel) lineThrough(ctx,m,Z.P.Na,Z.P.I,C.olive,cp?1.2:1.8,[3,4]);
+  const pts=[["G",C.ink],["I",C.olive],["O",C.terra],["H",C.terra],["Sp",C.olive],["Na",C.olive]];
+  pts.forEach(([k,col])=>{ if((k==="O"||k==="H")&&!sh.euler&&!o.all) return; if((k==="Sp"||k==="Na"||k==="I")&&!sh.nagel&&!o.all) return; const p=Z.P[k]; if(Math.abs(p[0])>40||Math.abs(p[1])>40) return; dot(ctx,m,p,col,cp?3:5,cp&&!o.labels?null:k,cp); });
+  if(!cp) T.forEach(p=>circle(ctx,m.X(p[0]),m.Y(p[1]),9,null,C.terra,1.5));
+  return m; }
+function drawPts(ctx,w,h,o){ const T=o.T||T0, cp=o.compact||w<440, m=triFrame(ctx,w,h,T,{...o,box:[-1.4,7.6,-1.2,5.8]}), [P,Q,R]=o.pts;
+  if(o.shade){ ctx.save(); ctx.beginPath(); ctx.moveTo(m.X(P[0]),m.Y(P[1])); ctx.lineTo(m.X(Q[0]),m.Y(Q[1])); ctx.lineTo(m.X(R[0]),m.Y(R[1])); ctx.closePath(); ctx.fillStyle=o.neg?C.blush:C.apricot; ctx.globalAlpha=.6; ctx.fill(); ctx.restore(); }
+  else lineThrough(ctx,m,P,Q,o.col||C.olive,cp?1.5:2,[6,5]);
+  [[P,"P"],[Q,"Q"],[R,"R"]].forEach(([p,l])=>dot(ctx,m,p,l==="R"?C.terra:C.olive,cp?4:7,l,cp)); return m; }
+function drawCeva(ctx,w,h,o){ const T=o.T||T0, cp=o.compact||w<440, m=triFrame(ctx,w,h,T,{...o,box:[-1.4,7.6,-1.2,5.8]}), [ra,rb,rc]=o.r;
+  // D on BC with BD/DC=ra: D=(0:1:ra); E on CA with CE/EA=rb: E=(rb:0:1); F on AB with AF/FB=rc: F=(1:rc:0)
+  const D=toCart(T,[0,1,ra]), E=toCart(T,[rb,0,1]), F2=toCart(T,[1,rc,0]), conc=Math.abs(ra*rb*rc-1)<0.015;
+  [[0,D],[1,E],[2,F2]].forEach(([i,p])=>{ line(ctx,m.X(T[i][0]),m.Y(T[i][1]),m.X(p[0]),m.Y(p[1]),conc?C.olive:C.terra,cp?1.6:2.4); dot(ctx,m,p,C.ink,cp?3:4.5,cp?null:"DEF"[i],cp); });
+  if(conc){ const P=toCart(T,[ra*rb,1,ra]); dot(ctx,m,P,C.olive,cp?5:8,cp?null:"P",cp); }
+  else { // the three pairwise intersections: small triangle
+    const ints=[[0,D,1,E],[1,E,2,F2],[2,F2,0,D]].map(([i,p,j,q])=>inter(T[i],p,T[j],q)).filter(Boolean);
+    if(ints.length===3){ ctx.save(); ctx.beginPath(); ints.forEach((p,k)=>k?ctx.lineTo(m.X(p[0]),m.Y(p[1])):ctx.moveTo(m.X(p[0]),m.Y(p[1]))); ctx.closePath(); ctx.fillStyle=C.blush; ctx.globalAlpha=.7; ctx.fill(); ctx.restore(); } }
+  return m; }
+function inter(p1,p2,p3,p4){ const d=(p1[0]-p2[0])*(p3[1]-p4[1])-(p1[1]-p2[1])*(p3[0]-p4[0]); if(Math.abs(d)<1e-12) return null; const t=((p1[0]-p3[0])*(p3[1]-p4[1])-(p1[1]-p3[1])*(p3[0]-p4[0]))/d; return [p1[0]+t*(p2[0]-p1[0]),p1[1]+t*(p2[1]-p1[1])]; }
+
+/* ================= ROUTER ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "masses", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+$("loList").innerHTML = LO.map(([t,s],i)=>`<li><label><input type="checkbox" id="lo${i}"><span class="mono">${i+1}</span><span>${s} <small style="color:var(--muted)">· ${LO_HEAD[t]}</small></span></label></li>`).join("");
+const loState=store.get("mebc-lo",{});
+LO.forEach((x,i)=>{ const id="lo"+i; $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("mebc-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=LO.filter((x,i)=>$("lo"+i).checked).length; $("stLO").textContent=`${lo}/${LO.length}`; $("stLOb").style.width=(lo/LO.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("mebc-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  masses:{ vis:[["mass",{m:[2,3,7]}]], cap:"Masses 2, 3, 7 at A, B, C balance at P = (2 : 3 : 7). Each cevian through P balances one side: BD/DC = 7/3.",
+    keys:[["⚖","(x : y : z) is the centre of mass when masses x, y, z sit at A, B, C. Masses can be zero or negative."],["÷","The traces of P cut the sides in the ratios BD/DC = z/y, CE/EA = x/z, AF/FB = y/x (signed)."],["∞","If x + y + z = 0 there's no balance point: the cevians are parallel and P is a point at infinity."]],
+    f:"P = (x : y : z) = (xA + yB + zC)/(x + y + z)", mistake:"Mixing up the ratio: D is on BC, so BD/DC uses the masses at C and B, z/y, not y/z. The heavier end pulls the balance point towards it." },
+  areas:{ vis:[["areas",{P:[2.2,1.4]}]], cap:"The three coloured triangles around P have areas in the ratio x : y : z.",
+    keys:[["▲","x : y : z = [PBC] : [PCA] : [PAB]: the coordinate at A is the area of the triangle opposite A."],["≡","The coordinates are homogeneous: (2 : 3 : 7) and (4 : 6 : 14) are the same point."],["1","Normalise by dividing by x + y + z. Then x = [PBC]/[ABC] and the coordinates add to 1."]],
+    f:"(x : y : z) → (x, y, z)/(x + y + z)", mistake:"Using unnormalised coordinates in the area or ratio formulas. Divide by x + y + z first." },
+  centres:{ vis:[["centres",{show:{euler:true,nagel:true},labels:true}]], cap:"Centroid, incentre, circumcentre, orthocentre, Spieker centre and Nagel point, with the Euler (dashed) and Nagel (dotted) lines.",
+    keys:[["G","Centroid (1 : 1 : 1); incentre (a : b : c), because [IBC] = ½ar."],["Sp","Spieker centre (b + c : c + a : a + b); Nagel point (s − a : s − b : s − c)."],["H","Orthocentre (tan A : tan B : tan C); circumcentre (sin 2A : sin 2B : sin 2C), which in side lengths is (a²(b² + c² − a²) : …)."]],
+    f:"G (1:1:1) · I (a:b:c) · Na (s−a : s−b : s−c)", mistake:"Writing I = (1 : 1 : 1). The incentre weights each vertex by the opposite side length: I = (a : b : c)." },
+  collinear:{ vis:[["pts",{pts:[[1,0.8],[3,2],[5,3.2]]}]], cap:"P, Q, R on one line: the determinant of their coordinates is 0.",
+    keys:[["▦","P, Q, R are collinear exactly when the 3×3 determinant of their coordinates is 0."],["⇄","With normalised coordinates, R = (1 − k)P + kQ where k = PR/PQ: a weighted average."],["✓","Euler line: 3G = H + 2O, so O, G, H are collinear with OH = 3·OG."]],
+    f:"det[x₁ y₁ z₁; x₂ y₂ z₂; x₃ y₃ z₃] = 0", mistake:"Forgetting that a point on line BC has first coordinate 0. Use that to write points like D = (0 : y : z) quickly." },
+  area:{ vis:[["pts",{pts:[[1.6,0.8],[4.8,0.9],[2.6,3.2]],shade:true}]], cap:"[PQR]/[ABC] is the determinant of the normalised coordinates of P, Q, R.",
+    keys:[["▲","For normalised P, Q, R: [PQR]/[ABC] = det of their coordinate rows."],["±","The sign tells the orientation: negative means P, Q, R run the other way round."],["3D","Proof idea: put A, B, C at (1,0,0), (0,1,0), (0,0,1) in space; the determinant is a volume ratio."]],
+    f:"[PQR] = [ABC] · det(P; Q; R)", mistake:"Using homogeneous (unnormalised) coordinates in the area formula. The determinant then gets multiplied by the three coordinate sums." },
+  ceva:{ vis:[["ceva",{r:[1.5,0.8,1/1.2]}]], cap:"BD/DC · CE/EA · AF/FB = 1.5 × 0.8 × 0.833 = 1, so the cevians meet in one point.",
+    keys:[["×","Ceva: cevians AD, BE, CF are concurrent exactly when (BD/DC)(CE/EA)(AF/FB) = 1."],["P","The point (r_a r_b : 1 : r_a) has traces with BD/DC = r_a and CE/EA = r_b; it forces AF/FB = 1/(r_a r_b)."],["*","Isogonal conjugate: (x : y : z) ↦ (a²/x : b²/y : c²/z). It swaps O and H."]],
+    f:"r_a · r_b · r_c = 1", mistake:"Using unsigned ratios when a cevian meets a side extended. Ceva needs signed ratios." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  ["centres","Centroid G","var(--blush)","(1 : 1 : 1) = ⅓(1, 1, 1). Equal masses."],
+  ["centres","Incentre I","var(--apricot)","(a : b : c) = (a, b, c)/2s."],
+  ["centres","Spieker Sp","var(--sage)","(b + c : c + a : a + b) = (b + c, c + a, a + b)/4s."],
+  ["centres","Nagel Na","var(--cream)","(s − a : s − b : s − c) = (s − a, s − b, s − c)/s."],
+  ["centres","Orthocentre H","var(--blush)","(tan A : tan B : tan C)."],
+  ["centres","Circumcentre O","var(--sage)","(sin 2A : sin 2B : sin 2C)."],
+];
+$("cases").innerHTML = CASES.map(([i,n,tn,d])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${n}</h3></div><p style="font-family:var(--f-mono);font-size:.92rem">${d}</p></div>`).join("");
+(()=>{ const a=7,b=8,c=9,s=12, a2=49,b2=64,c2=81; const rows=[["G",[1,1,1]],["I",[a,b,c]],["Sp",[b+c,c+a,a+b]],["Na",[s-a,s-b,s-c]],["O",[a2*(b2+c2-a2),b2*(c2+a2-b2),c2*(a2+b2-c2)]],["H",[(a2+b2-c2)*(a2-b2+c2),(b2+c2-a2)*(b2-c2+a2),(c2+a2-b2)*(c2-a2+b2)]]].map(([k,v])=>[k,norm(v)[0]]), mx=Math.max(...rows.map(r=>r[1]));
+  $("bars").innerHTML = rows.map(([k,v],i)=>`<div class="barrow"><span><b>${k}</b></span><div class="track"><i style="width:${(v/mx*100).toFixed(1)}%;background:var(--${["terra","apricot","sage","blush","olive","cream"][i]})"></i></div><span class="v">${v.toFixed(3)}</span></div>`).join("") + `<p class="result">Side a = 7 is the shortest, so the incentre (a, b, c)/2s puts the least weight on A (7/24 ≈ 0.292), while the Nagel point puts the most (s − a)/s = 5/12 ≈ 0.417. Check the Nagel line: Sp = (Na + I)/2 gives (5/12 + 7/24)/2 = 17/48 ≈ 0.354 = (b + c)/4s ✓.</p>`; })();
+const AROUND = [
+  ["screen","Computer graphics","Every pixel inside a triangle on your screen is coloured using barycentric weights of the three corner colours.",[["Areas","real"]],"var(--blush)"],
+  ["scale","Physics","Barycentric literally means \"centre of weight\": the centre of mass of three masses.",[["Masses","real"]],"var(--apricot)"],
+  ["globe","Maps and meshes","Engineers split shapes into triangles and interpolate temperatures or heights with barycentric weights.",[["Interpolation","neutral"]],"var(--sage)"],
+  ["trophy","Olympiad geometry","Many IMO and national olympiad geometry problems can be \"bashed\" in barycentrics, a reliable back-up when a slick proof won't come.",[["Problems","alert"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"masses",label:"Masses",col:"var(--blush)",leaves:[["(x : y : z)","Masses at A, B, C."],["Traces","BD/DC = z/y."],["Negative","Points outside."]]},
+  {id:"areas",label:"Areas",col:"var(--apricot)",leaves:[["x : y : z","[PBC] : [PCA] : [PAB]"],["Homogeneous","Scale freely."],["Normalised","Sum to 1."]]},
+  {id:"centres",label:"Centres",col:"var(--sage)",leaves:[["G, I","(1:1:1), (a:b:c)"],["Sp, Na","Spieker, Nagel."],["O, H","sin 2A, tan A."],["Lines","Euler, Nagel."]]},
+  {id:"collinear",label:"Collinear",col:"var(--cream)",leaves:[["det = 0","Linearly dependent."],["Weighted avg","R = (1−k)P + kQ."],["Euler","3G = H + 2O."]]},
+  {id:"area",label:"Area",col:"var(--blush)",leaves:[["det","[PQR]/[ABC]."],["Sign","Orientation."],["Proof","Volume in 3D."]]},
+  {id:"ceva",label:"Ceva & problems",col:"var(--sage)",leaves:[["Ceva","Product = 1."],["Isogonal","(a²/x : …)"],["Bash","Compute it out."],["MOP, USAMO","Worked problems."]]},
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Barycentric</text><text x="${cx}" y="${cy+22}" text-anchor="middle">coordinates</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["masses","What does P = (x : y : z) mean physically?","P is the centre of mass of masses x, y, z placed at A, B, C."],
+  ["masses","Traces of (x : y : z): BD/DC = ?","z/y (and CE/EA = x/z, AF/FB = y/x)."],
+  ["masses","Can barycentric coordinates be negative?","Yes. A negative coordinate means P is on the far side of the corresponding side line."],
+  ["masses","What happens if x + y + z = 0?","No finite balance point: the cevians are parallel (a point at infinity)."],
+  ["areas","Area meaning of (x : y : z)?","x : y : z = [PBC] : [PCA] : [PAB] (signed areas)."],
+  ["areas","What does homogeneous mean?","(x : y : z) and (kx : ky : kz) are the same point for any k ≠ 0."],
+  ["areas","Normalise (2 : 3 : 7).","(2, 3, 7)/12 = (1/6, 1/4, 7/12)."],
+  ["areas","What is the first coordinate of any point on BC?","0."],
+  ["centres","Centroid?","G = (1 : 1 : 1)."],
+  ["centres","Incentre?","I = (a : b : c) = (a, b, c)/2s."],
+  ["centres","Spieker centre?","(b + c : c + a : a + b): the incentre of the medial triangle."],
+  ["centres","Nagel point?","(s − a : s − b : s − c)."],
+  ["centres","Orthocentre in trig form?","(tan A : tan B : tan C) = (a cos B cos C : …)."],
+  ["centres","Circumcentre in trig form?","(sin 2A : sin 2B : sin 2C) = (a cos A : b cos B : c cos C)."],
+  ["collinear","Collinearity test?","P, Q, R are collinear iff the determinant of their coordinates is 0."],
+  ["collinear","Euler line relation?","3G = H + 2O (normalised), so OH = 3·OG."],
+  ["collinear","Nagel line relations?","Sp = (Na + I)/2 and G = (Na + 2I)/3."],
+  ["area","Area formula?","[PQR]/[ABC] = det of the normalised coordinates of P, Q, R."],
+  ["area","What does a negative determinant mean?","P, Q, R are in the opposite orientation (clockwise vs anticlockwise) to A, B, C."],
+  ["area","Area of triangle OIH?","(a − b)(b − c)(c − a)/(8r), up to sign (a result proved in the notes)."],
+  ["ceva","Ceva's theorem?","AD, BE, CF concurrent ⇔ (BD/DC)(CE/EA)(AF/FB) = 1 (signed)."],
+  ["ceva","The concurrency point for ratios r_a, r_b?","(r_a r_b : 1 : r_a)."],
+  ["ceva","Isogonal conjugate of (x : y : z)?","(a²/x : b²/y : c²/z)."],
+  ["ceva","Isogonal conjugate of the centroid?","(a² : b² : c²): the symmedian point."],
+  ["ceva","MOP 2006 answer (tangent, bisector, PQ through O)?","∠BAC = 60°."],
+  ["ceva","Key identity used often?","abc = 4rRs, and [ABC] = rs = abc/(4R)."],
+];
+let fcKnown = store.get("mebc-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter(c=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("mebc-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("mebc-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("mebc-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["masses","Masses 2, 3, 7 are placed at A, B, C. D is where the cevian from A meets BC. BD/DC =",["3/7","7/3","2/7","3/2"],1,"BD/DC = z/y = 7/3: the heavier mass at C pulls D towards C."],
+  ["masses","The point (0 : 1 : 1) is:",["vertex A","the midpoint of BC","the centroid","the midpoint of AB"],1,"No mass at A, equal masses at B and C: the midpoint of BC."],
+  ["masses","If x + y + z = 0, the point (x : y : z):",["is the centroid","is at infinity (the cevians are parallel)","is vertex A","does not depend on the triangle"],1,"There's no finite balance point; it is a point at infinity."],
+  ["areas","Normalised, (2 : 3 : 7) is:",["(2, 3, 7)","(1/6, 1/4, 7/12)","(1/2, 1/3, 1/7)","(0.2, 0.3, 0.7)"],1,"Divide by 2 + 3 + 7 = 12."],
+  ["areas","For P = (x : y : z), the ratio [PCA] : [PAB] equals:",["x : y","y : z","z : y","x : z"],1,"[PBC] : [PCA] : [PAB] = x : y : z."],
+  ["areas","A point P has a negative first coordinate. Where is it?",["Inside the triangle","On the opposite side of line BC from A","On line BC","At A"],1,"[PBC] has the opposite sign to [ABC]."],
+  ["centres","The incentre is:",["(1 : 1 : 1)","(a : b : c)","(a² : b² : c²)","(s − a : s − b : s − c)"],1,"[IBC] = ½ar, so I = (a : b : c)."],
+  ["centres","(s − a : s − b : s − c) is the:",["Gergonne point","Nagel point","Spieker centre","circumcentre"],1,"The cevians to the excircle touch points meet at the Nagel point."],
+  ["centres","On the Euler line, OH : OG =",["2","3","3/2","1"],1,"3G = H + 2O gives OH = 3·OG."],
+  ["collinear","P, Q, R are collinear exactly when:",["the sum of their coordinates is 0","the determinant of their coordinates is 0","they have the same first coordinate","the determinant is 1"],1,"Collinear ⇔ linearly dependent rows ⇔ det = 0."],
+  ["collinear","With normalised coordinates, the midpoint of PQ is:",["P + Q","(P + Q)/2","P − Q","2P − Q"],1,"R = (1 − k)P + kQ with k = ½."],
+  ["area","For normalised P, Q, R, [PQR]/[ABC] =",["the sum of the coordinates","the determinant of their coordinates","the product of the diagonals","always 1/3"],1,"The area formula."],
+  ["area","Normalised P = (1, 0, 0), Q = (0, 1, 0), R = (0, 0, 1). [PQR]/[ABC] =",["0","1","1/2","3"],1,"det of the identity matrix is 1: PQR is ABC itself."],
+  ["ceva","BD/DC = 2 and CE/EA = 3. For concurrency AF/FB must be:",["6","1/6","5","2/3"],1,"Product = 1 → AF/FB = 1/(2·3) = 1/6."],
+  ["ceva","The isogonal conjugate of the centroid (1 : 1 : 1) is:",["(1 : 1 : 1)","(a² : b² : c²)","(a : b : c)","(1/a : 1/b : 1/c)"],1,"(a²/1 : b²/1 : c²/1): the symmedian point."],
+  ["ceva","In the MOP 2006 problem (tangent PA, bisector of ∠APB, PQ through the circumcentre), ∠BAC =",["45°","60°","90°","120°"],1,"The determinant condition gives cos A = ½."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("mebc-best",null); if(best==null||pct>best) store.set("mebc-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[A-Za-z]/.test(g.t[0]) ? g.t[0].toUpperCase() : "#";
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/</g,"&lt;")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Prove","Give a complete logical argument from known facts. Every step must follow.","Prove that AQ = D₂P."],
+  ["Show that","Prove the given result; the answer is stated, so the working earns the marks.","Show that OH = 3·OG."],
+  ["Compute / Determine","Find the exact value and justify it.","Compute ∠BAC."],
+  ["Find all","Find every solution AND prove there are no others.","Find all points P such that…"],
+  ["Hence","Use the previous result.","Hence find the area of OIH."],
+  ["Concurrent","Prove the lines meet at one point.","Show that AD, BE, CF are concurrent."],
+  ["Collinear","Prove the points lie on one line.","Prove that Na, G, I are collinear."],
+  ["WLOG","Without loss of generality: a simplifying assumption that loses no cases (say why).","WLOG a ≤ b."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("");
+
+// Calculation trainer (decimal answers, tight tolerance)
+const pb = x => x<0? `(−${-x})` : String(x);
+const frac = (p,q) => { const g=(x,y)=>y?g(y,x%y):Math.abs(x); const d=g(p,q)||1; return q/d===1? String(p/d) : `${p/d}/${q/d}`; };
+const PTYPES = {
+  normal:{ name:"Normalise", gen(){ const v=[rnd(1,9),rnd(1,9),rnd(1,9)], s=v[0]+v[1]+v[2], k=rnd(0,2), L="xyz"[k];
+      return { q:`Normalise P = (<b>${v.join(" : ")}</b>). What is the normalised ${L}-coordinate? (decimal, 3 d.p.)`, ans:v[k]/s,
+        steps:[`Sum = ${v.join(" + ")} = ${s}`,`Normalised P = (${v.map(x=>frac(x,s)).join(", ")})`,`${L} = ${frac(v[k],s)} ≈ ${(v[k]/s).toFixed(3)}`] }; } },
+  trace:{ name:"Cevian ratio", gen(){ const v=[rnd(1,9),rnd(1,9),rnd(1,9)], k=rnd(0,2), names=["BD/DC","CE/EA","AF/FB"], ans=[v[2]/v[1],v[0]/v[2],v[1]/v[0]][k], sym=["z/y","x/z","y/x"][k];
+      return { q:`P = (<b>${v.join(" : ")}</b>). Its cevians meet BC at D, CA at E, AB at F. Find <b>${names[k]}</b> (decimal, 3 d.p.).`, ans,
+        steps:[`${names[k]} = ${sym}`,`= ${[`${v[2]}/${v[1]}`,`${v[0]}/${v[2]}`,`${v[1]}/${v[0]}`][k]} ≈ ${ans.toFixed(3)}`] }; } },
+  incentre:{ name:"Incentre", gen(){ let a,b,c; do{ a=rnd(3,15); b=rnd(3,15); c=rnd(3,15); }while(a+b<=c||b+c<=a||c+a<=b); const k=rnd(0,2), L="xyz"[k], s2=a+b+c;
+      return { q:`A triangle has a = ${a}, b = ${b}, c = ${c}. Find the normalised <b>${L}</b>-coordinate of the incentre (decimal, 3 d.p.).`, ans:[a,b,c][k]/s2,
+        steps:[`I = (a : b : c) = (${a} : ${b} : ${c})`,`a + b + c = ${s2}`,`${L} = ${[a,b,c][k]}/${s2} ≈ ${([a,b,c][k]/s2).toFixed(3)}`] }; } },
+  det:{ name:"Collinear?", gen(){ const P=[rnd(-3,5),rnd(-3,5),rnd(-3,5)], Q=[rnd(-3,5),rnd(-3,5),rnd(-3,5)], col=Math.random()<0.4, l=rnd(1,3), mu=rnd(-2,2)||1;
+      const R = col? P.map((x,i)=>l*x+mu*Q[i]) : [rnd(-4,6),rnd(-4,6),rnd(-4,6)], d=det3([P,Q,R]);
+      return { q:`P = (${P.join(" : ")}), Q = (${Q.join(" : ")}), R = (${R.join(" : ")}). Compute the determinant. (0 means collinear.)`, ans:d,
+        steps:[`det = x₁(y₂z₃ − z₂y₃) − y₁(x₂z₃ − z₂x₃) + z₁(x₂y₃ − y₂x₃)`,`= ${pb(P[0])}(${pb(Q[1]*R[2])} − ${pb(Q[2]*R[1])}) − ${pb(P[1])}(${pb(Q[0]*R[2])} − ${pb(Q[2]*R[0])}) + ${pb(P[2])}(${pb(Q[0]*R[1])} − ${pb(Q[1]*R[0])})`,`= ${d}${d===0?": collinear":": not collinear"}`] }; } },
+  area:{ name:"Area ratio", gen(){ const S=pick([4,5,6,8]); const mk=()=>{ const x=rnd(0,S), y=rnd(0,S-x); return [x,y,S-x-y]; }; let P,Q,R,d; do{ P=mk(); Q=mk(); R=mk(); d=det3([P,Q,R]); }while(d===0); const ans=d/S**3;
+      return { q:`Normalised coordinates (all over ${S}): P = (${P.join(", ")})/${S}, Q = (${Q.join(", ")})/${S}, R = (${R.join(", ")})/${S}. Find [PQR]/[ABC] (signed, 4 d.p.).`, ans,
+        steps:[`det of the integer rows = ${d}`,`Each row was divided by ${S}, so divide the determinant by ${S}³ = ${S**3}`,`[PQR]/[ABC] = ${d}/${S**3} ≈ ${ans.toFixed(4)}`] }; } },
+  ceva:{ name:"Ceva", gen(){ const ra=pick([2,3,4,1.5,0.5]), rb=pick([2,3,0.5,0.25,1.5]), ans=1/(ra*rb);
+      return { q:`Cevians AD, BE, CF with BD/DC = ${ra} and CE/EA = ${rb}. Find AF/FB so that they are concurrent (decimal, 3 d.p.).`, ans,
+        steps:[`Ceva: (BD/DC)(CE/EA)(AF/FB) = 1`,`AF/FB = 1/(${ra} × ${rb}) = 1/${ra*rb} ≈ ${ans.toFixed(3)}`,`The point is (r_a r_b : 1 : r_a) = (${ra*rb} : 1 : ${ra})`] }; } },
+};
+let pType="normal", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paIn").value=""; $("paFb").innerHTML=""; document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+const parseAns = v => { v=v.trim().replace(/−/g,"-").replace(",","."); const m=v.match(/^(-?\d+(?:\.\d+)?)\s*\/\s*(-?\d+(?:\.\d+)?)$/); return m? (+m[1])/(+m[2]) : parseFloat(v); };
+$("paCheck").addEventListener("click",()=>{ const x=parseAns($("paIn").value); if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number or a fraction, e.g. 0.583 or 7/12.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans)<=Math.max(1.5e-3,Math.abs(pCur.ans)*0.004); if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>` : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check which coordinates go in the ratio and whether you normalised. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; });
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Which centre? drill
+const PRED = [["(1 : 1 : 1)","G","Centroid"],["(a : b : c)","I","Incentre"],["(s − a : s − b : s − c)","Na","Nagel point"],["(b + c : c + a : a + b)","Sp","Spieker centre"],["(tan A : tan B : tan C)","H","Orthocentre"],["(sin 2A : sin 2B : sin 2C)","O","Circumcentre"],["(a²(b² + c² − a²) : b²(c² + a² − b²) : c²(a² + b² − c²))","O","Circumcentre"],["(a cos B cos C : b cos C cos A : c cos A cos B)","H","Orthocentre"]];
+const PNAMES = [["G","Centroid"],["I","Incentre"],["O","Circumcentre"],["H","Orthocentre"],["Sp","Spieker centre"],["Na","Nagel point"]];
+$("predBtns").innerHTML = PNAMES.map(([k,n])=>`<button data-a="${k}">${n}</button>`).join("");
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k); pd={...pd,k,shown:false,sel:null}; document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML=""; $("predQ").innerHTML=`Which centre has barycentric coordinates <b>${PRED[k][0]}</b>?`; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{ if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick a centre first.</div>`; return; } const [,k,n]=PRED[pd.k], ok=pd.sel===k; pd.streak=ok?pd.streak+1:0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> It's the ${n} (${k}).${ok?` Streak: ${pd.streak} 🔥`:""}</div>`; });
+$("predNext").addEventListener("click",pdNew);
+
+// Long problems with full solutions
+const LONGQ = [
+  { title:"Ceva in coordinates", intro:"In triangle ABC, D lies on BC with BD/DC = 1/2 and E lies on CA with CE/EA = 3. F lies on AB.",
+    parts:[["a","Find AF/FB so that AD, BE and CF are concurrent.",6,"Ceva: (1/2)(3)(AF/FB) = 1, so AF/FB = 2/3."],
+      ["b","Find the barycentric coordinates of the point of concurrency P, and normalise them.",8,"From BD/DC = z/y = 1/2 and CE/EA = x/z = 3: take z = 1, y = 2, x = 3, so P = (3 : 2 : 1). Check AF/FB = y/x = 2/3 ✓. Normalised: (1/2, 1/3, 1/6)."],
+      ["c","Find [PBC]/[ABC], [PCA]/[ABC] and [PAB]/[ABC].",6,"These are the normalised coordinates: 1/2, 1/3 and 1/6."]] },
+  { title:"The Nagel line in a 3-4-5 triangle", intro:"Let ABC have a = BC = 5, b = CA = 4, c = AB = 3 (a right angle at A).",
+    parts:[["a","Find s and the normalised coordinates of G, I and the Nagel point Na.",8,"s = 6. G = (1, 1, 1)/3. I = (5, 4, 3)/12. Na = (s − a, s − b, s − c)/s = (1, 2, 3)/6."],
+      ["b","Use a determinant to show that Na, G and I are collinear.",8,"det[1/6 2/6 3/6; 1/3 1/3 1/3; 5/12 4/12 3/12] = (1/6)(1/3)(1/12)·det[1 2 3; 1 1 1; 5 4 3] and det[1 2 3; 1 1 1; 5 4 3] = 1(3 − 4) − 2(3 − 5) + 3(4 − 5) = −1 + 4 − 3 = 0 ✓."],
+      ["c","Show that G = (Na + 2I)/3 and deduce NaG : GI.",6,"(Na + 2I)/3 first coordinate: (1/6 + 10/12)/3 = (2/12 + 10/12)/3 = 1/3 ✓; second: (4/12 + 8/12)/3 = 1/3 ✓; third: (6/12 + 6/12)/3 = 1/3 ✓. So G divides NaI with NaG : GI = 2 : 1."]] },
+  { title:"MOP 2006 (credited in the notes)", intro:"Triangle ABC is inscribed in circle ω. Point P on line BC is such that PA is tangent to ω. The bisector of ∠APB meets AB at D and AC at E. BE and CD meet at Q. Given that PQ passes through the centre of ω, find ∠BAC.",
+    parts:[["a","Show that PB/PA = PA/PC = c/b, and deduce BD/DA and AE/EC.",8,"Triangles PBA and PAC are similar (tangent–chord angle ∠PAB = ∠PCA, common angle at P), so PB/PA = PA/PC = AB/CA = c/b. By the angle bisector theorem in triangle PAB, BD/DA = PB/PA = c/b; in triangle PAC, AE/EC = PA/PC = c/b."],
+      ["b","Find barycentric coordinates for D, E, Q and P.",10,"D = (c : b : 0), E = (b : 0 : c), Q = BE ∩ CD = (bc : b² : c²). P = (0 : x : y) on BC; collinearity of P, D, E gives det[0 x y; c b 0; b 0 c] = −c²x − b²y = 0 ⇒ x/y = −b²/c², so P = (0 : b² : −c²)."],
+      ["c","Using O = (a cos A : b cos B : c cos C), find ∠BAC.",10,"P, Q, O collinear: det[0 b² −c²; bc b² c²; a cos A b cos B c cos C] = 0. Expanding and dividing by common factors gives 2abc·cos A = bc(c cos B + b cos C) = bc·a (projection formula a = b cos C + c cos B). So cos A = ½ and ∠BAC = 60°."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist (red / amber / green)
+const RAG = ["Explain (x : y : z) as masses","Find the cevian ratios of a point","Explain coordinates as area ratios","Normalise homogeneous coordinates","Write G, I, Sp, Na","Use O and H in side-length form","Test collinearity with a determinant","Use the weighted-average form R = (1 − k)P + kQ","Compute a triangle's area ratio with a determinant","Prove Ceva with barycentrics","Find an isogonal conjugate","Set up and finish a full olympiad bash"];
+const ragState=store.get("mebc-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("mebc-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Choose good coordinates","Pick the reference triangle so key points are simple.","Masses lab"],["Translate geometry to algebra","Ratios → coordinates; lines → determinants.","Collinearity lab"],["Keep algebra tidy","Factor early; keep coordinates homogeneous.","Calculation trainer"],["Check special cases","Equilateral and right triangles catch slips.","Centres lab"],["Collect evidence","Test a claim numerically before proving it.","Collect & fit lab"],["Write it up","State each coordinate and why; finish cleanly.","Long problems"]];
+const skState=store.get("mebc-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("mebc-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+// Masses
+const ms = {m:[2,3,7]};
+function msUpd(){ const [x,y,z]=ms.m, s=x+y+z; ["msX","msY","msZ"].forEach((id,i)=>$(id+"o").textContent=ms.m[i]);
+  const r=(p,q)=>q===0?"∞":nf(p/q,3);
+  setReadout($("msOut"),[["P",`(${x} : ${y} : ${z})`],["Normalised",s?`(${[x,y,z].map(v=>frac(v,s)).join(", ")})`:"not possible (sum 0)"],["BD/DC = z/y",r(z,y)],["CE/EA = x/z",r(x,z)],["AF/FB = y/x",r(y,x)]]);
+  $("msWork").innerHTML = s? `<b>Check Ceva:</b> (z/y)(x/z)(y/x) = 1 always, so the three cevians of P always meet at P.` : `<b>x + y + z = 0:</b> the cevians are parallel; P is a point at infinity.`;
+  if(msC) msC.redraw(); }
+["msX","msY","msZ"].forEach((id,i)=>$(id).addEventListener("input",e=>{ ms.m[i]=+e.target.value; msUpd(); }));
+// Areas
+const ar = {P:[2.4,1.5], m:null};
+function arUpd(){ const b=toBary(T0,ar.P), S=Math.abs(sarea(...T0)), A=b.map(v=>v*S);
+  setReadout($("arOut"),[["[PBC], [PCA], [PAB]",A.map(v=>nf(v,2)).join(", ")],["x : y : z (normalised)",b.map(v=>nf(v,3)).join(" : ")],["Sum",nf(b[0]+b[1]+b[2],3)]]);
+  $("arWork").innerHTML = `<b>[ABC]</b> = ${nf(S,2)} · each coordinate = its area ÷ [ABC]${b.some(v=>v<0)?" · a negative area means P is across that side":""}`; if(arC) arC.redraw(); }
+// Centres
+const ce = {T:T0.map(p=>[...p]), show:{euler:true,nagel:true,circles:false}, m:null, h:-1};
+$("ceShow").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ce.show[b.dataset.k]=!ce.show[b.dataset.k]; b.setAttribute("aria-pressed",ce.show[b.dataset.k]); ceUpd(); });
+function ceUpd(){ const Z=centres(ce.T), nb=k=>norm(Z.B[k]).map(v=>nf(v,3)).join(", "), OG=dist(Z.P.O,Z.P.G), OH=dist(Z.P.O,Z.P.H), NG=dist(Z.P.Na,Z.P.G), GI=dist(Z.P.G,Z.P.I);
+  setReadout($("ceOut"),[["Sides a, b, c",[Z.a,Z.b,Z.c].map(v=>nf(v,2)).join(", ")],["G",nb("G")],["I",nb("I")],["O",nb("O")],["H",nb("H")],["OH ÷ OG",OG>1e-6?nf(OH/OG,3):"–"],["NaG ÷ GI",GI>1e-6?nf(NG/GI,3):"–"]]);
+  const e1=det3([norm(Z.B.O),norm(Z.B.G),norm(Z.B.H)]), e2=det3([norm(Z.B.Na),norm(Z.B.G),norm(Z.B.I)]);
+  $("ceWork").innerHTML = `<b>det(O, G, H)</b> = ${e1.toExponential(1)} · <b>det(Na, G, I)</b> = ${e2.toExponential(1)} (both 0 up to rounding: collinear)`; if(ceC) ceC.redraw(); }
+// Collinear
+const cl = {pts:[[1.2,0.8],[4.8,2.4],[3.6,3]], m:null, h:-1};
+function clUpd(){ const B=cl.pts.map(p=>toBary(T0,p)), d=det3(B), [P,Q,R]=cl.pts, PQ=dist(P,Q), k=PQ>1e-9? ((R[0]-P[0])*(Q[0]-P[0])+(R[1]-P[1])*(Q[1]-P[1]))/PQ**2 : 0;
+  setReadout($("clOut"),[["P",B[0].map(v=>nf(v,3)).join(", ")],["Q",B[1].map(v=>nf(v,3)).join(", ")],["R",B[2].map(v=>nf(v,3)).join(", ")],["det",nf(d,4)],["Collinear?",Math.abs(d)<0.004?"Yes ✓":"No"]]);
+  $("clWork").innerHTML = Math.abs(d)<0.004? `<b>R = (1 − k)P + kQ</b> with k = PR/PQ ≈ ${nf(k,3)}` : `Drag R onto the dashed line through P and Q (or press "Put R on line PQ").`; if(clC) clC.redraw(); }
+$("clSnap").addEventListener("click",()=>{ const [P,Q]=cl.pts, k=0.5+Math.random()*0.6; cl.pts[2]=[P[0]+k*(Q[0]-P[0]),P[1]+k*(Q[1]-P[1])]; clUpd(); });
+$("clRand").addEventListener("click",()=>{ cl.pts=cl.pts.map(()=>toCart(T0,[Math.random()+.1,Math.random()+.1,Math.random()+.1])); clUpd(); });
+// Area data
+const aa = {pts:[[1.6,0.8],[4.8,0.9],[2.6,3.2]], rows:[]};
+function aaFit(){ const r=aa.rows; if(r.length<2) return null; const n=r.length, mx=r.reduce((s,x)=>s+x.d,0)/n, my=r.reduce((s,x)=>s+x.m,0)/n; let sxy=0,sxx=0; r.forEach(x=>{ sxy+=(x.d-mx)*(x.m-my); sxx+=(x.d-mx)**2; }); if(!sxx) return null; const g=sxy/sxx; return {g,c:my-g*mx}; }
+function aaUpd(){ $("aaTable").innerHTML = aa.rows.map((r,i)=>`<tr><td>${i+1}</td><td>${nf(r.d,4)}</td><td>${nf(r.m,4)}</td></tr>`).join("") || `<tr><td colspan="3">No data yet.</td></tr>`;
+  const f=aaFit(); $("aaResult").innerHTML = f? `Fitted line: measured = ${nf(f.g,4)} × det ${f.c<0?"−":"+"} ${nf(Math.abs(f.c),4)}. Gradient 1, intercept 0: the area formula.` : "Record at least two triangles."; if(aaC){ aaC.redraw(); aaG.redraw(); } }
+$("aaRec").addEventListener("click",()=>{ aa.pts=[0,1,2].map(()=>toCart(T0,[Math.random()*1.4-.2,Math.random()*1.4-.2,Math.random()*1.4-.2])); const d=det3(aa.pts.map(p=>toBary(T0,p))), meas=sarea(...aa.pts)/sarea(...T0); aa.rows.push({d,m:meas}); aaUpd(); });
+$("aaClr").addEventListener("click",()=>{ aa.rows=[]; aaUpd(); });
+// Ceva
+const cv = {r:[1.5,0.8,1]};
+function cvUpd(){ const [ra,rb,rc]=cv.r, p=ra*rb*rc, conc=Math.abs(p-1)<0.015; $("cvAo").textContent=nf(ra,1); $("cvBo").textContent=nf(rb,1); $("cvCo").textContent=nf(rc,2);
+  setReadout($("cvOut"),[["Product r_a r_b r_c",nf(p,3)],["Concurrent?",conc?"Yes ✓":"No (shaded triangle)"],["Needed r_c",nf(1/(ra*rb),3)],["Point",conc?`(${nf(ra*rb,2)} : 1 : ${nf(ra,2)})`:"–"]]);
+  $("cvWork").innerHTML = `<b>Ceva:</b> concurrent ⇔ (BD/DC)(CE/EA)(AF/FB) = 1 · D = (0 : 1 : r_a), E = (r_b : 0 : 1), F = (1 : r_c : 0)`; if(cvC) cvC.redraw(); }
+[["cvA",0],["cvB",1],["cvC2",2]].forEach(([id,i])=>$(id).addEventListener("input",e=>{ cv.r[i]=+e.target.value; cvUpd(); }));
+$("cvFix").addEventListener("click",()=>{ cv.r[2]=Math.round(100/(cv.r[0]*cv.r[1]))/100; if(cv.r[2]<0.2||cv.r[2]>4){ cv.r=[1.5,0.8,0.83]; $("cvA").value=1.5; $("cvB").value=0.8; } $("cvC2").value=cv.r[2]; cvUpd(); });
+
+/* ================= CREATE CANVASES ================= */
+let msC=null, arC=null, ceC=null, clC=null, aaC=null, aaG=null, cvC=null;
+const hero = makeCanvas($("heroCanvas"), 0.75, 240, s => { const t=reduce?1:heroT, m=[3+2*Math.sin(t*0.9),3+2*Math.sin(t*1.3+2),3+2*Math.sin(t*0.7+4)].map(v=>Math.round(v*10)/10); drawMass(s.ctx,s.w,s.h,{m,compact:s.w<380}); }, 440);
+msC = makeCanvas($("msC"), 0.6, 300, s => drawMass(s.ctx,s.w,s.h,{m:ms.m}), 480);
+arC = makeCanvas($("arC"), 0.6, 300, s => { ar.m=drawAreas(s.ctx,s.w,s.h,{P:ar.P}); }, 480);
+drag($("arC"),(x,y)=>{ if(!ar.m) return; const p=ar.m.inv(x,y); ar.P=[Math.max(-1.2,Math.min(7.4,p[0])),Math.max(-1.2,Math.min(5.6,p[1]))]; arUpd(); });
+ceC = makeCanvas($("ceC"), 0.62, 320, s => { ce.m=drawCentres(s.ctx,s.w,s.h,{T:ce.T,show:ce.show,box:[-2,8.2,-1.6,6.2]}); }, 500);
+drag($("ceC"),(x,y,start)=>{ if(!ce.m) return; const p=ce.m.inv(x,y); if(start){ let b=-1,bd=1e9; ce.T.forEach((q,i)=>{ const d=dist(p,q); if(d<bd){ bd=d; b=i; } }); ce.h= bd<1.2? b : -1; } if(ce.h<0) return; const n=[Math.max(-1.6,Math.min(7.8,p[0])),Math.max(-1.2,Math.min(5.8,p[1]))], T2=ce.T.map((q,i)=>i===ce.h?n:q); if(Math.abs(sarea(...T2))>0.6){ ce.T=T2; ceUpd(); } });
+clC = makeCanvas($("clC"), 0.6, 300, s => { cl.m=drawPts(s.ctx,s.w,s.h,{pts:cl.pts,col:Math.abs(det3(cl.pts.map(p=>toBary(T0,p))))<0.004?C.good:C.olive}); }, 480);
+drag($("clC"),(x,y,start)=>{ if(!cl.m) return; const p=cl.m.inv(x,y); if(start){ let b=-1,bd=1e9; cl.pts.forEach((q,i)=>{ const d=dist(p,q); if(d<bd){ bd=d; b=i; } }); cl.h= bd<1? b : -1; } if(cl.h<0) return; cl.pts[cl.h]=[Math.max(-1.2,Math.min(7.4,p[0])),Math.max(-1,Math.min(5.6,p[1]))]; clUpd(); });
+aaC = makeCanvas($("aaC"), 0.45, 240, s => { const d=det3(aa.pts.map(p=>toBary(T0,p))); drawPts(s.ctx,s.w,s.h,{pts:aa.pts,shade:true,neg:d<0}); }, 400);
+aaG = makeCanvas($("aaG"), 0.7, 200, s => { bg(s.ctx,s.w,s.h); const L=Math.max(0.5,...aa.rows.map(r=>Math.abs(r.d)),...aa.rows.map(r=>Math.abs(r.m)))*1.1, fr=frame(s.ctx,s.w,s.h,{x0:-L,x1:L,y0:-L,y1:L,xl:"det",yl:"measured",compact:true}), f=aaFit();
+  if(f) line(s.ctx,fr.X(-L),fr.Y(f.c-f.g*L),fr.X(L),fr.Y(f.c+f.g*L),C.terra,2.5); line(s.ctx,fr.X(0),fr.T,fr.X(0),s.h-fr.B,C.muted,1); aa.rows.forEach(r=>circle(s.ctx,fr.X(r.d),fr.Y(r.m),4,C.surface,C.ink,2)); }, 320);
+cvC = makeCanvas($("cvC"), 0.6, 300, s => drawCeva(s.ctx,s.w,s.h,{r:cv.r}), 480);
+const PRED_T = [[1.1,4.6],[0,0],[6.4,0]];
+predC = makeCanvas($("predC"), 0.6, 210, s => { const m=triFrame(s.ctx,s.w,s.h,PRED_T,{compact:true,bgc:C["surface-2"],box:[-1.6,8,-1.4,6]}); if(pd.shown&&pd.k>=0){ const Z=centres(PRED_T), k=PRED[pd.k][1]; dot(s.ctx,m,Z.P[k],C.terra,6,k,true); } }, 320);
+pdNew();
+const MINI = {
+  mass:(s,o)=>drawMass(s.ctx,s.w,s.h,{...o,compact:true}),
+  areas:(s,o)=>drawAreas(s.ctx,s.w,s.h,{...o,compact:true}),
+  centres:(s,o)=>drawCentres(s.ctx,s.w,s.h,{...o,compact:true}),
+  pts:(s,o)=>drawPts(s.ctx,s.w,s.h,{...o,compact:true}),
+  ceva:(s,o)=>drawCeva(s.ctx,s.w,s.h,{...o,compact:true}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, 0.62, 150, s=>MINI[kind](s,o), 380); });
+const INFO = { mass:["mass",{m:[2,3,7]}], areas:["areas",{P:[2.2,1.4]}], centres:["centres",{show:{euler:true,nagel:true},labels:true}] };
+document.querySelectorAll("canvas[data-mini]").forEach(el=>{ const [k,o]=INFO[el.dataset.mini]; makeCanvas(el,0.7,160,s=>MINI[k](s,{...o,bgc:C["surface-2"]})); });
+msUpd(); arUpd(); ceUpd(); clUpd(); aaUpd(); cvUpd();
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>
+

@@ -13,6 +13,7 @@ const SUBJECTS = [
   ["english", "English", "Single text, comparative study, poetry and Paper 1."],
   ["spanish", "Spanish", "Communication, language awareness and culture."],
   ["irish", "Irish", "Gaeilge: topics for the oral, writing, prose and poetry."],
+  ["maths-enrichment", "Maths Enrichment", "Beyond the Leaving Cert: barycentric coordinates and the Maths Olympiad."],
 ];
 const START = "<!--subj-nav-->", END = "<!--/subj-nav-->";
 const CSS = `${START}<style id="subj-css">

@@ -1,0 +1,1508 @@
+<title>Maths Olympiad Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.sh-card{display:grid;gap:8px;padding:16px;align-content:start}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card ul{margin:0;padding-left:18px;font-size:.88rem;color:var(--muted);display:grid;gap:3px}
+.fbbox{padding:0 16px 14px}
+.predopts .btns button{min-width:100px}
+.ctl button[disabled]{opacity:.5}
+</style>
+
+<style>
+.qt{font-family:var(--f-display);font-size:1.02rem;line-height:1.5;padding:12px 16px;border-left:4px solid var(--terra);background:var(--surface-2);border-radius:0 12px 12px 0}
+.qt small{display:block;font-family:var(--f-body);font-size:.82rem;color:var(--muted);margin-top:4px}
+.fbbox{padding:0 16px 14px}
+.prob details{margin-top:8px} .prob summary{cursor:pointer;font-weight:700;color:var(--terra-ink)}
+.prob .sol{margin-top:6px;font-size:.93rem;line-height:1.55;display:grid;gap:6px}
+.pa2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.pa2 input{font:inherit;padding:8px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);min-width:0;flex:1 1 160px}
+</style>
+<!-- ================= TOP BAR ================= -->
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 01-14.3 4.9M4 12a8 8 0 0114.3-4.9"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg></div>
+        <div style="min-width:0"><b>The Maths Olympiad</b><span>Maths Enrichment · IrMO, EGMO and IMO</span></div>
+      </div>
+      
+      
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html">Business</a><a href="../maths/index.html">Maths</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a><a href="../maths-enrichment/index.html" class="on" aria-current="page">Maths Enrichment</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Toolkit</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <details open><summary>Maths Enrichment</summary><ol><li class="link"><a href="barycentric-coordinates.html"><span class="mono">1</span>Barycentric coordinates</a></li><li class="here"><span class="mono">2</span>The Maths Olympiad</li><li><span class="mono">3</span>Inequalities</li><li><span class="mono">4</span>Number theory</li><li><span class="mono">5</span>Combinatorics</li><li><span class="mono">6</span>Olympiad geometry</li></ol></details>
+      <p class="soon">Bold pages are ready. Others are coming soon. Enrichment material goes beyond the Leaving Certificate.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Maths Enrichment · Irish Maths Olympiad</span>
+          <h1 style="margin-top:12px">Not harder sums.<br>Different maths.<br><em>The Olympiad.</em></h1>
+          <p class="lede">The Irish Mathematical Olympiad (IrMO) is Ireland's national problem-solving contest and the road to the IMO and EGMO teams. Learn how the year works, the four topic areas (algebra, number theory, geometry, combinatorics), the key techniques, and try real past problems with hints and full worked solutions.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs" data-lab="problems">Try past problems</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated Pascal's triangle coloured by remainders"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Goals ticked</span><b id="stLO">0/8</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>The pathway, the four olympiad areas, and past problems.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">There is no official IrMO syllabus</p><h2>What you'll be able to do</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list" id="loList"></ul>
+        <p class="result" style="margin-top:10px">The IrMO site says the problems "broadly fall into the categories: Algebra, Number Theory, Discrete Mathematics, Inequalities, and Geometry", and the enrichment classes have "little overlap" with the Leaving Certificate course. The topic lists on this page are our summary of what those areas usually cover, based on irmo.ie, the IMO and EGMO, and past papers. Facts about dates and teams are from irmo.ie (checked November 2026).</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Explore the pathway, play with inequalities, count primes, chase angles, colour Pascal's triangle and solve past problems.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="pathway">
+        <div class="labhead"><span class="pill t">The olympiad year</span><p class="goal">Tap a stage to see what happens, when, and how students move on. (2026–27 cycle, from irmo.ie.)</p></div>
+        <div class="panel sim">
+          <canvas id="pwC" aria-label="Timeline of the Irish olympiad year from Round 1 to the IMO. Tap a stage."></canvas>
+          <div class="readout" id="pwOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>When is the next IrMO final round? Do you need Round 1 to enter it?</div><div class="try"><b>2</b>How many students go to the IMO, and how many to EGMO?</div><div class="try"><b>3</b>Find your nearest senior enrichment centre.</div></div>
+      </div>
+
+      <div class="lab" data-lab="algebra" hidden>
+        <div class="labhead"><span class="pill t">AM ≥ GM ≥ HM</span><p class="goal">Two positive numbers a and b. The semicircle shows the arithmetic, geometric, harmonic and quadratic means as lengths. When are they equal?</p></div>
+        <div class="panel sim">
+          <canvas id="amC" aria-label="Semicircle construction showing the four means of a and b"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="amA">a <output id="amAo">2</output></label><input type="range" id="amA" min="0.2" max="10" step="0.1" value="2"></div>
+            <div class="ctl"><label for="amB">b <output id="amBo">8</output></label><input type="range" id="amB" min="0.2" max="10" step="0.1" value="8"></div>
+          </div>
+          <div class="readout" id="amOut"></div>
+          <div class="working" id="amWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Make the means equal. What must be true of a and b?</div><div class="try"><b>2</b>Why is GM the half-chord? (Hint: similar triangles / intersecting chords.)</div><div class="try"><b>3</b>Use AM ≥ GM to show x + 1/x ≥ 2 for x > 0.</div></div>
+      </div>
+
+      <div class="lab" data-lab="number" hidden>
+        <div class="labhead"><span class="pill t">Collect &amp; fit</span><p class="goal">Count the primes up to x (a sieve does it live). Record several x values, then plot π(x) against x/ln x and fit a line.</p></div>
+        <div class="panel sim">
+          <canvas id="prC" aria-label="Number grid with primes highlighted"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="prX">x <output id="prXo">1000</output></label><input type="range" id="prX" min="2" max="5" step="0.1" value="3"></div>
+            <div class="ctl"><span class="lbl">Experiment</span><div class="btns"><button class="primary" id="prRec">Count &amp; record</button><button id="prClr">Clear data</button></div></div>
+          </div>
+          <div class="datapanel">
+            <div class="tablewrap"><table><thead><tr><th>x</th><th>π(x)</th><th>x / ln x</th><th>ratio</th></tr></thead><tbody id="prTable"></tbody></table></div>
+            <div class="graphbox"><canvas id="prG" aria-label="Graph of the prime count against x over ln x, with fitted line"></canvas><p class="result" id="prResult"></p></div>
+          </div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Record x = 100, 1 000, 10 000 and 100 000. Does the ratio approach 1?</div><div class="try"><b>2</b>The Prime Number Theorem says π(x) ~ x/ln x. What does "~" mean here?</div><div class="try"><b>3</b>Why are there infinitely many primes? (Euclid: look at p₁p₂…pₙ + 1.)</div></div>
+      </div>
+
+      <div class="lab" data-lab="geometry" hidden>
+        <div class="labhead"><span class="pill t">Angle chasing</span><p class="goal">Drag vertex A. The bisectors from B and C meet at the incentre I and cut the sides at D and E. Watch ∠BIC = 90° + A/2, and see when IE = ID (IrMO 2009).</p></div>
+        <div class="panel sim">
+          <canvas id="geC" aria-label="Triangle with angle bisectors from B and C, incentre I, and points D and E. Drag A."></canvas>
+          <div class="readout" id="geOut"></div>
+          <div class="working" id="geWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Check ∠BIC = 90° + ½∠A for several shapes.</div><div class="try"><b>2</b>Make ∠A = 60°. What happens to IE and ID?</div><div class="try"><b>3</b>When ∠A = 60°, why is AEID cyclic?</div></div>
+      </div>
+
+      <div class="lab" data-lab="combinatorics" hidden>
+        <div class="labhead"><span class="pill t">Pascal mod m</span><p class="goal">Pascal's triangle coloured by remainder when divided by m. Tap a cell to see C(n, k). Patterns appear!</p></div>
+        <div class="panel sim">
+          <canvas id="paC" aria-label="Pascal's triangle with cells coloured by remainder. Tap a cell."></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="paM">m <output id="paMo">2</output></label><input type="range" id="paM" min="2" max="7" step="1" value="2"></div>
+            <div class="ctl"><label for="paR">Rows <output id="paRo">32</output></label><input type="range" id="paR" min="8" max="64" step="1" value="32"></div>
+          </div>
+          <div class="readout" id="paOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>m = 2, 32 rows: which famous fractal appears?</div><div class="try"><b>2</b>Row 2ⁿ − 1 (e.g. row 31): what do you notice mod 2?</div><div class="try"><b>3</b>For a prime p, why is C(p, k) divisible by p for 0 &lt; k &lt; p?</div></div>
+      </div>
+
+      <div class="lab" data-lab="problems" hidden>
+        <div class="labhead"><span class="pill t">Past problems</span><p class="goal">Real past IrMO and IMO problems. Work on paper first. Then take a hint, check your answer, and compare with our full solution.</p></div>
+        <div class="panel sim">
+          <canvas id="pbC" aria-label="Progress ring showing how many past problems you have solved, by topic"></canvas>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Problem</span><div class="btns" id="pbList"></div></div></div>
+          <div class="fbbox prob" id="pbBox" style="padding-top:12px"></div>
+          <div class="readout" id="pbOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Spend at least 20 minutes before opening a hint. Struggle is where the learning happens.</div><div class="try"><b>2</b>After reading a solution, close it and write it out yourself.</div><div class="try"><b>3</b>Mark a problem solved only if your proof is complete.</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of olympiad mathematics"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>The four areas</h2></div><p>What each olympiad area usually covers, and the techniques to learn first.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three pictures</p><h2>Means, primes, Pascal</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="am"></canvas><h3>AM ≥ GM</h3><p>The radius (AM) is never shorter than the half-chord (GM).</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="primes"></canvas><h3>Primes thin out</h3><p>Primes up to 400: about x/ln x of them.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="pascal"></canvas><h3>Pascal mod 2</h3><p>Odd binomial coefficients form Sierpiński's triangle.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Real numbers from our sieve</p><h2>How many primes up to x?</h2></div><p>π(x) for powers of ten, compared with x/ln x.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Where it leads</p><h2>Competitions and resources</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+<!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Competition ready</p><h2>Problem practice</h2></div><p>How olympiad papers work, how to write proofs, warm-up calculations and full problems with solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="An IrMO paper: five problems in three hours">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="70.9 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">5 in 3 h</text><text x="80" y="96" text-anchor="middle" class="dn2">per paper</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>About 36 minutes per problem</b><p>IrMO papers have historically had two papers of three hours, five problems each (e.g. IrMO 2009). Check irmo.ie for the current format.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>IMO and EGMO</b><p>Two days, three problems a day in 4½ hours. Each problem is worth 7 points.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">How to attack an olympiad problem</h3>
+          <ol class="tips">
+            <li><b>Try small cases</b> and draw a big, accurate diagram. Patterns come from data.</li>
+            <li><b>Guess the answer</b> before proving it, then aim the proof at the guess.</li>
+            <li>Look for <b>invariants</b>, <b>extremes</b> (the smallest counterexample) and <b>symmetry</b>.</li>
+            <li>Work <b>backwards</b>: what would you need to show just before the end?</li>
+            <li>For "find all", prove both directions: your answers work, and <b>nothing else</b> does.</li>
+            <li>Write a <b>complete</b> proof: define everything, justify every step, state where you used each condition.</li>
+            <li>Partial progress counts: write up special cases and key lemmas if you can't finish.</li>
+            <li>Problems here are real past problems with <b>our own</b> solutions, not official marking schemes.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Olympiad words</h2></div><p>What problem statements mean. Plain-English summaries.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Warm-ups with worked steps</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="numeric" placeholder="Your answer" aria-label="Your answer" autocomplete="off"><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which area is it?</h2></div></div>
+          <canvas id="predC" aria-label="The four olympiad areas; the right one lights up after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns"><button data-a="alg">Algebra</button><button data-a="nt">Number theory</button><button data-a="geo">Geometry</button><button data-a="comb">Combinatorics</button></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+<div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">IMO problems with our full solutions (not official marking schemes)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Skills</p><h2>Problem-solving skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Habits that strong problem solvers build. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Precise words earn marks in "define" and "explain" questions.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: AM–GM, modular, pigeonhole…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Toolkit</h2></div><p>The results olympiad students use most, on one page.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Algebra</span><span class="big">AM ≥ GM ≥ HM</span><dl><dt>2 numbers</dt><dd>(a + b)/2 ≥ √(ab) ≥ 2ab/(a + b), equality iff a = b</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Algebra</span><span class="big">Cauchy–Schwarz</span><dl><dt>Form</dt><dd>(Σ aᵢbᵢ)² ≤ (Σ aᵢ²)(Σ bᵢ²)</dd><dt>Titu / Engel</dt><dd>Σ xᵢ²/yᵢ ≥ (Σ xᵢ)²/Σ yᵢ</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Algebra</span><span class="big">Vieta</span><dl><dt>Cubic</dt><dd>x³ + px² + qx + r: sum of roots −p, pair sum q, product −r</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Algebra</span><span class="big">Functional equations</span><dl><dt>Try</dt><dd>x = y = 0, y = x, y = −x; prove injective/surjective; guess f(x) = cx</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Number theory</span><span class="big">Fermat: a^(p−1) ≡ 1 (mod p)</span><dl><dt>If</dt><dd>p prime, p ∤ a</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Number theory</span><span class="big">gcd(a, b) = gcd(a − kb, b)</span><dl><dt>Bézout</dt><dd>gcd(a, b) = ax + by for some integers x, y</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Number theory</span><span class="big">Squares mod 3, 4, 8</span><dl><dt>mod 4</dt><dd>0, 1 · mod 3: 0, 1 · mod 8: 0, 1, 4</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Number theory</span><span class="big">Legendre: zeros of n!</span><dl><dt>Formula</dt><dd>⌊n/5⌋ + ⌊n/25⌋ + ⌊n/125⌋ + …</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Geometry</span><span class="big">∠BIC = 90° + A/2</span><dl><dt>Also</dt><dd>angles in the same segment; cyclic ⇔ opposite angles sum to 180°</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Geometry</span><span class="big">Power of a point: PA·PB = PC·PD</span><dl><dt>Tangent</dt><dd>PT² = PA·PB</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Geometry</span><span class="big">Sine rule: a/sin A = 2R</span><dl><dt>Ceva, Menelaus</dt><dd>products of ratios = 1 (signed: −1 for Menelaus)</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Combinatorics</span><span class="big">C(n, k) = n!/(k!(n − k)!)</span><dl><dt>Pascal</dt><dd>C(n, k) = C(n−1, k−1) + C(n−1, k)</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Combinatorics</span><span class="big">Pigeonhole</span><dl><dt>Rule</dt><dd>n + 1 objects in n boxes → a box has ≥ 2; kn + 1 → one has ≥ k + 1</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Combinatorics</span><span class="big">Handshake: Σ deg = 2E</span><dl><dt>Invariants</dt><dd>find a quantity that never changes (parity, sum, colouring)</dd></dl></div>
+      </div>
+      <footer>
+        <p>Facts about the competitions are from <a href="https://www.irmo.ie/" target="_blank" rel="noopener">irmo.ie</a> (checked November 2026), <a href="https://www.imo-official.org/" target="_blank" rel="noopener">imo-official.org</a> and <a href="https://www.egmo.org/" target="_blank" rel="noopener">egmo.org</a>. Past problems are quoted from the IrMO 2009 papers on irmo.ie and from the IMO problem archive, with year and number; all hints and solutions on this page are our own. This is enrichment material beyond the Leaving Certificate.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("me-theme","auto"), font = store.get("me-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("me-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("me-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  pathway:'<path d="M4 20c4-2 4-8 8-8s4-6 8-8"/><circle cx="4" cy="20" r="1.5"/><path d="M18 2l2 2-2 2"/>',
+  algebra:'<path d="M4 7h7M7.5 3.5v7M14 6h6M4 17h6M14 15l6 4M20 15l-6 4"/>',
+  number:'<path d="M9 3L7 21M17 3l-2 18M4 9h17M3 15h17"/>',
+  geometry:'<path d="M12 3L3 20h18z"/><circle cx="12" cy="14" r="3.5"/>',
+  combinatorics:'<circle cx="12" cy="5" r="1.5"/><circle cx="8" cy="11" r="1.5"/><circle cx="16" cy="11" r="1.5"/><circle cx="4" cy="17" r="1.5"/><circle cx="12" cy="17" r="1.5"/><circle cx="20" cy="17" r="1.5"/>',
+  problems:'<path d="M7 4h10v5a5 5 0 01-10 0zM5 5H3a3 3 0 003 4M19 5h2a3 3 0 01-3 4M12 14v4M8 21h8"/>',
+  book:'<path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18"/>',
+  people:'<circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20a6 6 0 0112 0M14 20a4 4 0 017 0"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"pathway", name:"The olympiad pathway", short:"Round 1, enrichment classes, the IrMO final, squad selection, EGMO and the IMO.", tint:"var(--blush)"},
+  {id:"algebra", name:"Algebra & inequalities", short:"AM–GM, Cauchy–Schwarz, polynomials and Vieta, functional equations.", tint:"var(--apricot)"},
+  {id:"number", name:"Number theory", short:"Divisibility, gcd, primes, modular arithmetic, Fermat, Diophantine equations.", tint:"var(--sage)"},
+  {id:"geometry", name:"Geometry", short:"Angle chasing, cyclic quadrilaterals, similar triangles, power of a point, coordinates.", tint:"var(--cream)"},
+  {id:"combinatorics", name:"Combinatorics", short:"Counting, binomials, pigeonhole, invariants, induction, graphs.", tint:"var(--blush)"},
+  {id:"problems", name:"Past problems", short:"Real IrMO and IMO problems with hints, answers and full solutions.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+const LO = [
+  ["pathway","Explain how the Irish olympiad year works and how students reach the IMO and EGMO teams"],
+  ["algebra","Prove inequalities with AM–GM and Cauchy–Schwarz, with equality cases"],
+  ["algebra","Use Vieta's formulas and solve simple functional equations"],
+  ["number","Work with divisibility, gcd and modular arithmetic, including Fermat's little theorem"],
+  ["number","Solve Diophantine equations by factorising, bounding and working mod n"],
+  ["geometry","Chase angles using cyclic quadrilaterals, the incentre and similar triangles"],
+  ["combinatorics","Count with binomials and use the pigeonhole principle, invariants and induction"],
+  ["problems","Write a complete, clear solution to an olympiad problem"],
+];
+const LO_HEAD = {pathway:"Pathway",algebra:"Algebra",number:"Number theory",geometry:"Geometry",combinatorics:"Combinatorics",problems:"Problem solving"};
+
+/* ---------- glossary ---------- */
+const GLOSS = [
+  ["IrMO","Irish Mathematical Olympiad","Ireland's national olympiad, held every year since 1988. Its results are used to select the national squad.","pathway"],
+  ["IMO","International Mathematical Olympiad","The world championship for secondary-school mathematicians; teams of up to six per country, held every July.","pathway"],
+  ["EGMO","European Girls' Mathematical Olympiad","An international olympiad for female students, first held in 2012; teams of up to four.","pathway"],
+  ["Enrichment centre","","A university running weekly olympiad classes. Senior centres: UCC, UCD, University of Galway, ATU Sligo, UL and Maynooth.","pathway"],
+  ["Round 1","","The first IrMO round, held in schools in September, open to any interested student.","pathway"],
+  ["Squad","","About twelve top IrMO students who sit further selection tests for the IMO team.","pathway"],
+  ["Shortlist","IMO Shortlist","The problems proposed for each IMO that reached the final selection, published after the contest. Great training material.","pathway"],
+  ["AM–GM","","The arithmetic mean is at least the geometric mean: (a₁ + … + aₙ)/n ≥ ⁿ√(a₁…aₙ) for non-negative numbers.","algebra"],
+  ["Cauchy–Schwarz","","(Σ aᵢbᵢ)² ≤ (Σ aᵢ²)(Σ bᵢ²), with equality when the sequences are proportional.","algebra"],
+  ["Titu's lemma","Engel form","Σ xᵢ²/yᵢ ≥ (Σ xᵢ)²/(Σ yᵢ) for positive yᵢ: a form of Cauchy–Schwarz.","algebra"],
+  ["Harmonic mean","HM","n/(1/a₁ + … + 1/aₙ). For two numbers: 2ab/(a + b).","algebra"],
+  ["Quadratic mean","QM, RMS","√((a² + b²)/2). QM ≥ AM ≥ GM ≥ HM.","algebra"],
+  ["Equality case","","When an inequality becomes an equality. Olympiad solutions should state it.","algebra"],
+  ["Vieta's formulas","","Relations between the roots of a polynomial and its coefficients.","algebra"],
+  ["Functional equation","","An equation where the unknown is a function, e.g. f(x + y) = f(x) + f(y).","algebra"],
+  ["Injective","one-to-one","f(a) = f(b) implies a = b.","algebra"],
+  ["Discriminant","","For a cubic t³ + pt + q, Δ = −4p³ − 27q²; three real roots iff Δ ≥ 0.","algebra"],
+  ["Divisibility","a | b","a divides b if b = ka for an integer k.","number"],
+  ["gcd","greatest common divisor","The largest integer dividing both numbers. gcd(a, b) = gcd(a − kb, b).","number"],
+  ["Euclidean algorithm","","Repeatedly replace (a, b) by (b, a mod b) to find gcd(a, b).","number"],
+  ["Prime","","An integer greater than 1 whose only positive divisors are 1 and itself.","number"],
+  ["Modular arithmetic","a ≡ b (mod n)","a and b leave the same remainder on division by n.","number"],
+  ["Fermat's little theorem","","If p is prime and p ∤ a, then a^(p−1) ≡ 1 (mod p).","number"],
+  ["Order","ord_n(a)","The smallest k > 0 with a^k ≡ 1 (mod n).","number"],
+  ["Diophantine equation","","An equation to be solved in integers.","number"],
+  ["Vieta jumping","","Replace one root of a quadratic in a Diophantine equation by the other root to get a smaller solution; famous from IMO 1988.","number"],
+  ["Prime Number Theorem","","π(x), the number of primes up to x, is asymptotic to x/ln x.","number","π(x) ~ x/ln x"],
+  ["Angle chasing","","Finding angles step by step using angle facts until the result appears.","geometry"],
+  ["Cyclic quadrilateral","","A quadrilateral with all four vertices on a circle; opposite angles add to 180°.","geometry"],
+  ["Incentre","I","Where the angle bisectors meet; centre of the inscribed circle. ∠BIC = 90° + A/2.","geometry"],
+  ["Power of a point","","For P and a circle, PA·PB is the same for every line through P meeting the circle at A and B.","geometry"],
+  ["Similar triangles","","Triangles with equal angles; their sides are in proportion.","geometry"],
+  ["Sine rule","","a/sin A = b/sin B = c/sin C = 2R.","geometry"],
+  ["Barycentric coordinates","","Coordinates relative to a triangle; see the barycentric page in this course.","geometry"],
+  ["Binomial coefficient","C(n, k)","The number of ways to choose k items from n.","combinatorics"],
+  ["Pigeonhole principle","","If more than n objects go into n boxes, some box gets at least two.","combinatorics"],
+  ["Invariant","","A quantity that never changes under the allowed moves; used to show something is impossible.","combinatorics"],
+  ["Induction","","Prove a statement for n = 1, then show that if it holds for n it holds for n + 1.","combinatorics"],
+  ["Graph","","Vertices joined by edges; e.g. people and friendships.","combinatorics"],
+  ["Strongly regular graph","","Every vertex has degree k; adjacent vertices share λ neighbours, non-adjacent share μ (IrMO 2009 P2 Q4).","combinatorics"],
+  ["Lucas's theorem","","C(n, k) mod p is the product of the binomials of the base-p digits of n and k.","combinatorics"],
+  ["Proof by contradiction","","Assume the opposite and reach an impossibility.","problems"],
+  ["WLOG","without loss of generality","A simplifying assumption that covers all cases by symmetry.","problems"],
+  ["Extremal principle","","Look at the smallest or largest object (e.g. a minimal counterexample).","problems"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+t.length}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["AM–GM","AM–GM",1],["Cauchy–Schwarz","Cauchy–Schwarz",1],["Vieta","Vieta's formulas",1],["functional equations","Functional equation"],["modular arithmetic","Modular arithmetic"],["Fermat","Fermat's little theorem",1],["Diophantine","Diophantine equation",1],["cyclic","Cyclic quadrilateral"],["incentre","Incentre"],["power of a point","Power of a point"],["pigeonhole","Pigeonhole principle"],["invariants","Invariant"],["induction","Induction"],["IrMO","IrMO",1],["EGMO","EGMO",1]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rr(ctx,x,y,w,h,r){ if(w<0){ x+=w; w=-w; } if(h<0){ y+=h; h=-h; } r=Math.max(0,Math.min(r,h/2,w/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function arrowHead(ctx,x,y,dx,dy,col,s=8){ ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x+dx*s,y+dy*s); ctx.lineTo(x-dx*s*0.6-dy*s*0.7,y-dy*s*0.6+dx*s*0.7); ctx.lineTo(x-dx*s*0.6+dy*s*0.7,y-dy*s*0.6-dx*s*0.7); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const nf = (x,d=0) => { const s=(Math.round(x*10**d)/10**d).toFixed(d); const [i,f]=s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f?"."+f:""); };
+const eur = x => "€"+nf(x, Math.abs(x-Math.round(x))>0.004?2:0);
+const niceStep = (range,n) => { const r=range/Math.max(1,n), p=10**Math.floor(Math.log10(r)), m=r/p; return (m<=1?1:m<=2?2:m<=5?5:10)*p; };
+const tick = v => String(+v.toFixed(6));
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+// Axes: returns mapping functions. o: x0,x1,y0,y1,xl,yl,compact
+function frame(ctx,w,h,o){
+  const cp=o.compact, L=cp?36:50, R=12, T=cp?12:16, B=cp?24:34, fs=cp?9:11;
+  const X=v=>L+(v-o.x0)/(o.x1-o.x0)*(w-L-R), Y=v=>h-B-(v-o.y0)/(o.y1-o.y0)*(h-B-T);
+  const xs=o.xt||niceStep(o.x1-o.x0, Math.max(3,Math.floor((w-L)/70))), ys=o.yt||niceStep(o.y1-o.y0, Math.max(3,Math.floor((h-B)/45)));
+  for(let v=Math.ceil(o.x0/xs)*xs; v<=o.x1+1e-9; v+=xs){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,tick(v),X(v),h-B+(cp?11:14),C.muted,M(fs),"center"); }
+  for(let v=Math.ceil(o.y0/ys)*ys; v<=o.y1+1e-9; v+=ys){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,tick(v),L-5,Y(v)+3,C.muted,M(fs),"right"); }
+  const y0=Y(Math.max(o.y0,Math.min(o.y1,0)));
+  line(ctx,L,y0,w-R,y0,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(o.xl) text(ctx,o.xl,w-R,h-B+(cp?22:30),C.muted,F(cp?10:12),"right");
+  if(o.yl) text(ctx,o.yl,L+6,T+(cp?10:12),C.muted,F(cp?10:12),"left");
+  return {X,Y,L,R,T,B};
+}
+function curve(ctx,f,x0,x1,X,Y,col,lw=2.5,dash,clip){ ctx.save(); if(clip){ ctx.beginPath(); ctx.rect(clip[0],clip[1],clip[2],clip[3]); ctx.clip(); } ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); const n=120; for(let i=0;i<=n;i++){ const x=x0+(x1-x0)*i/n, y=f(x); if(i) ctx.lineTo(X(x),Y(y)); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore(); }
+
+/* ================= MODELS + DRAWINGS ================= */
+function drag(el, fn){ let down=false; const pos=e=>{ const r=el.getBoundingClientRect(); return [e.clientX-r.left, e.clientY-r.top]; };
+  el.addEventListener("pointerdown",e=>{ down=true; el.setPointerCapture(e.pointerId); fn(...pos(e),true); });
+  el.addEventListener("pointermove",e=>{ if(down) fn(...pos(e),false); });
+  el.addEventListener("pointerup",()=>down=false); el.addEventListener("pointercancel",()=>down=false); }
+const pick=a=>a[Math.floor(Math.random()*a.length)], rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+// 1. Pathway (2026-27 cycle, from irmo.ie)
+const STAGES = [
+  ["Round 1","Sept","14–18 September 2026, in second-level schools. Open to any interested student: ask a maths teacher to register the school."],
+  ["Enrichment","Oct–Dec","Senior enrichment classes at six centres (UCC, UCD, University of Galway, ATU Sligo, UL, Maynooth), run by volunteer mathematicians. Some centres use a selection test. Junior centres opened from January 2026."],
+  ["IrMO final","23 Jan","The final round of the 40th IrMO, on 23 January 2027 at the senior enrichment centres. Round 1 is not a prerequisite: contact a centre in the autumn."],
+  ["Squad","Spring","About twelve top students form a squad and sit two further selection tests to choose the IMO team."],
+  ["EGMO","April","Team of up to four female students. EGMO 2026: Bordeaux, France, 9–15 April 2026. Two papers of 4½ hours."],
+  ["IMO","July","Team of up to six. IMO 2026 (the 67th): Shanghai, China, 10–20 July 2026. Ireland has taken part every year since 1988."],
+];
+const SCOL = ["blush","apricot","sage","cream","olive","terra"];
+function drawPath(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, n=STAGES.length, pad=cp?16:30, y=h*0.5, P=[];
+  ctx.save(); ctx.strokeStyle=C.line; ctx.lineWidth=cp?4:6; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(w-pad,y); ctx.stroke(); ctx.restore();
+  STAGES.forEach((s,i)=>{ const x=pad+i*(w-2*pad)/(n-1), sel=o.sel===i, r=sel?(cp?13:22):(cp?10:17), yy=y+(i%2?1:-1)*(cp?0:0); P.push([x,yy]);
+    if(o.t!=null){ const k=(o.t*0.6)%n; if(i<=k) line(ctx,pad,y,x,y,C.terra,cp?4:6); }
+    circle(ctx,x,yy,r,C[SCOL[i]],sel?C.terra:C.surface,sel?4:2); text(ctx,String(i+1),x,yy+1,"#3b2b21",F(cp?10:14,800),"center","middle");
+    text(ctx,s[0],x,yy+(i%2?1:-1)*(r+(cp?12:20))+(i%2?6:0),C.ink,F(cp?9:13,800),"center"); if(!cp) text(ctx,s[1],x,yy+(i%2?1:-1)*(r+38)+(i%2?6:0),C.muted,F(11),"center"); });
+  return P; }
+// 2. Means: semicircle construction
+function drawAM(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, a=o.a, b=o.b, d=a+b, s=Math.min((w-(cp?24:60))/d,(h-(cp?30:60))/(d/2)), x0=(w-d*s)/2, y0=h-(cp?18:34);
+  const X=v=>x0+v*s, Y=v=>y0-v*s, AM=d/2, GM=Math.sqrt(a*b), HM=2*a*b/d, QM=Math.sqrt((a*a+b*b)/2), cx=AM;
+  ctx.save(); ctx.strokeStyle=C.ink; ctx.lineWidth=cp?1.5:2; ctx.beginPath(); ctx.arc(X(cx),Y(0),AM*s,Math.PI,0); ctx.stroke(); ctx.restore();
+  line(ctx,X(0),Y(0),X(d),Y(0),C.ink,cp?1.5:2);
+  line(ctx,X(a),Y(0),X(a),Y(GM),C.olive,cp?3:4); line(ctx,X(cx),Y(0),X(a),Y(GM),C.terra,cp?2.5:3.5);
+  const t=GM/AM, fx=a+(cx-a)*(GM*GM/(AM*AM)), fy=GM-GM*(GM*GM/(AM*AM)); // foot of perpendicular from G-top onto radius (length HM from top)
+  const top=[a,GM], dir=[(cx-a)/AM,(0-GM)/AM], foot=[top[0]+dir[0]*HM,top[1]+dir[1]*HM]; line(ctx,X(top[0]),Y(top[1]),X(foot[0]),Y(foot[1]),C.apricot,cp?2.5:3.5); line(ctx,X(a),Y(0),X(foot[0]),Y(foot[1]),C.line,1,[4,4]);
+  line(ctx,X(cx),Y(0),X(cx),Y(AM),C.terra,1.2,[5,4]); line(ctx,X(a),Y(0),X(cx),Y(AM),C.sage,cp?2.5:3.5);
+  if(!cp){ text(ctx,`AM ${nf(AM,2)}`,X((cx+a)/2)+6,Y(GM/2)-6,C.terra,F(12,800),"left"); text(ctx,`GM ${nf(GM,2)}`,X(a)-6,Y(GM/2),C.olive,F(12,800),"right"); text(ctx,`HM ${nf(HM,2)}`,X((top[0]+foot[0])/2)+8,Y((top[1]+foot[1])/2),C.apricot,F(12,800),"left"); text(ctx,`QM ${nf(QM,2)}`,X((a+cx)/2)-10,Y(AM*0.75),C.sage,F(12,800),"right");
+    text(ctx,"a",X(a/2),Y(0)+16,C.muted,F(12),"center"); text(ctx,"b",X(a+b/2),Y(0)+16,C.muted,F(12),"center"); }
+}
+// 3. Primes
+const SIEVE_N = 100000, isComp = new Uint8Array(SIEVE_N+1); isComp[0]=isComp[1]=1; for(let i=2;i*i<=SIEVE_N;i++) if(!isComp[i]) for(let j=i*i;j<=SIEVE_N;j+=i) isComp[j]=1;
+const PI = new Uint32Array(SIEVE_N+1); for(let i=1;i<=SIEVE_N;i++) PI[i]=PI[i-1]+(isComp[i]?0:1);
+function drawGrid(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, N=o.N||400, cols=cp?20:40, rows=Math.ceil(N/cols), cw=(w-12)/cols, ch=Math.min(cw,(h-12)/rows), sz=Math.min(cw,ch);
+  for(let n=1;n<=N;n++){ const i=(n-1)%cols, j=Math.floor((n-1)/cols); rr(ctx,6+i*cw+1,6+j*sz+1,cw-2,sz-2,2); ctx.fillStyle= n>1&&!isComp[n]? C.terra : C["surface-2"]; ctx.fill(); }
+  if(!cp) text(ctx,`${PI[N]} primes up to ${N}`,w-10,h-8,C.muted,F(12),"right"); }
+// 4. Geometry: bisectors and incentre
+const GB=[0,0], GC=[6,0];
+function triStuff(A){ const a=Math.hypot(GB[0]-GC[0],GB[1]-GC[1]), b=Math.hypot(GC[0]-A[0],GC[1]-A[1]), c=Math.hypot(A[0]-GB[0],A[1]-GB[1]), s=a+b+c;
+  const I=[(a*A[0]+b*GB[0]+c*GC[0])/s,(a*A[1]+b*GB[1]+c*GC[1])/s];
+  const D=[(a*A[0]+c*GC[0])/(a+c),(a*A[1]+c*GC[1])/(a+c)]; // on AC, AD:DC = c:a (bisector from B)
+  const E=[(a*A[0]+b*GB[0])/(a+b),(a*A[1]+b*GB[1])/(a+b)]; // on AB, AE:EB = b:a (bisector from C)
+  const ang=(P,Q,R)=>{ const u=[P[0]-Q[0],P[1]-Q[1]], v=[R[0]-Q[0],R[1]-Q[1]]; return Math.acos((u[0]*v[0]+u[1]*v[1])/(Math.hypot(...u)*Math.hypot(...v)))*180/Math.PI; };
+  return {a,b,c,I,D,E,A:ang(GB,A,GC),BIC:ang(GB,I,GC),IE:Math.hypot(I[0]-E[0],I[1]-E[1]),ID:Math.hypot(I[0]-D[0],I[1]-D[1])}; }
+function drawGeo(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, A=o.A, S=triStuff(A), box=[-0.8,6.8,-0.6,Math.max(4.4,A[1]+0.8)], pad=cp?14:24, sc=Math.min((w-2*pad)/(box[1]-box[0]),(h-2*pad)/(box[3]-box[2])), cx=w/2-(box[0]+box[1])/2*sc, cy=h/2+(box[2]+box[3])/2*sc, X=x=>cx+x*sc, Y=y=>cy-y*sc;
+  const tri=[A,GB,GC]; ctx.save(); ctx.beginPath(); tri.forEach((p,i)=>i?ctx.lineTo(X(p[0]),Y(p[1])):ctx.moveTo(X(p[0]),Y(p[1]))); ctx.closePath(); ctx.strokeStyle=C.ink; ctx.lineWidth=cp?1.8:2.5; ctx.stroke(); ctx.restore();
+  line(ctx,X(GB[0]),Y(GB[1]),X(S.D[0]),Y(S.D[1]),C.olive,cp?1.5:2); line(ctx,X(GC[0]),Y(GC[1]),X(S.E[0]),Y(S.E[1]),C.olive,cp?1.5:2);
+  const eq=Math.abs(S.IE-S.ID)<0.02; line(ctx,X(S.I[0]),Y(S.I[1]),X(S.E[0]),Y(S.E[1]),eq?C.good:C.terra,cp?2.5:4); line(ctx,X(S.I[0]),Y(S.I[1]),X(S.D[0]),Y(S.D[1]),eq?C.good:C.apricot,cp?2.5:4);
+  if(Math.abs(S.A-60)<0.6){ const P=[A,S.E,S.I,S.D], cxy=circum(A,S.E,S.D); if(cxy){ ctx.save(); ctx.strokeStyle=C.good; ctx.setLineDash([5,5]); ctx.beginPath(); ctx.arc(X(cxy[0]),Y(cxy[1]),cxy[2]*sc,0,7); ctx.stroke(); ctx.restore(); } }
+  [[A,"A"],[GB,"B"],[GC,"C"],[S.I,"I"],[S.D,"D"],[S.E,"E"]].forEach(([p,l])=>{ circle(ctx,X(p[0]),Y(p[1]),l==="A"&&!cp?8:4,l==="A"?C.terra:C.ink); text(ctx,l,X(p[0])+7,Y(p[1])-7,C.ink,F(cp?10:13,800),"left"); });
+  return {inv:(px,py)=>[(px-cx)/sc,(cy-py)/sc]}; }
+function circum(P,Q,R){ const d=2*(P[0]*(Q[1]-R[1])+Q[0]*(R[1]-P[1])+R[0]*(P[1]-Q[1])); if(Math.abs(d)<1e-9) return null; const s=p=>p[0]**2+p[1]**2; const ux=(s(P)*(Q[1]-R[1])+s(Q)*(R[1]-P[1])+s(R)*(P[1]-Q[1]))/d, uy=(s(P)*(R[0]-Q[0])+s(Q)*(P[0]-R[0])+s(R)*(Q[0]-P[0]))/d; return [ux,uy,Math.hypot(P[0]-ux,P[1]-uy)]; }
+// 5. Pascal mod m
+const binomRow = n => { const r=[1n]; for(let k=1;k<=n;k++) r.push(r[k-1]*BigInt(n-k+1)/BigInt(k)); return r; };
+function drawPascal(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const m=o.m, R=o.rows, cs=Math.min((w-10)/R,(h-10)/R), x0=w/2, cols=[C.terra,C.apricot,C.sage,C.olive,C.blush,C.cream,C.ink]; let row=[1];
+  const lim = o.t!=null? Math.min(R, Math.floor(o.t*6)%(R+10)) : R;
+  for(let n=0;n<R && n<lim;n++){ if(n>0){ const nr=[1]; for(let k=1;k<n;k++) nr.push((row[k-1]+row[k])%m); nr.push(1); row=nr; }
+    row.forEach((v,k)=>{ const x=x0+(k-n/2)*cs-cs/2, y=5+n*cs; ctx.fillStyle= v===0? C["surface-2"] : m===2? C.terra : cols[(v-1)%cols.length]; ctx.fillRect(x,y,cs-0.6,cs-0.6); if(o.sel&&o.sel[0]===n&&o.sel[1]===k){ ctx.strokeStyle=C.ink; ctx.lineWidth=2; ctx.strokeRect(x,y,cs,cs); } }); }
+  return {cs,x0}; }
+// 6. Problems progress ring
+function drawRing(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, P=o.probs, cx=w/2, cy=h/2, R=Math.min(w,h)/2-(cp?10:18), r0=R*0.62, n=P.length;
+  const tc={alg:C.apricot,nt:C.sage,geo:C.cream,comb:C.blush};
+  P.forEach((p,i)=>{ const a0=-Math.PI/2+i*2*Math.PI/n+0.02, a1=a0+2*Math.PI/n-0.04, solved=o.solved[p.id]; ctx.beginPath(); ctx.arc(cx,cy,R,a0,a1); ctx.arc(cx,cy,r0,a1,a0,true); ctx.closePath(); ctx.fillStyle=solved? C.olive : tc[p.topic]; ctx.globalAlpha= o.sel===i?1:0.75; ctx.fill(); ctx.globalAlpha=1; if(o.sel===i){ ctx.strokeStyle=C.terra; ctx.lineWidth=3; ctx.stroke(); }
+    const am=(a0+a1)/2; text(ctx,String(i+1),cx+Math.cos(am)*(R+r0)/2,cy+Math.sin(am)*(R+r0)/2+4,"#3b2b21",F(cp?9:12,800),"center"); });
+  const k=Object.values(o.solved).filter(Boolean).length; text(ctx,`${k}/${n}`,cx,cy+(cp?4:8),C.ink,F(cp?16:30,800),"center"); if(!cp) text(ctx,"solved",cx,cy+28,C.muted,F(12),"center"); }
+
+// Past problems: statements quoted from the sources (lightly formatted); hints and solutions are our own
+const PROBS = [
+  {id:"i09-1-1", src:"IrMO 2009, Paper 1, Problem 1", url:"https://www.irmo.ie/IrMO2009paper1solutions.pdf", topic:"comb",
+   st:"Hamilton Avenue has eight houses. On one side of the street are the houses numbered 1, 3, 5, 7 and directly opposite are houses 2, 4, 6, 8 respectively. An eccentric postman starts deliveries at house 1 and delivers letters to each of the houses, finally returning to house 1 for a cup of tea. Throughout the entire journey he must observe the following rules. The numbers of the houses delivered to must follow an odd-even-odd-even pattern throughout, each house except house 1 is visited exactly once (house 1 is visited twice) and the postman at no time is allowed to cross the road to the house directly opposite. How many different delivery sequences are possible?",
+   hint:"The route is 1, E, O, E, O, E, O, E, 1. Fix the order of the odd houses 3, 5, 7 (6 ways). Each even slot sits between two odd houses and must avoid both of their opposite numbers.", ans:"12", num:12,
+   sol:["Write the route as 1, e₁, o₂, e₂, o₃, e₃, o₄, e₄, 1, where o₂o₃o₄ is an ordering of 3, 5, 7 and e₁…e₄ an ordering of 2, 4, 6, 8. Opposite pairs are (1,2), (3,4), (5,6), (7,8).","Slot eᵢ lies between two odd houses, so it must avoid two even numbers: the opposites of its neighbours. Slot e₁ (between 1 and o₂) avoids 2 and opp(o₂); e₂ avoids opp(o₂), opp(o₃); e₃ avoids opp(o₃), opp(o₄); e₄ (between o₄ and 1) avoids opp(o₄) and 2.","So each slot has exactly two allowed values and each value two allowed slots. The forbidden pairs form a single 8-cycle (slot e₁ – 2 – e₄ – opp(o₄) – e₃ – opp(o₃) – e₂ – opp(o₂) – e₁), and so do the allowed pairs. A single 8-cycle has exactly 2 perfect matchings, so there are exactly 2 ways to place the even houses.","There are 3! = 6 orders for the odd houses, each giving 2 arrangements: 6 × 2 = <b>12</b> sequences. (We also checked this by listing all routes by computer.)"]},
+  {id:"i09-1-3", src:"IrMO 2009, Paper 1, Problem 3", url:"https://www.irmo.ie/IrMO2009paper1solutions.pdf", topic:"nt",
+   st:"Find all positive integers n for which n⁸ + n + 1 is a prime number.",
+   hint:"Try to factorise. Does n² + n + 1 divide n⁸ + n + 1? (Think about cube roots of unity, or just do polynomial division.)", ans:"n = 1 only", num:1,
+   sol:["Claim: n⁸ + n + 1 = (n² + n + 1)(n⁶ − n⁵ + n³ − n² + 1). Multiply out: n⁸ − n⁷ + n⁵ − n⁴ + n² + n⁷ − n⁶ + n⁴ − n³ + n + n⁶ − n⁵ + n³ − n² + 1 = n⁸ + n + 1 ✓.","(Why to expect it: if ω is a cube root of unity, ω⁸ + ω + 1 = ω² + ω + 1 = 0, so the roots of n² + n + 1 are roots of n⁸ + n + 1.)","For n ≥ 2: n² + n + 1 ≥ 7 > 1, and n⁶ − n⁵ + n³ − n² + 1 = n⁵(n − 1) + n²(n − 1) + 1 ≥ 1 + … > 1. So the number has two factors bigger than 1: not prime.","For n = 1: 1 + 1 + 1 = 3, which is prime. Answer: <b>n = 1</b>."]},
+  {id:"i09-1-5", src:"IrMO 2009, Paper 1, Problem 5", url:"https://www.irmo.ie/IrMO2009paper1solutions.pdf", topic:"alg",
+   st:"Suppose a, b, c are real numbers such that a + b + c = 0 and a² + b² + c² = 1. Prove that a²b²c² ≤ 1/54, and determine the cases of equality.",
+   hint:"a, b, c are the roots of a cubic. Find ab + bc + ca from the two conditions, then ask when a cubic has three real roots.", ans:"Equality when two of a, b, c equal ±1/√6 and the third is ∓2/√6", num:null,
+   sol:["From (a + b + c)² = a² + b² + c² + 2(ab + bc + ca): 0 = 1 + 2(ab + bc + ca), so ab + bc + ca = −½. Let p = abc.","So a, b, c are the three real roots of t³ − ½t − p = 0 (Vieta: sum 0, pair-sum −½, product p).","A cubic t³ + Pt + Q has three real roots exactly when its discriminant −4P³ − 27Q² ≥ 0. Here −4(−½)³ − 27p² = ½ − 27p² ≥ 0, so p² ≤ 1/54, i.e. <b>a²b²c² ≤ 1/54</b>.","Equality ⇔ discriminant 0 ⇔ a repeated root. With a = b: c = −2a and 6a² = 1, so (a, b, c) = (1/√6, 1/√6, −2/√6) or its negative, in any order. Check: a²b²c² = (1/6)(1/6)(4/6) = 4/216 = 1/54 ✓."]},
+  {id:"i09-2-2", src:"IrMO 2009, Paper 2, Problem 2", url:"https://www.irmo.ie/IrMO2009paper2solutions.pdf", topic:"nt",
+   st:"For any positive integer n define E(n) = n(n + 1)(2n + 1)(3n + 1) ··· (10n + 1). Find the greatest common divisor of E(1), E(2), E(3), …, E(2009).",
+   hint:"The gcd divides E(1). Which primes can divide it, and can a prime square divide it? Then show each small prime divides every E(n).", ans:"2310", num:2310,
+   sol:["Let g be the gcd. g | E(1) = 1·2·3·…·11, so every prime factor of g is at most 11.","If p ≤ 11 is prime, g | E(p) = p(p + 1)(2p + 1)···(10p + 1). Each kp + 1 is coprime to p, so p divides E(p) exactly once: p² ∤ g. Hence g divides 2·3·5·7·11 = 2310.","Conversely, fix p ∈ {2, 3, 5, 7, 11} and any n. If p | n, then p | E(n). Otherwise n has an inverse mod p, and k ≡ −n⁻¹ (mod p) has a solution with 1 ≤ k ≤ p − 1 ≤ 10, giving p | kn + 1. So p | E(n) for every n.","Therefore 2310 divides every E(n), and g = <b>2310</b>."]},
+  {id:"i09-2-3", src:"IrMO 2009, Paper 2, Problem 3", url:"https://www.irmo.ie/IrMO2009paper2solutions.pdf", topic:"nt",
+   st:"Find all pairs (a, b) of positive integers, such that (ab)² − 4(a + b) is the square of an integer.",
+   hint:"The expression is less than (ab)², and has the same parity as (ab)². So it is at most (ab − 2)². What does that inequality give?", ans:"(1, 5), (5, 1), (2, 2), (2, 3), (3, 2)", num:null,
+   sol:["Let (ab)² − 4(a + b) = k² with k ≥ 0. Since 4(a + b) > 0, k < ab. Also k² ≡ (ab)² (mod 2), so k and ab have the same parity, hence k ≤ ab − 2.","Then (ab)² − 4(a + b) ≤ (ab − 2)² = (ab)² − 4ab + 4, so ab − a − b ≤ 1, i.e. (a − 1)(b − 1) ≤ 2.","WLOG a ≤ b. Either a = 1, or (a, b) = (2, 2) or (2, 3). Check: (2, 2): 16 − 16 = 0 = 0² ✓. (2, 3): 36 − 20 = 16 = 4² ✓.","If a = 1: b² − 4b − 4 = (b − 2)² − 8 = k², so (b − 2 − k)(b − 2 + k) = 8 with both factors of the same parity: 2 × 4, giving b − 2 = 3, k = 1, b = 5 ✓ (b = 1, 2, 3, 4 give negative values or non-squares).","Answer: <b>(1, 5), (5, 1), (2, 2), (2, 3), (3, 2)</b>. (Confirmed by a computer search up to 200.)"]},
+  {id:"i09-2-4", src:"IrMO 2009, Paper 2, Problem 4", url:"https://www.irmo.ie/IrMO2009paper2solutions.pdf", topic:"comb",
+   st:"At a strange party, each person knew exactly 22 others. For any pair of people X and Y who knew one another, there was no other person at the party that they both knew. For any pair of people X and Y who did not know one another, there were exactly 6 other people that they both knew. How many people were at the party?",
+   hint:"Fix one person X. Count the pairs (friend F of X, person Z ≠ X that F knows) in two ways.", ans:"100", num:100,
+   sol:["Fix a person X. X knows 22 people. Each of them knows 21 people other than X, and none of those is a friend of X (a friend of both X and F would be a common acquaintance of the pair X, F, which is not allowed). So there are 22 × 21 = 462 pairs (F, Z) with F a friend of X and Z a non-friend of X.","Count the same pairs from the other side: every non-friend Z of X (other than X) shares exactly 6 acquaintances with X, so appears in exactly 6 pairs. So the number of non-friends is 462 ÷ 6 = 77.","Total: X + 22 friends + 77 others = <b>100</b> people."]},
+  {id:"i09-2-5", src:"IrMO 2009, Paper 2, Problem 5", url:"https://www.irmo.ie/IrMO2009paper2solutions.pdf", topic:"geo",
+   st:"In the triangle ABC we have |AB| < |AC|. The bisectors of the angles at B and C meet AC and AB at D and E respectively. BD and CE intersect at the incentre I of ΔABC. Prove that ∠BAC = 60° if and only if |IE| = |ID|.",
+   hint:"Use the sine rule in triangles AEI and ADI: AI is common, and the angles at A are equal (A/2).", ans:"Proof", num:null,
+   sol:["AI bisects angle A, so ∠EAI = ∠DAI = A/2. By the sine rule in triangles AEI and ADI: IE = AI·sin(A/2)/sin∠AEI and ID = AI·sin(A/2)/sin∠ADI.","So IE = ID ⇔ sin∠AEI = sin∠ADI ⇔ ∠AEI = ∠ADI or ∠AEI + ∠ADI = 180°.","∠AEI = ∠AEC = 180° − A − C/2 and ∠ADI = ∠ADB = 180° − A − B/2. These are equal only if B = C, which is ruled out by AB < AC.","So IE = ID ⇔ (180° − A − C/2) + (180° − A − B/2) = 180° ⇔ 180° = 2A + (B + C)/2 = 2A + (180° − A)/2 ⇔ 90° = 3A/2 ⇔ <b>A = 60°</b>. (Geometrically: then ∠EID = ∠BIC = 90° + A/2 = 120°, AEID is cyclic, and AI bisects the angle between equal chords.)"]},
+  {id:"imo59-1", src:"IMO 1959, Problem 1", url:"https://www.imo-official.org/problems.aspx", topic:"nt",
+   st:"Prove that the fraction (21n + 4)/(14n + 3) is irreducible for every natural number n.",
+   hint:"Use gcd(a, b) = gcd(a − b, b) twice.", ans:"Proof (gcd = 1)", num:null,
+   sol:["gcd(21n + 4, 14n + 3) = gcd(7n + 1, 14n + 3) (subtract) = gcd(7n + 1, 14n + 3 − 2(7n + 1)) = gcd(7n + 1, 1) = 1.","So numerator and denominator have no common factor: the fraction is irreducible. (Alternatively 3(14n + 3) − 2(21n + 4) = 1, a Bézout combination.)"]},
+];
+
+/* ================= ROUTER ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "pathway", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+$("loList").innerHTML = LO.map(([t,s],i)=>`<li><label><input type="checkbox" id="lo${i}"><span class="mono">${i+1}</span><span>${s} <small style="color:var(--muted)">· ${LO_HEAD[t]}</small></span></label></li>`).join("");
+const loState=store.get("meol-lo",{});
+LO.forEach((x,i)=>{ const id="lo"+i; $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("meol-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=LO.filter((x,i)=>$("lo"+i).checked).length; $("stLO").textContent=`${lo}/${LO.length}`; $("stLOb").style.width=(lo/LO.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("meol-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  pathway:{ vis:[["path",{sel:2}]], cap:"Round 1 in September → enrichment classes → IrMO final in January → squad tests → EGMO (April) and IMO (July).",
+    keys:[["1","IrMO starts with Round 1 in schools in September; anyone can take part through their maths teacher."],["🏫","Enrichment classes at six universities train students in problem solving; the IrMO final is at those centres."],["🌍","About twelve top students sit further tests; Ireland sends up to six to the IMO and up to four to EGMO."]],
+    f:"Round 1 → enrichment → IrMO final → squad → EGMO / IMO", mistake:"Thinking you need to be top of your class in Leaving Cert maths. Olympiad maths is different: curiosity and persistence matter most." },
+  algebra:{ vis:[["am",{a:2,b:8}]], cap:"a = 2, b = 8: AM = 5 (radius) ≥ GM = 4 (half-chord) ≥ HM = 3.2.",
+    keys:[["≥","AM–GM: (a + b)/2 ≥ √(ab) for a, b ≥ 0, with equality only when a = b. It extends to n numbers."],["Σ","Cauchy–Schwarz, and its Titu/Engel form Σ x²/y ≥ (Σ x)²/Σ y, handle many fraction inequalities."],["f","Polynomials (Vieta's formulas, factor theorem) and functional equations: substitute clever values, find patterns, prove the guess."]],
+    f:"QM ≥ AM ≥ GM ≥ HM", mistake:"Forgetting the equality case. Olympiad solutions must say when equality holds, and check it is achievable." },
+  number:{ vis:[["grid",{N:400}]], cap:"Primes up to 400 (terracotta). They thin out, roughly like x/ln x.",
+    keys:[["|","Divisibility and gcd: gcd(a, b) = gcd(a − kb, b); Euclid's algorithm; Bézout."],["≡","Modular arithmetic: work mod a cleverly chosen n. Squares mod 4 are 0 or 1; Fermat: a^(p−1) ≡ 1 (mod p)."],["x²","Diophantine equations: factorise, bound (squeeze between squares), or check residues to rule out cases."]],
+    f:"gcd · mod n · factorise · bound", mistake:"Checking only small cases. \"It works for n up to 10\" is evidence, not a proof." },
+  geometry:{ vis:[["geo",{A:[2.2,4.2]}]], cap:"Bisectors from B and C meet at the incentre I. ∠BIC = 90° + A/2 always.",
+    keys:[["∠","Angle chasing: angles in a triangle, isosceles triangles, parallel lines, the same segment."],["○","Cyclic quadrilaterals: opposite angles sum to 180°; power of a point PA·PB = PC·PD."],["≈","Similar triangles, the sine rule, and coordinates (Cartesian, complex, barycentric) when a slick idea won't come."]],
+    f:"∠BIC = 90° + A/2 · cyclic ⇔ opposite angles add to 180°", mistake:"Trusting a sketch. Draw an accurate, general diagram (not isosceles or right-angled by accident)." },
+  combinatorics:{ vis:[["pascal",{m:2,rows:32}]], cap:"Pascal's triangle mod 2: odd entries in terracotta form Sierpiński's triangle.",
+    keys:[["C","Counting: product and sum rules, C(n, k), counting the same thing two ways (double counting)."],["□","Pigeonhole: n + 1 objects in n boxes force a shared box. Choose the boxes cleverly."],["∞","Invariants and monovariants, induction, and graphs (vertices and edges) model many puzzles."]],
+    f:"C(n, k) = C(n−1, k−1) + C(n−1, k)", mistake:"Double counting by accident. Decide whether order matters before you count." },
+  problems:{ vis:[["ring",{}]], cap:"Real past problems from IrMO 2009 and the IMO, with hints and our full solutions.",
+    keys:[["✎","Read carefully, try small cases, and guess before you prove."],["💡","Take a hint only after a real attempt. Then try again."],["✓","Compare with the solution, then write your own complete version."]],
+    f:"Try → hint → answer → full solution", mistake:"Reading the solution straight away. You learn olympiad maths by struggling with the problem first." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  ["algebra","Algebra","var(--apricot)",["Inequalities: AM–GM, Cauchy–Schwarz, rearrangement","Polynomials and Vieta's formulas","Functional equations","Sequences and sums"]],
+  ["number","Number theory","var(--sage)",["Divisibility, gcd and lcm","Primes and factorisation","Modular arithmetic, Fermat","Diophantine equations"]],
+  ["geometry","Geometry","var(--cream)",["Angle chasing and cyclic quads","Similar triangles, power of a point","Triangle centres and circles","Coordinates: Cartesian, vectors, barycentric"]],
+  ["combinatorics","Combinatorics","var(--blush)",["Counting and binomials","Pigeonhole principle","Invariants and induction","Graphs and games"]],
+];
+$("cases").innerHTML = CASES.map(([i,n,tn,rows])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${n}</h3></div><ul>${rows.map(r=>`<li>${r}</li>`).join("")}</ul></div>`).join("");
+(()=>{ const X=[10,100,1000,10000,100000], mx=Math.log10(PI[100000]);
+  $("bars").innerHTML = X.map((x,i)=>`<div class="barrow"><span><b>x = ${nf(x)}</b></span><div class="track"><i style="width:${(Math.log10(PI[x])/mx*100).toFixed(1)}%;background:var(--${["blush","apricot","sage","olive","terra"][i]})"></i></div><span class="v">${nf(PI[x])}</span></div>`).join("") + `<p class="result">Bars on a log scale. x/ln x gives ${X.map(x=>nf(x/Math.log(x))).join(", ")}: the ratio π(x)/(x/ln x) falls slowly towards 1 (at x = 100 000 it is ${(PI[100000]/(100000/Math.log(100000))).toFixed(3)}).</p>`; })();
+const AROUND = [
+  ["globe","IMO","Held every July since 1959 (except 1980). Six problems over two days, 4½ hours each day, 7 points per problem. Problems and results: imo-official.org.",[["Up to 6 per team","neutral"]],"var(--blush)"],
+  ["people","EGMO","European Girls' Mathematical Olympiad, since 2012. Same format as the IMO; teams of up to four. Details: egmo.org.",[["Up to 4 per team","neutral"]],"var(--apricot)"],
+  ["book","Books","irmo.ie recommends Engel's Problem-Solving Strategies, Evan Chen's Euclidean Geometry in Mathematical Olympiads, Coxeter and Greitzer's Geometry Revisited and The IMO Compendium.",[["Reading","real"]],"var(--sage)"],
+  ["problems","Past papers","irmo.ie links the collected IrMO problems 1988–2023 (a compendium by Mark Dukes) and the 2009 papers with solutions.",[["Practice","real"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"pathway",label:"Pathway",col:"var(--blush)",leaves:[["Round 1","September, in schools."],["Enrichment","Six senior centres."],["IrMO final","January."],["IMO / EGMO","July / April."]]},
+  {id:"algebra",label:"Algebra",col:"var(--apricot)",leaves:[["AM–GM","Equality iff equal."],["Cauchy","Titu's form."],["Vieta","Roots ↔ coefficients."],["FEs","Substitute and guess."]]},
+  {id:"number",label:"Number theory",col:"var(--sage)",leaves:[["gcd","Euclid, Bézout."],["mod n","Squares mod 4."],["Fermat","a^(p−1) ≡ 1."],["Diophantine","Factor, bound."]]},
+  {id:"geometry",label:"Geometry",col:"var(--cream)",leaves:[["Angles","Chase them."],["Cyclic","180° opposite."],["Power","PA·PB."],["Coordinates","Bash if needed."]]},
+  {id:"combinatorics",label:"Combinatorics",col:"var(--blush)",leaves:[["Counting","C(n, k)."],["Pigeonhole","n + 1 into n."],["Invariants","What never changes?"],["Graphs","Double counting."]]},
+  {id:"problems",label:"Problems",col:"var(--sage)",leaves:[["Try cases","Data first."],["Guess","Then prove."],["Write up","Complete proof."]]},
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Maths</text><text x="${cx}" y="${cy+22}" text-anchor="middle">Olympiad</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["pathway","What is the IrMO?","The Irish Mathematical Olympiad: Ireland's national olympiad (since 1988), used to pick the IMO team."],
+  ["pathway","When is IrMO Round 1?","In schools in September (14–18 September 2026)."],
+  ["pathway","When is the 40th IrMO final round?","23 January 2027, at the senior enrichment centres."],
+  ["pathway","Do you need Round 1 to sit the final?","No. Contact an enrichment centre in the autumn (some use a selection test)."],
+  ["pathway","Name the six senior enrichment centres.","UCC, UCD, University of Galway, ATU Sligo, University of Limerick, Maynooth University."],
+  ["pathway","Team sizes at the IMO and EGMO?","Up to six at the IMO, up to four at EGMO."],
+  ["algebra","AM–GM for two numbers?","(a + b)/2 ≥ √(ab) for a, b ≥ 0, equality iff a = b."],
+  ["algebra","Order of the four means?","QM ≥ AM ≥ GM ≥ HM."],
+  ["algebra","Titu's lemma?","Σ xᵢ²/yᵢ ≥ (Σ xᵢ)²/Σ yᵢ for positive yᵢ."],
+  ["algebra","Vieta for x² + px + q?","Sum of roots −p, product q."],
+  ["algebra","First moves in a functional equation?","Substitute 0, equal variables, opposites; guess a solution (often f(x) = cx); prove it's the only one."],
+  ["number","gcd trick?","gcd(a, b) = gcd(a − kb, b)."],
+  ["number","Squares mod 4?","0 or 1."],
+  ["number","Fermat's little theorem?","p prime, p ∤ a ⇒ a^(p−1) ≡ 1 (mod p)."],
+  ["number","Trailing zeros of 100!?","⌊100/5⌋ + ⌊100/25⌋ = 20 + 4 = 24."],
+  ["number","Prime Number Theorem?","π(x) ~ x/ln x."],
+  ["geometry","∠BIC in terms of A?","90° + A/2."],
+  ["geometry","Cyclic quadrilateral test?","Opposite angles sum to 180° (or equal angles in the same segment)."],
+  ["geometry","Power of a point?","PA·PB = PC·PD for two chords through P; PT² = PA·PB for a tangent."],
+  ["geometry","Sine rule with R?","a/sin A = b/sin B = c/sin C = 2R."],
+  ["combinatorics","Pigeonhole principle?","n + 1 objects in n boxes ⇒ some box has at least 2."],
+  ["combinatorics","Pascal's rule?","C(n, k) = C(n−1, k−1) + C(n−1, k)."],
+  ["combinatorics","What is an invariant?","A quantity unchanged by every allowed move, used to show a target is unreachable."],
+  ["combinatorics","Double counting?","Count the same set two ways and equate (e.g. IrMO 2009 party problem)."],
+  ["problems","IrMO 2009 party problem answer?","100 people."],
+  ["problems","gcd of E(1), …, E(2009) in IrMO 2009?","2310 = 2·3·5·7·11."],
+];
+let fcKnown = store.get("meol-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter(c=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("meol-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("meol-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("meol-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["pathway","Since when has Ireland taken part in the IMO?",["1959","1988","2012","2001"],1,"Every year since 1988 (irmo.ie)."],
+  ["pathway","Up to how many students represent a country at EGMO?",["2","4","6","8"],1,"Teams of up to four."],
+  ["pathway","IrMO Round 1 is held:",["in January at universities","in September in schools","in July abroad","online only"],1,"Round 1 is in second-level schools in September."],
+  ["algebra","For positive a, b, which is always true?",["√(ab) ≥ (a + b)/2","(a + b)/2 ≥ √(ab)","a + b ≥ 2(a + b)","ab ≥ a + b"],1,"AM–GM."],
+  ["algebra","x + 1/x for x > 0 is always at least:",["0","1","2","4"],2,"By AM–GM, x + 1/x ≥ 2√(x·1/x) = 2, equality at x = 1."],
+  ["algebra","If a + b + c = 0 and a² + b² + c² = 1, then ab + bc + ca =",["1","0","−1/2","1/2"],2,"(a + b + c)² = 1 + 2(ab + bc + ca) = 0."],
+  ["number","gcd(21n + 4, 14n + 3) is always:",["7","1","n","depends on n"],1,"IMO 1959: subtract to get gcd(7n + 1, 1) = 1."],
+  ["number","n⁸ + n + 1 is prime only for n =",["1","2","3","no n"],0,"It factors as (n² + n + 1)(n⁶ − n⁵ + n³ − n² + 1)."],
+  ["number","A perfect square leaves which remainder mod 4?",["0 or 1","0 or 2","1 or 3","any"],0,"(2k)² = 4k², (2k + 1)² = 4k² + 4k + 1."],
+  ["number","How many trailing zeros does 50! have?",["10","12","11","5"],1,"⌊50/5⌋ + ⌊50/25⌋ = 10 + 2 = 12."],
+  ["geometry","If ∠A = 70°, then ∠BIC =",["110°","125°","140°","145°"],1,"90° + 70°/2 = 125°."],
+  ["geometry","A quadrilateral is cyclic if:",["all sides are equal","opposite angles add to 180°","diagonals are equal","it has a right angle"],1,"Opposite angles of a cyclic quadrilateral are supplementary (and conversely)."],
+  ["geometry","In IrMO 2009 P2 Q5, IE = ID exactly when ∠A =",["45°","60°","90°","120°"],1,"Shown with the sine rule."],
+  ["combinatorics","10 socks in 9 drawers: some drawer has at least",["1","2","3","10"],1,"Pigeonhole."],
+  ["combinatorics","C(6, 2) =",["12","15","30","36"],1,"6·5/2 = 15."],
+  ["combinatorics","In the IrMO 2009 party problem, how many people were there?",["78","100","121","88"],1,"1 + 22 + 22·21/6 = 100."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("meol-best",null); if(best==null||pct>best) store.set("meol-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[A-Za-z]/.test(g.t[0]) ? g.t[0].toUpperCase() : "#";
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/</g,"&lt;")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Prove / Show that","Give a complete argument: every step justified.","Prove that the fraction is irreducible."],
+  ["Find all","Give every solution AND prove there are no others.","Find all positive integers n…"],
+  ["Determine","Find the exact answer with justification.","Determine the cases of equality."],
+  ["If and only if","Prove both directions: P ⇒ Q and Q ⇒ P.","∠BAC = 60° iff IE = ID."],
+  ["Positive / non-negative","Positive: > 0. Non-negative: ≥ 0. Natural numbers: usually 1, 2, 3, …","positive integers"],
+  ["Real numbers","Not just integers: inequalities and algebra problems often use reals.","a, b, c are real numbers"],
+  ["WLOG","Without loss of generality: say why the case covers the others (symmetry).","WLOG a ≤ b."],
+  ["Equality case","When ≥ becomes =; you must find it and show it occurs.","Determine when equality holds."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("");
+
+// Calculation trainer (integer answers)
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const powmod=(a,n,m)=>{ let r=1n, b=BigInt(a)%BigInt(m), e=BigInt(n), M=BigInt(m); while(e>0n){ if(e&1n) r=r*b%M; b=b*b%M; e>>=1n; } return Number(r); };
+const PTYPES = {
+  mod:{ name:"Power mod n", gen(){ const m=pick([5,7,9,10,11,13]), a=rnd(2,9), n=rnd(20,200), ans=powmod(a,n,m); let k=1; while(powmod(a,k,m)!==1 && k<m*2) k++;
+      const cyc=powmod(a,k,m)===1? k : null;
+      return { q:`Find the remainder when <b>${a}<sup>${n}</sup></b> is divided by <b>${m}</b>.`, ans,
+        steps: cyc? [`Powers of ${a} mod ${m} repeat with period ${cyc} (${a}^${cyc} ≡ 1)`,`${n} = ${cyc} × ${Math.floor(n/cyc)} + ${n%cyc}`,`${a}^${n} ≡ ${a}^${n%cyc} ≡ ${ans} (mod ${m})`] : [`gcd(${a}, ${m}) ≠ 1, so compute the powers until they repeat`,`${a}^${n} ≡ ${ans} (mod ${m})`] }; } },
+  gcd:{ name:"gcd", gen(){ const g=rnd(2,30), a=g*rnd(5,40), b=g*rnd(5,40), ans=gcd(a,b); const st=[]; let x=a,y=b; while(y){ st.push(`gcd(${x}, ${y}) = gcd(${y}, ${x%y})`); [x,y]=[y,x%y]; }
+      return { q:`Find gcd(<b>${a}</b>, <b>${b}</b>) using the Euclidean algorithm.`, ans, steps:[...st.slice(0,6),`= ${ans}`] }; } },
+  zeros:{ name:"Zeros of n!", gen(){ const n=rnd(20,500); let s=0, st=[], p=5; while(p<=n){ st.push(`⌊${n}/${p}⌋ = ${Math.floor(n/p)}`); s+=Math.floor(n/p); p*=5; }
+      return { q:`How many zeros are at the end of <b>${n}!</b>?`, ans:s, steps:[`Count factors of 5 (there are more 2s): Legendre's formula`,...st,`Total = ${s}`] }; } },
+  binom:{ name:"C(n, k)", gen(){ const n=rnd(5,20), k=rnd(2,Math.min(6,n-1)); let c=1; for(let i=1;i<=k;i++) c=c*(n-k+i)/i;
+      return { q:`How many ways can you choose <b>${k}</b> students from <b>${n}</b>? (C(${n}, ${k}))`, ans:Math.round(c), steps:[`C(${n}, ${k}) = ${n}!/(${k}!·${n-k}!)`,`= (${[...Array(k)].map((_,i)=>n-i).join("·")})/(${[...Array(k)].map((_,i)=>k-i).join("·")})`,`= ${Math.round(c)}`] }; } },
+  divs:{ name:"Number of divisors", gen(){ const ps=[2,3,5,7], ex=ps.map(()=>rnd(0,3)); if(ex.every(e=>e===0)) ex[0]=2; const N=ps.reduce((a,p,i)=>a*p**ex[i],1), ans=ex.reduce((a,e)=>a*(e+1),1);
+      return { q:`How many positive divisors does <b>${N}</b> have?`, ans, steps:[`${N} = ${ps.map((p,i)=>ex[i]?`${p}${ex[i]>1?`^${ex[i]}`:""}`:null).filter(Boolean).join(" · ")}`,`Number of divisors = product of (exponent + 1) = ${ex.filter(e=>e).map(e=>`(${e}+1)`).join(" × ")}`,`= ${ans}`] }; } },
+  pigeon:{ name:"Pigeonhole", gen(){ const boxes=rnd(3,12), k=rnd(2,5), ans=boxes*(k-1)+1;
+      return { q:`There are ${boxes} colours of socks. How many socks must you take (in the dark) to be sure of <b>${k}</b> of the same colour?`, ans, steps:[`Worst case: ${k-1} of each colour = ${boxes} × ${k-1} = ${boxes*(k-1)} socks with no ${k} the same`,`One more forces ${k} of one colour: ${ans}`] }; } },
+};
+let pType="mod", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paIn").value=""; $("paFb").innerHTML=""; document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{ const x=parseFloat($("paIn").value.replace(/[\s,]/g,"")); if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a whole number.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans)<1e-9; if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>` : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; });
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Which area? drill
+const AREAS = {alg:"Algebra",nt:"Number theory",geo:"Geometry",comb:"Combinatorics"};
+const PRED = [
+  ...PROBS.map(p=>[p.st.length>180? p.st.slice(0,170).replace(/\s\S*$/,"")+"…" : p.st, p.topic, p.src]),
+  ["Prove that for positive reals a, b, c with abc = 1, the sum of 1/(a³(b + c)) over the three cyclic terms is at least 3/2.","alg","IMO 1995 P2"],
+  ["Find all functions f: ℤ → ℤ with f(2a) + 2f(b) = f(f(a + b)) for all integers a, b.","alg","IMO 2019 P1"],
+  ["Show that (a² + b²)/(ab + 1) is a perfect square whenever it is an integer (a, b positive integers).","nt","IMO 1988 P6"],
+  ["Points are coloured red or blue so that…; show there is a monochromatic triangle.","comb","Typical"],
+  ["Two circles meet at P and Q; a line through P meets them again at A and B. Prove that…","geo","Typical"],
+];
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k); pd={...pd,k,shown:false,sel:null}; document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML=""; $("predQ").innerHTML=`<b>${PRED[k][0]}</b> <span style="color:var(--muted)">(${PRED[k][2]})</span> Which area is this mainly?`; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{ if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick an area first.</div>`; return; } const ans=PRED[pd.k][1], ok=pd.sel===ans; pd.streak=ok?pd.streak+1:0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> Mainly ${AREAS[ans]}. Many problems mix areas, so use the main technique as your guide.${ok?` Streak: ${pd.streak} 🔥`:""}</div>`; });
+$("predNext").addEventListener("click",pdNew);
+
+// Long problems (IMO) with our solutions
+const LONGQ = [
+  { title:"IMO 1995, Problem 2", intro:"Let a, b, c be positive real numbers such that abc = 1. Prove that 1/(a³(b + c)) + 1/(b³(c + a)) + 1/(c³(a + b)) ≥ 3/2. (Source: imo-official.org; solution ours.)",
+    parts:[["a","Substitute x = 1/a, y = 1/b, z = 1/c. Show that the first term equals x²/(y + z).",6,"xyz = 1. 1/(a³(b + c)) = x³/(1/y + 1/z) = x³yz/(y + z) = x²·(xyz)/(y + z) = x²/(y + z)."],
+      ["b","Use Titu's lemma (Cauchy–Schwarz) to show the sum is at least (x + y + z)/2.",8,"Σ x²/(y + z) ≥ (x + y + z)²/(2(x + y + z)) = (x + y + z)/2."],
+      ["c","Finish with AM–GM and state the equality case.",6,"x + y + z ≥ 3∛(xyz) = 3, so the sum ≥ 3/2. Equality when x = y = z = 1, i.e. a = b = c = 1."]] },
+  { title:"IMO 2019, Problem 1", intro:"Let ℤ be the set of integers. Determine all functions f: ℤ → ℤ such that, for all integers a and b, f(2a) + 2f(b) = f(f(a + b)). (Source: imo-official.org; solution ours.)",
+    parts:[["a","Put a = 0 to find f(f(b)) in terms of f(b) and f(0). Deduce f(2a) + 2f(b) = 2f(a + b) + f(0).",6,"a = 0: f(0) + 2f(b) = f(f(b)). So the right side f(f(a + b)) = 2f(a + b) + f(0), giving f(2a) + 2f(b) = 2f(a + b) + f(0)."],
+      ["b","Put a = 1, b = n to show f(n + 1) − f(n) is constant, so f(n) = mn + c.",8,"f(2) + 2f(n) = 2f(n + 1) + f(0) ⇒ f(n + 1) − f(n) = (f(2) − f(0))/2, a constant m. So f(n) = mn + c with c = f(0)."],
+      ["c","Substitute f(n) = mn + c and find all solutions.",8,"f(f(b)) = m(mb + c) + c must equal 2(mb + c) + c for all b: m² = 2m and mc + c = 3c. So m = 0 (then c = 0: f ≡ 0) or m = 2 (any c: f(n) = 2n + c). Both work: check 2(2a) + c + 2(2b + c) = 4a + 4b + 3c = 2(2(a + b) + c) + c ✓. Answer: f(n) = 0 and f(n) = 2n + c for any integer c."]] },
+  { title:"IMO 1988, Problem 6", intro:"Let a and b be positive integers such that ab + 1 divides a² + b². Show that (a² + b²)/(ab + 1) is the square of an integer. (Source: imo-official.org; solution ours, by \"Vieta jumping\".)",
+    parts:[["a","Let k = (a² + b²)/(ab + 1) and suppose k is not a square. Take a solution with a ≥ b ≥ 0 and a + b as small as possible. Show the quadratic x² − kbx + (b² − k) = 0 has root a and another root a′ = kb − a = (b² − k)/a, an integer.",8,"Rearranging a² + b² = k(ab + 1) gives a² − kba + b² − k = 0, so a is a root. By Vieta the other root is a′ = kb − a (an integer) and aa′ = b² − k."],
+      ["b","Show a′ ≠ 0 and a′ > 0.",8,"If a′ = 0 then k = b², a square: contradiction. If a′ < 0 then a′² − kba′ + b² − k ≥ a′² + k + b² − k > 0 (since −kba′ ≥ k), not 0: contradiction. So a′ is a positive integer, and (a′, b) is another solution with the same k."],
+      ["c","Show a′ < a and reach a contradiction.",8,"a′ = (b² − k)/a < b²/a ≤ a (as b ≤ a). So (a′, b) has a smaller sum a′ + b < a + b, contradicting minimality. Hence k must be a perfect square. (The values that occur are 1, 4, 9, …; e.g. a = 8, b = 2 gives k = 4.)"]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist (red / amber / green)
+const RAG = ["Explain the IrMO year and team selection","Prove AM–GM for two numbers and use it","Use Cauchy–Schwarz / Titu's lemma","Use Vieta's formulas","Attack a functional equation","Use gcd tricks and the Euclidean algorithm","Work mod n (squares, Fermat)","Solve a Diophantine equation by factorising and bounding","Chase angles with cyclic quadrilaterals and the incentre","Count with binomials and double counting","Use the pigeonhole principle","Find an invariant","Write a complete olympiad proof"];
+const ragState=store.get("meol-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("meol-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Experiment","Try small cases and collect data before proving.","Collect & fit lab"],["Draw","Accurate, general diagrams in geometry.","Angle chasing lab"],["Guess, then prove","Conjecture the answer from data.","Past problems"],["Use the toolkit","Know AM–GM, Fermat, pigeonhole cold.","Toolkit"],["Write clearly","Define, justify, conclude.","Long problems"],["Keep going","Persistence: come back to a problem after a break.","Past problems"]];
+const skState=store.get("meol-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("meol-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+// Pathway
+const pw = {sel:2, P:[]};
+function pwUpd(){ const s=STAGES[pw.sel]; setReadout($("pwOut"),[["Stage",`${pw.sel+1} · ${s[0]}`],["When",s[1]],["What happens",s[2]]]); if(pwC) pwC.redraw(); }
+// Means
+const am = {a:2,b:8};
+function amUpd(){ const {a,b}=am, AM=(a+b)/2, GM=Math.sqrt(a*b), HM=2*a*b/(a+b), QM=Math.sqrt((a*a+b*b)/2); $("amAo").textContent=a; $("amBo").textContent=b;
+  setReadout($("amOut"),[["QM",nf(QM,3)],["AM",nf(AM,3)],["GM",nf(GM,3)],["HM",nf(HM,3)],["Equal?",Math.abs(a-b)<1e-9?"Yes: a = b":"No: QM > AM > GM > HM"]]);
+  $("amWork").innerHTML = `<b>AM − GM</b> = (√a − √b)²/2 = ${nf((Math.sqrt(a)-Math.sqrt(b))**2/2,3)} ≥ 0 · <b>GM² = AM × HM</b>: ${nf(GM*GM,3)} = ${nf(AM*HM,3)}`; if(amC) amC.redraw(); }
+$("amA").addEventListener("input",e=>{ am.a=+e.target.value; amUpd(); }); $("amB").addEventListener("input",e=>{ am.b=+e.target.value; amUpd(); });
+// Primes
+const pr = {e:3, rows:[]};
+const prX = () => Math.round(10**pr.e);
+function prFit(){ const r=pr.rows; if(r.length<2) return null; const n=r.length, mx=r.reduce((s,x)=>s+x.f,0)/n, my=r.reduce((s,x)=>s+x.p,0)/n; let sxy=0,sxx=0; r.forEach(x=>{ sxy+=(x.f-mx)*(x.p-my); sxx+=(x.f-mx)**2; }); if(!sxx) return null; const g=sxy/sxx; return {g,c:my-g*mx}; }
+function prUpd(){ $("prXo").textContent=nf(prX()); $("prTable").innerHTML = pr.rows.map(r=>`<tr><td>${nf(r.x)}</td><td>${nf(r.p)}</td><td>${nf(r.f,1)}</td><td>${nf(r.p/r.f,3)}</td></tr>`).join("") || `<tr><td colspan="4">No data yet.</td></tr>`;
+  const f=prFit(); $("prResult").innerHTML = f? `Fitted line: π(x) ≈ ${nf(f.g,3)} × (x/ln x) ${f.c<0?"−":"+"} ${nf(Math.abs(f.c),1)}. The gradient is a little above 1 and creeps down as x grows (Prime Number Theorem).` : "Record at least two values of x."; if(prC){ prC.redraw(); prG.redraw(); } }
+$("prX").addEventListener("input",e=>{ pr.e=+e.target.value; prUpd(); });
+$("prRec").addEventListener("click",()=>{ const x=prX(); if(!pr.rows.some(r=>r.x===x)) pr.rows.push({x,p:PI[x],f:x/Math.log(x)}); pr.rows.sort((a,b)=>a.x-b.x); prUpd(); });
+$("prClr").addEventListener("click",()=>{ pr.rows=[]; prUpd(); });
+// Geometry
+const ge = {A:[2.2,4.2], m:null};
+function geUpd(){ const S=triStuff(ge.A); setReadout($("geOut"),[["∠A",`${nf(S.A,1)}°`],["∠BIC",`${nf(S.BIC,1)}°`],["90° + A/2",`${nf(90+S.A/2,1)}°`],["IE / ID",`${nf(S.IE,3)} / ${nf(S.ID,3)}`],["IE = ID?",Math.abs(S.IE-S.ID)<0.02?"Yes":"No"]]);
+  $("geWork").innerHTML = Math.abs(S.A-60)<0.6? `<b>∠A ≈ 60°:</b> ∠EID = ∠BIC = 120°, so ∠A + ∠EID = 180°: AEID is cyclic (dashed circle), and AI bisects ∠EAD, so IE = ID.` : `Drag A until ∠A = 60° (IrMO 2009, Paper 2, Problem 5). Keep AB &lt; AC for the problem's condition.`; if(geC) geC.redraw(); }
+// Pascal
+const pa = {m:2, rows:32, sel:null, geo:null};
+function paUpd(){ $("paMo").textContent=pa.m; $("paRo").textContent=pa.rows; let info="Tap a cell";
+  if(pa.sel){ const [n,k]=pa.sel, v=binomRow(n)[k]; info=`C(${n}, ${k}) = ${v.toString().length>18? v.toString().slice(0,16)+"…" : v} ≡ ${Number(v%BigInt(pa.m))} (mod ${pa.m})`; }
+  const row=binomRow(pa.rows-1), nz=row.filter(v=>v%BigInt(pa.m)!==0n).length;
+  setReadout($("paOut"),[["Selected",info],[`Row ${pa.rows-1}: entries not divisible by ${pa.m}`,`${nz} of ${pa.rows}`]]); if(paC) paC.redraw(); }
+$("paM").addEventListener("input",e=>{ pa.m=+e.target.value; paUpd(); }); $("paR").addEventListener("input",e=>{ pa.rows=+e.target.value; pa.sel=null; paUpd(); });
+// Problems
+const pb = {i:0, solved:store.get("meol-solved",{}), hint:false};
+$("pbList").innerHTML = PROBS.map((p,i)=>`<button data-i="${i}">${i+1}. ${p.src.replace(/, Paper /," P").replace(/, Problem /," Q")}</button>`).join("");
+$("pbList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pb.i=+b.dataset.i; pbUpd(); });
+function pbUpd(){ const p=PROBS[pb.i]; pressGroup([...$("pbList").children],$("pbList").children[pb.i]);
+  $("pbBox").innerHTML = `<div class="qt">${p.st}<small>${p.src} · <a href="${p.url}" target="_blank" rel="noopener">source</a> · ${AREAS[p.topic]}</small></div>
+    <details><summary>Hint</summary><div class="sol"><p>${p.hint}</p></div></details>
+    <div class="pa2"><input id="pbIn" type="text" placeholder="${p.num!=null?"Your final answer (a number)":"Write your answer, then reveal"}" aria-label="Your answer" autocomplete="off"><button class="primary" id="pbCheck">${p.num!=null?"Check answer":"Reveal answer"}</button><button id="pbSolved">${pb.solved[p.id]?"✓ Solved":"Mark solved"}</button></div>
+    <div id="pbFb" style="margin-top:8px"></div>
+    <details><summary>Full worked solution (ours)</summary><div class="sol">${p.sol.map(s=>`<p>${s}</p>`).join("")}</div></details>`;
+  $("pbCheck").addEventListener("click",()=>{ const v=$("pbIn").value.trim(); if(p.num!=null){ const x=parseFloat(v.replace(/[^\d.\-]/g,"")); const ok=x===p.num; $("pbFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not this time."}</b> ${ok?"Now check your proof against the full solution.":"Have another go, or open the hint."}</div>`; }
+    else $("pbFb").innerHTML=`<div class="fb"><b>Answer:</b> ${p.ans}. Compare your reasoning with the full solution.</div>`; });
+  $("pbSolved").addEventListener("click",()=>{ pb.solved[p.id]=!pb.solved[p.id]; store.set("meol-solved",pb.solved); pbUpd(); });
+  const k=Object.values(pb.solved).filter(Boolean).length; setReadout($("pbOut"),[["Problem",`${pb.i+1} of ${PROBS.length}`],["Area",AREAS[p.topic]],["Solved so far",`${k} of ${PROBS.length}`]]); if(pbC) pbC.redraw(); }
+
+/* ================= CREATE CANVASES ================= */
+let pwC=null, amC=null, prC=null, prG=null, geC=null, paC=null, pbC=null;
+const hero = makeCanvas($("heroCanvas"), 0.75, 240, s => drawPascal(s.ctx,s.w,s.h,{m:2,rows:32,t:reduce?null:heroT}), 440);
+pwC = makeCanvas($("pwC"), 0.38, 220, s => { pw.P=drawPath(s.ctx,s.w,s.h,{sel:pw.sel}); }, 340);
+$("pwC").addEventListener("pointerdown",e=>{ const r=$("pwC").getBoundingClientRect(), x=e.clientX-r.left; let b=0,bd=1e9; pw.P.forEach(([px],i)=>{ const d=Math.abs(px-x); if(d<bd){ bd=d; b=i; } }); pw.sel=b; pwUpd(); });
+amC = makeCanvas($("amC"), 0.55, 280, s => drawAM(s.ctx,s.w,s.h,am), 460);
+prC = makeCanvas($("prC"), 0.4, 200, s => drawGrid(s.ctx,s.w,s.h,{N:Math.min(prX(),s.w<440?400:800)}), 360);
+prG = makeCanvas($("prG"), 0.7, 200, s => { bg(s.ctx,s.w,s.h); const r=pr.rows, xm=Math.max(100,...r.map(x=>x.f))*1.1, ym=Math.max(100,...r.map(x=>x.p))*1.1, fr=frame(s.ctx,s.w,s.h,{x0:0,x1:xm,y0:0,y1:ym,xl:"x / ln x",yl:"π(x)",compact:true}), f=prFit();
+  if(f) line(s.ctx,fr.X(0),fr.Y(f.c),fr.X(xm),fr.Y(f.c+f.g*xm),C.terra,2.5); line(s.ctx,fr.X(0),fr.Y(0),fr.X(Math.min(xm,ym)),fr.Y(Math.min(xm,ym)),C.muted,1,[4,4]); r.forEach(p=>circle(s.ctx,fr.X(p.f),fr.Y(p.p),4,C.surface,C.ink,2)); }, 320);
+geC = makeCanvas($("geC"), 0.55, 280, s => { ge.m=drawGeo(s.ctx,s.w,s.h,{A:ge.A}); }, 460);
+drag($("geC"),(x,y)=>{ if(!ge.m) return; const p=ge.m.inv(x,y); ge.A=[Math.max(-0.5,Math.min(6.5,p[0])),Math.max(0.8,Math.min(6.5,p[1]))]; geUpd(); });
+paC = makeCanvas($("paC"), 0.6, 280, s => { pa.geo=drawPascal(s.ctx,s.w,s.h,pa); }, 460);
+$("paC").addEventListener("pointerdown",e=>{ if(!pa.geo) return; const r=$("paC").getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top, n=Math.floor((y-5)/pa.geo.cs); if(n<0||n>=pa.rows) return; const k=Math.round((x-pa.geo.x0+pa.geo.cs/2)/pa.geo.cs+n/2-0.5); if(k<0||k>n) return; pa.sel=[n,k]; paUpd(); });
+pbC = makeCanvas($("pbC"), 0.42, 220, s => drawRing(s.ctx,s.w,s.h,{probs:PROBS,solved:pb.solved,sel:pb.i}), 340);
+predC = makeCanvas($("predC"), 0.6, 210, s => { bg(s.ctx,s.w,s.h,C["surface-2"]); const ks=["alg","nt","geo","comb"], cols=["apricot","sage","cream","blush"], gw=(s.w-24)/2, gh=(s.h-24)/2;
+  ks.forEach((k,i)=>{ const x=12+(i%2)*gw, y=12+Math.floor(i/2)*gh, hit=pd.shown&&pd.k>=0&&PRED[pd.k][1]===k; rr(s.ctx,x+4,y+4,gw-8,gh-8,12); s.ctx.fillStyle=hit?C.terra:C[cols[i]]; s.ctx.fill(); text(s.ctx,AREAS[k],x+gw/2,y+gh/2+5,hit?(C["on-accent"]||"#fff"):"#3b2b21",F(s.w<380?12:15,800),"center"); }); }, 320);
+pdNew();
+const MINI = {
+  path:(s,o)=>drawPath(s.ctx,s.w,s.h,{...o,compact:true}),
+  am:(s,o)=>drawAM(s.ctx,s.w,s.h,{a:2,b:8,...o,compact:true}),
+  grid:(s,o)=>drawGrid(s.ctx,s.w,s.h,{...o,compact:true}),
+  primes:(s,o)=>drawGrid(s.ctx,s.w,s.h,{N:400,...o,compact:true}),
+  geo:(s,o)=>drawGeo(s.ctx,s.w,s.h,{...o,compact:true}),
+  pascal:(s,o)=>drawPascal(s.ctx,s.w,s.h,{m:2,rows:32,...o}),
+  ring:(s,o)=>drawRing(s.ctx,s.w,s.h,{probs:PROBS,solved:pb.solved,...o,compact:true}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, 0.62, 150, s=>MINI[kind](s,o), 380); });
+document.querySelectorAll("canvas[data-mini]").forEach(el=>{ const k=el.dataset.mini; makeCanvas(el,0.7,160,s=>MINI[k](s,{bgc:C["surface-2"]})); });
+pwUpd(); amUpd(); prUpd(); geUpd(); paUpd(); pbUpd();
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>
+
