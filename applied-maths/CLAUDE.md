@@ -7,7 +7,7 @@ per topic. Same design and page format as the sister courses in `C:\Users\manos\
 Course progress and build order: `COURSE-PLAN.md`. Update it whenever a topic is built.
 
 Built so far: `s1-1-mathematical-modelling.html` (1.1 The modelling cycle), `s2-1-networks.html` (2.1 Networks &
-terminology), `s3-2-vectors-projectiles.html` (3.2 Vectors & projectiles). No hub `index.html` yet.
+terminology), `s2-2-adjacency-matrices.html` (2.2 Matrices & adjacency), `s3-2-vectors-projectiles.html` (3.2 Vectors & projectiles). No hub `index.html` yet.
 
 ## Run it locally
 

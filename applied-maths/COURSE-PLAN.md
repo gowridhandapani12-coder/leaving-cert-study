@@ -6,7 +6,7 @@ One page per topic, built in this order. Numbering is this course's (the spec ha
 |---|-------|------|--------|
 | 1.1 | Mathematical modelling: the modelling cycle | `s1-1-mathematical-modelling.html` | Done (2026-11-08) |
 | 2.1 | Networks and terminology | `s2-1-networks.html` | Done (2026-11-17) |
-| 2.2 | Matrices and adjacency | | To do |
+| 2.2 | Matrices and adjacency | `s2-2-adjacency-matrices.html` | Done (2026-11-20) |
 | 2.3 | Minimum spanning trees (Kruskal, Prim) | | To do |
 | 2.4 | Shortest paths and dynamic programming (Dijkstra, Bellman) | | To do |
 | 2.5 | Comparing algorithms (greedy vs dynamic programming) | | To do |
@@ -53,6 +53,10 @@ the origin, launch speed from the gradient). 7 learning outcomes (Particle motio
 only for gravity here, full treatment in 3.3), 26 flashcards, 16 quiz questions, 45 glossary terms, 9 trainer types,
 "which goes further?" drill, 3 long questions. g = 9.8 m/s², horizontal planes only, no air resistance.
 
+## 2.2 contents
+
+Labs: Graph → matrix (tap to add/remove edges; matrix with row and column sums, symmetry, total = 2E) · Matrix → graph (edit cells with mirroring, or a challenge: draw the graph of a mystery matrix and check it) · Directed graphs (five-person follow network; row = from, column = to; out/in-degrees as row/column sums) · Multiply by hand (2 × 2 and 3 × 3 step through row × column with working; 5 × 5 by computer with the n³ work count; swap to BA) · Powers count walks (A to A⁴, tap a cell to list the walks and animate one; collect & fit: trace(A²) against E gives gradient 2, trace(A³) = 6 × triangles) · Two-flight planner (illustrative six-airport network; A, A², A³ and A + A² for any pair; cancel routes). 4 learning outcomes (Matrices, matrix algebra and adjacency), 28 flashcards, 19 quiz questions, 41 glossary terms, 8 trainer types, "match the matrix" drill (undirected and directed, with transpose and one-edge distractors), 3 long questions with full matrices in the marking guides. Built from the 2.1 page with a splice script.
+
 ## Run log
 
 | Date | Built | Weekly usage before → after |
@@ -61,3 +65,4 @@ only for gravity here, full treatment in 3.3), 26 flashcards, 16 quiz questions,
 | 2026-11-17 | 2.1 Networks and terminology (asked for by the user) | 75% → 76% (5-hour window 6% → 16%) |
 | 2026-11-18 | 3.2 Vectors and projectiles (asked for by the user) | 78% → 79% (5-hour window 9% → 16%) |
 | 2026-11-18 | Nothing (weekly run skipped: weekly 83%, above the 70% limit; 5-hour 29%) | 83% → 83% |
+| 2026-11-20 | 2.2 Matrices and adjacency (5-hour scheduled run, 2nd page after Physics 3.4) | 13% → 18% (5-hour window 21% → 54%: over the 50% goal; the start was below the 40% cap) |
