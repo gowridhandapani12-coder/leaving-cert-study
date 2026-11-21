@@ -1,0 +1,1640 @@
+<title>Unseen Poetry Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.sh-card{display:grid;gap:8px;padding:16px;align-content:start}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card ul{margin:0;padding-left:18px;font-size:.88rem;color:var(--muted);display:grid;gap:3px}
+.fbbox{padding:0 16px 14px}
+.predopts .btns button{min-width:100px}
+.ctl button[disabled]{opacity:.5}
+</style>
+
+<style>
+.qt{font-family:var(--f-display);font-size:1.15rem;line-height:1.4;padding:12px 16px;border-left:4px solid var(--terra);background:var(--surface-2);border-radius:0 12px 12px 0}
+.qt small{display:block;font-family:var(--f-body);font-size:.82rem;color:var(--muted);margin-top:4px}
+.cards2{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px}
+.cards2 button{text-align:left;max-width:100%;white-space:normal}
+.cards2 button.done{opacity:.45}
+.cards2 button.sel{outline:3px solid var(--terra)}
+.qbank{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.qbank li{font-size:.9rem}
+.qbank li b{font-family:var(--f-display);font-weight:600}
+.qbank li span{color:var(--muted);font-size:.8rem}
+</style>
+<!-- ================= TOP BAR ================= -->
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 01-14.3 4.9M4 12a8 8 0 0114.3-4.9"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg></div>
+        <div style="min-width:0"><b>Unseen poetry</b><span>Leaving Cert English · Paper 2 · Section C (HL)</span></div>
+      </div>
+      
+      
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html">Business</a><a href="../maths/index.html">Maths</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html" class="on" aria-current="page">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a><a href="../maths-enrichment/index.html">Maths Enrichment</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Poem bank</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <details open><summary>Paper 2 · Texts</summary><ol><li class="link"><a href="hamlet.html"><span class="mono">S</span>Single text: Hamlet (HL, 2028)</a></li><li><span class="mono">C</span>Comparative study</li><li><span class="mono">P</span>Prescribed poetry</li><li class="here"><span class="mono">U</span>Unseen poetry</li></ol></details>
+      <details><summary>Paper 1 · Language</summary><ol><li><span class="mono">A</span>Comprehension (Question A)</li><li><span class="mono">B</span>Functional writing (Question B)</li><li><span class="mono">Co</span>Composition</li><li><span class="mono">G</span>The five language genres</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon. Texts follow the Department's prescribed list for the 2028 exam.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Paper 2 · Section C · Unseen poem · Higher Level</span>
+          <h1 style="margin-top:12px">One poem<br>you've never seen.<br><em>Twenty minutes. No panic.</em></h1>
+          <p class="lede">The unseen poem rewards a calm routine, not luck. Practise on four short public-domain poems: annotate them, sort their images, chart their mood, count their lines, compare their themes, and plan answers that score on all four marking criteria.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="formulae">Read the poems</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated theme compass moving between the four practice poems"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Syllabus aims ticked</span><b id="stLO">0/6</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the Leaving Certificate English syllabus</p><h2>What you must be able to do</h2></div><p style="font-size:.88rem">Quoted from the syllabus (sections 4.5.1 and 5.4). Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list" id="loList"></ul>
+        <p class="result" style="margin-top:10px">The syllabus (6.3) says: "At both levels students will need to read widely in poetry to prepare for the question on an unseen poem in the examination". At Higher Level, Paper 2 Section C has an unseen poem and a question on the prescribed poets. The four practice poems here are out of copyright and were checked against Wikisource. They are not predictions: any poem can appear on the day.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Annotate, sort, chart, count and compare four practice poems, then plan an answer.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="read">
+        <div class="labhead"><span class="pill t">Annotator</span><p class="goal">Pick a poem and a lens. The highlighted phrases are the ones worth quoting. Tap one (or press "Next note") to read what it does.</p></div>
+        <div class="panel sim">
+          <canvas id="poC" aria-label="The selected poem with highlighted phrases. Tap a highlighted phrase to read its note."></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Poem</span><div class="btns" id="poP"></div></div>
+            <div class="ctl"><span class="lbl">Lens</span><div class="btns" id="poL"></div></div>
+            <div class="ctl"><span class="lbl">Notes</span><div class="btns"><button class="primary" id="poNext">Next note</button></div></div>
+          </div>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="poQ"></div></div>
+          <div class="readout" id="poOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Read "Adlestrop" with the Sound lens. How does Thomas make silence audible?</div><div class="try"><b>2</b>In "Remember", switch to Tone. Where does the feeling change, and to what?</div><div class="try"><b>3</b>Find a phrase in "Thomas McDonagh" that has no note. Write your own note for it.</div></div>
+      </div>
+
+      <div class="lab" data-lab="imagery" hidden>
+        <div class="labhead"><span class="pill t">Image sorter</span><p class="goal">Tap a phrase, then tap the box it belongs in. Thirteen phrases from the four poems.</p></div>
+        <div class="panel sim">
+          <canvas id="imC" aria-label="Four boxes: visual images, sound images, personification, metaphor and symbol. Tap a box to place the selected phrase."></canvas>
+          <div class="cards2" id="imCards"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="imReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="imOut"></div>
+          <div class="fbbox" id="imFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Sort all thirteen. Which poem gives you the most personification?</div><div class="try"><b>2</b>"Robins will wear their feathery fire" is also a visual image. Why is "metaphor" the better label?</div><div class="try"><b>3</b>Pick one phrase and write a sentence on its effect, not just its name.</div></div>
+      </div>
+
+      <div class="lab" data-lab="tone" hidden>
+        <div class="labhead"><span class="pill t">Mood map</span><p class="goal">Each poem split into sections, plotted from darker to brighter (our reading, for discussion). Tap a point or a section to see the lines and the tone words.</p></div>
+        <div class="panel sim">
+          <canvas id="moC" aria-label="Line graph of mood through the sections of the selected poem. Tap a point."></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Poem</span><div class="btns" id="moP"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Section</span><div class="btns" id="moS"></div></div>
+          </div>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="moQ"></div></div>
+          <div class="readout" id="moOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Which poem has the biggest drop in mood? Find the exact line where it turns.</div><div class="try"><b>2</b>"Thomas McDonagh" rises at the end. What word signals the change?</div><div class="try"><b>3</b>Would you score any section differently? Choose a better tone word and argue for it.</div></div>
+      </div>
+
+      <div class="lab" data-lab="sound" hidden>
+        <div class="labhead"><span class="pill t">Collect &amp; fit: line shape</span><p class="goal">Count the words (or letters) in each line, line by line. Bars that rhyme share a colour. Then fit a trend line and look at the poem's shape.</p></div>
+        <div class="panel sim">
+          <canvas id="shC" aria-label="Bar chart of words per line for the selected poem, coloured by rhyme, with a fitted trend line"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Poem</span><div class="btns" id="shP"></div></div>
+            <div class="ctl"><span class="lbl">Data</span><div class="btns"><button class="primary" id="shRec">Count the next line</button><button id="shAll">Count all lines</button><button id="shClr">Clear</button></div></div>
+            <div class="ctl"><span class="lbl">Measure</span><div class="btns" id="shM"><button data-m="words" aria-pressed="true">Words</button><button data-m="letters" aria-pressed="false">Letters</button></div></div>
+          </div>
+          <div class="readout" id="shOut"></div>
+          <div class="working" id="shWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Count all of "Remember". How regular are the lines? What does that tell you about a sonnet?</div><div class="try"><b>2</b>In "There Will Come Soft Rains", which couplet is shortest? Read it aloud: what is the effect?</div><div class="try"><b>3</b>Compare the rhyme colours in "Adlestrop" and "Remember". Which pattern is tighter?</div></div>
+      </div>
+
+      <div class="lab" data-lab="theme" hidden>
+        <div class="labhead"><span class="pill t">Theme compass</span><p class="goal">How strongly each poem deals with six themes (0 to 5, our judgement). Overlay two poems to compare them.</p></div>
+        <div class="panel sim">
+          <canvas id="raC" aria-label="Radar chart of six themes for one or two poems"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Poem A (terracotta)</span><div class="btns" id="raA"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Poem B (olive)</span><div class="btns" id="raB"></div></div>
+          </div>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="raQ"></div></div>
+          <div class="readout" id="raOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Overlay "Adlestrop" and "Thomas McDonagh". Both are full of nature: what does nature mean in each?</div><div class="try"><b>2</b>Which two poems share the most themes? Do they say the same thing about them?</div><div class="try"><b>3</b>Disagree with one score. What evidence would you use?</div></div>
+      </div>
+
+      <div class="lab" data-lab="answer" hidden>
+        <div class="labhead"><span class="pill t">Answer builder</span><p class="goal">Choose a question, an opening sentence and three paragraphs. See how your plan would score out of 20 on the four marking criteria.</p></div>
+        <div class="panel sim">
+          <canvas id="esC" aria-label="Answer plan diagram with estimated scores for purpose, coherence, language and mechanics"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Question</span><div class="btns" id="esQ"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Opening (your answer in one sentence)</span><div class="btns" id="esT"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Paragraphs (pick three)</span><div class="btns" id="esP"></div></div>
+          </div>
+          <div class="readout" id="esOut"></div>
+          <div class="fbbox" id="esFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Build a plan that scores well on Purpose. What did you have to leave out?</div><div class="try"><b>2</b>Swap in a paragraph of background facts. What happens to the score?</div><div class="try"><b>3</b>Write the opening sentence in your own words, then time yourself writing one paragraph (5 minutes).</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of unseen poetry skills"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>Four practice poems</h2></div><p>Who wrote them, their form, and a line worth quoting.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three ways to see a poem</p><h2>Mood, themes, shape</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="mood"></canvas><h3>A sudden turn</h3><p>"There Will Come Soft Rains" starts serene, then turns at the war and ends chillingly.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="radar"></canvas><h3>Same nature, new meaning</h3><p>Teasdale and Thomas both fill their poems with nature, but for very different reasons.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="shape"></canvas><h3>The sonnet's shape</h3><p>"Remember": fourteen even lines, a tight rhyme pattern, and a turn at line 9.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Counted from the texts</p><h2>How long is an unseen poem?</h2></div><p>Words in each practice poem. Exam poems are often this sort of length.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">On the day</p><h2>Twenty minutes, well spent</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+<!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>Where the unseen poem sits in the exam, how answers are marked, and practice with feedback.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Higher Level English: Paper 1 200 marks, unseen poem 20 marks, rest of Paper 2 180 marks">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--blush)" stroke-width="26" stroke-dasharray="182.2 364.4" transform="rotate(-90 80 80)"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="18.2 364.4" stroke-dashoffset="-182.2" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">20 / 400</text><text x="80" y="96" text-anchor="middle" class="dn2">unseen poem</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--blush)"></i><div><b>Paper 1 · 200 marks</b><p>Comprehending and composing: comprehension, functional writing and a composition.</p></div></div>
+            <div><i style="background:var(--terra)"></i><div><b>Paper 2, unseen poem · 20 marks</b><p>A poem you haven't studied, printed on the paper (Section C). About 20 minutes. Read the instructions on the day: the shape of the question can vary.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Rest of Paper 2 · 180 marks</b><p>Single text 60, comparative study 70, prescribed poetry 50.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for the unseen poem</h3>
+          <ol class="tips">
+            <li><b>Read the question first</b>, then the poem twice: once for sense, once with a pen.</li>
+            <li>Spend about <b>20 minutes</b>: five reading and planning, fifteen writing.</li>
+            <li><b>Answer in your first sentence.</b> Use the question's key words.</li>
+            <li>Write <b>three or four focused paragraphs</b>: point, short quotation, comment on effect.</li>
+            <li>Use <b>precise terms</b> (sibilance, volta, pathetic fallacy), but always say what they do.</li>
+            <li><b>Look for the turn</b>: "But", "Yet", a new stanza, a question, a change of tense.</li>
+            <li>Show a <b>personal response</b>: "I find…", "for me…", backed by the poem.</li>
+            <li><b>Proofread</b> the poet's name and every quotation. Questions here are practice questions, not official SEC papers.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Question words</h2></div><p>Common phrasings in unseen-poem questions. The meanings are plain-English summaries, not official definitions.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Know the poems closely</p><h2>Line trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="btns" id="qtOpts" style="margin-top:8px"></div>
+          <div id="paFb" style="margin-top:10px"></div>
+          <div class="btns" style="margin-top:8px"><button id="paNext">Next question</button></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which device?</h2></div></div>
+          <canvas id="predC" aria-label="Six poetic devices; the right one lights up after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" id="predBtns"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next phrase</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+<div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>The poems are in the Poem bank tab. Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">How answers are marked</p><h2>Answer skills (PCLM)</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The four marking criteria and the habits behind them. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Poetic terms and tone words. Precise critical vocabulary earns marks under Language.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: sibilance, volta, tone…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= POEM BANK ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Practice texts</p><h2>Poem bank</h2></div><p>The four practice poems in full, with their form and context. Treat each one as an unseen poem: read it cold, then use the labs.</p></div>
+      <div class="sheet" id="qbank"></div>
+      <footer>
+        <p>Based on the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/english/" target="_blank" rel="noopener">Leaving Certificate English Syllabus</a> (for examination to June 2028). Poem texts are in the public domain and were checked against <a href="https://en.wikisource.org/" target="_blank" rel="noopener">Wikisource</a> (Thomas, <i>Poems</i>, 1917; Rossetti, <i>Goblin Market and Other Poems</i>, 1862; Teasdale, <i>Flame and Shadow</i>, 1920; Ledwidge, <i>Songs of Peace</i>, 1917). Mood scores, theme scores and notes are our interpretations, for discussion.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("en-theme","auto"), font = store.get("en-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("en-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("en-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  read:'<path d="M2 6s4-2 10 0 10 0 10 0v13s-4-2-10 0-10 0-10 0z"/><path d="M12 6v13"/>',
+  imagery:'<circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/>',
+  tone:'<path d="M3 17l5-6 4 3 4-8 5 6"/><path d="M3 21h18"/>',
+  sound:'<path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/>',
+  theme:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/><path d="M12 7l3 5-3 5-3-5z"/>',
+  answer:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  rose:'<circle cx="12" cy="9" r="4"/><path d="M12 13v8M12 17c-2-1-4-1-5 0M12 16c2-1 4-1 5 0"/>',
+  rain:'<path d="M6 14a5 5 0 01.5-10A6 6 0 0118 6a4 4 0 010 8z"/><path d="M8 17l-1 3M12 17l-1 3M16 17l-1 3"/>',
+  cow:'<path d="M5 9c0-2 2-3 4-3h6c2 0 4 1 4 3v4c0 3-3 5-7 5s-7-2-7-5z"/><path d="M5 9L2 6M19 9l3-3"/><circle cx="9.5" cy="11" r=".8"/><circle cx="14.5" cy="11" r=".8"/>',
+  train:'<rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14M8 20l2-4M16 20l-2-4"/><circle cx="9" cy="13" r=".8"/><circle cx="15" cy="13" r=".8"/>',
+  book:'<path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"read", name:"Reading an unseen poem", short:"Title, speaker, situation, feeling, the turn: a calm first-reading routine.", tint:"var(--blush)"},
+  {id:"imagery", name:"Imagery & figurative language", short:"Pictures for the senses, metaphor, personification and symbol.", tint:"var(--apricot)"},
+  {id:"tone", name:"Tone & mood", short:"The speaker's attitude, the atmosphere, and how they shift.", tint:"var(--sage)"},
+  {id:"sound", name:"Sound, form & structure", short:"Alliteration, rhyme, rhythm, stanzas, sonnets and the volta.", tint:"var(--cream)"},
+  {id:"theme", name:"Theme & response", short:"What the poem says, what it makes you feel, and how poems compare.", tint:"var(--blush)"},
+  {id:"answer", name:"Writing the answer", short:"Twenty marks in about twenty minutes: plan, quote, comment, PCLM.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+const LO = [
+  ["read","Develop appropriate stances for reading and/or viewing in all literary genres. This means students should … read poetry conscious of its specific mode of using language as an artistic medium."],
+  ["imagery","Re-read texts for encountering rich and diverse levels of suggestion, inference and meaning."],
+  ["tone","Develop an awareness of their own responses, affective, imaginative, and intellectual, to aesthetic texts."],
+  ["sound","identify and analyze the form, structure and style of a text and show an understanding of how all these elements constitute its genre"],
+  ["theme","Attempt to compare and evaluate texts for the quality of the imaginative experience being presented."],
+  ["answer","Explore these responses relative to the texts read, generate and justify meanings and build coherent interpretations."],
+];
+const LO_HEAD = {read:"Syllabus 4.5.1",imagery:"Syllabus 4.5.1",tone:"Syllabus 4.5.1",sound:"Syllabus 5.4, Higher Level",theme:"Syllabus 4.5.1",answer:"Syllabus 4.5.1"};
+
+/* ---------- the four practice poems (public domain; texts checked against Wikisource) ---------- */
+// st: stanzas; rh: rhyme letter per line; mood: [lines, section, score -5 darker .. +5 brighter (our reading), what happens, tone words]
+// th: theme scores 0-5 for THM (our judgement); msg: the message in one sentence (our reading)
+const THM = ["Nature","Death & loss","Memory","Time & change","War","Love"];
+const POEMS = [
+  {id:"adl", short:"Adlestrop", title:"Adlestrop", poet:"Edward Thomas", year:"1917", icon:"train",
+   fs:"Four quatrains", form:"Four quatrains rhyming ABCB, short lines of about eight syllables",
+   ctx:"Edward Thomas (1878–1917) based it on a June day in 1914, when his express train made an unscheduled stop at Adlestrop station in Gloucestershire, weeks before the First World War. He was killed at Arras in 1917; the poem was published that year.",
+   st:[["Yes. I remember Adlestrop—","The name, because one afternoon","Of heat the express-train drew up there","Unwontedly. It was late June."],
+       ["The steam hissed. Someone cleared his throat.","No one left and no one came","On the bare platform. What I saw","Was Adlestrop—only the name"],
+       ["And willows, willow-herb, and grass,","And meadowsweet, and haycocks dry,","No whit less still and lonely fair","Than the high cloudlets in the sky."],
+       ["And for that minute a blackbird sang","Close by, and round him, mistier,","Farther and farther, all the birds","Of Oxfordshire and Gloucestershire."]],
+   rh:"ABCBDEFEGHIHJKLK",
+   mood:[["1-4","Remembering the stop",1,"A casual, spoken opening; heat and an unexpected halt.","reflective, relaxed"],["5-8","Silence on the platform",0,"Empty and hushed: nothing happens, no one comes.","still, detached"],["9-12","The countryside",3,"The eye moves out to wild flowers, hay and sky.","peaceful, admiring"],["13-16","The blackbird's song",4,"One song spreads out across two counties.","uplifting, timeless"]],
+   th:[5,1,5,4,1,0], msg:"A single, ordinary moment can stay in the memory for ever, and nature can make it feel timeless."},
+  {id:"rem", short:"Remember", title:"Remember", poet:"Christina Rossetti", year:"1862", icon:"rose",
+   fs:"Petrarchan sonnet", form:"Petrarchan sonnet: 14 lines of iambic pentameter, octave ABBAABBA and sestet CDDECE, with a turn (volta) at line 9",
+   ctx:"Christina Rossetti (1830–1894) published this sonnet in Goblin Market and Other Poems (1862). The speaker talks to someone she loves about her own death.",
+   st:[["Remember me when I am gone away,","Gone far away into the silent land;","When you can no more hold me by the hand,","Nor I half turn to go yet turning stay.","Remember me when no more day by day","You tell me of our future that you planned:","Only remember me; you understand","It will be late to counsel then or pray.","Yet if you should forget me for a while","And afterwards remember, do not grieve:","For if the darkness and corruption leave","A vestige of the thoughts that once I had,","Better by far you should forget and smile","Than that you should remember and be sad."]],
+   rh:"ABBAABBACDDECE",
+   mood:[["1-4","The plea",-3,"She asks to be remembered after death.","pleading, tender"],["5-8","The lost future",-2,"Plans they made together will never happen.","regretful, urgent"],["9-12","The turn",1,"\"Yet\": she gives permission to forget.","consoling, gentle"],["13-14","Forget and smile",2,"Her lover's happiness matters more than being remembered.","selfless, calm"]],
+   th:[0,5,5,3,0,5], msg:"True love can mean letting go: the speaker would rather be forgotten than cause grief."},
+  {id:"rain", short:"Soft Rains", title:"\"There Will Come Soft Rains\"", poet:"Sara Teasdale", year:"1920", icon:"rain",
+   fs:"Six couplets", form:"Six rhyming couplets (two are half rhymes) with a loose four-beat rhythm",
+   ctx:"Sara Teasdale (1884–1933), an American poet, wrote it during the First World War; its subtitle is (War Time). It was collected in Flame and Shadow (1920).",
+   st:[["There will come soft rains and the smell of the ground,","And swallows circling with their shimmering sound;"],["And frogs in the pools singing at night,","And wild plum-trees in tremulous white;"],["Robins will wear their feathery fire","Whistling their whims on a low fence-wire;"],["And not one will know of the war, not one","Will care at last when it is done."],["Not one would mind, neither bird nor tree","If mankind perished utterly;"],["And Spring herself, when she woke at dawn,","Would scarcely know that we were gone."]],
+   rh:"AABBCCDDEEFF",
+   mood:[["1-4","Spring returns",4,"Rain, swallows, frogs and blossom: gentle new life.","serene, delicate"],["5-6","The robins",4,"Colour and playful sound.","light, joyful"],["7-8","The war",-1,"Sudden shift: nature knows nothing of the war.","detached, ironic"],["9-10","Mankind gone",-4,"The shocking idea that humans could die out.","bleak, chilling"],["11-12","Spring wakes",-3,"A calm, quiet, devastating ending.","haunting, resigned"]],
+   th:[5,4,0,3,5,0], msg:"Nature carries on without us: human wars, and even humanity itself, do not matter to the earth."},
+  {id:"mac", short:"McDonagh", title:"Thomas McDonagh", poet:"Francis Ledwidge", year:"1917", icon:"cow",
+   fs:"Three quatrains", form:"Three quatrains rhyming ABCB, with internal rhymes (cry/sky, blows/snows, moor/poor, morn/horn)",
+   ctx:"Francis Ledwidge (1887–1917), from Slane, Co. Meath, wrote this elegy (often called \"Lament for Thomas MacDonagh\") for his friend Thomas MacDonagh, a poet executed after the 1916 Easter Rising. Ledwidge was serving in the British Army and was killed near Ypres in 1917. It appeared in Songs of Peace (1917).",
+   st:[["He shall not hear the bittern cry","In the wild sky, where he is lain,","Nor voices of the sweeter birds","Above the wailing of the rain."],["Nor shall he know when loud March blows","Thro' slanting snows her fanfare shrill,","Blowing to flame the golden cup","Of many an upset daffodil."],["But when the Dark Cow leaves the moor,","And pastures poor with greedy weeds,","Perhaps he'll hear her low at morn","Lifting her horn in pleasant meads."]],
+   rh:"ABCBDEFEGHIH",
+   mood:[["1-4","He will not hear",-4,"The dead man cannot hear the birds; the rain is wailing.","grieving, sombre"],["5-8","The spring he'll miss",-1,"Loud, bright March life that he will never see.","bittersweet, vivid"],["9-12","The Dark Cow",2,"\"But\": hope that Ireland will be free and he will know.","hopeful, defiant"]],
+   th:[5,5,3,3,4,2], msg:"Grief for a dead friend and poet joins with hope for the freedom of his country."},
+];
+POEMS.forEach(P=>{ P.L=[]; P.S=[]; P.st.forEach((s,k)=>s.forEach(l=>{ P.L.push(l); P.S.push(k); })); });
+const rhymeStr = P => P.L.length===14&&P.st.length===1? P.rh.slice(0,8)+" "+P.rh.slice(8) : P.st.map((s,k)=>{ const a=P.S.indexOf(k); return P.rh.slice(a,a+s.length); }).join(" ");
+const wordsIn = l => l.split(/[\s—]+/).filter(x=>/[A-Za-z]/.test(x)).length;
+const lettersIn = l => (l.match(/[A-Za-z]/g)||[]).length;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Unseen poem","","A poem you have not studied, printed on Paper 2. You answer a question on it in about 20 minutes.","read"],
+  ["Speaker","persona, voice","The voice in the poem (the \"I\"). It may not be the poet, so \"the speaker\" is the safe word.","read"],
+  ["Title","","The poem's name: often a clue to its subject, situation or irony.","read"],
+  ["First reading","","Reading for overall sense before analysing: who, where, when, and what feeling.","read"],
+  ["Turn","shift","A change in mood, idea or viewpoint, often at \"But\", \"Yet\" or a new stanza.","read"],
+  ["Annotation","","Brief notes and underlining on the poem as you read.","read"],
+  ["Imagery","","Language that creates pictures or sensations for the senses.","imagery"],
+  ["Visual imagery","","Imagery of sight: \"tremulous white\".","imagery"],
+  ["Aural imagery","auditory imagery","Imagery of sound: \"a blackbird sang\".","imagery"],
+  ["Olfactory imagery","","Imagery of smell: \"the smell of the ground\".","imagery"],
+  ["Tactile imagery","","Imagery of touch: \"hold me by the hand\".","imagery"],
+  ["Simile","","A comparison using \"like\" or \"as\".","imagery"],
+  ["Metaphor","","Describing one thing as if it were another: the robin's breast is \"feathery fire\".","imagery"],
+  ["Extended metaphor","","A metaphor developed over several lines.","imagery"],
+  ["Personification","","Giving human qualities to something non-human: \"Spring herself, when she woke at dawn\".","imagery"],
+  ["Pathetic fallacy","","Nature seeming to share human feelings: \"the wailing of the rain\".","imagery"],
+  ["Symbol","","An object that stands for a bigger idea: Ledwidge's \"Dark Cow\" stands for Ireland.","imagery"],
+  ["Euphemism","","A gentle way of naming something painful: \"the silent land\" for death.","imagery"],
+  ["Juxtaposition","contrast","Placing two very different things side by side for effect.","imagery"],
+  ["Tone","","The speaker's attitude: tender, bitter, ironic, wistful.","tone"],
+  ["Mood","atmosphere","The feeling the poem creates in the reader.","tone"],
+  ["Irony","","A gap between what is said and what is meant, or between what is expected and what happens.","tone"],
+  ["Wistful","","Sadly longing for something past or lost.","tone"],
+  ["Nostalgic","","Fondly remembering the past.","tone"],
+  ["Serene","","Calm and peaceful.","tone"],
+  ["Sombre","","Dark, serious and sad.","tone"],
+  ["Ambiguity","","When a word or line can be read in more than one way.","tone"],
+  ["Alliteration","","Repeated consonant sounds at the start of nearby words: \"Whistling their whims\".","sound"],
+  ["Sibilance","","Repeated s and sh sounds: \"shimmering sound\".","sound"],
+  ["Assonance","","Repeated vowel sounds in nearby words.","sound"],
+  ["Onomatopoeia","","A word that sounds like what it means: \"The steam hissed.\"","sound"],
+  ["Repetition","","Repeating a word or phrase for emphasis: \"Remember me\".","sound"],
+  ["Rhyme","","Words that end with the same sound.","sound"],
+  ["Rhyme scheme","","The pattern of end rhymes, shown with letters, e.g. ABCB.","sound"],
+  ["Half rhyme","slant rhyme","A near rhyme: \"dawn\" and \"gone\".","sound"],
+  ["Internal rhyme","","A rhyme inside a line or between words close together: \"morn … horn\".","sound"],
+  ["Rhythm","","The beat of the lines, made by stressed and unstressed syllables.","sound"],
+  ["Metre","","A regular pattern of rhythm.","sound"],
+  ["Iambic pentameter","","Ten syllables in five unstressed-stressed pairs. \"Remember\" uses it.","sound","da-DUM da-DUM da-DUM da-DUM da-DUM"],
+  ["Enjambment","run-on line","A sentence running over the end of a line without a pause.","sound"],
+  ["Caesura","","A pause in the middle of a line: \"Unwontedly. It was late June.\"","sound"],
+  ["End-stopped line","","A line that ends with punctuation and a pause.","sound"],
+  ["Stanza","verse","A group of lines in a poem.","sound"],
+  ["Couplet","","Two lines together, usually rhyming.","sound"],
+  ["Quatrain","","A four-line stanza.","sound"],
+  ["Sonnet","","A 14-line poem, usually in iambic pentameter.","sound"],
+  ["Octave","","The first eight lines of a Petrarchan sonnet.","sound"],
+  ["Sestet","","The last six lines of a Petrarchan sonnet.","sound"],
+  ["Volta","the turn","The turn in a sonnet, usually at line 9.","sound"],
+  ["Free verse","","Poetry without regular rhyme or metre.","sound"],
+  ["Theme","","The poem's central idea: what it says about its subject.","theme"],
+  ["Elegy","","A poem mourning someone who has died.","theme"],
+  ["Lyric","","A short poem expressing personal feeling.","theme"],
+  ["Personal response","","Your own reasoned reaction to a poem, supported by quotation.","theme"],
+  ["Easter Rising","1916","The armed rebellion in Dublin in April 1916. Its leaders, including the poet Thomas MacDonagh, were executed.","theme"],
+  ["PCLM","","The four marking criteria: Purpose 30%, Coherence 30%, Language 30%, Mechanics 10%.","answer","20 marks → P 6 · C 6 · L 6 · M 2"],
+  ["Purpose","","Answering the question asked, with a clear point of view.","answer"],
+  ["Coherence","","Putting points in a logical order and linking them.","answer"],
+  ["Point, quote, comment","PQC","A paragraph shape: make a point, quote briefly, comment on the effect.","answer"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+t.length}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["imagery","Imagery"],["personification","Personification"],["metaphor","Metaphor"],["sibilance","Sibilance"],["alliteration","Alliteration"],["onomatopoeia","Onomatopoeia"],["volta","Volta"],["pathetic fallacy","Pathetic fallacy"],["symbol","Symbol"],["speaker","Speaker"],["internal rhyme","Internal rhyme"],["PCLM","PCLM",1],["sonnet","Sonnet"],["euphemism","Euphemism"],["elegy","Elegy"],["irony","Irony"]];
+
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rr(ctx,x,y,w,h,r){ if(w<0){ x+=w; w=-w; } if(h<0){ y+=h; h=-h; } r=Math.max(0,Math.min(r,h/2,w/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function arrowHead(ctx,x,y,dx,dy,col,s=8){ ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x+dx*s,y+dy*s); ctx.lineTo(x-dx*s*0.6-dy*s*0.7,y-dy*s*0.6+dx*s*0.7); ctx.lineTo(x-dx*s*0.6+dy*s*0.7,y-dy*s*0.6-dx*s*0.7); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const nf = (x,d=0) => { const s=(Math.round(x*10**d)/10**d).toFixed(d); const [i,f]=s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f?"."+f:""); };
+const eur = x => "€"+nf(x, Math.abs(x-Math.round(x))>0.004?2:0);
+const niceStep = (range,n) => { const r=range/Math.max(1,n), p=10**Math.floor(Math.log10(r)), m=r/p; return (m<=1?1:m<=2?2:m<=5?5:10)*p; };
+const tick = v => String(+v.toFixed(6));
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+// Axes: returns mapping functions. o: x0,x1,y0,y1,xl,yl,compact
+function frame(ctx,w,h,o){
+  const cp=o.compact, L=cp?36:50, R=12, T=cp?12:16, B=cp?24:34, fs=cp?9:11;
+  const X=v=>L+(v-o.x0)/(o.x1-o.x0)*(w-L-R), Y=v=>h-B-(v-o.y0)/(o.y1-o.y0)*(h-B-T);
+  const xs=o.xt||niceStep(o.x1-o.x0, Math.max(3,Math.floor((w-L)/70))), ys=o.yt||niceStep(o.y1-o.y0, Math.max(3,Math.floor((h-B)/45)));
+  for(let v=Math.ceil(o.x0/xs)*xs; v<=o.x1+1e-9; v+=xs){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,tick(v),X(v),h-B+(cp?11:14),C.muted,M(fs),"center"); }
+  for(let v=Math.ceil(o.y0/ys)*ys; v<=o.y1+1e-9; v+=ys){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,tick(v),L-5,Y(v)+3,C.muted,M(fs),"right"); }
+  const y0=Y(Math.max(o.y0,Math.min(o.y1,0)));
+  line(ctx,L,y0,w-R,y0,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(o.xl) text(ctx,o.xl,w-R,h-B+(cp?22:30),C.muted,F(cp?10:12),"right");
+  if(o.yl) text(ctx,o.yl,L+6,T+(cp?10:12),C.muted,F(cp?10:12),"left");
+  return {X,Y,L,R,T,B};
+}
+function curve(ctx,f,x0,x1,X,Y,col,lw=2.5,dash,clip){ ctx.save(); if(clip){ ctx.beginPath(); ctx.rect(clip[0],clip[1],clip[2],clip[3]); ctx.clip(); } ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); const n=120; for(let i=0;i<=n;i++){ const x=x0+(x1-x0)*i/n, y=f(x); if(i) ctx.lineTo(X(x),Y(y)); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore(); }
+/* ================= MODELS + DRAWINGS ================= */
+// Annotations: [poem id, line index, lens, exact phrase, note]
+const LENS = {imagery:["Imagery","apricot"], sound:["Sound","sage"], tone:["Tone & feeling","blush"]};
+const ANN = [
+  ["adl",0,"tone","Yes. I remember Adlestrop","Starts mid-conversation, as if answering a question: casual, personal, a memory."],
+  ["adl",3,"tone","Unwontedly","An old word for \"unusually\": a small, unexpected break in routine."],
+  ["adl",4,"sound","The steam hissed.","Onomatopoeia and short sentences: in the silence, tiny sounds seem loud."],
+  ["adl",5,"sound","No one left and no one came","Repetition and balance stress the emptiness: nothing happens."],
+  ["adl",6,"imagery","bare platform","A stark visual image: empty and still."],
+  ["adl",8,"imagery","willows, willow-herb, and grass","A list of wild plants: the eye moves from the station into the countryside. \"And… and…\" slows the pace."],
+  ["adl",11,"imagery","the high cloudlets in the sky","The view lifts upward: the scene widens from the ground to the sky."],
+  ["adl",12,"sound","a blackbird sang","One bird's song breaks the silence: the turning point."],
+  ["adl",14,"sound","Farther and farther","Repetition makes the birdsong ripple outward: the moment grows."],
+  ["adl",15,"tone","Oxfordshire and Gloucestershire","Ends on long, musical place names: a peaceful, timeless England, written just before the war."],
+  ["rem",0,"sound","Remember me","The imperative \"Remember\" is repeated through the octave: a plea."],
+  ["rem",1,"imagery","the silent land","A gentle metaphor (a euphemism) for death: quiet, far away, unknown."],
+  ["rem",2,"imagery","hold me by the hand","A tender image of touch and closeness that death will end."],
+  ["rem",3,"tone","half turn to go yet turning stay","Their partings in life were never final: she always stayed. Death will not be like that."],
+  ["rem",5,"tone","our future that you planned","Sad irony: plans for a future that will never happen."],
+  ["rem",8,"tone","Yet if you should forget","The volta: from \"remember me\" to permission to forget."],
+  ["rem",10,"imagery","the darkness and corruption","Stark images of the grave and decay, in contrast with the gentle tone."],
+  ["rem",12,"sound","forget and smile","The last two lines balance \"forget and smile\" against \"remember and be sad\"."],
+  ["rem",13,"tone","remember and be sad","Selfless love: she would rather be forgotten than cause grief."],
+  ["rain",0,"imagery","the smell of the ground","Smell and touch: soft, fresh, earthy spring."],
+  ["rain",1,"sound","swallows circling with their shimmering sound","Sibilance (s, sh) imitates soft, rustling movement."],
+  ["rain",3,"imagery","tremulous white","A delicate visual image: blossom trembling in the breeze."],
+  ["rain",4,"imagery","feathery fire","A metaphor for the robin's red breast, with alliteration of f."],
+  ["rain",5,"sound","Whistling their whims","Alliteration of w: a light, playful sound."],
+  ["rain",6,"tone","not one will know of the war","The turn: nature's peace is suddenly set against human war."],
+  ["rain",9,"tone","If mankind perished utterly","A shocking idea stated calmly: nature would not notice."],
+  ["rain",10,"imagery","Spring herself","Personification: Spring is a woman waking at dawn, indifferent to us."],
+  ["rain",11,"tone","Would scarcely know that we were gone","A quiet, chilling ending: humans matter less than we think."],
+  ["mac",0,"sound","the bittern cry","MacDonagh translated the Irish poem \"The Yellow Bittern\", so the bird is linked to him. \"cry\" chimes with \"sky\"."],
+  ["mac",3,"imagery","the wailing of the rain","Pathetic fallacy: the rain mourns like a keening woman."],
+  ["mac",4,"sound","loud March blows","Loud, energetic sounds: spring arrives noisily, but he won't hear it."],
+  ["mac",5,"sound","slanting snows","Sibilance suggests the hiss of wind-blown snow."],
+  ["mac",6,"imagery","golden cup","Metaphor: the daffodil is a golden cup blown \"to flame\", bright colour in the cold."],
+  ["mac",8,"imagery","the Dark Cow","A symbol: in Irish tradition Ireland is pictured as a dark cow. The poem turns political."],
+  ["mac",9,"tone","greedy weeds","The land is poor and choked: Ireland under oppression."],
+  ["mac",10,"tone","Perhaps he'll hear her","A note of hope: if Ireland is free, perhaps the dead man will somehow know."],
+  ["mac",11,"sound","Lifting her horn","Internal rhyme (morn/horn, moor/poor) gives the last stanza a song-like lift."],
+];
+// Image sorter
+const BINS = [["vis","Visual images","apricot"],["sound","Sound images","sage"],["pers","Personification","blush"],["meta","Metaphor & symbol","olive"]];
+const SORT = [
+  ["Robins will wear their feathery fire","meta","Teasdale"],
+  ["Gone far away into the silent land","meta","Rossetti"],
+  ["But when the Dark Cow leaves the moor","meta","Ledwidge"],
+  ["Blowing to flame the golden cup","meta","Ledwidge"],
+  ["And Spring herself, when she woke at dawn","pers","Teasdale"],
+  ["loud March blows … her fanfare shrill","pers","Ledwidge"],
+  ["Above the wailing of the rain","pers","Ledwidge"],
+  ["The steam hissed.","sound","Thomas"],
+  ["And swallows circling with their shimmering sound","sound","Teasdale"],
+  ["And for that minute a blackbird sang","sound","Thomas"],
+  ["Than the high cloudlets in the sky","vis","Thomas"],
+  ["And wild plum-trees in tremulous white","vis","Teasdale"],
+  ["And willows, willow-herb, and grass","vis","Thomas"],
+];
+// Answer builder (20 marks)
+const ESSAYS = [
+  {q:"(\"There Will Come Soft Rains\") What impression of nature does the poet create in this poem? Support your answer with reference to the poem.", t:[["Teasdale shows nature as beautiful and gentle but completely indifferent to humans, which makes the poem unsettling.",3],["Nature is nice in this poem.",1],["The poem is about rain, swallows, frogs and robins.",0]],
+    p:[["Soft, sensuous images of spring: \"the smell of the ground\", \"tremulous white\".",1],["Sound and colour bring nature alive: \"shimmering sound\", \"feathery fire\".",1],["The turn, \"not one will know of the war\", shows nature does not care about us.",1],["Personified Spring \"Would scarcely know that we were gone\": a chilling ending.",1],["Sara Teasdale was an American poet born in 1884.",0],["The poem mentions frogs, swallows, robins and plum-trees.",0]]},
+  {q:"(\"Adlestrop\") Did you enjoy this poem? Give reasons for your answer, with reference to its language and imagery.", t:[["I enjoyed how Thomas turns an ordinary moment, a train stopping, into a still, beautiful memory that seems to spread across the countryside.",3],["Yes, I liked it because it was short.",1],["The poem is about a train that stopped at Adlestrop.",0]],
+    p:[["Short sentences and the \"hissed\" steam create a hush I can almost hear.",1],["The list \"willows, willow-herb, and grass\" slows me down to look closely.",1],["The blackbird's song spreads \"Farther and farther\": the moment grows beautifully.",1],["Knowing it comes from just before the First World War gives the peace a sad edge for me.",1],["The train was an express and it was late June.",0],["Adlestrop is a village with a railway station.",0]]},
+  {q:"(\"Remember\") How does the poet's language convey the speaker's feelings? Support your answer with reference to the poem.", t:[["Rossetti's language moves from pleading repetition to gentle, selfless acceptance, showing a love that puts the other person first.",3],["The speaker has lots of feelings in this poem.",1],["The poem is a sonnet by Christina Rossetti.",0]],
+    p:[["The repeated imperative \"Remember me\" sounds like an urgent plea.",1],["Soft euphemisms such as \"the silent land\" show she faces death gently.",1],["The volta, \"Yet if you should forget\", turns her feelings from need to generosity.",1],["The balanced last lines, \"forget and smile\" against \"remember and be sad\", show selfless love.",1],["A sonnet has fourteen lines.",0],["Christina Rossetti lived in London in the nineteenth century.",0]]},
+];
+/* ---------- drawings ---------- */
+function pointerTap(el,fn){ el.addEventListener("pointerdown",e=>{ const r=el.getBoundingClientRect(); fn(e.clientX-r.left,e.clientY-r.top); }); }
+function drawPoem(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const P=POEMS[o.p], cp=o.compact||w<440, padX=cp?10:18, top=cp?28:44, bot=cp?8:14, gaps=P.st.length-1, gapH=cp?5:12;
+  const lh=Math.min(o.compact?17:cp?22:26,(h-top-bot-gaps*gapH)/P.L.length), numW=cp?16:30, rhW=o.lens==="sound"?(cp?14:26):0, avail=w-padX*2-numW-rhW-6;
+  let fs=cp?12:16; ctx.font=F(fs,600); const widest=Math.max(...P.L.map(l=>ctx.measureText(l).width)); if(widest>avail) fs=fs*avail/widest; fs=Math.max(7,Math.min(fs,lh*0.74));
+  text(ctx,P.title.replace(/"/g,""),padX,cp?17:26,C.ink,`700 ${cp?12:18}px ${C.fd}`);
+  if(!cp) text(ctx,`${P.poet} (${P.year})`,w-padX,26,C.muted,F(12,600),"right");
+  const rows=[]; let y=top;
+  P.L.forEach((l,i)=>{ if(i>0 && P.S[i]!==P.S[i-1]) y+=gapH; const x=padX+numW, by=y+lh/2;
+    ctx.font=F(fs,600);
+    ANN.forEach((a,k)=>{ if(a[0]!==P.id||a[1]!==i||a[2]!==o.lens) return; const s=l.indexOf(a[3]); if(s<0) return;
+      const x0=x+ctx.measureText(l.slice(0,s)).width, ww=ctx.measureText(a[3]).width; rr(ctx,x0-3,by-fs*0.72,ww+6,fs*1.4,5);
+      ctx.globalAlpha=k===o.sel?0.95:0.5; ctx.fillStyle=C[LENS[o.lens][1]]; ctx.fill(); ctx.globalAlpha=1; if(k===o.sel){ ctx.strokeStyle=C.terra; ctx.lineWidth=2; ctx.stroke(); } });
+    if(!cp || (i+1)%4===0) text(ctx,String(i+1),padX+numW-7,by+fs*0.35,C.muted,M(cp?8:10),"right");
+    text(ctx,l,x,by+fs*0.35,C.ink,F(fs,600));
+    if(rhW) text(ctx,P.rh[i],w-padX,by+fs*0.35,C.terra,M(cp?9:12),"right");
+    rows.push({i,y0:y-(i>0&&P.S[i]!==P.S[i-1]?gapH/2:0),y1:y+lh}); y+=lh; });
+  return rows;
+}
+function drawMood(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, L=cp?14:30, R=cp?10:20, T=cp?14:24, B=cp?20:34, Y=v=>T+(5-v)/10*(h-T-B);
+  line(ctx,L,Y(0),w-R,Y(0),C.muted,1.5,[5,5]);
+  if(!cp){ text(ctx,"brighter ↑",L+2,T+4,C.olive,F(11),"left"); text(ctx,"darker ↓",L+2,h-B-6,C.terra,F(11),"left"); }
+  const cols=[C.terra,C.olive,C.apricot,C.img], ps=o.all?POEMS.map((x,i)=>i):[o.p]; let pts=[];
+  ps.forEach((pi,j)=>{ const Md=POEMS[pi].mood, n=Md.length, X=k=>L+(k+0.5)/n*(w-L-R), col=o.all?cols[j]:C.apricot, upto=o.t==null?n-1:o.t*(n-1);
+    if(!o.all) Md.forEach((s,k)=>{ const x0=L+k/n*(w-L-R), x1=L+(k+1)/n*(w-L-R); if(k%2){ ctx.fillStyle=C["surface-2"]; ctx.fillRect(x0,T,x1-x0,h-T-B); } text(ctx,(cp?"":"lines ")+s[0],X(k),h-B+(cp?13:18),C.muted,F(cp?9:11),"center"); });
+    if(!o.all) line(ctx,L,Y(0),w-R,Y(0),C.muted,1.5,[5,5]);
+    ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=cp?2.2:3.2; ctx.lineJoin="round"; ctx.beginPath();
+    Md.forEach((s,k)=>{ if(k>Math.ceil(upto)) return; let x=X(k), y=Y(s[2]); if(k>upto){ const f=upto-Math.floor(upto); x=X(k-1)+(x-X(k-1))*f; y=Y(Md[k-1][2])+(y-Y(Md[k-1][2]))*f; } k?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke(); ctx.restore();
+    Md.forEach((s,k)=>{ if(k>upto) return; const x=X(k), y=Y(s[2]), sel=!o.all&&k===o.sel; circle(ctx,x,y,sel?(cp?6:10):(cp?3.5:6),o.all?col:(s[2]>=0?C.sage:C.blush),sel?C.terra:(o.all?C.surface:C.ink),sel?3:1.5);
+      if(!cp&&!o.all) text(ctx,s[4],Math.max(L+50,Math.min(w-R-50,x)),y+(s[2]>=0?-16:24),C.ink,F(11),"center"); pts.push([x,y]); });
+    if(o.all && !cp) text(ctx,POEMS[pi].short,X(n-1)+8>w-R-60?w-R:X(n-1)+8,Y(Md[n-1][2])-8,col,F(11),X(n-1)+8>w-R-60?"right":"left");
+  });
+  return pts;
+}
+function shapeVals(p,m){ return POEMS[p].L.map(m==="letters"?lettersIn:wordsIn); }
+function shapeFit(p,m,rec){ if(!rec||rec.length<2) return null; const v=shapeVals(p,m), xs=rec.map(i=>i+1), ys=rec.map(i=>v[i]); const mx=xs.reduce((a,b)=>a+b,0)/xs.length, my=ys.reduce((a,b)=>a+b,0)/ys.length; let sxy=0,sxx=0; xs.forEach((x,i)=>{ sxy+=(x-mx)*(ys[i]-my); sxx+=(x-mx)**2; }); if(!sxx) return null; const m2=sxy/sxx; return {m:m2,c:my-m2*mx}; }
+function rhymeCol(P,i){ const ch=P.rh[i]; if(P.rh.split(ch).length<3) return C.sage; const groups=[...new Set(P.rh.split("").filter(c=>P.rh.split(c).length>=3))]; return [C.apricot,C.terra,C.olive,C.img,C.blush][groups.indexOf(ch)%5]; }
+function drawShape(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const P=POEMS[o.p], v=shapeVals(o.p,o.m), n=v.length, rec=o.rec||v.map((x,i)=>i), narrow=o.compact||w<500;
+  const fr=frame(ctx,w,h,{x0:0.4,x1:n+0.6,y0:0,y1:Math.max(...v)*1.25,xl:"line",yl:o.m==="letters"?"letters":"words",compact:o.compact,xt:o.compact?4:(narrow?2:1)});
+  const bw=(fr.X(1)-fr.X(0))*0.62;
+  for(let i=1;i<n;i++) if(P.S[i]!==P.S[i-1]) line(ctx,fr.X(i+0.5),fr.T,fr.X(i+0.5),fr.Y(0),C.muted,1,[3,4]);
+  rec.forEach(i=>{ const val=v[i]; rr(ctx,fr.X(i+1)-bw/2,fr.Y(val),bw,fr.Y(0)-fr.Y(val),3); ctx.fillStyle=rhymeCol(P,i); ctx.fill();
+    if(!o.compact && bw>9) text(ctx,P.rh[i],fr.X(i+1),fr.Y(val)-5,C.ink,M(narrow?9:11),"center"); });
+  const f=shapeFit(o.p,o.m,rec); if(f) line(ctx,fr.X(0.7),fr.Y(f.c+f.m*0.7),fr.X(n+0.3),fr.Y(f.c+f.m*(n+0.3)),C.terra,2.5,[7,5]);
+}
+function drawRadar(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, n=THM.length, cx=w/2, cy=h/2+(cp?4:10), R=Math.max(30,Math.min(w*(cp?0.27:0.3), h/2-(cp?20:36))), ang=k=>-Math.PI/2+k*2*Math.PI/n;
+  for(let r=1;r<=5;r++){ ctx.beginPath(); for(let k=0;k<=n;k++){ const a=ang(k%n), x=cx+Math.cos(a)*R*r/5, y=cy+Math.sin(a)*R*r/5; k?ctx.lineTo(x,y):ctx.moveTo(x,y); } ctx.strokeStyle=C.grid; ctx.lineWidth=1; ctx.stroke(); }
+  THM.forEach((t,k)=>{ const a=ang(k), c=Math.cos(a); line(ctx,cx,cy,cx+c*R,cy+Math.sin(a)*R,C.grid,1); const lx=cx+c*(R+(cp?7:14)), ly=cy+Math.sin(a)*(R+(cp?9:16)); text(ctx,t,lx,ly+4,C.ink,F(cp?9:12),Math.abs(c)<0.2?"center":c>0?"left":"right"); });
+  const poly=(sc,col,fa)=>{ ctx.beginPath(); sc.forEach((v,k)=>{ const a=ang(k), x=cx+Math.cos(a)*R*v/5, y=cy+Math.sin(a)*R*v/5; k?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.closePath(); ctx.globalAlpha=fa; ctx.fillStyle=col; ctx.fill(); ctx.globalAlpha=1; ctx.strokeStyle=col; ctx.lineWidth=cp?2:3; ctx.lineJoin="round"; ctx.stroke(); };
+  if(o.b!=null && o.b>=0) poly(POEMS[o.b].th,C.olive,0.22);
+  poly(o.sc||POEMS[o.a].th,C.terra,0.3);
+  if(!cp){ text(ctx,o.label||POEMS[o.a].title.replace(/"/g,""),12,20,C.terra,F(13),"left"); if(o.b!=null&&o.b>=0) text(ctx,POEMS[o.b].title.replace(/"/g,""),12,38,C.olive,F(13),"left"); }
+  else if(o.label) text(ctx,o.label,8,14,C.terra,F(10),"left");
+}
+function drawSorter(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, n=BINS.length, gap=cp?6:10, bw=(w-gap*(n+1))/n, top=cp?8:12, bh=h-top-(cp?8:12), P=[];
+  BINS.forEach(([id,name,col],i)=>{ const x=gap+i*(bw+gap); P.push([x,top,bw,bh]); rr(ctx,x,top,bw,bh,12); ctx.fillStyle=C["surface-2"]; ctx.fill(); ctx.strokeStyle=o.armed?C.terra:C.line; ctx.lineWidth=o.armed?2.5:1.5; ctx.stroke();
+    const words=name.split(" "); words.forEach((wd,j)=>text(ctx,wd,x+bw/2,top+(cp?16:22)+j*(cp?13:17),C.ink,F(cp?10:13),"center"));
+    const items=(o.placed||[]).filter(p=>p.bin===id); items.forEach((p,j)=>{ const y=top+bh-(cp?12:16)-j*(cp?14:20); rr(ctx,x+4,y-(cp?9:12),bw-8,cp?12:16,5); ctx.fillStyle=p.ok?C[col]:C.blush; ctx.fill(); ctx.save(); ctx.beginPath(); ctx.rect(x+4,y-14,bw-8,20); ctx.clip(); text(ctx,(p.ok?"✓ ":"✗ ")+p.short,x+bw/2,y,"#3b2b21",F(cp?8:10),"center"); ctx.restore(); }); });
+  return P;
+}
+const PCLM = [["Purpose","P",30],["Coherence","C",30],["Language","L",30],["Mechanics","M",10]];
+function essayScore(es){ const E=ESSAYS[es.q], t=es.t==null?0:E.t[es.t][1], rel=es.p.filter(i=>E.p[i][1]).length, n=es.p.length;
+  const P=Math.min(1,(t/3)*0.5+rel/3*0.5), Cq=Math.min(1,(t>0?0.3:0)+n/3*0.4+rel/3*0.3), L=0.6+0.1*rel, Mm=0.8; return [P,Cq,Math.min(1,L),Mm]; }
+function drawEssay(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, es=o.es, E=ESSAYS[es.q], sc=essayScore(es);
+  const leftW = cp? w : w*0.6, boxes=[["Opening: your answer", es.t==null?null:E.t[es.t][1]>=3]].concat([0,1,2].map(k=>[`Paragraph ${k+1}`, es.p[k]==null?null:!!E.p[es.p[k]][1]])).concat([["One-line conclusion",es.t==null?null:true]]);
+  const bh=cp?20:30, gap=cp?6:10, top=12, bx=14, bwid=leftW-28;
+  boxes.forEach(([lab,ok],i)=>{ const y=top+i*(bh+gap); rr(ctx,bx,y,bwid,bh,8); ctx.fillStyle= ok==null? C["surface-2"] : ok? C.sage : C.blush; ctx.fill(); ctx.strokeStyle=C.line; ctx.lineWidth=1.2; ctx.stroke();
+    text(ctx,lab+(ok==null?" (empty)":ok?" ✓":" ✗ off the question"),bx+12,y+bh/2+1,"#3b2b21",F(cp?10:12),"left","middle"); if(i<boxes.length-1) line(ctx,bx+bwid/2,y+bh,bx+bwid/2,y+bh+gap,C.muted,1.5); });
+  const gx= cp? 14 : leftW+10, gy = cp? top+boxes.length*(bh+gap)+6 : top, gw= cp? w-28 : w-leftW-24, rowH= cp? 18 : 34;
+  PCLM.forEach(([name,k,pct],i)=>{ const y=gy+i*rowH, v=sc[i]; text(ctx,`${k} ${pct}%`,gx,y+(cp?12:14),C.ink,F(cp?10:12),"left"); const tx=gx+(cp?50:60), tw=gw-(cp?50:60); rr(ctx,tx,y+4,tw,cp?10:14,6); ctx.fillStyle=C.grid; ctx.fill(); rr(ctx,tx,y+4,Math.max(4,tw*v),cp?10:14,6); ctx.fillStyle=v>0.75?C.olive:v>0.5?C.apricot:C.terra; ctx.fill(); });
+}
+
+/* ================= ROUTER ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "plot", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+$("loList").innerHTML = LO.map(([t,s],i)=>`<li><label><input type="checkbox" id="lo${i}"><span class="mono">${i+1}</span><span>${s} <small style="color:var(--muted)">· ${LO_HEAD[t]}</small></span></label></li>`).join("");
+const loState=store.get("enu-lo",{});
+LO.forEach((x,i)=>{ const id="lo"+i; $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("enu-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=LO.filter((x,i)=>$("lo"+i).checked).length; $("stLO").textContent=`${lo}/${LO.length}`; $("stLOb").style.width=(lo/LO.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("enu-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  read:{ vis:[["poem",{p:0,lens:"tone",sel:0}]], cap:"Annotate as you read: who is speaking, where, and how they feel. Here, the tone notes on \"Adlestrop\".",
+    keys:[["1","Read the title, then the whole poem twice: once for sense, once with a pen. Who is the speaker? Where and when? What is the feeling?"],["↻","Find the turn: a shift in mood or idea, often at \"But\", \"Yet\" or a new stanza."],["✎","Underline three or four short phrases you could quote, and jot one word for the effect of each."]],
+    f:"Title → speaker → situation → feeling → turn → message", mistake:"Writing down everything you notice. Use only the evidence that answers the question." },
+  imagery:{ vis:[["sorter",{placed:[{bin:"vis",ok:true,short:"tremulous white"},{bin:"sound",ok:true,short:"steam hissed"},{bin:"pers",ok:true,short:"Spring herself"},{bin:"meta",ok:true,short:"feathery fire"}]}]], cap:"Sort images by type: sight and sound, personification, metaphor and symbol.",
+    keys:[["👁","Imagery appeals to the senses: sight (\"tremulous white\"), sound (\"The steam hissed.\"), smell (\"the smell of the ground\"), touch."],["✦","Figurative language: metaphor (\"feathery fire\"), personification (\"Spring herself\"), pathetic fallacy (\"the wailing of the rain\")."],["◆","A symbol stands for something bigger: Ledwidge's \"Dark Cow\" is Ireland."]],
+    f:"Image → what it shows → what it makes you feel", mistake:"Naming a device without its effect (\"there is alliteration in line 6\"). Always say what it does." },
+  tone:{ vis:[["mood",{p:2,sel:3}]], cap:"\"There Will Come Soft Rains\": serene for six lines, then a sharp turn at the war, ending bleak and chilling.",
+    keys:[["◐","Tone is the speaker's attitude (tender, bitter, ironic); mood is the atmosphere you feel (eerie, peaceful)."],["≈","Use precise tone words: wistful, serene, sombre, defiant, nostalgic, ironic. \"Sad\" is too vague."],["↘","Most poems shift. Quote a line before and after the turn and name both tones."]],
+    f:"Tone = the speaker's attitude · Mood = the atmosphere you feel", mistake:"Describing the subject (\"it's about spring\") instead of the tone (\"it is calm, then chilling\")." },
+  sound:{ vis:[["shape",{p:1,m:"words"}]], cap:"\"Remember\": fourteen even lines, rhyme pairs in matching colours, octave then sestet.",
+    keys:[["♪","Sound devices: alliteration (\"Whistling their whims\"), sibilance (\"shimmering sound\"), onomatopoeia (\"hissed\"), internal rhyme (\"morn … horn\")."],["▦","Rhyme and rhythm: a tight scheme (ABBAABBA) feels controlled; half rhymes (\"dawn\"/\"gone\") feel uneasy."],["⤵","Form and structure: a sonnet's volta at line 9, stanza breaks, short lines, enjambment and caesura all shape meaning."]],
+    f:"Form + sound + structure → meaning", mistake:"Describing the rhyme scheme without saying why it matters to the poem." },
+  theme:{ vis:[["radar",{a:2,b:0}]], cap:"Teasdale (terracotta) and Thomas (olive) both fill their poems with nature, for very different reasons.",
+    keys:[["❝","A theme is a message, not a topic: not \"spring\" but \"nature carries on without us\"."],["♥","Personal response counts: say what the poem made you think or feel, and why, with evidence."],["⇄","Comparing poems sharpens your reading: the same subject (nature) can carry peace, grief or warning."]],
+    f:"Topic (spring) → theme (nature doesn't need us)", mistake:"Stating a theme in one word. Say what the poem says about it." },
+  answer:{ vis:[["essay",{es:{q:0,t:0,p:[0,1,2]}}]], cap:"A strong plan: an opening that answers, three relevant paragraphs, a one-line conclusion.",
+    keys:[["20","The unseen poem is worth 20 marks at Higher Level: about 20 minutes, a page or a page and a half."],["¶","Answer in the first sentence, then three paragraphs: point, short quotation, comment on effect."],["✓","Answers are marked on PCLM: Purpose 30%, Coherence 30%, Language 30%, Mechanics 10%."]],
+    f:"20 marks: P 6 · C 6 · L 6 · M 2", mistake:"Paraphrasing the poem line by line instead of answering the question." },
+};
+
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+/* ================= INFOGRAPHICS ================= */
+$("cases").innerHTML = POEMS.map((P,i)=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${["var(--blush)","var(--apricot)","var(--sage)","var(--cream)"][i]}">${svg(P.icon)}</div><div><h3>${P.title}</h3><p style="color:var(--muted)">${P.poet}, ${P.year}</p></div></div><p>${P.form}.</p><p style="color:var(--muted)"><i>"${[P.L[12],P.L[13],P.L[11],P.L[8]][i]}"</i></p><button data-go="formulae">Read it</button></div>`).join("");
+(()=>{ const tot=POEMS.map(P=>P.L.reduce((a,l)=>a+wordsIn(l),0)), mx=Math.max(...tot);
+  $("bars").innerHTML = POEMS.map((P,i)=>`<div class="barrow"><span><b>${P.short}</b></span><div class="track"><i style="width:${(tot[i]/mx*100).toFixed(1)}%;background:var(--${["terra","apricot","sage","blush"][i]})"></i></div><span class="v">${tot[i]} words · ${P.L.length} lines</span></div>`).join("") + `<p class="result">Counted from the texts (hyphenated words count as one). Short poems reward close reading: every word was chosen.</p>`; })();
+const AROUND = [
+  ["clock","Minutes 0 to 5: read","Read the question, then the poem twice. Underline 3 or 4 phrases and mark the turn.",[["Annotator lab","real"]],"var(--blush)"],
+  ["answer","Minutes 5 to 8: plan","Write your one-sentence answer, then three points in order, each with a quotation.",[["Answer builder","real"]],"var(--apricot)"],
+  ["book","Minutes 8 to 20: write","Point, quote, comment. Keep linking back to the question's key words.",[["PCLM","neutral"]],"var(--sage)"],
+  ["read","All year: read widely","The syllabus asks you to read widely in poetry. Try one new short poem a week and annotate it.",[["Syllabus 6.3","real"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+$("qbank").innerHTML = POEMS.map(P=>`<div class="panel fcell"><span class="pill">${P.poet} · ${P.year}</span><h3 style="font-size:1.25rem">${P.title}</h3>${P.id==="rain"?`<p style="color:var(--muted);font-size:.85rem">(War Time)</p>`:""}<div style="font-family:var(--f-display);line-height:1.55;font-size:1rem">${P.st.map(s=>s.join("<br>")).join("<br><br>")}</div><p style="font-size:.85rem;color:var(--muted)"><b>Form:</b> ${P.form}. <b>Rhyme:</b> <span class="mono">${rhymeStr(P)}</span></p><p style="font-size:.85rem;color:var(--muted)">${P.ctx}</p></div>`).join("") + `<div class="panel fcell"><span class="pill a">Toolkit</span><span class="big">S·S·F·T·T</span><dl><dt>Speaker</dt><dd>who, to whom, where, when</dd><dt>Senses</dt><dd>imagery and figurative language</dd><dt>Feeling</dt><dd>tone and mood, and the turn</dd><dt>Technique</dt><dd>sound, form, structure</dd><dt>Theme</dt><dd>the message, in a sentence</dd></dl></div>`;
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"read",label:"First reading",col:"var(--blush)",leaves:[["Title","A clue or an irony."],["Speaker","Who, to whom, where?"],["Turn","But, Yet, new stanza."],["Annotate","3-4 phrases to quote."]]},
+  {id:"imagery",label:"Imagery",col:"var(--apricot)",leaves:[["Senses","Sight, sound, smell, touch."],["Metaphor","\"feathery fire\"."],["Personification","\"Spring herself\"."],["Symbol","The Dark Cow."]]},
+  {id:"tone",label:"Tone & mood",col:"var(--sage)",leaves:[["Tone","The speaker's attitude."],["Mood","The atmosphere you feel."],["Precise words","Wistful, serene, sombre."],["Shift","Name both tones."]]},
+  {id:"sound",label:"Sound & form",col:"var(--cream)",leaves:[["Sound","Sibilance, onomatopoeia."],["Rhyme","Scheme, half, internal."],["Sonnet","Octave, sestet, volta."],["Structure","Stanzas, enjambment."]]},
+  {id:"theme",label:"Theme",col:"var(--blush)",leaves:[["Message","A sentence, not a word."],["Response","What you feel, and why."],["Compare","Same subject, new meaning."],["Context","Only if it helps."]]},
+  {id:"answer",label:"The answer",col:"var(--sage)",leaves:[["20 marks","About 20 minutes."],["Opening","Answer at once."],["PQC","Point, quote, comment."],["PCLM","6 · 6 · 6 · 2."]]},
+];
+
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Unseen</text><text x="${cx}" y="${cy+22}" text-anchor="middle">poetry</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["read","What should you do in your first reading of an unseen poem?","Read the title, then the whole poem for sense. Ask: who is speaking, to whom, where and when, and what is the feeling?"],
+  ["read","What is the \"speaker\" of a poem?","The voice in the poem (the \"I\"). It may not be the poet, so \"the speaker\" is the safe word."],
+  ["read","What is a turn in a poem?","A shift in mood, idea or viewpoint, often marked by \"But\", \"Yet\", a question or a new stanza."],
+  ["read","Why read the title carefully?","It can set up the subject or an irony. \"There Will Come Soft Rains\" sounds gentle, but the poem imagines humans dying out."],
+  ["imagery","What is imagery?","Language that appeals to the senses: sight, sound, touch, taste and smell."],
+  ["imagery","Simile or metaphor: what's the difference?","A simile compares using \"like\" or \"as\". A metaphor says one thing is another: the robin's breast is \"feathery fire\"."],
+  ["imagery","What is personification? Give an example.","Giving human qualities to something non-human: \"Spring herself, when she woke at dawn\" (Teasdale)."],
+  ["imagery","What is pathetic fallacy?","When nature seems to share human feelings, e.g. \"the wailing of the rain\" in Ledwidge's elegy."],
+  ["imagery","What is a symbol?","An object that stands for a bigger idea. Ledwidge's \"Dark Cow\" stands for Ireland."],
+  ["tone","Tone or mood: what's the difference?","Tone is the speaker's attitude (bitter, tender, ironic). Mood is the atmosphere the reader feels (eerie, peaceful)."],
+  ["tone","Give five precise tone words.","Wistful, serene, sombre, ironic, nostalgic (also tender, defiant, playful, reflective, bitter)."],
+  ["tone","How do you write about a tone shift?","Quote a line before and after the turn and name each tone: in \"Remember\", pleading becomes consoling at \"Yet\"."],
+  ["tone","What is irony?","A gap between what is said and what is meant, or between what is expected and what happens."],
+  ["sound","Alliteration or sibilance?","Alliteration repeats a first consonant sound (\"Whistling their whims\"); sibilance repeats s and sh sounds (\"shimmering sound\")."],
+  ["sound","What is onomatopoeia?","A word that sounds like its meaning: \"The steam hissed.\""],
+  ["sound","What is enjambment?","When a sentence runs on past the end of a line without punctuation, for flow or surprise."],
+  ["sound","What is a caesura?","A pause in the middle of a line, often a full stop or dash: \"Unwontedly. It was late June.\""],
+  ["sound","What is the shape of a Petrarchan sonnet?","14 lines: an octave (8) and a sestet (6), with a turn (the volta) between them."],
+  ["sound","What is internal rhyme?","A rhyme inside a line or between words close together: \"morn … horn\", \"moor … poor\" (Ledwidge)."],
+  ["theme","Topic or theme: what's the difference?","The topic is what the poem is about (spring). The theme is what it says about it (nature carries on without us)."],
+  ["theme","What is a personal response?","Your own reasoned reaction to the poem: what it made you think or feel, and why, backed by quotation."],
+  ["theme","What is an elegy?","A poem of mourning for someone who has died, often moving from grief towards consolation."],
+  ["answer","How many marks is the unseen poem at Higher Level?","20 marks (Paper 2, Section C), out of 400 for English."],
+  ["answer","What does PCLM stand for?","Purpose 30%, Coherence 30%, Language 30%, Mechanics 10%. For 20 marks: 6, 6, 6 and 2."],
+  ["answer","What is a good shape for a 20-mark answer?","An opening sentence that answers the question, three focused paragraphs (point, quote, comment) and a one-line conclusion."],
+  ["answer","How should you use quotations?","Short and exact, woven into your sentence, and always followed by a comment on the effect."],
+];
+
+let fcKnown = store.get("enu-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter(c=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("enu-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("enu-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("enu-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["read","In an answer on an unseen poem, the safest word for the \"I\" of the poem is:",["the poet","the speaker","the author","the reader"],1,"The voice may not be the poet's own, so \"the speaker\" is accurate."],
+  ["read","In \"Remember\", where is the turn (volta)?",["Line 1","Line 5","Line 9","Line 14"],2,"\"Yet if you should forget me for a while\" (line 9) starts the sestet and changes the request."],
+  ["imagery","\"Robins will wear their feathery fire\" is an example of:",["simile","metaphor","onomatopoeia","caesura"],1,"The robin's red breast is called fire, without \"like\" or \"as\"."],
+  ["imagery","\"And Spring herself, when she woke at dawn\" uses:",["personification","onomatopoeia","internal rhyme","a simile"],0,"Spring is a woman who sleeps and wakes."],
+  ["imagery","In Ledwidge's poem, the \"Dark Cow\" is best read as a symbol of:",["winter","death","Ireland","farming"],2,"In Irish tradition Ireland is pictured as a dark cow; the last stanza looks to the country's future."],
+  ["imagery","Which phrase is mainly a visual image?",["\"The steam hissed.\"","\"tremulous white\"","\"the bittern cry\"","\"Whistling their whims\""],1,"Trembling white blossom is something you see; the others are sounds."],
+  ["tone","Tone means:",["the atmosphere the reader feels","the speaker's attitude","the rhyme scheme","the subject"],1,"Mood is the atmosphere; tone is the attitude behind the words."],
+  ["tone","Which word best describes the ending of \"There Will Come Soft Rains\"?",["jolly","chilling","angry","confused"],1,"Calm words carry a shocking idea: Spring \"Would scarcely know that we were gone.\""],
+  ["tone","Which is the most precise tone word for the end of \"Remember\"?",["sad","nice","selfless","loud"],2,"She would rather be forgotten than make her lover sad."],
+  ["sound","\"The steam hissed.\" is an example of:",["onomatopoeia","personification","metaphor","rhyme"],0,"\"Hissed\" sounds like the noise it names."],
+  ["sound","\"swallows circling with their shimmering sound\" mainly uses:",["sibilance","caesura","simile","free verse"],0,"Repeated s and sh sounds imitate soft, rustling movement."],
+  ["sound","A Petrarchan sonnet is made of:",["three quatrains and a couplet","an octave and a sestet","six couplets","unrhymed lines"],1,"\"Remember\" has an octave (ABBAABBA) and a sestet (CDDECE)."],
+  ["sound","The rhyme scheme of each stanza of \"Adlestrop\" is:",["AABB","ABAB","ABCB","ABBA"],2,"Lines 2 and 4 rhyme (afternoon / June); lines 1 and 3 don't."],
+  ["theme","Which of these is a theme rather than a topic?",["spring","a railway station","nature carries on without humans","a robin"],2,"A theme says something about the subject."],
+  ["theme","An elegy is:",["a love poem","a poem of mourning","a comic poem","any sonnet"],1,"Ledwidge's poem mourns Thomas MacDonagh."],
+  ["answer","At Higher Level, the unseen poem is worth:",["10 marks","20 marks","50 marks","70 marks"],1,"20 marks out of 400: plan for about 20 minutes."],
+];
+
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("enu-best",null); if(best==null||pct>best) store.set("enu-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[A-Za-z]/.test(g.t[0]) ? g.t[0].toUpperCase() : "#";
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/</g,"&lt;")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["What impression…?","Say what picture or idea the poem creates (of a person, place or feeling) and show how the language creates it.","What impression of nature do you get from this poem?"],
+  ["Did you enjoy…?","Give an honest, reasoned personal response, backed by the poem's language and imagery.","Did you enjoy this poem? Give reasons for your answer."],
+  ["Comment on…","Point out a feature, give examples and explain the effect.","Comment on the poet's use of sound."],
+  ["How does the poet convey…?","Focus on technique: imagery, sound, form, tone. Quote and explain.","How does the poet convey a sense of loss?"],
+  ["Choose a phrase or image…","Pick one, quote it exactly and explain why it works.","Choose the image you find most striking and explain your choice."],
+  ["Mood or tone","Name it precisely and show where and how it changes.","Describe the mood of the poem and how it changes."],
+  ["Theme or message","Say in a sentence what the poem says about its subject, and support it.","What is the poet saying about memory?"],
+  ["Support your answer…","Every point needs a short quotation or close reference.","…with reference to the poem."],
+];
+
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("");
+// Line trainer (multiple choice)
+const pick=a=>a[Math.floor(Math.random()*a.length)], shuffle=a=>{ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const ALLL = POEMS.flatMap((P,p)=>P.L.map((l,i)=>({l,p,i})));
+const endWord = l => (l.trim().split(/[\s—]+/).pop()||"").replace(/[^A-Za-z'-]/g,"").replace(/^'+|'+$/g,"");
+const half = l => { const w=l.split(" "), c=Math.ceil(w.length/2); return [w.slice(0,c).join(" "), w.slice(c).join(" ")]; };
+const QT = {
+  poem:{name:"Which poem?", gen(){ const x=pick(ALLL.filter(z=>wordsIn(z.l)>=4)), P=POEMS[x.p]; return {q:`<div class="qt">"${x.l}"</div>`, opts:POEMS.map(Q=>Q.short), ans:P.short, why:`${P.title} by ${P.poet}, line ${x.i+1}.`}; }},
+  finish:{name:"Finish the line", gen(){ const pool=ALLL.filter(z=>wordsIn(z.l)>=6), x=pick(pool), [a,end]=half(x.l);
+    const others=[...new Set(shuffle(pool.filter(z=>z!==x)).map(z=>half(z.l)[1]))].filter(e=>e!==end).slice(0,3);
+    return {q:`<div class="qt">"${a} …"<small>${POEMS[x.p].title}</small></div>`, opts:shuffle([end,...others]), ans:end, why:`"${x.l}" (${POEMS[x.p].title}, line ${x.i+1}).`}; }},
+  rhyme:{name:"Which word rhymes?", gen(){ const cands=[]; POEMS.forEach((P,p)=>P.L.forEach((l,i)=>{ const j=P.L.findIndex((m,jj)=>jj!==i && P.rh[jj]===P.rh[i]); if(j>=0) cands.push({p,i,j}); }));
+    const c=pick(cands), P=POEMS[c.p], ans=endWord(P.L[c.j]);
+    const others=[...new Set(shuffle(P.L.map((l,k)=>k).filter(k=>P.rh[k]!==P.rh[c.i])).map(k=>endWord(P.L[k])))].filter(v=>v!==ans).slice(0,3);
+    return {q:`<div class="qt">Which end word rhymes with "${endWord(P.L[c.i])}"?<small>${P.title}, line ${c.i+1}</small></div>`, opts:shuffle([ans,...others]), ans, why:`Line ${c.i+1} ("${P.L[c.i]}") rhymes with line ${c.j+1} ("${P.L[c.j]}"). Rhyme scheme: ${rhymeStr(P)}.${P.id==="rain"?" Two of Teasdale's couplets are half rhymes.":""}`}; }},
+};
+let qtType="poem", qtCur=null, qtRight=0, qtTried=0, qtDone=false;
+
+$("prType").innerHTML = Object.entries(QT).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; qtType=b.dataset.k; qtNew(); });
+function qtNew(){ qtCur=QT[qtType].gen(); qtDone=false; $("pq").innerHTML=qtCur.q; $("qtOpts").innerHTML=qtCur.opts.map((o,i)=>`<button data-i="${i}">${o}</button>`).join(""); $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===qtType)); }
+$("qtOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qtDone) return; const pickd=qtCur.opts[+b.dataset.i], ok=pickd===qtCur.ans; qtDone=true; qtTried++; if(ok) qtRight++;
+  [...$("qtOpts").children].forEach((x,i)=>{ x.disabled=true; if(qtCur.opts[i]===qtCur.ans) x.classList.add("on"); });
+  $("paFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${qtCur.why}</div>`; $("paScore").textContent=`This session: ${qtRight} correct out of ${qtTried}.`; });
+$("paNext").addEventListener("click",qtNew);
+qtNew();
+// Which device? drill
+const DEVK = ["Metaphor","Personification","Alliteration & sibilance","Onomatopoeia","Repetition","Internal rhyme"];
+const DEV = [
+  ["The steam hissed.","Adlestrop",3],
+  ["swallows circling with their shimmering sound","Soft Rains",2],
+  ["Robins will wear their feathery fire","Soft Rains",0],
+  ["Whistling their whims on a low fence-wire","Soft Rains",2],
+  ["And Spring herself, when she woke at dawn","Soft Rains",1],
+  ["Farther and farther, all the birds","Adlestrop",4],
+  ["No one left and no one came","Adlestrop",4],
+  ["Gone far away into the silent land","Remember",0],
+  ["Only remember me; you understand","Remember",4],
+  ["Above the wailing of the rain","McDonagh",1],
+  ["Thro' slanting snows her fanfare shrill","McDonagh",2],
+  ["Blowing to flame the golden cup","McDonagh",0],
+  ["Perhaps he'll hear her low at morn / Lifting her horn","McDonagh",5],
+  ["But when the Dark Cow leaves the moor, / And pastures poor","McDonagh",5],
+  ["Not one would mind, neither bird nor tree","Soft Rains",4],
+  ["Nor shall he know when loud March blows","McDonagh",1],
+];
+let pd = { k:null, shown:false, sel:null, streak:0 };
+let predC=null;
+$("predBtns").innerHTML = DEVK.map((k,i)=>`<button data-a="${i}">${k}</button>`).join("");
+function pdNew(){ let q; do{ q=pick(DEV); }while(pd.k && q===pd.k); pd={...pd,k:q,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>"${q[0]}"</b> (${q[1]}). Which device stands out most?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=+b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick a device first.</div>`; return; }
+  const ans=pd.k[2], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> Best fit: ${DEVK[ans]}. ${ok?"":"Many lines use more than one device; in an answer, name the one that matters most and explain its effect."}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions (Higher Level unseen-poem style)
+const LONGQ = [
+  { title:"\"There Will Come Soft Rains\" (Sara Teasdale)", intro:"Read the poem in the Poem bank, then answer both parts.",
+    parts:[["a","What does the poem suggest about the relationship between human beings and nature? Support your answer with reference to the poem.",10,"Marked on PCLM (roughly P 3, C 3, L 3, M 1). <b>Possible points:</b> nature is beautiful and alive (\"shimmering sound\", \"feathery fire\"); it carries on regardless of the war (\"not one will know of the war\"); it would not even notice if \"mankind perished utterly\"; humans are less important than we like to think; the subtitle (War Time) hints at the poet's despair at human violence. Credit any well-supported reading."],
+      ["b","Choose two images from the poem that you found effective and explain why.",10,"<b>Expect:</b> two images quoted accurately, each with a clear explanation of its effect, e.g. \"tremulous white\" (delicate, trembling blossom: fragile beauty); \"feathery fire\" (colour and warmth, alliteration); \"Spring herself, when she woke at dawn\" (personification: nature as an indifferent woman). Reward personal engagement: why the image works for you."]] },
+  { title:"\"Thomas McDonagh\" (Francis Ledwidge)", intro:"Read the poem in the Poem bank, then answer in about a page.",
+    parts:[["a","How does the poet use images of the natural world to express both grief and hope? Support your answer with reference to the poem.",20,"PCLM: P 6, C 6, L 6, M 2. <b>Possible points:</b> grief: the dead man \"shall not hear\" the bittern or the \"sweeter birds\"; the rain is \"wailing\" like a mourner (pathetic fallacy); the vivid spring of stanza 2 (\"golden cup\", \"fanfare shrill\") is what he has lost; the turn at \"But\"; the Dark Cow as a symbol of Ireland; \"pastures poor with greedy weeds\" as the country's suffering; \"Perhaps he'll hear her low at morn\": a hope that freedom will come and that he will somehow know; internal rhymes lift the ending. Credit answers that link the images to MacDonagh's death after the 1916 Rising, but reward close reading over background."]] },
+  { title:"\"Remember\" (Christina Rossetti)", intro:"Read the poem in the Poem bank, then answer both parts.",
+    parts:[["a","What impression of the speaker do you form from reading this poem? Support your answer with reference to the poem.",10,"PCLM (roughly P 3, C 3, L 3, M 1). <b>Possible impressions:</b> loving and tender (\"hold me by the hand\"); afraid of being forgotten (repeated \"Remember me\"); realistic about death (\"the silent land\", \"darkness and corruption\"); finally selfless and generous (\"Better by far you should forget and smile\"). Reward a clear impression supported by two or three accurate quotations."],
+      ["b","Comment on the poet's use of the sonnet form in this poem, including the change at line 9.",10,"<b>Expect:</b> Petrarchan sonnet, octave and sestet; the octave pleads and repeats \"Remember\"; the volta (\"Yet if you should forget\") turns to permission to forget; tight rhyme (ABBAABBA) suits a controlled, formal plea; the sestet's balanced ending (\"forget and smile\" / \"remember and be sad\") resolves the argument. Credit any accurate comment on form linked to meaning."]] },
+];
+
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+const RAG = ["Use a first-reading routine on any poem","Identify the speaker, situation and feeling","Find the turn in a poem","Name and explain three kinds of imagery","Explain metaphor, personification and symbol with examples","Use five precise tone words","Describe a shift in tone or mood","Explain alliteration, sibilance, onomatopoeia and internal rhyme","Work out a rhyme scheme","Explain sonnet form and the volta","State a theme as a sentence, not a word","Plan a 20-mark answer in three minutes","Write point, quote, comment paragraphs"];
+
+const ragState=store.get("enu-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("enu-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Purpose","Answer the exact question; say your view in the first sentence.","Answer builder lab"],["Coherence","Three points in a sensible order, each linked to the question.","Answer builder lab"],["Language","Precise terms and tone words: sibilance, volta, wistful.","Glossary"],["Mechanics","Spell the poet's name and copy quotations exactly.","Line trainer"],["Evidence","Short quotations, each followed by a comment on effect.","Annotator lab"],["Personal response","Say what the poem made you think or feel, and why.","Theme compass lab"]];
+
+const skState=store.get("enu-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("enu-skills",skState); });
+/* ================= LAB STATE + WIRING ================= */
+const btnRow = (id,items,cur) => { $(id).innerHTML = items.map((t,i)=>`<button data-i="${i}" aria-pressed="${i===cur}">${t}</button>`).join(""); };
+// Annotator
+const po = {p:0, lens:"imagery", sel:null, rows:[], msg:""};
+btnRow("poP",POEMS.map(P=>P.short),0);
+$("poP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; po.p=+b.dataset.i; po.sel=null; po.msg=""; pressGroup([...$("poP").children],b); poUpd(); });
+$("poL").innerHTML = Object.entries(LENS).map(([k,[n]])=>`<button data-k="${k}" aria-pressed="${k===po.lens}">${n}</button>`).join("");
+$("poL").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; po.lens=b.dataset.k; po.sel=null; po.msg=""; pressGroup([...$("poL").children],b); poUpd(); });
+const poList = () => ANN.map((a,k)=>k).filter(k=>ANN[k][0]===POEMS[po.p].id && ANN[k][2]===po.lens);
+$("poNext").addEventListener("click",()=>{ const l=poList(); if(!l.length) return; const j=l.indexOf(po.sel); po.sel=l[(j+1)%l.length]; po.msg=""; poUpd(); });
+function poUpd(){ const P=POEMS[po.p], l=poList();
+  setReadout($("poOut"),[["Poem",`${P.title} · ${P.poet} (${P.year})`],["Form",P.fs],["Lens",`${LENS[po.lens][0]}: ${l.length} highlighted phrase${l.length===1?"":"s"}`]]);
+  $("poQ").innerHTML = po.msg? po.msg : po.sel==null? `Tap a highlighted phrase, or press "Next note".<small>${P.ctx}</small>` : `"${ANN[po.sel][3]}"<small>Line ${ANN[po.sel][1]+1}: ${ANN[po.sel][4]}</small>`;
+  if(poC) poC.redraw(); }
+// Image sorter
+const im = {order:[], placed:[], sel:null, P:[]};
+function imNew(){ im.order=shuffle(SORT.map((x,i)=>i)); im.placed=[]; im.sel=null; $("imFb").innerHTML=""; imUpd(); }
+function imUpd(){ $("imCards").innerHTML = im.order.map(i=>{ const done=im.placed.some(p=>p.i===i); return `<button data-i="${i}" class="${done?"done":""}${im.sel===i?" sel":""}" ${done?"disabled":""}>"${SORT[i][0]}"</button>`; }).join("");
+  const ok=im.placed.filter(p=>p.ok).length; setReadout($("imOut"),[["Sorted",`${im.placed.length} of ${SORT.length}`],["Correct",ok],["Selected",im.sel==null?"tap a phrase":SORT[im.sel][2]]]);
+  if(imC) imC.redraw(); }
+$("imCards").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; im.sel=+b.dataset.i; imUpd(); });
+$("imReset").addEventListener("click",imNew);
+// Mood map
+const mo = {p:2, sel:0, P:[]};
+btnRow("moP",POEMS.map(P=>P.short),2);
+$("moP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; mo.p=+b.dataset.i; mo.sel=0; pressGroup([...$("moP").children],b); moUpd(); });
+$("moS").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; mo.sel=+b.dataset.i; moUpd(); });
+function moUpd(){ const P=POEMS[mo.p], s=P.mood[mo.sel], [a,b]=s[0].split("-").map(Number);
+  btnRow("moS",P.mood.map(x=>`${x[0]}: ${x[1]}`),mo.sel);
+  $("moQ").innerHTML=`${P.L.slice(a-1,b).join("<br>")}<small>${P.title}, lines ${s[0]}</small>`;
+  setReadout($("moOut"),[["Section",`${s[1]} (lines ${s[0]})`],["Mood score (our reading)",s[2]>0?`+${s[2]}`:String(s[2])],["Tone words",s[4]],["What happens",s[3]]]);
+  if(moC) moC.redraw(); }
+// Line shape
+const sh = {p:1, m:"words", rec:[]};
+btnRow("shP",POEMS.map(P=>P.short),1);
+$("shP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sh.p=+b.dataset.i; sh.rec=[]; pressGroup([...$("shP").children],b); shUpd(); });
+$("shM").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sh.m=b.dataset.m; pressGroup([...$("shM").children],b); shUpd(); });
+$("shRec").addEventListener("click",()=>{ const n=POEMS[sh.p].L.length; if(sh.rec.length<n){ sh.rec.push(sh.rec.length); shUpd(); } });
+$("shAll").addEventListener("click",()=>{ sh.rec=POEMS[sh.p].L.map((x,i)=>i); shUpd(); });
+$("shClr").addEventListener("click",()=>{ sh.rec=[]; shUpd(); });
+function shUpd(){ const P=POEMS[sh.p], v=shapeVals(sh.p,sh.m), f=shapeFit(sh.p,sh.m,sh.rec), n=sh.rec.length, mean=n? sh.rec.reduce((a,i)=>a+v[i],0)/n : 0, last=n? sh.rec[n-1] : null;
+  setReadout($("shOut"),[["Form",P.fs],["Rhyme scheme",rhymeStr(P)],["Lines counted",`${n} of ${P.L.length}`+(n?` · mean ${nf(mean,1)} ${sh.m} per line`:"")],["Trend",f? `${Math.abs(f.m)<0.05?"about level":f.m>0?"lines get longer":"lines get shorter"} (${f.m<0?"−":"+"}${nf(Math.abs(f.m),2)} per line)` : "count two or more lines"]]);
+  $("shWork").innerHTML = (last!=null? `Line ${last+1}: "${P.L[last]}" → <b>${v[last]} ${sh.m}</b>. ` : "") + (f? `<b>Line of best fit:</b> y = ${nf(f.m,2)}x ${f.c<0?"−":"+"} ${nf(Math.abs(f.c),2)} (x = line number). Counted from the poem's text; hyphenated words count as one word.` : "Bars that rhyme share a colour; grey-green bars don't rhyme. Dotted lines mark stanza breaks.");
+  $("shRec").disabled = n>=P.L.length; if(shC) shC.redraw(); }
+// Theme compass
+const ra = {a:2, b:0};
+const argmax = a => a.indexOf(Math.max(...a));
+btnRow("raA",POEMS.map(P=>P.short),2);
+$("raB").innerHTML = POEMS.map((P,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${P.short}</button>`).join("") + `<button data-i="-1" aria-pressed="false">None</button>`;
+$("raA").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ra.a=+b.dataset.i; pressGroup([...$("raA").children],b); raUpd(); });
+$("raB").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ra.b=+b.dataset.i; pressGroup([...$("raB").children],b); raUpd(); });
+function raUpd(){ const A=POEMS[ra.a], B=ra.b>=0&&ra.b!==ra.a? POEMS[ra.b] : null;
+  const shared = B? THM.filter((t,k)=>A.th[k]>=3&&B.th[k]>=3) : [];
+  const diff = B? THM.map((t,k)=>[t,A.th[k]-B.th[k]]).sort((x,y)=>Math.abs(y[1])-Math.abs(x[1]))[0] : null;
+  setReadout($("raOut"),[["Poem A (terracotta)",`${A.title}: strongest theme ${THM[argmax(A.th)]}`],["Poem B (olive)",B?`${B.title}: strongest theme ${THM[argmax(B.th)]}`:(ra.b===ra.a?"same as poem A: pick another":"none: pick one to compare")],["Shared themes (both 3 or more)",B?(shared.join(", ")||"none"):"–"],["Biggest difference",B&&diff[1]!==0?`${diff[0]} (much stronger in ${diff[1]>0?A.short:B.short})`:"–"]]);
+  $("raQ").innerHTML=`${A.msg}<small>${A.title}: the message in one sentence (our reading)</small>`; if(raC) raC.redraw(); }
+// Answer builder
+const es = {q:0, t:null, p:[]};
+$("esQ").innerHTML = ESSAYS.map((x,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${["Soft Rains","Adlestrop","Remember"][i]}</button>`).join("");
+$("esQ").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; es.q=+b.dataset.i; es.t=null; es.p=[]; pressGroup([...$("esQ").children],b); esUpd(); });
+$("esT").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; es.t=+b.dataset.i; esUpd(); });
+$("esP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=+b.dataset.i, k=es.p.indexOf(i); if(k>=0) es.p.splice(k,1); else if(es.p.length<3) es.p.push(i); esUpd(); });
+function esUpd(){ const E=ESSAYS[es.q];
+  $("esT").innerHTML = E.t.map((t,i)=>`<button data-i="${i}" aria-pressed="${es.t===i}">${t[0]}</button>`).join("");
+  $("esP").innerHTML = E.p.map((p,i)=>`<button data-i="${i}" aria-pressed="${es.p.includes(i)}">${p[0]}</button>`).join("");
+  const sc=essayScore(es), marks=[6,6,6,2].map((m,i)=>Math.round(m*sc[i])), tot=marks.reduce((a,b)=>a+b,0);
+  setReadout($("esOut"),[["Question",E.q],["Estimated marks",`P ${marks[0]} · C ${marks[1]} · L ${marks[2]} · M ${marks[3]} = ${tot} / 20`]]);
+  const tips=[]; if(es.t==null) tips.push("Choose an opening: your answer to the question in one sentence."); else if(E.t[es.t][1]<3) tips.push(E.t[es.t][1]===0?"That opening describes the poem; it doesn't answer the question.":"That opening is too vague: say how and why, and take a clear view.");
+  if(es.p.some(i=>!E.p[i][1])) tips.push("At least one paragraph gives facts or a list without answering the question.");
+  if(es.p.length<3) tips.push(`Pick ${3-es.p.length} more paragraph${3-es.p.length===1?"":"s"}.`);
+  $("esFb").innerHTML = `<div class="fb ${tips.length?"no":"ok"}">${tips.length? tips.join(" ") : "<b style=\"color:var(--good)\">Strong plan.</b> Now write it: each paragraph needs a point, a short quotation and a comment on its effect. Language and Mechanics depend on your writing, so these bars are only a guide."}</div>`;
+  if(esC) esC.redraw(); }
+
+/* ================= CREATE CANVASES ================= */
+let poC=null, imC=null, moC=null, shC=null, raC=null, esC=null;
+const hero = makeCanvas($("heroCanvas"), 0.8, 260, s => { const t=reduce?0:heroT*0.35, i=Math.floor(t)%POEMS.length, j=(i+1)%POEMS.length, fr=t-Math.floor(t), e=fr<0.6?0:(fr-0.6)/0.4, k=e*e*(3-2*e);
+  const sc=POEMS[i].th.map((v,m)=>v+(POEMS[j].th[m]-v)*k); drawRadar(s.ctx,s.w,s.h,{a:i,sc,label:(k<0.5?POEMS[i]:POEMS[j]).title.replace(/"/g,"")}); }, 460);
+poC = makeCanvas($("poC"), 1.0, 380, s => { po.rows=drawPoem(s.ctx,s.w,s.h,{p:po.p,lens:po.lens,sel:po.sel}); }, 520);
+pointerTap($("poC"),(x,y)=>{ const r=po.rows.find(r=>y>=r.y0&&y<r.y1); if(!r) return; const k=poList().find(k=>ANN[k][1]===r.i);
+  if(k!=null){ po.sel=k; po.msg=""; } else { po.sel=null; po.msg=`Line ${r.i+1} has no ${LENS[po.lens][0].toLowerCase()} note.<small>"${POEMS[po.p].L[r.i]}": try another lens, or write your own note.</small>`; } poUpd(); });
+imC = makeCanvas($("imC"), 0.45, 260, s => { im.P=drawSorter(s.ctx,s.w,s.h,{placed:im.placed,armed:im.sel!=null}); }, 400);
+pointerTap($("imC"),(x,y)=>{ if(im.sel==null) return; const k=im.P.findIndex(([bx,by,bw,bh])=>x>=bx&&x<=bx+bw&&y>=by&&y<=by+bh); if(k<0) return; const it=SORT[im.sel], bin=BINS[k][0], ok=it[1]===bin;
+  im.placed.push({i:im.sel,bin,ok,short:it[0].split(" ").slice(0,3).join(" ")+"…"}); $("imFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Yes.":"Not quite."}</b> "${it[0]}" (${it[2]}) belongs in <b>${BINS.find(p=>p[0]===it[1])[1]}</b>.</div>`; im.sel=null; imUpd(); });
+moC = makeCanvas($("moC"), 0.45, 250, s => { mo.P=drawMood(s.ctx,s.w,s.h,{p:mo.p,sel:mo.sel}); }, 420);
+pointerTap($("moC"),(x,y)=>{ let b=-1,bd=34; mo.P.forEach(([px,py],i)=>{ const d=Math.hypot(px-x,py-y); if(d<bd){ bd=d; b=i; } }); if(b>=0){ mo.sel=b; moUpd(); } });
+shC = makeCanvas($("shC"), 0.5, 260, s => drawShape(s.ctx,s.w,s.h,{p:sh.p,m:sh.m,rec:sh.rec}), 440);
+raC = makeCanvas($("raC"), 0.72, 280, s => drawRadar(s.ctx,s.w,s.h,{a:ra.a,b:ra.b===ra.a?-1:ra.b}), 460);
+esC = makeCanvas($("esC"), 0.42, 240, s => drawEssay(s.ctx,s.w,s.h,{es}), 400);
+predC = makeCanvas($("predC"), 0.6, 210, s => { bg(s.ctx,s.w,s.h,C["surface-2"]); const cols=3, gw=(s.w-24)/cols, gh=(s.h-24)/2;
+  DEVK.forEach((k,i)=>{ const x=12+(i%cols)*gw, y=12+Math.floor(i/cols)*gh, hit=pd.shown && pd.k && pd.k[2]===i; rr(s.ctx,x+4,y+4,gw-8,gh-8,12); s.ctx.fillStyle=hit?C.terra:C.surface; s.ctx.fill(); s.ctx.strokeStyle=C.line; s.ctx.lineWidth=1.5; s.ctx.stroke();
+    const wds=k.split(" "); const mid=Math.ceil(wds.length/2); [wds.slice(0,mid).join(" "),wds.slice(mid).join(" ")].filter(Boolean).forEach((t,j,arr)=>text(s.ctx,t,x+gw/2,y+gh/2+(j-(arr.length-1)/2)*16+4,hit?C["on-accent"]||"#fff":C.ink,F(s.w<380?11:13),"center")); }); }, 320);
+pdNew();
+const MINI = {
+  poem:(s,o)=>drawPoem(s.ctx,s.w,s.h,{...o,compact:true}),
+  sorter:(s,o)=>drawSorter(s.ctx,s.w,s.h,{...o,compact:true}),
+  mood:(s,o)=>drawMood(s.ctx,s.w,s.h,{...o,compact:true}),
+  shape:(s,o)=>drawShape(s.ctx,s.w,s.h,{...o,compact:true}),
+  radar:(s,o)=>drawRadar(s.ctx,s.w,s.h,{...o,compact:true}),
+  essay:(s,o)=>drawEssay(s.ctx,s.w,s.h,{...o,compact:true}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, kind==="poem"?1.0:0.62, kind==="poem"?300:150, s=>MINI[kind](s,o), kind==="poem"?420:380); });
+const INFO = { mood:["mood",{p:2,sel:3}], radar:["radar",{a:2,b:0}], shape:["shape",{p:1,m:"words"}] };
+document.querySelectorAll("canvas[data-mini]").forEach(el=>{ const [k,o]=INFO[el.dataset.mini]; makeCanvas(el,0.7,160,s=>MINI[k](s,{...o,bgc:C["surface-2"]})); });
+poUpd(); imNew(); moUpd(); shUpd(); raUpd(); esUpd();
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>
