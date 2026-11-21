@@ -7,7 +7,7 @@ specification topic. Same design and page format as the sister Physics course in
 Course progress and build order: `COURSE-PLAN.md`. Update it whenever a topic is built.
 
 Built so far: `s1-1-stakeholders.html` (1.1 Key stakeholders), `s1-2-forms-of-business.html` (1.2 Forms of business,
-regulation and governance), `s1-3-economy.html` (1.3 Business and the economy), `s1-4-policy.html` (1.4 National and EU policy), `s1-5-global.html` (1.5 Irish business globally), `s2-1-enterprise.html` (2.1 Enterprise), `s2-2-ideas.html` (2.2 Idea development), `s2-3-planning.html` (2.3 Business planning), `s2-4-target-market.html` (2.4 The target market), `s2-5-operations-finance.html` (2.5 Operations and finance), `s2-6-growth.html` (2.6 Growth, development and expansion), `s2-7-risk.html` (2.7 Managing risk), plus the hub `index.html`. Sidebars have a "Course home" link (`.homelink`).
+regulation and governance), `s1-3-economy.html` (1.3 Business and the economy), `s1-4-policy.html` (1.4 National and EU policy), `s1-5-global.html` (1.5 Irish business globally), `s2-1-enterprise.html` (2.1 Enterprise), `s2-2-ideas.html` (2.2 Idea development), `s2-3-planning.html` (2.3 Business planning), `s2-4-target-market.html` (2.4 The target market), `s2-5-operations-finance.html` (2.5 Operations and finance), `s2-6-growth.html` (2.6 Growth, development and expansion), `s2-7-risk.html` (2.7 Managing risk), `s3-1-leading.html` (3.1 Leading and managing an organisation), plus the hub `index.html`. Sidebars have a "Course home" link (`.homelink`).
 
 ## Run it locally
 

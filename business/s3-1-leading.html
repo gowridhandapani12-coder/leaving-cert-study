@@ -1,0 +1,1554 @@
+<title>Leading and Managing</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.homelink{display:block;font-weight:800;text-decoration:none;color:var(--terra-ink);margin:0 0 10px}
+.srt{display:grid;gap:8px;padding:12px 16px}
+.srt .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.srt .row span{flex:1 1 220px;min-width:0}
+.srt .row.ok{border-color:var(--good)} .srt .row.no{border-color:var(--bad)}
+.srt .row small{display:block;color:var(--muted);font-size:.8rem}
+.sh-card{display:grid;gap:8px;padding:16px}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card p b{color:var(--terra)}
+.fbbox{padding:0 16px 14px}
+.offers{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 14px}
+.predopts .btns button{min-width:110px}
+.qmvb{display:flex;flex-wrap:wrap;gap:5px}
+.qmvb button{font-size:.78rem;padding:5px 9px}
+.qmvb button[aria-pressed="false"]{opacity:.7;text-decoration:line-through}
+.srt .row .ctl{flex:0 1 170px}
+</style>
+
+
+
+
+<!-- ================= TOP BAR ================= -->
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <div style="min-width:0"><b>Leading and Managing</b><span>Leaving Cert Business · Strand 3 · Topic 1</span></div>
+      </div>
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html" class="on" aria-current="page">Business</a><a href="../maths/index.html">Maths</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a><a href="../maths-enrichment/index.html">Maths Enrichment</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Cheat sheet</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <a class="homelink" href="index.html">⌂ Course home</a>
+      <details><summary>U · Investigating Business</summary><ol><li><span class="mono">U</span>Research skills (all year)</li></ol></details>
+      <details><summary>1 · Business Environment</summary><ol><li class="link"><a href="s1-1-stakeholders.html"><span class="mono">1.1</span>Key stakeholders</a></li><li class="link"><a href="s1-2-forms-of-business.html"><span class="mono">1.2</span>Forms of business &amp; governance</a></li><li class="link"><a href="s1-3-economy.html"><span class="mono">1.3</span>Business &amp; the economy</a></li><li class="link"><a href="s1-4-policy.html"><span class="mono">1.4</span>National &amp; EU policy</a></li><li class="link"><a href="s1-5-global.html"><span class="mono">1.5</span>Irish business globally</a></li><li><span class="mono">1.6</span>Applying my learning</li></ol></details>
+      <details><summary>2 · Understanding Enterprise</summary><ol><li class="link"><a href="s2-1-enterprise.html"><span class="mono">2.1</span>Enterprise</a></li><li class="link"><a href="s2-2-ideas.html"><span class="mono">2.2</span>Idea development</a></li><li class="link"><a href="s2-3-planning.html"><span class="mono">2.3</span>Business planning</a></li><li class="link"><a href="s2-4-target-market.html"><span class="mono">2.4</span>The target market</a></li><li class="link"><a href="s2-5-operations-finance.html"><span class="mono">2.5</span>Operations &amp; finance</a></li><li class="link"><a href="s2-6-growth.html"><span class="mono">2.6</span>Growth &amp; expansion</a></li><li class="link"><a href="s2-7-risk.html"><span class="mono">2.7</span>Managing risk</a></li><li><span class="mono">2.8</span>Applying my learning</li></ol></details>
+      <details open><summary>3 · Leading in Business</summary><ol><li class="here"><span class="mono">3.1</span>Leading an organisation</li><li><span class="mono">3.2</span>Leading people</li><li><span class="mono">3.3</span>Communication</li><li><span class="mono">3.4</span>Planning</li><li><span class="mono">3.5</span>Applying my learning</li></ol></details>
+      <details><summary>4 · Informed Decisions</summary><ol><li><span class="mono">4.1</span>Informed consumer</li><li><span class="mono">4.2</span>Informed financial decisions</li><li><span class="mono">4.3</span>Informed employee</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 3 · Leading in business</span>
+          <h1 style="margin-top:12px">Leaders set the direction.<br>Managers make it happen.<br><em>Culture decides how it feels.</em></h1>
+          <p class="lede">Every organisation needs both leading and managing. Leaders give people a reason to follow; managers plan, organise and control so the work gets done. The way they lead shapes the culture, and the culture decides whether new ideas grow or die.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Staff engagement over a year under four leadership styles, drawn month by month"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/3</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the NCCA specification</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list">
+          <li><label><input type="checkbox" id="lo1"><span class="mono">3.1.1</span><span>distinguish between leadership and management in organisations.</span></label></li>
+          <li><label><input type="checkbox" id="lo2"><span class="mono">3.1.2</span><span>analyse the significance of organisational culture and innovation in successful organisations.</span></label></li>
+          <li><label><input type="checkbox" id="lo3"><span class="mono">3.1.3</span><span>outline how leadership styles foster organisational culture and organisational innovation.</span></label></li>
+        </ul>
+        <div class="result" style="margin-top:10px"><p><b>Students learn about:</b></p>
+          <ul style="margin:6px 0 0 18px;display:grid;gap:4px">
+            <li>the role of leaders and managers in organisations.</li>
+            <li>the significance of organisational culture and applying innovative approaches within organisations.</li>
+            <li>how leadership styles influence organisations.</li>
+          </ul>
+          <p style="margin-top:8px">Recruitment, motivation and wellbeing come in 3.2 Leading and managing people; communication and conflict in 3.3; change and contingency planning in 3.4. Idea generation for a new venture is in <a href="s2-2-ideas.html">2.2 Idea development</a>.</p></div>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Sort leading from managing, control a sales plan, survey branches about culture, run an innovation funnel, choose a style for each situation and watch a year under four leaders.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="lead">
+        <div class="labhead"><span class="pill t">Leading or managing?</span><p class="goal">Crann Outdoor (illustrative) is a Galway company with 40 staff that designs outdoor clothing and sells it online and in two shops. Sort what its people do into leading (direction, people, change) or managing (plans, systems, control).</p></div>
+        <div class="panel sim">
+          <canvas id="ldC" aria-label="Two columns, leading and managing, filling with Crann Outdoor's activities as you sort them"></canvas>
+          <div class="srt" id="ldList"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="ldReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="ldOut"></div>
+        </div>
+        <p class="result">Crann Outdoor is illustrative. In real organisations the same person often leads and manages; the sorter asks which side of the job each activity shows best.</p>
+        <div class="tries"><div class="try"><b>1</b>Which words keep coming up in the leading column? In the managing column?</div><div class="try"><b>2</b>Could a company be well managed but badly led? What would it feel like to work there?</div><div class="try"><b>3</b>Think of a sports captain and a team manager. Who leads and who manages?</div></div>
+      </div>
+
+      <div class="lab" data-lab="manage" hidden>
+        <div class="labhead"><span class="pill t">Plan, then control</span><p class="goal">Managers plan (set a target), organise (put people and resources in place) and control (compare results with the plan and act). Set Crann's monthly online sales target and the tolerance. Then run six months and see which months need action.</p></div>
+        <div class="panel sim">
+          <canvas id="mgC" aria-label="Monthly sales bars against the target line with a shaded tolerance band; months outside the band are flagged"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="mgT">Monthly target <output id="mgTo"></output></label><input type="range" id="mgT" min="40000" max="80000" step="5000" value="60000"></div>
+            <div class="ctl"><label for="mgB">Tolerance (±) <output id="mgBo"></output></label><input type="range" id="mgB" min="2" max="15" step="1" value="5"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Results</span><div class="btns"><button class="primary" id="mgRun">Run a new six months</button></div></div>
+          </div>
+          <div class="readout" id="mgOut"></div>
+          <div class="working wrap" id="mgWork"></div>
+        </div>
+        <p class="result">Simulated data. Variance = actual − target; variance % = variance ÷ target × 100. A negative (adverse) variance in sales means the business sold less than planned.</p>
+        <div class="tries"><div class="try"><b>1</b>Narrow the tolerance to ±2%. How many months now need action? Is that useful or just noise?</div><div class="try"><b>2</b>Raise the target to €80 000. What happens, and what does that say about setting realistic plans?</div><div class="try"><b>3</b>For the worst month, suggest one corrective action a manager could take.</div></div>
+      </div>
+
+      <div class="lab" data-lab="culture" hidden>
+        <div class="labhead"><span class="pill t">Culture and ideas: survey the branches</span><p class="goal">Does an open culture go with more innovation? Survey a branch of a large retail chain (illustrative): staff rate how open the culture is (1 to 5), and you record how many staff ideas were put into practice per 100 staff last year. Collect at least five branches, then look at the fitted line.</p></div>
+        <div class="panel sim">
+          <canvas id="cuC" aria-label="Scatter graph of culture openness score against ideas implemented per 100 staff for each surveyed branch, with a fitted straight line"></canvas>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Data</span><div class="btns"><button class="primary" id="cuAdd">Survey a branch</button><button id="cuAdd5">Survey 5 branches</button><button id="cuClear">Clear</button></div></div></div>
+          <div class="readout" id="cuOut"></div>
+          <div class="working wrap" id="cuWork"></div>
+        </div>
+        <p class="result">Simulated data. A strong link (correlation) doesn't prove that culture causes innovation: successful branches might simply have more money and confident staff. You would also look at other evidence.</p>
+        <div class="tries"><div class="try"><b>1</b>After 5 branches, what is the slope? After 20? Why does it settle down?</div><div class="try"><b>2</b>Is r close to 1? What does a weaker r tell you?</div><div class="try"><b>3</b>Name two things a manager could change to make a branch's culture more open.</div></div>
+      </div>
+
+      <div class="lab" data-lab="innov" hidden>
+        <div class="labhead"><span class="pill t">Innovation funnel</span><p class="goal">Most ideas never make it. Set how Crann supports innovation: paid time for staff to work on ideas, how mistakes are treated, and a budget for testing prototypes. Follow the ideas through the funnel and weigh the cost against the gain.</p></div>
+        <div class="panel sim">
+          <canvas id="inC" aria-label="A funnel from ideas suggested to ideas screened, prototypes tested and products launched, with the cost and extra sales"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="inT">Paid time for ideas <output id="inTo"></output></label><input type="range" id="inT" min="0" max="20" step="1" value="5"></div>
+            <div class="ctl"><label for="inS">Mistakes are… <output id="inSo"></output></label><input type="range" id="inS" min="1" max="5" step="1" value="3"></div>
+            <div class="ctl"><label for="inB">Prototype budget <output id="inBo"></output></label><input type="range" id="inB" min="0" max="80000" step="4000" value="24000"></div>
+          </div>
+          <div class="readout" id="inOut"></div>
+          <div class="working wrap" id="inWork"></div>
+        </div>
+        <p class="result">Illustrative model: 40 staff costing €40 000 a year each; each prototype test costs €4 000; each launch adds about €80 000 of sales a year. Real results vary much more, and many benefits (staff morale, reputation) don't show up in one year's figures.</p>
+        <div class="tries"><div class="try"><b>1</b>Set paid time to 0 and mistakes to "blamed". How many products are launched?</div><div class="try"><b>2</b>Raise the budget but keep a blame culture. Why doesn't money alone fix it?</div><div class="try"><b>3</b>Find the setting with the best return. Is the most ideas always best?</div></div>
+      </div>
+
+      <div class="lab" data-lab="styles" hidden>
+        <div class="labhead"><span class="pill t">Which style fits?</span><p class="goal">There's no single best leadership style: it depends on the situation, the people and the time available. Pick a situation at Crann and a style. The bars show how well each style fits (illustrative scoring of speed, staff buy-in, creativity, control and driving change).</p></div>
+        <div class="panel sim">
+          <canvas id="syC" aria-label="Bars showing how well each of four leadership styles fits the chosen situation, with your choice outlined"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Situation</span><div class="btns" id="sySit"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Your style</span><div class="btns" id="syPick"></div></div>
+          </div>
+          <div class="readout" id="syOut"></div>
+          <div class="working wrap" id="syWork"></div>
+        </div>
+        <p class="result">The scores are a model for discussion, not a rule. Good leaders adapt their style to the situation and often blend styles.</p>
+        <div class="tries"><div class="try"><b>1</b>In the fire evacuation, why does the democratic style score so badly?</div><div class="try"><b>2</b>Which situation suits laissez-faire? What must be true of the team?</div><div class="try"><b>3</b>Which style scores worst across every situation? Is any style never right?</div></div>
+      </div>
+
+      <div class="lab" data-lab="foster" hidden>
+        <div class="labhead"><span class="pill t">A year under four leaders</span><p class="goal">How does a style build a culture, and the culture build innovation? Choose a style for Crann's new managing director and run a year. Watch staff engagement and the ideas suggested and put into practice. Then compare all four.</p></div>
+        <div class="panel sim">
+          <canvas id="fsC" aria-label="Staff engagement month by month over a year, and ideas put into practice, under the chosen leadership style"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Style</span><div class="btns" id="fsPick"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Run</span><div class="btns"><button class="primary" id="fsRun">Run a year</button><button id="fsAll">Compare all four</button></div></div>
+          </div>
+          <div class="readout" id="fsOut"></div>
+          <div class="working wrap" id="fsWork"></div>
+        </div>
+        <p class="result">Simulated model for discussion. Engagement = how committed and involved staff feel (from a staff survey, 0 to 100).</p>
+        <div class="tries"><div class="try"><b>1</b>Which style gets the most ideas suggested? Why aren't they all put into practice?</div><div class="try"><b>2</b>Why does engagement fall under the autocratic style even though work gets done?</div><div class="try"><b>3</b>Run the same style twice. Why are the results a little different?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of leading and managing an organisation"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it · LO 3.1.1 to 3.1.3</p><h2>Culture and innovation in the real world</h2></div><p>Well-known examples, in general terms. Check a current source before using one in your own work.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three big pictures</p><h2>Style, culture, ideas</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="styles"></canvas><h3>Fit the style to the situation</h3><p>In an emergency, decide fast. With experts, step back. For big change, inspire.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="scatter"></canvas><h3>Open cultures, more ideas</h3><p>Branches where staff feel safe to speak up tend to put more ideas into practice.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="funnel"></canvas><h3>Most ideas don't make it</h3><p>Many ideas in, a few launches out. Culture fills the top of the funnel; money and focus get ideas through.</p></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Digital transformation</p><h2>Leading in a digital workplace</h2></div><p>Technology changes how leaders lead and how managers control.</p></div>
+      <div class="cases" id="impacts"></div>
+
+      <div class="head"><div><p class="eyebrow">In Ireland</p><h2>Who helps organisations lead and innovate?</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+
+    <!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How the new exam works, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Assessment split: 60% written exam, 40% Business Alive Investigative Study">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="218.7 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">60 / 40</text><text x="80" y="96" text-anchor="middle" class="dn2">of your grade</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Written exam · 60%</b><p>Higher or Ordinary level, set by the SEC. Covers all four strands.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Business Alive Investigative Study · 40%</b><p>An investigation based on a common brief from the SEC. The same brief for both levels.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this chapter</h3>
+          <ol class="tips">
+            <li>To <b>distinguish</b>, make the difference clear on both sides: leaders set <b>direction, inspire and drive change</b>; managers <b>plan, organise and control</b> resources to reach goals.</li>
+            <li>Name the <b>management activities</b>: planning, organising, staffing, directing (leading) and controlling. Give an example for each from the business in the question.</li>
+            <li>Define <b>organisational culture</b> as "the way we do things around here": shared values, beliefs, behaviours and norms. Give <b>signs</b> of it (how decisions are made, how mistakes are treated, dress, language, stories).</li>
+            <li>For "analyse the significance", link culture and innovation to <b>success</b>: motivation and retention, reputation, attracting talent, adapting to change, new products and lower costs. Weigh the <b>costs and risks</b> too.</li>
+            <li>Innovation can be in <b>products, processes</b> or <b>business models</b>, and can be <b>incremental</b> (small steps) or <b>radical</b> (new to the world). Name an innovative approach: intrapreneurship, design thinking, kaizen, suggestion schemes, open innovation, hackathons, R&amp;D.</li>
+            <li>Leadership styles: <b>autocratic</b>, <b>democratic</b>, <b>laissez-faire</b> and <b>transformational</b>. For each, say how it <b>shapes the culture</b> and whether it <b>helps or blocks innovation</b>, with an advantage and a disadvantage.</li>
+            <li>The best style <b>depends on the situation</b>: urgency, the skills of the team, the size of the change.</li>
+            <li>Show every <b>formula and working</b>: variance, variance %, labour turnover, idea conversion rate, return on investment.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Action verbs</h2></div><p>Meanings from the specification's glossary of action verbs, which will be aligned with the exam's command words.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Business and financial literacy</p><h2>Numbers trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which leadership style is it?</h2></div></div>
+          <canvas id="predC" aria-label="The leadership style, shown after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts">
+            <div class="btns" data-g="0"><button data-a="AU">Autocratic</button><button data-a="DE">Democratic</button><button data-a="LF">Laissez-faire</button><button data-a="TR">Transformational</button></div>
+          </div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">40% of your grade</p><h2>Investigation skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Skills the Business Alive Investigative Study rewards (from the Investigating Business strand). Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term in this chapter. Learn the definitions: "define" and "outline" questions reward precise wording.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: culture, autocratic, variance…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= CHEAT SHEET ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Cheat sheet</h2></div><p>The whole chapter on one page, plus the numbers you might meet in a management question.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Leading v managing (LO 3.1.1)</span><span class="big">Leaders: vision · inspire · influence · change</span><dl><dt>Managers</dt><dd>plan · organise · staff · direct · control · coordinate resources</dd><dt>Saying</dt><dd>managers do things right; leaders do the right things</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Management activities</span><span class="big">Plan → Organise → Staff → Direct → Control</span><dl><dt>Control loop</dt><dd>set a standard → measure → compare (variance) → act</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Organisational culture (LO 3.1.2)</span><span class="big">"The way we do things around here"</span><dl><dt>Signs</dt><dd>values, decision-making, treatment of mistakes, dress, language, stories, rewards</dd><dt>Types (Handy)</dt><dd>power · role · task · person</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Why culture matters</span><span class="big">Motivation · retention · reputation · innovation · ethics</span><dl><dt>Risk</dt><dd>a toxic or blame culture: fear, silence, staff leave, scandals</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Innovation (LO 3.1.2)</span><span class="big">Product · Process · Business model</span><dl><dt>Size</dt><dd>incremental (small steps) or radical (new to the world)</dd><dt>Approaches</dt><dd>intrapreneurship, design thinking, kaizen, suggestion schemes, open innovation, hackathons, R&amp;D</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Leadership styles (LO 3.1.3)</span><span class="big">Autocratic · Democratic · Laissez-faire · Transformational</span><dl><dt>Fit</dt><dd>urgency → autocratic; buy-in → democratic; experts → laissez-faire; big change → transformational</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Styles → culture → innovation</span><span class="big">Trust + autonomy + safety to fail = more ideas</span><dl><dt>But</dt><dd>ideas need focus, budget and coordination to be put into practice</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Variance = actual − budget (target)</span><div class="ex">€54 000 − €60 000 = −€6 000 (adverse)</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Variance % = variance ÷ budget × 100</span><div class="ex">−€6 000 ÷ €60 000 × 100 = −10%</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Labour turnover = leavers ÷ average staff × 100</span><div class="ex">6 ÷ 40 × 100 = 15%</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Idea conversion rate = ideas implemented ÷ ideas suggested × 100</span><div class="ex">9 ÷ 60 × 100 = 15%</div></div>
+        <div class="panel fcell"><span class="pill a">Numbers</span><span class="big">Return on investment = (gain − cost) ÷ cost × 100</span><div class="ex">(€150 000 − €100 000) ÷ €100 000 × 100 = 50%</div></div>
+      </div>
+      <footer>
+        <p>Built on Strand 3, topic 1 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/business/" target="_blank" rel="noopener">Leaving Certificate Business Specification</a> (NCCA, for introduction September 2025). Learning outcomes and the "students learn about" points are quoted from the specification. Crann Outdoor, scenarios, survey data and euro figures are illustrative unless stated. Handy's culture types and the four leadership styles are standard models used to analyse organisations; the specification doesn't name particular models.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--cream","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("bs-theme","auto"), font = store.get("bs-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("bs-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("bs-font",font); applyFont(); });
+/* ---------- icons + topics ---------- */
+const ICON = {
+  lead:'<path d="M5 21V4"/><path d="M5 4h12l-2 4 2 4H5"/>',
+  manage:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M7 13h4M7 17h7"/>',
+  culture:'<circle cx="12" cy="7" r="3"/><circle cx="5" cy="17" r="2.5"/><circle cx="19" cy="17" r="2.5"/><path d="M10 9.5l-3.5 5M14 9.5l3.5 5M7.5 17h9"/>',
+  innov:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0012 3z"/>',
+  styles:'<circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="6" cy="17" r="2.5"/><circle cx="18" cy="17" r="2.5"/><path d="M8.5 7h7M8.5 17h7M6 9.5v5M18 9.5v5"/>',
+  foster:'<path d="M12 21v-8"/><path d="M12 13c0-4 3-7 8-7 0 5-3 7-8 7zM12 15c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/>',
+  people:'<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0112 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20a5 5 0 016-4.8"/>',
+  chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+  cloud:'<path d="M7 18a5 5 0 01-.5-10A6 6 0 0118 9a4.5 4.5 0 01-1 9z"/>',
+  car:'<path d="M3 16v-4l2-5h14l2 5v4z"/><circle cx="7.5" cy="16.5" r="1.8"/><circle cx="16.5" cy="16.5" r="1.8"/>',
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+  gov:'<path d="M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M12 3l9 5H3z"/>',
+  scale:'<path d="M12 3v18M7 21h10M4 7h16"/><path d="M4 7l-2.5 6a3 3 0 005 0zM20 7l-2.5 6a3 3 0 005 0z"/>',
+  lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"lead", name:"Leading v managing", short:"The role of leaders and managers, and how to tell leadership and management apart.", tint:"var(--blush)"},
+  {id:"manage", name:"What managers do", short:"Planning, organising, staffing, directing and controlling: setting targets and acting on variances.", tint:"var(--apricot)"},
+  {id:"culture", name:"Organisational culture", short:"\"The way we do things around here\": shared values and habits, and why culture matters to success.", tint:"var(--sage)"},
+  {id:"innov", name:"Innovation", short:"New products, processes and business models, and innovative approaches inside organisations.", tint:"var(--cream)"},
+  {id:"styles", name:"Leadership styles", short:"Autocratic, democratic, laissez-faire and transformational, and which suits each situation.", tint:"var(--blush)"},
+  {id:"foster", name:"Styles shape culture", short:"How the way leaders lead fosters (or blocks) a strong culture and innovation.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Leadership","","Influencing and inspiring people to work towards a shared vision or goal, especially through change.","lead"],
+  ["Management","","Getting things done through people and resources by planning, organising, staffing, directing and controlling.","lead"],
+  ["Leader","","A person who sets direction, inspires and influences others. Leaders can be found at every level, not only at the top.","lead"],
+  ["Manager","","A person responsible for planning, organising and controlling resources and people to reach set goals.","lead"],
+  ["Vision","","A clear picture of what the organisation wants to become in the future.","lead"],
+  ["Mission statement","","A short statement of an organisation's purpose: what it does, for whom and why.","lead"],
+  ["Authority","","The right to make decisions and give instructions that comes with a position.","lead"],
+  ["Influence","","The ability to change what others think or do without relying only on formal authority.","lead"],
+  ["Planning","","Setting goals and deciding in advance how to reach them.","manage"],
+  ["Organising","","Arranging people, tasks and resources (structure, roles, equipment) so the plan can be carried out.","manage"],
+  ["Staffing","","Recruiting, training and keeping the right people (covered in detail in 3.2).","manage"],
+  ["Directing","","Guiding, motivating and communicating with staff day to day; the \"leading\" part of a manager's job.","manage"],
+  ["Controlling","","Measuring performance, comparing it with the plan and taking corrective action.","manage","Set standard → measure → compare → act"],
+  ["Coordinating","","Making sure the work of different people and departments fits together.","manage"],
+  ["Budget","","A financial plan for a future period, e.g. target sales and allowed costs per month.","manage"],
+  ["Variance","","The difference between the actual result and the budget or target. Favourable if better than planned, adverse if worse.","manage","Variance = actual − budget"],
+  ["Tolerance","","The range around a target within which a result is accepted without action, e.g. ±5%.","manage"],
+  ["Corrective action","","What a manager does to bring results back into line with the plan.","manage"],
+  ["Span of control","","The number of staff who report directly to one manager.","manage","Span = staff ÷ managers"],
+  ["Organisational culture","","The shared values, beliefs, attitudes and behaviours that shape how people in an organisation work: \"the way we do things around here\".","culture"],
+  ["Values","","The principles an organisation says it stands for, e.g. honesty, sustainability, customer first.","culture"],
+  ["Norms","","The unwritten rules of behaviour that everyone in a group follows.","culture"],
+  ["Power culture","Handy","Power sits with one person or a small group at the centre; quick decisions, but depends on the boss.","culture"],
+  ["Role culture","Handy","Clear rules, job descriptions and procedures; stable and consistent but slow to change.","culture"],
+  ["Task culture","Handy","Teams form around projects and expertise matters most; flexible and good for innovation.","culture"],
+  ["Person culture","Handy","The organisation exists to serve the individuals in it, e.g. a partnership of barristers or consultants.","culture"],
+  ["Psychological safety","","A shared belief that you can speak up, ask questions or admit mistakes without being punished or embarrassed.","culture"],
+  ["Toxic culture","","A culture where fear, blame, bullying or unethical behaviour is common; staff disengage and leave.","culture"],
+  ["Staff engagement","","How committed and involved employees feel in their work and the organisation, often measured by a staff survey.","culture"],
+  ["Labour turnover","","The percentage of staff who leave in a year.","culture","Labour turnover = leavers ÷ average staff × 100"],
+  ["Innovation","","Turning a new idea into something of value: a new or improved product, process or business model.","innov"],
+  ["Product innovation","","A new or improved good or service.","innov"],
+  ["Process innovation","","A new or improved way of making or delivering something, often cutting cost or time.","innov"],
+  ["Business model innovation","","A new way of creating and earning value, e.g. moving from selling to renting or subscriptions.","innov"],
+  ["Incremental innovation","","Small, step-by-step improvements to existing products or processes.","innov"],
+  ["Radical innovation","","A big breakthrough that is new to the market or the world.","innov"],
+  ["Intrapreneurship","","Employees acting like entrepreneurs inside an existing organisation, developing new ideas with its support.","innov"],
+  ["Design thinking","","An innovative, non-linear approach to the development of products and services which focuses on solutions for the end user (spec glossary).","innov"],
+  ["Kaizen","continuous improvement","A Japanese approach in which every employee makes small, ongoing improvements to how work is done.","innov"],
+  ["Suggestion scheme","","A system that collects, reviews and rewards ideas from staff.","innov"],
+  ["Open innovation","","Using ideas from outside the organisation too: customers, universities, start-ups, suppliers.","innov"],
+  ["Research and development","R&D","Investment in creating and testing new products and processes.","innov"],
+  ["Idea conversion rate","","The percentage of suggested ideas that are put into practice.","innov","Ideas implemented ÷ ideas suggested × 100"],
+  ["Return on investment","ROI","The gain from an investment compared with its cost, as a percentage.","innov","ROI = (gain − cost) ÷ cost × 100"],
+  ["Leadership style","","The way a leader makes decisions, gives direction and treats people.","styles"],
+  ["Autocratic leadership","authoritarian","The leader makes decisions alone and expects them to be followed. Fast and clear, but staff have little say.","styles"],
+  ["Democratic leadership","participative","The leader involves staff in decisions and listens to their views before deciding. Builds buy-in, but slower.","styles"],
+  ["Laissez-faire leadership","","The leader sets the goal and leaves staff free to decide how to reach it. Suits skilled, motivated experts; risky with inexperienced staff.","styles"],
+  ["Transformational leadership","","The leader inspires staff with a vision, sets an example and encourages them to think in new ways; suits major change.","styles"],
+  ["Situational leadership","","Adapting the leadership style to the situation and to the skills and confidence of the team.","styles"],
+  ["Delegation","","Giving a subordinate the authority to carry out a task, while the manager stays responsible for the result.","foster"],
+  ["Empowerment","","Giving staff the authority, skills and confidence to make decisions in their own work.","foster"],
+  ["Autonomy","","Freedom to decide how to do your own work.","foster"],
+  ["Trust","","Confidence that others will act honestly and fairly; leaders build it by being consistent and open.","foster"],
+  ["Role model","","A leader who shows the values and behaviour they want from others by doing it themselves.","foster"],
+];
+const GL_LINKS = [["leadership style","Leadership style"],["organisational culture","Organisational culture"],["psychological safety","Psychological safety"],["engagement","Staff engagement"],["labour turnover","Labour turnover"],["variance","Variance"],["tolerance","Tolerance"],["corrective action","Corrective action"],["span of control","Span of control"],["intrapreneur","Intrapreneurship"],["design thinking","Design thinking"],["kaizen","Kaizen"],["suggestion scheme","Suggestion scheme"],["open innovation","Open innovation"],["incremental","Incremental innovation"],["radical","Radical innovation"],["autocratic","Autocratic leadership"],["democratic","Democratic leadership"],["laissez-faire","Laissez-faire leadership"],["transformational","Transformational leadership"],["delegat","Delegation"],["empower","Empowerment"],["autonomy","Autonomy"],["role model","Role model"],["vision","Vision"],["power culture","Power culture"],["role culture","Role culture"],["task culture","Task culture"],["person culture","Person culture"]];
+GLOSS.forEach((g,i)=>{ GLOSS[i]={t:g[0],aka:g[1],d:g[2],topic:g[3],f:g[4],id:"g-"+g[0].toLowerCase().replace(/[^a-z0-9]+/g,"-")}; });
+const glossBy = t => GLOSS.find(g=>g.t===t);
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\w*)(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rrect(ctx,x,y,w,h,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.roundRect? ctx.roundRect(x,y,w,h,r) : ctx.rect(x,y,w,h); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function arrow(ctx,x1,y1,x2,y2,col,w=3,dash){ line(ctx,x1,y1,x2,y2,col,w,dash); const a=Math.atan2(y2-y1,x2-x1), s=8+w; ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-s*Math.cos(a-0.45),y2-s*Math.sin(a-0.45)); ctx.lineTo(x2-s*Math.cos(a+0.45),y2-s*Math.sin(a+0.45)); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const n0 = x => Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const eur = x => "€"+n0(x);
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+function wrapText(ctx,str,maxW){ const words=str.split(" "), out=[]; let cur=""; words.forEach(wd=>{ const t=cur?cur+" "+wd:wd; if(ctx.measureText(t).width>maxW && cur){ out.push(cur); cur=wd; } else cur=t; }); if(cur) out.push(cur); return out; }
+const f2 = x => x.toFixed(2);
+// box with centred (wrapped) label
+function box(ctx,cx,cy,bw,bh,label,fill,stroke,col,fs){ rrect(ctx,cx-bw/2,cy-bh/2,bw,bh,12,fill,stroke,2); ctx.save(); ctx.font=F(fs); const ls=wrapText(ctx,label,bw-10); ctx.restore(); ls.forEach((s,i)=>text(ctx,s,cx,cy+(i-(ls.length-1)/2)*(fs+3)+fs*0.35,col,F(fs),"center")); }
+const fm = x => f2(x).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const sgn = v => (v>0?"+€":v<0?"−€":"€")+Math.abs(Math.round(v*100)/100);
+
+
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+/* ================= VIEWS / NAVIGATION ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "lead", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+const loIds=["lo1","lo2","lo3"]; const loState=store.get("b31-lo",{});
+loIds.forEach(id=>{ $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("b31-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=loIds.filter(id=>$(id).checked).length; $("stLO").textContent=`${lo}/${loIds.length}`; $("stLOb").style.width=(lo/loIds.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("b31-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+/* ================= LEARN ================= */
+const LEARN = {
+  lead:{ vis:[["cols",{}]], cap:"Crann Outdoor's activities sorted: leading is about direction, people and change; managing is about plans, systems and control.",
+    keys:[["🧭","Leaders set the direction: a vision and values. They inspire and influence people, build trust and drive change. Anyone can lead, not only the boss."],["📋","Managers make the plan happen: they plan, organise, staff, direct and control resources (people, money, time, equipment) to reach goals efficiently."],["🤝","Organisations need both. Strong management without leadership is efficient but stuck; strong leadership without management is exciting but chaotic. Many people do both in one job."]],
+    f:"Leaders: direction & change · Managers: plans & control", mistake:"Writing that leaders are the people at the top and managers are below them. Leadership is about what you do (influence, vision), not your job title." },
+  manage:{ vis:[["control",{demo:true}]], cap:"Planned v actual sales for six months. Two months fall outside the ±5% band, so the manager investigates and acts.",
+    keys:[["🎯","Planning: set goals and decide how to reach them (targets, budgets, schedules). Organising: arrange people, tasks and resources. Staffing: get the right people."],["🗣","Directing: guide and motivate staff day to day. Coordinating: make sure departments work together towards the same goals."],["🔁","Controlling: set a standard, measure results, compare with the plan (variance = actual − budget) and take corrective action when results are outside the tolerance."]],
+    f:"Variance % = (actual − budget) ÷ budget × 100", mistake:"Treating every small difference from the plan as a problem. Managers set a tolerance and act on the variances that matter." },
+  culture:{ vis:[["scatter",{demo:true}]], cap:"An illustrative survey: branches with a more open culture tend to put more staff ideas into practice.",
+    keys:[["🏛","Organisational culture is \"the way we do things around here\": the shared values, beliefs, norms and behaviours that shape how people work and decide."],["🔎","You can see it in how decisions are made, how mistakes are treated, what gets rewarded, how people dress and talk, and the stories they tell. Handy's types: power, role, task and person cultures."],["📈","Why it matters: a positive culture raises motivation and engagement, keeps staff (lower labour turnover), attracts talent, builds reputation and supports innovation. A toxic culture does the opposite and can lead to scandals."]],
+    f:"Culture = shared values + norms + behaviour", mistake:"Saying culture is just the mission statement on the wall. Culture is what people actually do, especially when no one is watching." },
+  innov:{ vis:[["funnel",{}]], cap:"An innovation funnel: many ideas are suggested, fewer pass screening, some are tested, and only a handful are launched.",
+    keys:[["💡","Innovation turns a new idea into value: product innovation (new goods or services), process innovation (better ways of working) or business model innovation (new ways to earn money). It can be incremental or radical."],["🛠","Innovative approaches: intrapreneurship, paid time for ideas, design thinking (start with the end user), kaizen (continuous improvement), suggestion schemes, open innovation, hackathons, R&D."],["🏆","Why it matters: new products and markets, lower costs, competitive advantage, motivated staff and a business that can adapt. Costs and risks: time, money, many failures and disruption."]],
+    f:"Idea → screen → prototype → launch", mistake:"Thinking innovation only means inventing new high-tech products. A better process, a new service or a smarter way of selling is innovation too." },
+  styles:{ vis:[["styles",{s:3,p:"TR"}]], cap:"How well each style fits a big change that worries staff (illustrative scoring). Transformational fits best.",
+    keys:[["👑","Autocratic: the leader decides alone. Fast and clear in a crisis or with new staff, but staff feel unheard, motivation and creativity fall."],["🗳","Democratic: the leader consults and involves staff. Better decisions and buy-in, but slower. Laissez-faire: the leader sets goals and steps back; suits skilled experts, but can drift without direction."],["✨","Transformational: the leader inspires with a vision, sets an example and challenges people to think differently; suits big change. The best leaders adapt their style to the situation."]],
+    f:"Autocratic · Democratic · Laissez-faire · Transformational", mistake:"Saying one style is always best. Autocratic is right in an emergency; democratic or transformational usually suits change; laissez-faire needs an expert team." },
+  foster:{ vis:[["year",{all:true}]], cap:"An illustrative year at Crann under four leaders: engagement climbs fastest where staff are trusted and inspired.",
+    keys:[["🌱","Leaders shape culture by what they do: what they reward, how they react to mistakes, how they share decisions and whether they act on their own values (role model)."],["🔓","Styles that give trust, autonomy and a voice (democratic, transformational, sometimes laissez-faire) build an open culture where staff suggest and test ideas: they foster innovation."],["⚙","Autocratic leadership can give control and consistency, but blocks ideas from below. Laissez-faire can produce many ideas but few get finished without coordination. Innovation needs both freedom and focus."]],
+    f:"Style → culture → innovation", mistake:"Writing \"a democratic leader is nice so staff are happy\". Explain the link: staff are consulted → feel valued and safe to speak → share more ideas → more innovation." },
+};
+/* ================= INFOGRAPHICS ================= */
+const TINTS = ["var(--blush)","var(--apricot)","var(--sage)","var(--cream)"];
+const BIZ = [
+  {n:"3M and \"15% time\"", ic:"innov", chip:["Intrapreneurship","real"], who:"An American manufacturer of thousands of products.", job:"For decades 3M has encouraged staff to spend some working time on their own ideas. The Post-it Note grew from a weak glue that one scientist found and a colleague turned into a product.", ie:"A culture that tolerates odd ideas and failures lets innovation grow from below."},
+  {n:"Toyota and kaizen", ic:"car", chip:["Process innovation","real"], who:"A Japanese car maker known for its production system.", job:"Every worker is expected to suggest small improvements, and workers on the line can stop it to fix a problem rather than pass it on.", ie:"Continuous improvement is a culture, not a one-off project: thousands of small ideas add up."},
+  {n:"Netflix's culture statement", ic:"chat", chip:["Culture","real"], who:"An American streaming company.", job:"It has published its culture openly for years, built around \"freedom and responsibility\": giving staff a lot of freedom, and expecting high performance in return.", ie:"A clearly stated culture helps hire people who fit, but a high-pressure culture doesn't suit everyone."},
+  {n:"Microsoft's culture change", ic:"people", chip:["Transformational leadership","real"], who:"An American technology company.", job:"After Satya Nadella became chief executive in 2014, he pushed a \"growth mindset\" culture of learning and collaboration in place of internal rivalry.", ie:"A new leader can change a culture, but it takes years and the leader must act on the values, not just announce them."},
+  {n:"Co-operatives and credit unions", ic:"scale", chip:["Democratic control","real"], who:"Member-owned organisations in Ireland and around the world.", job:"Members elect the board, usually on one member, one vote, however much each member has invested.", ie:"Democratic structures build trust and loyalty, but decisions can be slower."},
+  {n:"Large organisations that ignored warning signs", ic:"lock", chip:["Toxic culture","general"], who:"Banks and companies in several countries in recent decades.", job:"Inquiries into scandals often find staff were afraid to speak up, targets were pushed at any cost and bad news didn't reach the top.", ie:"Culture is a risk: psychological safety and ethical leadership protect the organisation as well as its people."},
+];
+$("cases").innerHTML = BIZ.map((c,k)=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${TINTS[k%4]}">${svg(c.ic)}</div><h3>${c.n}</h3></div><div class="chips">${chipsHTML([c.chip])}</div><p><b>Who:</b> ${c.who}</p><p><b>What happened:</b> ${c.job}</p><p><b>Lesson:</b> ${c.ie}</p></div>`).join("");
+const IMPACTS = [
+  ["cloud","Leading remote and hybrid teams","Leaders can't see people working, so they manage by results, keep regular contact and work harder to build trust and a shared culture.","var(--blush)"],
+  ["chart","Data and dashboards","Live sales, stock and customer data let managers control faster: variances show up today, not at the end of the month.","var(--apricot)"],
+  ["chat","Collaboration tools","Shared documents and team chats make it easier for staff anywhere to suggest and build on ideas, if the culture invites them to.","var(--sage)"],
+  ["innov","AI and automation","New tools change jobs and processes. Leaders must explain the change, retrain staff and use the technology responsibly.","var(--cream)"],
+];
+$("impacts").innerHTML = IMPACTS.map(([i,t,p,tn])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${t}</h3></div><p>${p}</p></div>`).join("");
+const AROUND = [
+  ["gov","Enterprise Ireland","The State agency for Irish companies that export. It runs leadership and management development programmes and supports research and innovation projects.",[["Leadership & R&D","real"]],"var(--blush)"],
+  ["chart","Local Enterprise Offices (LEOs)","Training, mentoring and management courses for small businesses in every county. Check current programmes.",[["Small firms","real"]],"var(--apricot)"],
+  ["people","Skillnet Ireland","Funds networks of businesses that train their staff and managers together.",[["Training","real"]],"var(--sage)"],
+  ["star","Great Place to Work Ireland","Surveys staff about trust and culture and publishes lists of the best workplaces.",[["Culture surveys","real"]],"var(--cream)"],
+  ["scale","Ibec","Ireland's largest business representative group; it publishes guidance on managing people and workplace issues.",[["Employers","real"]],"var(--blush)"],
+  ["innov","Science Foundation Ireland / Research Ireland","Funds research, including partnerships between universities and companies. Check the current agency name and schemes.",[["Open innovation","real"]],"var(--sage)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"lead",label:"Leading v managing",col:"var(--blush)",leaves:[["Leaders","Vision, inspire, influence, change."],["Managers","Plan, organise, control."],["Both","Most jobs need both."]]},
+  {id:"manage",label:"Management",col:"var(--apricot)",leaves:[["Plan","Goals, targets, budgets."],["Organise","People, tasks, resources."],["Direct","Guide and motivate."],["Control","Measure, compare, act."]]},
+  {id:"culture",label:"Culture",col:"var(--sage)",leaves:[["Values","What we stand for."],["Norms","Unwritten rules."],["Handy","Power, role, task, person."],["Why it matters","Engagement, retention, innovation."]]},
+  {id:"innov",label:"Innovation",col:"var(--cream)",leaves:[["Product","New goods or services."],["Process","Better ways of working."],["Approaches","Intrapreneurship, kaizen, design thinking."],["Funnel","Many ideas, few launches."]]},
+  {id:"styles",label:"Styles",col:"var(--blush)",leaves:[["Autocratic","Leader decides."],["Democratic","Staff consulted."],["Laissez-faire","Staff left to decide."],["Transformational","Inspires change."]]},
+  {id:"foster",label:"Style → culture",col:"var(--sage)",leaves:[["Trust","Built by consistency."],["Autonomy","Freedom to try."],["Safety","Mistakes = learning."],["Focus","Ideas need finishing."]]},
+];
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["lead","Distinguish between leadership and management.","Leadership: setting direction, inspiring and influencing people, driving change. Management: planning, organising and controlling resources to reach goals efficiently."],
+  ["lead","Give three activities that show leadership.","Creating a vision; inspiring and motivating staff; setting an example; building trust; championing change; taking calculated risks on direction."],
+  ["lead","Give three activities that show management.","Drawing up budgets and plans; organising rotas and resources; setting procedures; monitoring results against targets; coordinating departments."],
+  ["lead","Why does an organisation need both leaders and managers?","Leaders give direction and drive change; managers make sure the plan is carried out efficiently day to day. One without the other leads to chaos or to standing still."],
+  ["manage","Name five management activities.","Planning, organising, staffing, directing and controlling (also coordinating)."],
+  ["manage","What are the four steps of control?","Set a standard (target) → measure actual performance → compare (variance) → take corrective action."],
+  ["manage","Define variance and say when it is adverse.","Variance = actual − budget. For sales, it is adverse when actual is below budget; for costs, when actual is above budget."],
+  ["manage","Sales budget €60 000, actual €54 000. Variance and variance %?","−€6 000 (adverse); −€6 000 ÷ €60 000 × 100 = −10%."],
+  ["manage","What is span of control?","The number of staff who report directly to one manager. Wide spans suit skilled staff; narrow spans give closer supervision."],
+  ["culture","Define organisational culture.","The shared values, beliefs, norms and behaviours that shape how people in an organisation work: \"the way we do things around here\"."],
+  ["culture","Give four signs of an organisation's culture.","How decisions are made; how mistakes are treated; what is rewarded; dress and language; office layout; stories told about the organisation."],
+  ["culture","Name Handy's four types of culture.","Power, role, task and person cultures."],
+  ["culture","Give three benefits of a positive culture.","Higher motivation and engagement; lower labour turnover; easier recruitment; better reputation; more ideas and innovation; ethical behaviour."],
+  ["culture","What is psychological safety?","A shared belief that you can speak up, ask questions or admit mistakes without being punished or embarrassed."],
+  ["culture","How is labour turnover calculated?","Leavers in the year ÷ average number of staff × 100."],
+  ["innov","Define innovation.","Turning a new idea into something of value: a new or improved product, process or business model."],
+  ["innov","Incremental v radical innovation?","Incremental: small, step-by-step improvements. Radical: a breakthrough new to the market or the world."],
+  ["innov","Name four innovative approaches inside organisations.","Intrapreneurship; paid time for ideas; design thinking; kaizen; suggestion schemes; open innovation; hackathons; R&D."],
+  ["innov","What is intrapreneurship?","Employees acting like entrepreneurs inside an existing organisation, developing new ideas with its support and resources."],
+  ["innov","Give two costs or risks of innovation.","Staff time and money; many ideas fail; disruption to existing work; new products may cannibalise old ones."],
+  ["styles","Autocratic leadership: one advantage, one disadvantage.","Advantage: fast, clear decisions (good in a crisis). Disadvantage: staff feel unheard, so motivation and creativity fall."],
+  ["styles","Democratic leadership: one advantage, one disadvantage.","Advantage: staff are consulted, so better ideas and buy-in. Disadvantage: decisions take longer."],
+  ["styles","When does laissez-faire leadership work best?","With highly skilled, motivated experts who need freedom (e.g. a design or research team). It fails with inexperienced staff."],
+  ["styles","What is transformational leadership?","Inspiring staff with a clear vision, setting an example and encouraging them to think in new ways; suits major change."],
+  ["styles","Which style suits a fire evacuation? Why?","Autocratic: there's no time to consult; clear instructions save lives."],
+  ["foster","How can a leader foster a culture of innovation?","Give staff time and autonomy; treat mistakes as learning; ask for and act on ideas; reward trying; set an example; share a clear purpose."],
+  ["foster","How can autocratic leadership block innovation?","Staff aren't asked for ideas and fear blame, so they stay quiet; only the leader's ideas are tried."],
+  ["foster","Why might laissez-faire produce many ideas but few launches?","Staff are free to explore, but without direction and coordination ideas aren't screened, resourced and finished."],
+  ["foster","Define empowerment.","Giving staff the authority, skills and confidence to make decisions in their own work."],
+];
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Leading</text><text x="${cx}" y="${cy+22}" text-anchor="middle">&amp; managing</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+let fcKnown = store.get("b31-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter((c,j)=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("b31-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("b31-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ shuffle(fcOrder); fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("b31-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["lead","Which activity is the clearest example of leadership rather than management?",["Drawing up the staff rota","Checking costs against the budget","Inspiring staff to support a new vision for the company","Reordering stock"],2,"Inspiring people towards a vision is leadership. The others are planning, organising and controlling: management."],
+  ["lead","\"Managers do things right; leaders do the right things.\" This saying means:",["Managers are more honest than leaders","Managers focus on running things efficiently; leaders focus on choosing the right direction","Leaders never make mistakes","Leaders don't need managers"],1,"Management is about efficiency (doing things right); leadership is about direction (doing the right things)."],
+  ["lead","Which statement about leaders is correct?",["Only the owner of a business can lead","Leadership depends only on job title","Anyone who influences and inspires others can show leadership","Leaders never plan"],2,"Leadership is about influence, not title. A team member can lead a project or set an example."],
+  ["manage","A manager compares monthly sales with the target and acts when there's a big gap. This is:",["Planning","Organising","Controlling","Staffing"],2,"Measuring results against the plan and taking corrective action is controlling."],
+  ["manage","Budgeted sales €50 000, actual sales €46 000. The variance is:",["+€4 000 favourable","−€4 000 adverse","−8% favourable","€96 000"],1,"Variance = actual − budget = €46 000 − €50 000 = −€4 000. Less sales than planned is adverse."],
+  ["manage","In the example above the variance % is:",["−4%","−8%","−8.7%","+8%"],1,"−€4 000 ÷ €50 000 × 100 = −8%."],
+  ["manage","A manager has 12 staff reporting directly to her. This is her:",["Chain of command","Span of control","Delegation","Hierarchy"],1,"Span of control = the number of staff who report directly to one manager."],
+  ["culture","Organisational culture is best described as:",["The company's logo and colours","\"The way we do things around here\": shared values, norms and behaviour","The organisation chart","The company's mission statement only"],1,"Culture is the shared values, beliefs and behaviour that shape how people actually work."],
+  ["culture","Which of these is a sign of an organisation's culture?",["How managers react when staff make mistakes","The VAT rate","The interest rate on a loan","The size of the car park"],0,"How mistakes are treated shows what the organisation really values: learning or blame."],
+  ["culture","In Handy's model, a culture built around project teams where expertise matters most is a:",["Power culture","Role culture","Task culture","Person culture"],2,"Task culture: teams form around projects; flexible and good for innovation."],
+  ["culture","A company had 50 staff on average and 10 left during the year. Labour turnover is:",["5%","10%","20%","50%"],2,"10 ÷ 50 × 100 = 20%."],
+  ["innov","A bakery finds a way to bake the same bread using 20% less energy. This is:",["Product innovation","Process innovation","Business model innovation","Radical innovation"],1,"A better way of making the same product is process innovation (and incremental)."],
+  ["innov","Employees developing new ventures inside their company with its support is called:",["Outsourcing","Intrapreneurship","Delegation","Franchising"],1,"Intrapreneurship: acting like an entrepreneur inside an existing organisation."],
+  ["innov","Staff suggested 80 ideas and 12 were put into practice. The idea conversion rate is:",["12%","15%","6.7%","68%"],1,"12 ÷ 80 × 100 = 15%."],
+  ["styles","A leader makes all decisions alone and gives clear instructions. This style is:",["Democratic","Laissez-faire","Autocratic","Transformational"],2,"Deciding alone and telling staff what to do is autocratic."],
+  ["styles","Which style is most suitable for a team of experienced research scientists?",["Autocratic","Laissez-faire","None","Only democratic"],1,"Skilled, motivated experts often do best with freedom: laissez-faire (with clear goals)."],
+  ["foster","Which leadership behaviour most fosters a culture of innovation?",["Punishing every failed idea","Making all decisions alone","Treating mistakes as learning and giving staff time to try ideas","Keeping information from staff"],2,"Psychological safety and time to experiment encourage staff to suggest and test ideas."],
+  ["foster","Why can transformational leadership help an organisation through major change?",["It avoids all change","It inspires staff with a vision so they commit to the change","It removes the need for planning","It lets staff do whatever they like"],1,"A clear, inspiring vision and a leader who sets the example help staff accept and drive change."],
+];
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Distinguish","Make the differences between two or more concepts or items clear.","Distinguish between leadership and management in Crann Outdoor."],
+  ["Analyse","Study or examine something in detail; break it down to bring out the essential elements; identify parts and relationships, and interpret information to reach conclusions.","Analyse the significance of organisational culture for a successful business."],
+  ["Outline","Give the main points; restrict to essential points of information.","Outline how a democratic leadership style can foster innovation."],
+  ["Explain","Give a detailed account including reasons or causes.","Explain the term \"organisational culture\"."],
+  ["Discuss","Offer a considered, balanced review that includes a range of arguments, factors or hypotheses, supported by appropriate evidence.","Discuss whether an autocratic style suits a modern business."],
+  ["Identify","Recognise patterns, facts or details; provide an answer from a number of possibilities; state briefly a distinguishing fact or feature.","Identify the leadership style shown in the case study."],
+  ["Appreciate","Recognise the meaning, value or importance of, or have a practical understanding of.","Appreciate the importance of innovation for a growing company."],
+  ["Demonstrate","Prove or make clear by reasoning or evidence, illustrating with examples or practical application.","Demonstrate how a manager uses control to keep sales on target."],
+  ["Calculate","Obtain a numerical answer showing the relevant stages in the working.","Calculate the labour turnover rate."],
+  ["Suggest","Propose solution(s), hypothesis, or other possible answer(s).","Suggest two ways a leader could make a culture more open to new ideas."],
+];
+// Numbers trainer
+const r1 = x => Math.round(x*10)/10, r2 = x => Math.round(x*100)/100;
+const mf = x => Number.isInteger(r2(x))? n0(x) : fm(x);
+const pct = x => (Number.isInteger(r2(x))? String(r2(x)) : f2(x)).replace("-","−")+"%";
+const eurM = x => (x<0?"−€":"€")+mf(Math.abs(x));
+const PTYPES = {
+  variance:{ name:"Variance", gen(){ const B=pick([40000,50000,60000,75000,80000]), d=pick([-12,-10,-8,-5,-4,4,5,6,10])/100, A=B*(1+d), x=A-B;
+    return { q:`Crann's budgeted sales for March were <b>€${n0(B)}</b>. Actual sales were <b>€${n0(A)}</b>. Calculate the variance (use a minus sign if it's adverse).`, ans:x, unit:"€", steps:["Variance = actual − budget",`= €${n0(A)} − €${n0(B)}`,`= <b>${eurM(x)}</b> (${x<0?"adverse: less sales than planned":"favourable: more sales than planned"})`] }; } },
+  varpct:{ name:"Variance %", gen(){ const B=pick([20000,40000,50000,80000]), d=pick([-15,-10,-6,-2.5,2.5,8,12])/100, A=B*(1+d), x=(A-B)/B*100;
+    return { q:`Budgeted costs were <b>€${n0(B)}</b> and actual costs were <b>€${n0(A)}</b>. Calculate the variance as a percentage of the budget.`, ans:x, unit:"%", steps:["Variance % = (actual − budget) ÷ budget × 100",`= (€${n0(A)} − €${n0(B)}) ÷ €${n0(B)} × 100 = ${eurM(A-B)} ÷ €${n0(B)} × 100`,`= <b>${pct(x)}</b> (for costs, ${x>0?"spending more than planned is adverse":"spending less than planned is favourable"})`] }; } },
+  turnover:{ name:"Labour turnover", gen(){ const [s1,s2,L]=pick([[38,42,6],[45,55,10],[110,90,15],[20,20,3],[60,68,8],[150,170,24]]), av=(s1+s2)/2, x=L/av*100;
+    return { q:`A business had <b>${s1}</b> staff at the start of the year and <b>${s2}</b> at the end. <b>${L}</b> staff left during the year. Calculate the labour turnover rate.`, ans:x, unit:"%", steps:[`Average staff = (${s1} + ${s2}) ÷ 2 = ${av}`,"Labour turnover = leavers ÷ average staff × 100",`= ${L} ÷ ${av} × 100 = <b>${pct(x)}</b>`] }; } },
+  span:{ name:"Span of control", gen(){ const m=pick([3,4,5,6,8]), sp=pick([5,6,8,10,12]), N=m*sp;
+    return { q:`<b>${N}</b> shop-floor staff are shared equally between <b>${m}</b> supervisors. Calculate each supervisor's span of control.`, ans:sp, unit:"", steps:["Span of control = staff ÷ supervisors",`= ${N} ÷ ${m}`,`= <b>${sp}</b> staff each`] }; } },
+  conv:{ name:"Idea conversion rate", gen(){ const [s,i]=pick([[60,9],[80,12],[120,18],[45,9],[200,14],[150,12]]), x=i/s*100;
+    return { q:`Staff suggested <b>${s}</b> ideas through the suggestion scheme last year, and <b>${i}</b> were put into practice. Calculate the idea conversion rate.`, ans:x, unit:"%", steps:["Conversion rate = ideas implemented ÷ ideas suggested × 100",`= ${i} ÷ ${s} × 100`,`= <b>${pct(x)}</b>`] }; } },
+  roi:{ name:"Return on investment", gen(){ const [c,g]=pick([[100000,150000],[40000,52000],[80000,72000],[25000,40000],[60000,96000],[200000,230000]]), x=(g-c)/c*100;
+    return { q:`An innovation project cost <b>€${n0(c)}</b> and brought in extra profit of <b>€${n0(g)}</b>. Calculate the return on investment (negative if it lost money).`, ans:x, unit:"%", steps:["ROI = (gain − cost) ÷ cost × 100",`= (€${n0(g)} − €${n0(c)}) ÷ €${n0(c)} × 100 = ${eurM(g-c)} ÷ €${n0(c)} × 100`,`= <b>${pct(x)}</b>`] }; } },
+  engage:{ name:"Survey average", gen(){ const sc=[0,0,0,0,0].map(()=>rnd(1,5)), sum=sc.reduce((a,b)=>a+b,0), x=sum/5;
+    return { q:`Five staff answered "I feel safe to suggest new ideas" on a scale of 1 (strongly disagree) to 5 (strongly agree): <b>${sc.join(", ")}</b>. Calculate the average score.`, ans:x, unit:"", steps:[`Total = ${sc.join(" + ")} = ${sum}`,`Average = ${sum} ÷ 5`,`= <b>${r2(x)}</b> out of 5`] }; } },
+  absence:{ name:"Absence rate", gen(){ const [n,d,l]=pick([[40,230,184],[25,240,300],[50,220,330],[80,225,720],[12,250,90]]), x=l/(n*d)*100;
+    return { q:`A firm has <b>${n}</b> staff, each due to work <b>${d}</b> days a year. <b>${l}</b> working days were lost to absence. Calculate the absence rate.`, ans:x, unit:"%", steps:[`Possible working days = ${n} × ${d} = ${n0(n*d)}`,"Absence rate = days lost ÷ possible days × 100",`= ${l} ÷ ${n0(n*d)} × 100 = <b>${pct(x)}</b>`] }; } },
+};
+// Which leadership style is it? [statement, key, why]
+const PNAME = {AU:["Autocratic","The leader decides alone and gives instructions.","blush"],DE:["Democratic","The leader consults staff before deciding.","sage"],LF:["Laissez-faire","The leader sets the goal and lets staff decide how.","cream"],TR:["Transformational","The leader inspires with a vision and leads change by example.","apricot"]};
+const PRED = [
+  ["During a fire alarm, the warehouse manager tells everyone exactly where to go and doesn't ask for opinions.","AU","Clear orders, no consultation: autocratic, and right for an emergency."],
+  ["A new owner announces the new shop layout and says it isn't up for discussion.","AU","Deciding alone and announcing it: autocratic."],
+  ["A head chef sets every recipe and checks each plate before it leaves the kitchen.","AU","Tight personal control over every decision: autocratic."],
+  ["A supervisor tells new seasonal staff exactly how to fold and stack each product.","AU","Detailed instructions for inexperienced staff: autocratic (directive)."],
+  ["A manager holds a staff meeting and asks for views before choosing the new opening hours.","DE","Consulting staff before deciding: democratic."],
+  ["Staff vote on which charity the company will support this year.","DE","Staff take part in the decision: democratic."],
+  ["A principal sets up a group of teachers and students to help write the new phone policy.","DE","Involving people affected in the decision: democratic."],
+  ["The MD asks each team for its ideas on cutting costs, then decides using their input.","DE","Consulting, then deciding: democratic (participative)."],
+  ["A games studio gives its senior designers a deadline and leaves them to decide everything else.","LF","Set the goal, then step back: laissez-faire."],
+  ["A research director lets her expert scientists choose their own projects and methods.","LF","Freedom for skilled experts: laissez-faire."],
+  ["A manager rarely checks in and lets the team sort out problems themselves.","LF","Hands-off leadership: laissez-faire (it can drift if the team lacks skills)."],
+  ["A founder leaves the shop staff to run the shop however they think best while he travels.","LF","Staff left to decide: laissez-faire."],
+  ["A new CEO shares an exciting vision of a fully sustainable company and personally switches to cycling to work.","TR","Inspiring vision plus leading by example: transformational."],
+  ["A leader challenges staff to rethink the whole business model and coaches each of them to grow.","TR","Challenging people to think differently and developing them: transformational."],
+  ["A manager turns a struggling team around by giving them a shared purpose they believe in.","TR","Inspiration and purpose drive the change: transformational."],
+  ["A hospital chief explains why a big change matters, shows the way and celebrates every step forward.","TR","Vision, example and motivation through change: transformational."],
+];
+// Long questions
+const LONGQ = [
+  { title:"Crann Outdoor: leading and managing", intro:"Niamh founded Crann Outdoor (illustrative), a Galway company with 40 staff that designs outdoor clothing and sells it online and in two shops. She talks about her vision of \"the most sustainable outdoor brand in Ireland\" and inspires staff to suggest ideas. Darren, the operations manager, sets monthly targets and budgets, organises the rotas and checks results every week.",
+    parts:[["a","Distinguish between leadership and management, referring to Niamh and Darren.",12,"2 × 6. Leadership (6): setting direction/vision (sustainable brand), inspiring and influencing staff, encouraging ideas, driving change, applied to Niamh. Management (6): planning (targets, budgets), organising (rotas, resources), controlling (weekly checks against targets), applied to Darren. Marks require a clear contrast, not two separate definitions."],
+      ["b","Outline the management activities of planning, organising and controlling, with an example of each from Crann Outdoor.",9,"3 × 3 (activity named 1 + explained 1 + applied 1): planning (sales targets, budgets, launch dates); organising (rotas, assigning staff and equipment to the shops and warehouse); controlling (compare weekly sales with target, investigate variances, take corrective action)."],
+      ["c","Crann's budgeted online sales for May were €60 000; actual sales were €54 000. Calculate the variance and the variance %, and suggest one corrective action.",9,"Variance = €54 000 − €60 000 = −€6 000, adverse (3). Variance % = −€6 000 ÷ €60 000 × 100 = −10% (3). Corrective action (3), e.g. targeted online promotion, check website problems, review pricing or stock levels."]] },
+  { title:"Culture and innovation", intro:"Crann's staff survey shows high engagement. Staff say mistakes are \"treated as lessons\" and every Friday afternoon is set aside for new ideas. Last year 60 ideas were suggested and 9 were put into practice, including a repair service for old jackets and a faster way to pack online orders. Labour turnover fell from 20% to 10%.",
+    parts:[["a","Explain the term organisational culture and describe two signs of Crann's culture.",8,"Definition (2): shared values, beliefs, norms and behaviours: the way we do things around here. Two signs × 3, e.g. mistakes treated as learning (psychological safety); time set aside for ideas; high engagement; staff stay."],
+      ["b","Analyse the significance of organisational culture and innovation for Crann's success.",16,"4 × 4 points (point 1, explained 1, applied to Crann 2), e.g. motivation and engagement; lower labour turnover (20% → 10%) saves recruitment and training costs; new products (repair service) create new income and support the sustainable brand; process innovation (faster packing) cuts costs and speeds delivery; reputation attracts customers and talent; adaptability. Credit for a balancing point (cost of Friday time; not every idea succeeds)."],
+      ["c","Calculate the idea conversion rate and identify each innovation as product or process innovation.",6,"9 ÷ 60 × 100 = 15% (3). Repair service: product (service) innovation (and arguably business model); faster packing: process innovation (3)."]] },
+  { title:"Leadership styles", intro:"Crann is growing and Niamh is appointing a new managing director. One candidate, Seán, says: \"I make the decisions and staff carry them out. That's how things get done.\" Another, Aisling, says: \"I'd set a clear direction, ask the teams how to get there and give them room to try things.\"",
+    parts:[["a","Identify the leadership style of each candidate and explain one advantage and one disadvantage of each.",12,"Seán: autocratic (2); advantage, e.g. fast, clear decisions, useful in a crisis (2); disadvantage, e.g. staff feel unheard, less motivation and fewer ideas (2). Aisling: democratic/transformational (2); advantage, e.g. buy-in, more ideas, motivation (2); disadvantage, e.g. slower decisions, needs a skilled team (2)."],
+      ["b","Outline how the new MD's leadership style could foster or damage Crann's culture and innovation.",12,"3 × 4: e.g. consulting staff and treating mistakes as learning keeps psychological safety → staff keep suggesting ideas; autocratic control could end Friday idea time, staff stop speaking up → fewer innovations, engagement and retention fall; a leader acting on sustainability values (role model) strengthens the culture; laissez-faire freedom without focus → many ideas but few finished."],
+      ["c","Discuss whether one leadership style is best for every situation at Crann.",6,"Balanced discussion (2 × 3): emergencies or compliance need clear autocratic direction; expert design teams can be left free (laissez-faire); big changes such as a new sustainable range need a transformational leader; good leaders adapt (situational leadership). Conclusion."]] },
+];
+const RAG = ["Distinguish between leadership and management with examples","Explain why organisations need both leaders and managers","Name and explain the management activities (plan, organise, staff, direct, control)","Calculate a variance and variance %, and suggest corrective action","Define organisational culture and give signs of it","Describe Handy's four types of culture","Analyse why culture matters for success (engagement, turnover, reputation)","Define innovation and its types (product, process, business model; incremental, radical)","Describe innovative approaches (intrapreneurship, kaizen, design thinking…)","Explain four leadership styles with an advantage and a disadvantage of each","Choose and justify a style for a given situation","Outline how leadership styles foster or block culture and innovation"];
+const SKILLS = [["Observe","Watch how decisions are made in a club, team or part-time job. Is it led, managed, or both?","Leading lab"],["Interview","Ask a local manager how they plan and control, and how they lead their team. Record carefully.","Managing lab"],["Design a survey","Write 5 statements about culture that staff can rate 1 to 5, avoiding leading questions.","Culture lab"],["Collect and graph data","Collect survey results from several branches and graph culture against innovation with a line of best fit.","Culture lab"],["Correlation v cause","Explain why a strong link in your data doesn't prove that one thing causes the other.","Culture lab"],["Use secondary sources","Find a published culture statement or a news report about a company's culture; note the source and date.","Infographics"],["Compare options","Weigh the cost of an innovation scheme against its benefits using numbers and reasons.","Innovation lab"],["Recommend with reasons","End your study with clear recommendations supported by your evidence.","Long questions"]];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = shuffle(QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic));
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("b31-best",null); if(best==null||pct>best) store.set("b31-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[0-9]/.test(g.t[0]) ? "#" : g.t[0].toUpperCase();
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("") + `<p class="result" style="grid-column:1/-1">General meanings to help you answer; always read the full question and the marks available.</p>`;
+let pType="variance", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{
+  const raw=$("paIn").value.replace(/[€%£$\sm]/g,"").replace(/years?/i,"").replace(/[−–]/g,"-").replace(/,(?=\d{3}(\D|$))/g,"").replace(",",".");
+  const x=parseFloat(raw);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a number first, for example 1500 or 59.3.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= Math.max(0.05, Math.abs(pCur.ans)*0.005);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Check: write the formula first. Variance = actual − budget; variance % = variance ÷ budget × 100; labour turnover = leavers ÷ average staff × 100. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p>${L.table?`<div style="overflow-x:auto;margin-top:8px">${L.table}</div>`:""}</header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k && PRED.length>1); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>${PRED[k][0]}</b> Which strategy is it?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(!pd.sel){ $("predFb").innerHTML=`<div class="fb no">Pick an answer first.</div>`; return; }
+  const [,ans,why]=PRED[pd.k], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> Answer: ${PNAME[ans][0]}. ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+const ragState=store.get("b31-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("b31-rag",ragState); ragRender(); });
+ragRender();
+const skState=store.get("b31-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("b31-skills",skState); });
+/* ================= LAB STATE + WIRING ================= */
+function sorter(listId,outId,DATA,NAMES,S){
+  $(listId).innerHTML = S.order.map(k=>{ const [d,c,note]=DATA[k], a=S.ans[k];
+    return `<div class="row ${a==null?"":a===c?"ok":"no"}"><span>${d}${a!=null?`<small>${a===c?"✓":"✗"} ${note}</small>`:""}</span><div class="btns">${Object.keys(NAMES).map(x=>`<button data-k="${k}" data-v="${x}" ${a!=null?"disabled":""}>${NAMES[x]}</button>`).join("")}</div></div>`; }).join("");
+  const done=Object.keys(S.ans).length, right=Object.entries(S.ans).filter(([k,a])=>a===DATA[k][1]).length;
+  setReadout($(outId),[["Sorted",`${done} / ${DATA.length}`],["Correct",`${right}`],["Score",done?Math.round(right/done*100)+"%":"–"]]);
+}
+/* ================= LAB DATA ================= */
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const gauss = R => { const u=1-R(), v=R(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+// 1. Leading or managing [text, key, note, short]
+const LDM=[["Sets out a vision: Crann will be Ireland's most sustainable outdoor brand","LE","Direction and vision: leading.","Vision"],["Draws up next year's budget for each department","MA","Planning money and resources: managing.","Budget"],["Inspires staff to back a switch to recycled fabrics","LE","Inspiring and influencing people: leading.","Inspire"],["Draws up the staff rota for the Christmas rush","MA","Organising people and time: managing.","Rota"],["Checks weekly sales against target and acts on big gaps","MA","Controlling: managing.","Control"],["Persuades the board to take the risk of selling in Germany","LE","Influencing others on direction and taking a calculated risk: leading.","New market"],["Writes clear procedures for handling returns","MA","Rules and systems for consistency: managing.","Procedures"],["Owns up in public to a mistake and shows the company's values in action","LE","Setting an example and shaping culture: leading.","Values"],["Allocates staff and equipment to a new project team","MA","Organising resources: managing.","Allocate"],["Encourages staff to question how things have always been done","LE","Challenging the status quo and driving change: leading.","Challenge"],["Monitors stock levels and reorders before they run out","MA","Coordinating and controlling day-to-day operations: managing.","Stock"],["Builds trust so staff feel safe to suggest ideas","LE","Building trust and an open culture: leading.","Trust"],["Measures each shop's costs against the budget","MA","Controlling costs: managing.","Costs"],["Explains why the company is changing and where it is going","LE","Communicating a shared purpose: leading.","Purpose"]];
+const LDMN={LE:"Leading",MA:"Managing"};
+// 2. Control
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun"], MG_DEMO=[1.02,0.97,1.08,0.91,1.01,0.95];
+const mgActual = (T,F) => F.map(f=>Math.round(T*f/100)*100);
+// 3. Culture survey: [openness 1-5, ideas implemented per 100 staff]
+function cuBranch(R){ const o=Math.round((1.5+3.3*R())*10)/10, y=Math.max(0,Math.round((2+6*(o-1)+gauss(R)*2.5)*10)/10); return [o,y]; }
+const CU_DEMO=(()=>{ const R=rng(11); return Array.from({length:12},()=>cuBranch(R)); })();
+const eqn = f => `${f.a<0?"−":""}${Math.abs(r1(f.a))} ${f.b<0?"−":"+"} ${Math.abs(r1(f.b))}`;
+function fitLine(P){ const n=P.length; if(n<2) return null; const mx=P.reduce((a,p)=>a+p[0],0)/n, my=P.reduce((a,p)=>a+p[1],0)/n; let sxx=0,sxy=0,syy=0; P.forEach(([x,y])=>{ sxx+=(x-mx)**2; sxy+=(x-mx)*(y-my); syy+=(y-my)**2; }); if(sxx===0) return null; const b=sxy/sxx; return {b,a:my-b*mx,r:syy>0?sxy/Math.sqrt(sxx*syy):0,mx,my}; }
+// 4. Innovation funnel
+const SAFE=["","blamed","frowned on","tolerated","accepted","learned from"];
+function funnel(t,s,B){ const ideas=Math.round(40*(0.3+0.2*t)*(0.4+0.15*s)), screened=Math.round(ideas*0.3), protos=Math.min(screened,Math.floor(B/4000)), launched=Math.round(protos*(0.25+0.05*s)), timeCost=16000*t, spend=protos*4000, cost=timeCost+spend, gain=launched*80000;
+  return {ideas,screened,protos,launched,timeCost,spend,cost,gain,roi:cost>0?(gain-cost)/cost*100:null}; }
+// 5. Styles: scores for [speed, staff buy-in, creativity, control, driving change]
+const STY={AU:[5,1,1,5,2],DE:[2,5,3,3,2],LF:[3,3,5,1,1],TR:[3,4,4,2,5]}, STYK=Object.keys(STY), DIMS=["speed","buy-in","creativity","control","change"];
+const SIT=[["Fire alarm: evacuate the warehouse now",[5,0,0,5,0]],["Expert design team creating next year's range",[1,1,5,0,0]],["Agreeing a hybrid-working policy that affects everyone",[0,5,1,1,0]],["Moving the whole firm to recycled fabrics; staff are worried",[0,3,1,1,5]],["Safety inspection next week: every procedure must be followed",[2,0,0,5,0]]];
+const fitOf = (k,w) => Math.round(STY[k].reduce((a,v,i)=>a+v*w[i],0) / (5*w.reduce((a,b)=>a+b,0)) * 100);
+// 6. A year under each style
+const YR={AU:{E:45,lam:1,co:0.9},DE:{E:70,lam:3,co:0.7},LF:{E:58,lam:5,co:0.35},TR:{E:78,lam:4.5,co:0.7}};
+function yearRun(k,R){ const p=YR[k], E=[55]; let sug=0, imp=0; const SUG=[0], IMP=[0];
+  for(let m=1;m<=12;m++){ const e=E[m-1]+(p.E-E[m-1])*0.25+gauss(R)*2.5; E.push(Math.max(5,Math.min(98,e))); const n=Math.max(0,Math.round(p.lam+gauss(R)*Math.sqrt(p.lam))); let im=0; for(let i=0;i<n;i++) if(R()<p.co) im++; sug+=n; imp+=im; SUG.push(sug); IMP.push(imp); }
+  return {k,E,SUG,IMP}; }
+const YR_DEMO=STYK.map((k,i)=>yearRun(k,rng(40+i)));
+const SCOL={AU:"terra",DE:"sage",LF:"apricot",TR:"olive"};
+
+/* ================= DRAWINGS ================= */
+function niceStep(x){ if(!(x>0)) return 1; const p=10**Math.floor(Math.log10(x)), m=x/p; return (m<1.5?1:m<3.5?2:m<7.5?5:10)*p; }
+const kfmt = v => { const a=Math.abs(v), s=v<0?"−":""; return s+"€"+(a>=1000? r1(a/1000)+"k" : Math.round(a)); };
+function axes(ctx,w,h,o){ const cp=o.compact, L=cp?40:56, R=cp?10:16, T=cp?14:20, B=cp?24:36; const X=v=>L+(v-o.x0)/(o.x1-o.x0)*(w-L-R), Y=v=>h-B-(v-o.y0)/(o.y1-o.y0)*(h-B-T);
+  const ys=niceStep((o.y1-o.y0)/(cp?3:5)); for(let v=Math.ceil(o.y0/ys)*ys; v<=o.y1+1e-9; v+=ys){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,o.yf?o.yf(v):String(+v.toFixed(2)),L-5,Y(v)+4,C.muted,M(cp?9:11),"right"); }
+  if(o.xt) o.xt.forEach(([v,lab])=>text(ctx,lab,X(v),h-B+(cp?13:16),C.muted,M(cp?9:11),"center")); else { const xs=niceStep((o.x1-o.x0)/(cp?3:5)); for(let v=Math.ceil(o.x0/xs)*xs; v<=o.x1+1e-9; v+=xs){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,String(+v.toFixed(2)),X(v),h-B+(cp?13:16),C.muted,M(cp?9:11),"center"); } }
+  line(ctx,L,h-B,w-R,h-B,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(o.xl&&!cp) text(ctx,o.xl,w-R,h-6,C.muted,F(11,700),"right"); if(o.yl&&!cp) text(ctx,o.yl,L+6,T+2,C.muted,F(11,700),"left");
+  return {X,Y,L,R,T,B}; }
+// 1. two columns of sorted items
+function drawCols(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, gap=cp?6:12, cw=(w-3*gap)/2, top=gap, ch=h-2*gap;
+  [["LE","Leading","direction · people · change","blush"],["MA","Managing","plans · systems · control","sage"]].forEach(([k,lab,sub,col],i)=>{ const x=gap+i*(cw+gap); rrect(ctx,x,top,cw,ch,14,C["surface-2"],C.line,1.5); rrect(ctx,x,top,cw,cp?24:44,14,C[col]);
+    text(ctx,lab,x+cw/2,top+(cp?16:22),"#3b2b21",F(cp?12:15,800),"center"); if(!cp) text(ctx,sub,x+cw/2,top+38,"#3b2b21",F(10,600),"center");
+    const items=o.items.filter(it=>it[1]===k), cols=cp?1:2, iw=(cw-12)/cols, ih=cp?15:22, y0=top+(cp?30:54);
+    items.forEach((it,j)=>{ const cx=x+6+(j%cols)*iw, cy=y0+Math.floor(j/cols)*(ih+4); rrect(ctx,cx+2,cy,iw-4,ih,7,it[2]?C[col]:C.bad); text(ctx,it[0],cx+iw/2,cy+ih/2+4,"#3b2b21",F(cp?9:11),"center"); }); });
+}
+// 2. control chart
+function drawControl(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, A=o.A, T=o.T, b=o.B/100, top=Math.max(T*(1+b)*1.12, ...A)*1.18;
+  const ax=axes(ctx,w,h,{x0:-0.5,x1:5.5,y0:0,y1:top,xt:MONTHS.map((m,i)=>[i,m]),yf:v=>kfmt(v),yl:"sales",compact:cp}), {X,Y}=ax, bw=(X(1)-X(0))*0.55;
+  ctx.save(); ctx.fillStyle=C.sage; ctx.globalAlpha=0.25; ctx.fillRect(ax.L,Y(T*(1+b)),w-ax.L-ax.R,Y(T*(1-b))-Y(T*(1+b))); ctx.restore();
+  A.forEach((a,i)=>{ const out=Math.abs(a-T)/T>b+1e-9; rrect(ctx,X(i)-bw/2,Y(a),bw,Y(0)-Y(a),6,out?(a<T?C.terra:C.apricot):C.olive); if(!cp) text(ctx,kfmt(a),X(i),Y(a)-6,C.ink,M(10),"center"); if(out) text(ctx,"act",X(i),Y(a)-(cp?4:20),C.bad,F(cp?9:11,800),"center"); });
+  line(ctx,ax.L,Y(T),w-ax.R,Y(T),C.ink,2,[6,5]); text(ctx,`target ${kfmt(T)} ±${o.B}%`,w-ax.R-4,ax.T+(cp?8:10),C.ink,F(cp?9:11,800),"right");
+}
+// 3. scatter + fit
+function drawScatter(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, P=o.pts, ymax=Math.max(30,...P.map(p=>p[1]+2));
+  const {X,Y}=axes(ctx,w,h,{x0:1,x1:5,y0:0,y1:ymax,xl:"culture openness score (1–5)",yl:"ideas implemented per 100 staff",compact:cp});
+  const f=fitLine(P); if(f&&P.length>=3){ ctx.save(); ctx.beginPath(); ctx.rect(X(1),Y(ymax),X(5)-X(1),Y(0)-Y(ymax)); ctx.clip(); line(ctx,X(1),Y(f.a+f.b),X(5),Y(f.a+5*f.b),C.terra,2.5,[7,5]); ctx.restore(); }
+  P.forEach(([x,y],i)=>circle(ctx,X(x),Y(y),cp?3.5:5.5,i===P.length-1&&!cp&&o.hl?C.terra:C.olive,C.surface,1.5));
+  if(!P.length) text(ctx,"Survey a branch to add a point",w/2,h/2,C.muted,F(13),"center");
+  if(f&&P.length>=3&&!cp) text(ctx,`y = ${eqn(f)}x   r = ${f2(f.r)}`,X(1)+8,Y(ymax)+14,C.terra,M(12),"left");
+}
+// 4. funnel
+function drawFunnel(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, f=funnel(o.t,o.s,o.B), st=[["Ideas suggested",f.ideas,"blush"],["Passed screening",f.screened,"apricot"],["Prototypes tested",f.protos,"sage"],["Launched",f.launched,"olive"]];
+  const top=cp?8:12, bottom=cp?8:(h*0.22), rowH=(h-top-bottom)/4, mx=Math.max(1,f.ideas), cx=w*(cp?0.5:0.42), maxW=w*(cp?0.92:0.7);
+  st.forEach(([lab,n,col],i)=>{ const wid=Math.max(cp?30:44, maxW*Math.sqrt(n/mx)), y=top+i*rowH+2; rrect(ctx,cx-wid/2,y,wid,rowH-6,10,C[col]);
+    text(ctx,cp?`${n}`:`${lab}: ${n}`,cx,y+(rowH-6)/2+5,"#3b2b21",F(cp?11:13,800),"center"); });
+  if(!cp){ const y=h-bottom+18; text(ctx,`Cost: ${kfmt(f.cost)} (staff time ${kfmt(f.timeCost)} + tests ${kfmt(f.spend)})`,16,y,C.ink,F(12,700),"left"); text(ctx,`Extra sales: ${kfmt(f.gain)} a year`,16,y+20,C.ink,F(12,700),"left");
+    text(ctx,f.roi==null?"ROI: –":`ROI: ${f.roi>=0?"":"−"}${Math.abs(Math.round(f.roi))}%`,w-16,y+10,f.roi==null?C.muted:f.roi>=0?C.good:C.bad,F(16,800),"right"); }
+  return f; }
+// 5. style fit bars
+function drawStyles(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, wgt=SIT[o.s][1], fits=STYK.map(k=>[k,fitOf(k,wgt)]), best=fits.reduce((a,b)=>b[1]>a[1]?b:a)[0];
+  const L=cp?108:150, R=cp?52:60, T=cp?10:(h*0.16), rowH=(h-T-(cp?6:14))/4;
+  if(!cp){ ctx.font=F(13,800); const ls=wrapText(ctx,SIT[o.s][0],w-32); ls.slice(0,2).forEach((s,i)=>text(ctx,s,16,22+i*17,C.ink,F(13,800),"left")); }
+  fits.forEach(([k,v],i)=>{ const y=T+i*rowH, bh=Math.min(cp?16:26,rowH*0.62), yy=y+(rowH-bh)/2; text(ctx,PNAME[k][0],L-8,yy+bh/2+4,C.ink,F(cp?10:13,k===o.p?800:600),"right");
+    rrect(ctx,L,yy,w-L-R,bh,8,C.grid); rrect(ctx,L,yy,Math.max(8,(w-L-R)*v/100),bh,8,C[SCOL[k]]); if(k===o.p){ ctx.save(); ctx.strokeStyle=C.ink; ctx.lineWidth=2.5; ctx.beginPath(); ctx.roundRect?ctx.roundRect(L-2,yy-2,w-L-R+4,bh+4,9):ctx.rect(L-2,yy-2,w-L-R+4,bh+4); ctx.stroke(); ctx.restore(); }
+    text(ctx,`${v}%${k===best?" ★":""}`,w-R+6,yy+bh/2+4,k===best?C.ink:C.muted,M(cp?9:12),"left"); });
+  return {fits,best}; }
+// 6. engagement over a year
+function drawYear(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, runs=o.runs||[], upto=o.upto==null?12:o.upto;
+  const {X,Y}=axes(ctx,w,h,{x0:0,x1:12,y0:0,y1:100,xt:[[0,"start"],[3,"M3"],[6,"M6"],[9,"M9"],[12,"M12"]],xl:"month",yl:"staff engagement (0–100)",compact:cp});
+  runs.forEach(r=>{ const col=C[SCOL[r.k]]; ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=cp?2.2:3.2; ctx.lineJoin="round"; ctx.beginPath(); const n=Math.floor(upto), fr=upto-n;
+    for(let m=0;m<=n;m++){ if(m) ctx.lineTo(X(m),Y(r.E[m])); else ctx.moveTo(X(m),Y(r.E[m])); } if(n<12&&fr>0){ const e=r.E[n]+(r.E[n+1]-r.E[n])*fr; ctx.lineTo(X(n+fr),Y(e)); } ctx.stroke(); ctx.restore();
+    if(upto>=12) text(ctx,cp?PNAME[r.k][0].slice(0,4):`${PNAME[r.k][0]} · ${r.IMP[12]} ideas used`,X(12)-4,Y(r.E[12])-6,col,F(cp?9:11,800),"right"); });
+  if(!runs.length) text(ctx,"Choose a style and run a year",w/2,h/2,C.muted,F(13),"center");
+}
+
+/* ================= LAB STATE + WIRING ================= */
+const wireSorter = (listId, S, render) => $(listId).addEventListener("click",e=>{ const b=e.target.closest("button[data-k]"); if(!b||b.disabled) return; S.ans[b.dataset.k]=b.dataset.v; render(); });
+// 1. Leading or managing
+const ldS={order:[],ans:{}};
+function ldRender(){ sorter("ldList","ldOut",LDM,LDMN,ldS); if(ldC) ldC.redraw(); }
+function ldNew(){ ldS.order=shuffle(LDM.map((s,k)=>k)); ldS.ans={}; ldRender(); }
+wireSorter("ldList",ldS,ldRender); $("ldReset").addEventListener("click",ldNew);
+// 2. Control
+const mg={T:60000,B:5,F:MG_DEMO.slice()};
+function mgRender(){ const A=mgActual(mg.T,mg.F), b=mg.B/100, V=A.map(a=>a-mg.T), out=A.map(a=>Math.abs(a-mg.T)/mg.T>b+1e-9), wi=V.reduce((m,v,i)=>Math.abs(v)>Math.abs(V[m])?i:m,0), tot=V.reduce((a,v)=>a+v,0);
+  $("mgTo").textContent=eur(mg.T); $("mgBo").textContent=mg.B+"%";
+  setReadout($("mgOut"),[["Months within ±"+mg.B+"%",`${out.filter(x=>!x).length} of 6`],["Months to act on",`${out.filter(x=>x).length}`],["Total variance",eurM(tot)],["Biggest variance",`${MONTHS[wi]} ${pct(V[wi]/mg.T*100)}`]]);
+  $("mgWork").innerHTML=`${MONTHS[wi]}: variance = actual − target = ${eur(A[wi])} − ${eur(mg.T)} = <b>${eurM(V[wi])}</b> (${V[wi]<0?"adverse":"favourable"}); variance % = ${eurM(V[wi])} ÷ ${eur(mg.T)} × 100 = <b>${pct(V[wi]/mg.T*100)}</b>; ${out[wi]?"outside":"inside"} the ±${mg.B}% tolerance, so ${out[wi]?"investigate and take corrective action":"no action needed"}.`;
+  if(mgC) mgC.redraw(); }
+$("mgT").addEventListener("input",e=>{ mg.T=+e.target.value; mgRender(); }); $("mgB").addEventListener("input",e=>{ mg.B=+e.target.value; mgRender(); });
+$("mgRun").addEventListener("click",()=>{ mg.F=MONTHS.map(()=>Math.round((1+gauss(Math.random)*0.06)*1000)/1000); mgRender(); });
+// 3. Culture survey
+const cu={pts:[]};
+function cuRender(){ const P=cu.pts, f=fitLine(P);
+  setReadout($("cuOut"),[["Branches surveyed",`${P.length}`],["Slope",f&&P.length>=3?`${r1(f.b)} more ideas per +1 openness`:"need 3+"],["Correlation r",f&&P.length>=3?f2(f.r):"–"],["Last branch",P.length?`openness ${P[P.length-1][0]}, ${P[P.length-1][1]} ideas`:"–"]]);
+  $("cuWork").innerHTML = f&&P.length>=3? `Least-squares line: ideas = <b>${eqn(f)} × openness</b>. r = ${f2(f.r)}: ${Math.abs(f.r)>=0.8?"a strong":Math.abs(f.r)>=0.5?"a moderate":"a weak"} ${f.r>=0?"positive":"negative"} link. ${P.length<5?"Collect at least 5 branches before drawing conclusions.":"Branches with a more open culture tend to put more ideas into practice."}` : "Survey at least three branches to fit a line.";
+  if(cuC) cuC.redraw(); }
+$("cuAdd").addEventListener("click",()=>{ cu.pts.push(cuBranch(Math.random)); cuRender(); }); $("cuAdd5").addEventListener("click",()=>{ for(let i=0;i<5;i++) cu.pts.push(cuBranch(Math.random)); cuRender(); }); $("cuClear").addEventListener("click",()=>{ cu.pts=[]; cuRender(); });
+// 4. Innovation funnel
+const iv={t:5,s:3,B:24000};
+function ivRender(){ const f=funnel(iv.t,iv.s,iv.B); $("inTo").textContent=iv.t+"% of the week"; $("inSo").textContent=SAFE[iv.s]; $("inBo").textContent=eur(iv.B);
+  setReadout($("inOut"),[["Ideas suggested",`${f.ideas}`],["Launched",`${f.launched}`],["Conversion rate",f.ideas?pct(f.launched/f.ideas*100):"–"],["Return on investment",f.roi==null?"–":pct(f.roi)]]);
+  $("inWork").innerHTML=`Cost = staff time (40 × €40 000 × ${iv.t}% = ${eur(f.timeCost)}) + tests (${f.protos} × €4 000 = ${eur(f.spend)}) = <b>${eur(f.cost)}</b>. Gain = ${f.launched} × €80 000 = <b>${eur(f.gain)}</b>. ROI = (gain − cost) ÷ cost × 100 = <b>${f.roi==null?"–":pct(f.roi)}</b>.${f.protos<f.screened?` Budget limits testing: ${f.screened-f.protos} good ideas wait.`:""}`;
+  if(inC) inC.redraw(); }
+[["inT","t"],["inS","s"],["inB","B"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ iv[k]=+e.target.value; ivRender(); }));
+// 5. Styles
+const sy={s:0,p:"DE"};
+$("sySit").innerHTML=SIT.map((x,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${x[0]}</button>`).join("");
+$("syPick").innerHTML=STYK.map(k=>`<button data-k="${k}" aria-pressed="${k===sy.p}">${PNAME[k][0]}</button>`).join("");
+$("sySit").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sy.s=+b.dataset.i; pressGroup([...$("sySit").children],b); syRender(); });
+$("syPick").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sy.p=b.dataset.k; pressGroup([...$("syPick").children],b); syRender(); });
+function syRender(){ const w=SIT[sy.s][1], fits=STYK.map(k=>[k,fitOf(k,w)]), best=fits.reduce((a,b)=>b[1]>a[1]?b:a)[0], mine=fitOf(sy.p,w), sc=STY[sy.p];
+  setReadout($("syOut"),[["Your style",PNAME[sy.p][0]],["Fit",`${mine}%`],["Best fit",PNAME[best][0]],["Verdict",sy.p===best?"Good choice":mine>=fitOf(best,w)-8?"Close":"Rethink"]]);
+  $("syWork").innerHTML=`What matters here: ${w.map((v,i)=>v?`${DIMS[i]} ×${v}`:"").filter(Boolean).join(", ")}. ${PNAME[sy.p][0]} scores ${sc.map((v,i)=>`${DIMS[i]} ${v}`).join(", ")}. Fit = Σ(weight × score) ÷ (5 × Σ weights) = ${sc.reduce((a,v,i)=>a+v*w[i],0)} ÷ ${5*w.reduce((a,b)=>a+b,0)} = <b>${mine}%</b>.`;
+  if(syC) syC.redraw(); }
+// 6. A year
+const fs={k:"DE",runs:[]};
+$("fsPick").innerHTML=STYK.map(k=>`<button data-k="${k}" aria-pressed="${k===fs.k}">${PNAME[k][0]}</button>`).join("");
+$("fsPick").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; fs.k=b.dataset.k; pressGroup([...$("fsPick").children],b); });
+function fsRender(){ const r=fs.runs[fs.runs.length-1];
+  setReadout($("fsOut"), r? [["Style",fs.runs.length>1?"all four":PNAME[r.k][0]],["Engagement after 12 months",fs.runs.map(x=>`${PNAME[x.k][0].slice(0,4)} ${Math.round(x.E[12])}`).join(" · ")],["Ideas suggested",fs.runs.map(x=>`${PNAME[x.k][0].slice(0,4)} ${x.SUG[12]}`).join(" · ")],["Ideas put into practice",fs.runs.map(x=>`${PNAME[x.k][0].slice(0,4)} ${x.IMP[12]}`).join(" · ")]] : [["Run","Choose a style and run a year"]]);
+  $("fsWork").innerHTML = r? fs.runs.map(x=>`${PNAME[x.k][0]}: ${x.IMP[12]} of ${x.SUG[12]} ideas used = <b>${x.SUG[12]?pct(x.IMP[12]/x.SUG[12]*100):"–"}</b>`).join(" · ") : "";
+  if(fsC) fsC.redraw(); }
+$("fsRun").addEventListener("click",()=>{ fs.runs=[yearRun(fs.k,Math.random)]; fsRender(); });
+$("fsAll").addEventListener("click",()=>{ fs.runs=STYK.map(k=>yearRun(k,Math.random)); fsRender(); });
+
+/* ================= CREATE CANVASES ================= */
+let ldC=null, mgC=null, cuC=null, inC=null, syC=null, fsC=null;
+const hero = makeCanvas($("heroCanvas"), 0.8, 260, s => drawYear(s.ctx,s.w,s.h,{runs:YR_DEMO,upto:reduce?12:Math.min(12,(heroT*1.6)%16)}), 420);
+ldC = makeCanvas($("ldC"), 0.48, 250, s => drawCols(s.ctx,s.w,s.h,{items:Object.entries(ldS.ans).map(([k,v])=>[LDM[k][3],v,v===LDM[k][1]])}), 380);
+mgC = makeCanvas($("mgC"), 0.5, 250, s => drawControl(s.ctx,s.w,s.h,{T:mg.T,B:mg.B,A:mgActual(mg.T,mg.F)}), 400);
+cuC = makeCanvas($("cuC"), 0.55, 260, s => drawScatter(s.ctx,s.w,s.h,{pts:cu.pts,hl:true}), 420);
+inC = makeCanvas($("inC"), 0.6, 280, s => drawFunnel(s.ctx,s.w,s.h,iv), 440);
+syC = makeCanvas($("syC"), 0.45, 240, s => drawStyles(s.ctx,s.w,s.h,sy), 380);
+fsC = makeCanvas($("fsC"), 0.5, 260, s => drawYear(s.ctx,s.w,s.h,{runs:fs.runs}), 420);
+predC = makeCanvas($("predC"), 0.5, 180, s => { const ans=PRED[pd.k<0?0:pd.k][1];
+  if(pd.shown){ bg(s.ctx,s.w,s.h,C[PNAME[ans][2]]); text(s.ctx,PNAME[ans][0],s.w/2,s.h/2,"#3b2b21",F(s.w<380?22:28,800),"center"); s.ctx.font=F(12,600); wrapText(s.ctx,PNAME[ans][1],s.w-30).forEach((l,i)=>text(s.ctx,l,s.w/2,s.h/2+26+i*16,"#3b2b21",F(12,600),"center")); }
+  else { bg(s.ctx,s.w,s.h,C["surface-2"]); text(s.ctx,"?",s.w/2,s.h/2+18,C.muted,F(56),"center"); text(s.ctx,"The answer appears here",s.w/2,s.h-14,C.muted,F(11,600),"center"); } }, 300);
+pdNew();
+// Learn and infographic minis
+const MINI = {
+  cols:o=>s=>drawCols(s.ctx,s.w,s.h,{compact:true,items:LDM.map(x=>[x[3],x[1],true]),...o}),
+  control:o=>s=>drawControl(s.ctx,s.w,s.h,{compact:true,T:60000,B:5,A:mgActual(60000,MG_DEMO),...o}),
+  scatter:o=>s=>drawScatter(s.ctx,s.w,s.h,{compact:true,pts:CU_DEMO,...o}),
+  funnel:o=>s=>drawFunnel(s.ctx,s.w,s.h,{compact:true,t:5,s:4,B:40000,...o}),
+  styles:o=>s=>drawStyles(s.ctx,s.w,s.h,{compact:true,s:0,p:"AU",...o}),
+  year:o=>s=>drawYear(s.ctx,s.w,s.h,{compact:true,runs:YR_DEMO,...o}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, 0.62, 230, MINI[kind](o), 380); });
+document.querySelectorAll("canvas[data-mini]").forEach(el=>makeCanvas(el,0.75,200,s=>MINI[el.dataset.mini]({bgc:C["surface-2"]})(s)));
+ldNew(); mgRender(); cuRender(); ivRender(); syRender(); fsRender();
+/* ================= LOOP / THEME / START ================= */
+
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>
