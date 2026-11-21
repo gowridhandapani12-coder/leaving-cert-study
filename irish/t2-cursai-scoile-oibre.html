@@ -1,0 +1,1564 @@
+<title>Gaeilge: Topaic 2</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.sh-card{display:grid;gap:8px;padding:16px;align-content:start}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card ul{margin:0;padding-left:18px;font-size:.88rem;color:var(--muted);display:grid;gap:3px}
+.fbbox{padding:0 16px 14px}
+.predopts .btns button{min-width:100px}
+.ctl button[disabled]{opacity:.5}
+</style>
+
+<style>
+.ga{font-family:var(--f-display);font-size:1.08rem;line-height:1.45}
+.en{display:block;font-size:.82rem;color:var(--muted);font-family:var(--f-body)}
+.say{padding:12px 16px;display:grid;gap:8px;border-top:1px solid var(--line)}
+.say p{margin:0;padding:8px 12px;background:var(--surface-2);border-radius:10px}
+.cards2{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px}
+.cards2 button{text-align:left;max-width:100%;white-space:normal}
+.cards2 button.done{opacity:.45}
+.cards2 button.sel{outline:3px solid var(--terra)}
+.ctl select{width:100%}
+.qbank{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.qbank li{font-size:.92rem}
+.qbank li b{font-family:var(--f-display);font-weight:600}
+.qbank li span{color:var(--muted);font-size:.8rem}
+</style>
+<!-- ================= TOP BAR ================= -->
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 01-14.3 4.9M4 12a8 8 0 0114.3-4.9"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg></div>
+        <div style="min-width:0"><b>Cúrsaí Scoile agus Oibre</b><span>Leaving Cert Irish · Topaic 2</span></div>
+      </div>
+      
+      
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html">Business</a><a href="../maths/index.html">Maths</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html" class="on" aria-current="page">Irish</a><a href="../maths-enrichment/index.html">Maths Enrichment</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Phrase bank</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <details open><summary>Topaicí · Topics</summary><ol><li class="link"><a href="t1-an-scolaire-fein.html"><span class="mono">1</span>An Scoláire Féin agus a Thimpeallacht</a></li><li class="here"><span class="mono">2</span>Cúrsaí Scoile agus Oibre</li><li><span class="mono">3</span>An Ghaeilge Timpeall Orainn</li><li><span class="mono">4</span>Saol an Duine Óig</li><li><span class="mono">5</span>Na Meáin Chumarsáide</li></ol></details>
+      <details><summary>An Bhéaltriail · Oral (40%)</summary><ol><li><span class="mono">S</span>Sraith pictiúr</li><li><span class="mono">F</span>Léamh filíochta</li><li><span class="mono">C</span>An comhrá (see each topic)</li></ol></details>
+      <details><summary>Páipéar 1 &amp; 2 · Written</summary><ol><li><span class="mono">C1</span>Cluastuiscint</li><li><span class="mono">C2</span>Ceapadóireacht</li><li><span class="mono">L</span>Léamhthuiscint</li><li><span class="mono">P</span>Prós</li><li><span class="mono">Fi</span>Filíocht</li><li><span class="mono">LB</span>Litríocht bhreise (HL)</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon. Topics follow the Leaving Certificate Irish syllabus.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Topaic 2 · Topic 2</span>
+          <h1 style="margin-top:12px">Scoil, pointí<br>agus post.<br><em>School, points and a job.</em></h1>
+          <p class="lede">Your subjects, the school rules, college and the CAO, the job you'd like, and taking a phone message at work. Learn the phrases, master the grammar that catches people out (seacht n-ábhar, níos suimiúla, i m'innealtóir, dúirt sé go…), and practise answers you can actually say.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated path from school through the Leaving Cert and the CAO to college and a job, with Irish labels"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Goals ticked</span><b id="stLO">0/3</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Ón siollabas · From the syllabus</p><h2>Spriocanna · Goals</h2></div><p style="font-size:.88rem">Quoted from the syllabus (Topic 2), with an English summary. Tick each one when you're confident. Saved on this device.</p></div>
+        <p class="result" style="margin-bottom:10px"><span class="ga">"Baineann cúrsaí scoile agus fostaíochta go dlúth le saol an duine óig."</span> <span class="en">School and work matter a lot in a young person's life, so the syllabus wants you to talk about them, give your opinions and swap views.</span></p>
+        <ul class="lo-list" id="loList"></ul>
+        <p class="result" style="margin-top:10px">The syllabus groups this topic into: 2.1 Ábhair scoile agus scrúduithe (subjects and exams) · 2.2 Rialacha (rules) · 2.3 An Tríú Leibhéal (third level) · 2.4 Cúrsaí Oibre (work, including phone messages). At Higher Level you work on the same topics in more depth. Example phrases on this page marked "siollabas" come straight from the syllabus.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Survey the class, sort the rules, count your CAO points, find a career and pass on a message. Everything updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="abhair">
+        <div class="labhead"><span class="pill t">Suirbhé ábhar</span><p class="goal">Survey your year group: "Cén t-ábhar is fearr leat?" Ask ten students at a time and watch the percentages settle. Then say how many subjects you do and compare two of them.</p></div>
+        <div class="panel sim">
+          <canvas id="abC" aria-label="Graph of the percentage choosing each subject as their favourite as more students are asked"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Suirbhé</span><div class="btns"><button class="primary" id="abAsk">Ask 10 more students</button><button id="abAll">Ask 100</button><button id="abNew">New year group</button></div></div>
+            <div class="ctl"><label for="abN">Líon ábhar (subjects I do) <output id="abNo">7</output></label><input type="range" id="abN" min="1" max="10" step="1" value="7"></div>
+            <div class="ctl"><label for="abX">Ábhar A</label><select id="abX"></select></div>
+            <div class="ctl"><label for="abJ">…is more…</label><select id="abJ"></select></div>
+            <div class="ctl"><label for="abY">…than ábhar B</label><select id="abY"></select></div>
+          </div>
+          <div class="readout" id="abOut"></div>
+          <div class="say" id="abSay"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Slide the number of subjects from 6 to 7. Why does "ábhar" become "n-ábhar"?</div><div class="try"><b>2</b>Compare two of your own subjects. Which adjectives change in "níos …"?</div><div class="try"><b>3</b>After 200 students, report the winner in Irish: "Is fearr le …% de na daltaí …".</div></div>
+      </div>
+
+      <div class="lab" data-lab="rialacha" hidden>
+        <div class="labhead"><span class="pill t">Rialacha na scoile</span><p class="goal">Sort the school rules: is it something you're not allowed to do (Níl cead agat…) or something you must do (Caithfidh tú…)? Then give your opinion of the rule.</p></div>
+        <div class="panel sim">
+          <canvas id="rlC" aria-label="Two boxes: Níl cead agat (not allowed) and Caithfidh tú (must). Tap a box to place the selected rule."></canvas>
+          <div class="cards2" id="rlCards"></div>
+          <div class="controls">
+            <div class="ctl"><span class="lbl">Mo thuairim (my opinion)</span><div class="btns" id="rlO"><button data-o="1" aria-pressed="true">Tá ciall leis</button><button data-o="0" aria-pressed="false">Níl ciall ar bith leis</button></div></div>
+            <div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="rlReset">Shuffle &amp; reset</button></div></div>
+          </div>
+          <div class="say" id="rlSay"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Sort all twelve. Which word comes after "Níl cead agat" and "Caithfidh tú"?</div><div class="try"><b>2</b>Notice the word order: "tobac a chaitheamh", "an éide scoile a chaitheamh". The object comes first.</div><div class="try"><b>3</b>Pick the rule you like least and argue against it out loud for 30 seconds.</div></div>
+      </div>
+
+      <div class="lab" data-lab="triu" hidden>
+        <div class="labhead"><span class="pill t">Pointí CAO</span><p class="goal">Pick grades for seven subjects. Your best six count on the CAO points scale, with 25 bonus points for Higher Level Maths at H6 or better. Compare your total with an example course.</p></div>
+        <div class="panel sim">
+          <canvas id="caC" aria-label="Stacked bar of the points from your best six subjects against the points needed for the chosen course"></canvas>
+          <div class="controls" id="caGrades"></div>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Cúrsa (example course, illustrative points)</span><div class="btns" id="caCourse"></div></div></div>
+          <div class="readout" id="caOut"></div>
+          <div class="say" id="caSay"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Change Maths from H6 to H7. Why do you lose far more than 9 points?</div><div class="try"><b>2</b>Drop one subject to a low grade. Why does your total sometimes not change?</div><div class="try"><b>3</b>Say your plan out loud with "Tá súil agam go bhfaighidh mé na pointí…".</div></div>
+      </div>
+
+      <div class="lab" data-lab="obair" hidden>
+        <div class="labhead"><span class="pill t">Slite beatha</span><p class="goal">Say what kind of work you like. The chart ranks fourteen jobs by how well they match, and the Irish tells you what you'd like to be, with "i mo" + séimhiú.</p></div>
+        <div class="panel sim">
+          <canvas id="obC" aria-label="Bar chart of jobs ranked by how well they match your preferences"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="obA">Amuigh faoin aer (outdoors) <output id="obAo">5</output></label><input type="range" id="obA" min="0" max="10" step="1" value="5"></div>
+            <div class="ctl"><label for="obD">Le daoine (with people) <output id="obDo">5</output></label><input type="range" id="obD" min="0" max="10" step="1" value="5"></div>
+            <div class="ctl"><label for="obK">Cruthaitheach (creative) <output id="obKo">5</output></label><input type="range" id="obK" min="0" max="10" step="1" value="5"></div>
+            <div class="ctl"><label for="obT">Teicneolaíocht (technology) <output id="obTo">5</output></label><input type="range" id="obT" min="0" max="10" step="1" value="5"></div>
+          </div>
+          <div class="say" id="obSay"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Set "outdoors" to 10 and "technology" to 0. Which syllabus sentences appear?</div><div class="try"><b>2</b>Look at "i mo mhúinteoir" and "i m'altra". When does "mo" become "m'"?</div><div class="try"><b>3</b>Answer out loud: "Cén post ba mhaith leat amach anseo? Cén fáth?"</div></div>
+      </div>
+
+      <div class="lab" data-lab="teachtaireacht" hidden>
+        <div class="labhead"><span class="pill t">An guthphost</span><p class="goal">You work in an office. A caller leaves a voicemail for your manager, Máire. Pass the message on: change the pronoun, and use go / nach + the right tense.</p></div>
+        <div class="panel sim">
+          <canvas id="gpC" aria-label="Voicemail bubble with the caller's exact words, and below it the message you pass on, with the changed words highlighted"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="gpW">Cé a ghlaoigh? (who rang?)</label><select id="gpW"></select></div>
+            <div class="ctl"><label for="gpM">An teachtaireacht (message)</label><select id="gpM"></select></div>
+            <div class="ctl"><label for="gpT">Am (time)</label><select id="gpT"></select></div>
+          </div>
+          <div class="say" id="gpSay"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Switch the caller from a man to a woman. Which small words change?</div><div class="try"><b>2</b>Compare "Glaofaidh mé" with "go nglaofadh sé". What two things changed?</div><div class="try"><b>3</b>Make up your own message and pass it on in Irish.</div></div>
+      </div>
+
+      <div class="lab" data-lab="comhra" hidden>
+        <div class="labhead"><span class="pill t">An comhrá</span><p class="goal">Pick an oral exam question about school or work and build your answer from the phrases. The meters show length, range of tenses and linking words: a rough guide, not official marks.</p></div>
+        <div class="panel sim">
+          <canvas id="chC" aria-label="Three meters: length, tenses used and linking words in your answer"></canvas>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Ceist (question)</span><div class="btns" id="chQ"></div></div></div>
+          <div class="cards2" id="chP"></div>
+          <div class="say" id="chSay"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Build an answer that uses at least three tenses.</div><div class="try"><b>2</b>Say it aloud and time it. Aim for about 30 seconds per question.</div><div class="try"><b>3</b>Swap in your own details: your subjects, your course, your dream job.</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of Topic 2: Cúrsaí Scoile agus Oibre"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>The topic at a glance</h2></div><p>Four areas from the syllabus, with a must-know phrase for each.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three pictures</p><h2>Path, points, message</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="path"></canvas><h3>Tar éis na scoile</h3><p>Ardteist → CAO → coláiste nó printíseacht → post.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="cao"></canvas><h3>Na sé ábhar is fearr</h3><p>Only your best six subjects count, plus 25 bonus points for HL Maths (H6 or better).</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="msg"></canvas><h3>Dúirt sé go…</h3><p>Passing on a message: change the pronoun, and go / nach + the conditional.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Where the marks are</p><h2>The exam out of 600</h2></div><p>From the syllabus's assessment section (Higher and Ordinary Level).</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Gaeilge timpeall orainn</p><h2>Irish, school and work</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+<!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How Irish is assessed, how this topic comes up, and practice with feedback.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Irish: oral 40%, Paper 1 27%, Paper 2 33%">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="145.8 364.4" transform="rotate(-90 80 80)"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--blush)" stroke-width="26" stroke-dasharray="97.2 364.4" stroke-dashoffset="-145.8" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">40%</text><text x="80" y="96" text-anchor="middle" class="dn2">is the oral</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>An Bhéaltriail (oral) · 240 marks, 40%</b><p>Common to Higher and Ordinary Level, around Easter of 6th year. This topic is the heart of the comhrá (conversation).</p></div></div>
+            <div><i style="background:var(--blush)"></i><div><b>Páipéar 1 · 160 marks, 27%</b><p>Cluastuiscint (listening) 60 + Ceapadóireacht (writing) 100.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Páipéar 2 · 200 marks, 33%</b><p>HL: two reading comprehensions 50 + 50, prose 30, poetry 30, extra literature 40. (OL: prose 50, poetry 50.)</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top tips for this topic</h3>
+          <ol class="tips">
+            <li><b>Know your own subjects</b> in Irish, and say how many: "Tá seacht n-ábhar ar siúl agam" (siollabas). 7–10 add an urú.</li>
+            <li>Always give a <b>reason</b>: "Is fearr liom Bitheolaíocht mar…". Compare with <b>níos … ná</b>: "Tá Béarla níos suimiúla ná Stair."</li>
+            <li>For rules: <b>Níl cead agat…</b> (not allowed) and <b>Caithfidh tú…</b> (must), then your view: "Tá ciall leis an riail sin" (siollabas).</li>
+            <li>Plans after school need the <b>future and conditional</b>: "Rachaidh mé…", "Ba mhaith liom…", "Tá súil agam go bhfaighidh mé na pointí" (siollabas).</li>
+            <li>Jobs: <b>i mo + séimhiú</b> (i mo mhúinteoir), <b>i m'</b> before a vowel or fh (i m'altra, i m'fheirmeoir).</li>
+            <li>Passing on a message: <b>Dúirt sé go / nach…</b> + the conditional for things that will happen: "Dúirt sé nach mbeadh sé ag an gcruinniú" (siollabas).</li>
+            <li>In the oral, <b>keep talking</b>: if you don't know a word, describe it another way.</li>
+            <li>The tasks here are practice tasks, not official SEC papers.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Question words</h2></div><p>Question words you'll hear in the oral and see on the papers.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Uimhreacha agus gramadach</p><h2>Numbers &amp; grammar trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="btns" id="qtOpts" style="margin-top:8px"></div>
+          <div id="paFb" style="margin-top:10px"></div>
+          <div class="btns" style="margin-top:8px"><button id="paNext">Next question</button></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Cén cheist? (Which question?)</h2></div></div>
+          <canvas id="predC" aria-label="Speech bubble with an answer; the matching question appears after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" id="predBtns"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next answer</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+<div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Habits that earn marks</p><h2>Oral &amp; writing skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">What examiners reward in the oral and in writing. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Irish words and grammar terms for this topic, with English. Search in Irish or English.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: teaghlach, family, urú…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= PHRASE BANK ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Phrase bank</h2></div><p>The phrases worth learning for this topic, with English. Learn three from each group.</p></div>
+      <div class="sheet" id="qbank"></div>
+      <footer>
+        <p>Based on the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/gaeilge/" target="_blank" rel="noopener">Leaving Certificate Irish syllabus</a> (Siollabais Nuashonraithe na hArdteistiméireachta), Topic 2 "Cúrsaí Scoile agus Oibre" and the assessment section. Goals are quoted from the syllabus; phrases marked "siollabas" are its examples. CAO grade points follow the CAO common points scale; course points, survey data, job matches and meter scores are illustrative.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("ga-theme","auto"), font = store.get("ga-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("ga-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("ga-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  abhair:'<path d="M4 4h12a3 3 0 013 3v13H7a3 3 0 01-3-3z"/><path d="M8 8h7M8 12h7M8 16h4"/>',
+  rialacha:'<path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/>',
+  triu:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6"/>',
+  obair:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 13h18"/>',
+  teachtaireacht:'<path d="M5 3h4l2 5-3 2a11 11 0 006 6l2-3 5 2v4a2 2 0 01-2 2A17 17 0 013 5a2 2 0 012-2z"/>',
+  comhra:'<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
+  radio:'<rect x="3" y="8" width="18" height="12" rx="2"/><circle cx="8" cy="14" r="3"/><path d="M14 12h4M14 16h4M7 8l9-5"/>',
+  tv:'<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  map:'<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  phone:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"abhair", name:"Ábhair · Subjects & exams", short:"Your subjects, how many, which you prefer and why.", tint:"var(--blush)"},
+  {id:"rialacha", name:"Rialacha · Rules", short:"School rules: not allowed, must do, and your opinion.", tint:"var(--apricot)"},
+  {id:"triu", name:"An Tríú Leibhéal · After school", short:"College, courses, the CAO and the points you hope for.", tint:"var(--sage)"},
+  {id:"obair", name:"Cúrsaí Oibre · Work", short:"Jobs, what kind of work you'd like, and asking questions at work.", tint:"var(--cream)"},
+  {id:"teachtaireacht", name:"Teachtaireachtaí · Messages", short:"Phone calls and voicemail: taking and passing on a message.", tint:"var(--blush)"},
+  {id:"comhra", name:"An Comhrá · The conversation", short:"Turning all of it into strong oral answers in several tenses.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+// Spriocanna quoted from the syllabus (Topic 2), with English
+const LO = [
+  ["abhair","Bheith inniúil ar thuiscint a bhaint as cineálacha éagsúla Gaeilge labhartha agus scríofa bunaithe ar an ábhar seo. <span class='en'>Understand different kinds of spoken and written Irish on this topic.</span>"],
+  ["comhra","Bheith ábalta labhairt go muiníneach i ngnáthshuíomhanna cumarsáide ar scoil agus ar láthair na hoibre, agus plé a dhéanamh ar chúrsaí scoile agus ar shlite beatha. <span class='en'>Speak confidently in everyday situations at school and at work, and discuss school matters and careers.</span>"],
+  ["triu","Bheith inniúil ar thascanna scríbhneoireachta a chomhlíonadh bunaithe ar an ábhar seo. <span class='en'>Complete writing tasks on this topic.</span>"],
+];
+const LO_HEAD = {abhair:"Spriocanna, Topaic 2",comhra:"Spriocanna, Topaic 2",triu:"Spriocanna, Topaic 2"};
+
+/* ---------- language data ---------- */
+const UNITS = ["","aon","dhá","trí","ceithre","cúig","sé","seacht","ocht","naoi","deich"];
+// séimhiú (lenition) and urú (eclipsis) on the first letter of a noun
+function lenH(w){ const c=w[0], d=w[1]||""; if("bcdfgmpt".includes(c) && d!=="h") return c+"h"+w.slice(1); if(c==="s" && "aeiouáéíóúlnr".includes(d)) return "sh"+w.slice(1); return w; }
+function ecl(w){ const c=w[0]; if("aeiouáéíóú".includes(c)) return "n-"+w; const m={b:"m",c:"g",d:"n",f:"bh",g:"n",p:"b",t:"d"}[c]; return m? m+w : w; }
+// number + noun: 1 noun amháin, 2 dhá + séimhiú, 3–6 + séimhiú, 7–10 + urú
+function numNoun(n,w){ if(n===1) return w+" amháin"; if(n<=6) return UNITS[n]+" "+lenH(w); return UNITS[n]+" "+ecl(w); }
+const NOUNS = [["ábhar","subject"],["ceacht","lesson"],["páipéar","paper"],["teanga","language"],["scrúdú","exam"],["múinteoir","teacher"],["leabhar","book"],["dalta","student"]];
+// subjects: [Irish, English, survey share, colour]
+const SUBJ = [["Béarla","English",0.22,"--terra"],["Bitheolaíocht","Biology",0.2,"--apricot"],["Mata","Maths",0.16,"--olive"],["Gaeilge","Irish",0.14,"--sage"],["Stair","History",0.13,"--blush"],["Ealaín","Art",0.15,"--muted"]];
+const SUBJ_ALL = ["Béarla","Gaeilge","Mata","Fraincis","Spáinnis","Stair","Tíreolaíocht","Bitheolaíocht","Fisic","Ceimic","Gnó","Ealaín","Ceol","Eacnamaíocht"];
+const SUBJ_EN = {Béarla:"English",Gaeilge:"Irish",Mata:"Maths",Fraincis:"French",Spáinnis:"Spanish",Stair:"History",Tíreolaíocht:"Geography",Bitheolaíocht:"Biology",Fisic:"Physics",Ceimic:"Chemistry",Gnó:"Business",Ealaín:"Art",Ceol:"Music",Eacnamaíocht:"Economics"};
+// adjectives: [base, comparative, English, distractors]
+const ADJ = [["suimiúil","suimiúla","interesting",["suimiúlaí","suimiúile"]],["deacair","deacra","difficult",["deacaire","deacraí"]],["éasca","éasca","easy",["éascaí","éascú","éascacha"]],["leadránach","leadránaí","boring",["leadránaigh","leadránacha"]],["úsáideach","úsáidí","useful",["úsáideacha","úsáidigh"]],["tábhachtach","tábhachtaí","important",["tábhachtacha","tábhachtaigh"]],["taitneamhach","taitneamhaí","enjoyable",["taitneamhacha","taitneamhaigh"]],["praiticiúil","praiticiúla","practical",["praiticiúlaí","praiticiúile"]]];
+// school rules: [English, Irish verbal-noun phrase, 0 = Níl cead agat, 1 = Caithfidh tú, syllabus?]
+const RULES = [["smoke","tobac a chaitheamh",0,1],["use your phone in class","d'fhón póca a úsáid sa rang",0],["chew gum","guma coganta a ithe",0],["run in the corridors","rith sna conairí",0],["leave the school at lunchtime","an scoil a fhágáil ag am lóin",0],["wear jewellery","seodra a chaitheamh",0],["be late for class","bheith déanach don rang",0],["wear the school uniform","an éide scoile a chaitheamh",1],["do your homework every night","d'obair bhaile a dhéanamh gach oíche",1],["bring in a note when you're absent","nóta a thabhairt isteach má bhíonn tú as láthair",1],["show respect to the teachers","meas a léiriú ar na múinteoirí",1],["be in class on time","bheith sa rang in am",1]];
+// CAO common points scale
+const HPTS = {H1:100,H2:88,H3:77,H4:66,H5:56,H6:46,H7:37,H8:0}, OPTS_ = {O1:56,O2:46,O3:37,O4:28,O5:20,O6:12,O7:0,O8:0};
+const GRADES = [...Object.keys(HPTS),...Object.keys(OPTS_)];
+const gradePts = (g,maths) => (HPTS[g]!=null? HPTS[g] : OPTS_[g]) + (maths && HPTS[g]!=null && HPTS[g]>=46 ? 25 : 0);
+const CAO_SUBJ = ["Mata","Gaeilge","Béarla","Bitheolaíocht","Fraincis","Gnó","Stair"];
+// example courses (illustrative points, not real cut-offs)
+const COURSES = [["Innealtóireacht","Engineering",480],["Altranas","Nursing",430],["Gnó agus Teangacha","Business & Languages",400],["Ríomhaireacht","Computing",360],["Ealaín agus Dearadh","Art & Design",300]];
+// jobs: [Irish, English, "i mo …" form, profile: outdoors, people, creative, technology]
+const JOBS = [["feirmeoir","farmer","i m'fheirmeoir",[10,2,3,3]],["garraíodóir","gardener","i mo gharraíodóir",[9,3,6,1]],["múinteoir","teacher","i mo mhúinteoir",[2,10,6,4]],["altra","nurse","i m'altra",[1,10,2,4]],["innealtóir","engineer","i m'innealtóir",[5,4,6,9]],["ríomhchláraitheoir","programmer","i mo ríomhchláraitheoir",[0,3,6,10]],["dearthóir","designer","i mo dhearthóir",[1,4,10,7]],["gruagaire","hairdresser","i mo ghruagaire",[0,9,8,1]],["garda","garda","i mo gharda",[6,9,2,4]],["siúinéir","carpenter","i mo shiúinéir",[5,4,7,3]],["cuntasóir","accountant","i mo chuntasóir",[0,5,1,8]],["ceoltóir","musician","i mo cheoltóir",[2,7,10,4]],["leictreoir","electrician","i mo leictreoir",[5,4,3,7]],["dochtúir","doctor","i mo dhochtúir",[1,10,3,6]]];
+// phone messages: caller, and message templates (direct → reported)
+const CALLERS = [["Mac Uí Shé","m","Mr Ó Sé"],["Bean Uí Bhriain","f","Mrs O'Brien"],["Pól ón ngaráiste","m","Pól from the garage"],["Siobhán ón mbanc","f","Siobhán from the bank"]];
+const PRON = {m:{s:"sé",le:"leis",ar:"air",en:"he",enO:"him"}, f:{s:"sí",le:"léi",ar:"uirthi",en:"she",enO:"her"}};
+const TIMES = [["a dó","2 o'clock"],["a trí","3 o'clock"],["a ceathair","4 o'clock"],["a cúig","5 o'clock"]];
+const MSGS = [
+  {en:"won't be at the meeting", t:0, d:()=>"Ní bheidh mé ag an gcruinniú.", r:p=>`nach mbeadh ${p.s} ag an gcruinniú`, w:p=>[`go mbeadh ${p.s} ag an gcruinniú`,`nach mbeidh ${p.s} ag an gcruinniú`,`nach mbeadh mé ag an gcruinniú`], ch:p=>[["Ní bheidh","nach mbeadh"],["mé",p.s]], enR:p=>`${p.en} wouldn't be at the meeting`, sy:1},
+  {en:"would like to meet Máire", t:1, d:t=>`Ba mhaith liom bualadh le Máire inniu ar ${t}.`, r:(p,t)=>`gur mhaith ${p.le} bualadh leat inniu ar ${t}`, w:(p,t)=>[`gur mhaith liom bualadh leat inniu ar ${t}`,`nár mhaith ${p.le} bualadh leat inniu ar ${t}`,`go bhfuil maith ${p.le} bualadh leat inniu ar ${t}`], ch:p=>[["Ba mhaith liom","gur mhaith "+p.le],["le Máire","leat"]], enR:(p,t)=>`${p.en}'d like to meet you today at ${t}`, sy:1},
+  {en:"is delayed in traffic", t:0, d:()=>"Tá moill orm sa trácht.", r:p=>`go raibh moill ${p.ar} sa trácht`, w:p=>[`go bhfuil moill orm sa trácht`,`nach raibh moill ${p.ar} sa trácht`,`go mbeidh moill ${p.ar} sa trácht`], ch:p=>[["Tá","go raibh"],["orm",p.ar]], enR:p=>`${p.en} was delayed in the traffic`, sy:1},
+  {en:"will ring back later", t:1, d:t=>`Glaofaidh mé ar ais ar ${t}.`, r:(p,t)=>`go nglaofadh ${p.s} ar ais ar ${t}`, w:(p,t)=>[`go glaofaidh ${p.s} ar ais ar ${t}`,`nach nglaofadh ${p.s} ar ais ar ${t}`,`go nglaofadh mé ar ais ar ${t}`], ch:p=>[["Glaofaidh","go nglaofadh"],["mé",p.s]], enR:(p,t)=>`${p.en} would ring back at ${t}`},
+  {en:"sent another order", t:0, d:()=>"Chuir mé ordú eile chugaibh.", r:p=>`gur chuir ${p.s} ordú eile chugainn`, w:p=>[`go chuir ${p.s} ordú eile chugainn`,`gur chuir mé ordú eile chugaibh`,`nár chuir ${p.s} ordú eile chugainn`], ch:p=>[["Chuir mé","gur chuir "+p.s],["chugaibh","chugainn"]], enR:p=>`${p.en} sent us another order`, sy:1},
+  {en:"is sick and won't be in", t:0, d:()=>"Táim tinn inniu, agus ní bheidh mé ag obair.", r:p=>`go raibh ${p.s} tinn inniu, agus nach mbeadh ${p.s} ag obair`, w:p=>[`go bhfuil ${p.s} tinn inniu, agus nach mbeidh ${p.s} ag obair`,`go raibh mé tinn inniu, agus nach mbeadh mé ag obair`,`nach raibh ${p.s} tinn inniu, agus go mbeadh ${p.s} ag obair`], ch:p=>[["Táim","go raibh "+p.s],["ní bheidh mé","nach mbeadh "+p.s]], enR:p=>`${p.en} was sick today and wouldn't be working`},
+];
+// Oral questions with answer chunks: [Irish, English, tense: l/c/f/n (present, past, future, conditional), linker?]
+const ORAL = [
+  {q:"Inis dom faoi na hábhair atá á ndéanamh agat.", en:"Tell me about the subjects you're doing.", p:[["Tá seacht n-ábhar ar siúl agam.","I'm doing seven subjects. (siollabas)","l"],["Déanaim Gaeilge, Béarla, Mata, Fraincis, Bitheolaíocht, Stair agus Gnó.","I do Irish, English, Maths, French, Biology, History and Business.","l"],["Déanaim gach ábhar ag an ardleibhéal ach amháin Mata.","I do every subject at higher level except Maths.","l",1],["Tá Béarla suimiúil, mar is breá liom an litríocht.","English is interesting, because I love literature. (siollabas pattern)","l",1],["Thosaigh mé ag déanamh Fraincise sa chéad bhliain.","I started doing French in first year.","c"],["Dá mbeadh an rogha agam arís, dhéanfainn Ceol.","If I had the choice again, I'd do Music.","n"]]},
+  {q:"Cén t-ábhar is fearr leat? Cén fáth?", en:"What's your favourite subject? Why?", p:[["Is í an Bhitheolaíocht an t-ábhar is fearr liom.","Biology is my favourite subject.","l"],["Tá sí níos suimiúla ná aon ábhar eile.","It's more interesting than any other subject.","l"],["Taitníonn na turgnaimh sa tsaotharlann go mór liom.","I really like the experiments in the lab.","l"],["B'fhearr liom Béarla ná Stair, mar níl suim agam i ndátaí!","I'd prefer English to History, because I've no interest in dates! (siollabas pattern)","n",1],["Fuair mé marc maith i scrúdú na Nollag.","I got a good mark in the Christmas exam.","c"],["Déanfaidh mé mo dhícheall sa scrúdú i mí an Mheithimh.","I'll do my best in the exam in June.","f"]]},
+  {q:"Cad é do bharúil faoi na rialacha i do scoil?", en:"What do you think of the rules in your school?", p:[["Tá a lán rialacha inár scoil.","There are a lot of rules in our school.","l"],["Níl cead tobac a chaitheamh, agus tá ciall leis an riail sin.","Smoking isn't allowed, and that rule makes sense. (siollabas)","l",1],["Níl cead againn ár bhfóin a úsáid sa rang.","We're not allowed to use our phones in class.","l"],["Ní luíonn an riail faoin éide scoile le réasún, i mo thuairim.","The uniform rule isn't reasonable, in my opinion. (siollabas pattern)","l"],["Athraíodh na rialacha anuraidh.","The rules were changed last year.","c"],["Dá mbeinn i mo phríomhoide, ligfinn do dhaltaí na séú bliana a gcuid éadaí féin a chaitheamh.","If I were principal, I'd let sixth years wear their own clothes.","n",1]]},
+  {q:"Cad ba mhaith leat a dhéanamh tar éis na hArdteistiméireachta?", en:"What would you like to do after the Leaving Cert?", p:[["Ba mhaith liom dul ar an ollscoil.","I'd like to go to university.","n"],["Tá suim agam san innealtóireacht.","I'm interested in engineering.","l"],["Tá cúrsa an-mhaith i nGaillimh.","There's a very good course in Galway. (siollabas)","l"],["Cúrsa ceithre bliana atá ann.","It's a four-year course. (siollabas pattern)","l"],["Tá súil agam go bhfaighidh mé na pointí, ach tá mé in amhras.","I hope I'll get the points, but I'm doubtful. (siollabas)","f",1],["Labhair mé leis an treoirchomhairleoir an tseachtain seo caite.","I spoke to the guidance counsellor last week.","c"],["Mura bhfaighidh mé na pointí, déanfaidh mé printíseacht.","If I don't get the points, I'll do an apprenticeship.","f",1]]},
+  {q:"Cén post ba mhaith leat amach anseo?", en:"What job would you like in the future?", p:[["Ba mhaith liom bheith i m'innealtóir.","I'd like to be an engineer.","n"],["B'fhearr liom bheith ag obair amuigh faoin aer.","I'd prefer to be working outdoors. (siollabas)","n"],["Ní thaitneodh obair oifige liom.","I wouldn't like office work. (siollabas)","n"],["Is maith liom bheith ag réiteach fadhbanna.","I like solving problems.","l"],["Rinne mé taithí oibre le comhlacht tógála san idirbhliain.","I did work experience with a building company in transition year.","c"],["Thaitin sé go mór liom, cé go raibh na laethanta fada.","I really enjoyed it, although the days were long.","c",1],["Tuilleann innealtóirí tuarastal maith freisin.","Engineers earn a good salary too.","l",1]]},
+];
+const LINKERS = ["ach","mar","agus","freisin","áfach","cé go","nuair","mura"];
+
+/* ---------- glossary: [term, English, definition/notes, topic] ---------- */
+const GLOSS = [
+  ["ábhar / ábhair","subject / subjects","Cé mhéad ábhar atá á ndéanamh agat? Tá seacht n-ábhar ar siúl agam. (siollabas)","abhair"],
+  ["scrúdú / scrúduithe","exam / exams","Scrúdú na Nollag (Christmas exam), na réamhscrúduithe (the mocks).","abhair"],
+  ["an Ardteistiméireacht","the Leaving Certificate","Often shortened to an Ardteist. Tar éis na hArdteistiméireachta: after the Leaving Cert.","abhair"],
+  ["an Teastas Sóisearach","the Junior Certificate","Now the Junior Cycle (an tSraith Shóisearach).","abhair"],
+  ["ardleibhéal / gnáthleibhéal","higher level / ordinary level","Déanaim Gaeilge ag an ardleibhéal.","abhair"],
+  ["suimiúil → níos suimiúla","interesting → more interesting","Tá an Fhraincis níos suimiúla. (siollabas)","abhair"],
+  ["deacair → níos deacra","difficult → more difficult","Tá Mata níos deacra ná Béarla.","abhair"],
+  ["leadránach","boring","Níos leadránaí: more boring.","abhair"],
+  ["an bhreischéim","comparative degree","níos + comparative + ná: níos suimiúla ná (more interesting than).","abhair"],
+  ["obair bhaile","homework","Bíonn an iomarca obair bhaile againn!","abhair"],
+  ["clár ama","timetable","Tá ocht gceacht ar an gclár ama gach lá.","abhair"],
+  ["ní thuigim","I don't understand","Ní thuigim é sin. (siollabas) Asking for help: An féidir leat cabhrú liom? (siollabas)","abhair"],
+  ["riail / rialacha","rule / rules","Tá ciall leis an riail sin. (siollabas)","rialacha"],
+  ["níl cead agat","you're not allowed","Níl cead tobac a chaitheamh. (siollabas) The verbal noun comes after the object: tobac a chaitheamh.","rialacha"],
+  ["caithfidh tú","you must","Caithfidh tú an éide scoile a chaitheamh.","rialacha"],
+  ["éide scoile","school uniform","Caithimid éide scoile.","rialacha"],
+  ["príomhoide","principal","Dá mbeinn i mo phríomhoide…: If I were principal…","rialacha"],
+  ["luíonn sé le réasún","it stands to reason","Luíonn sé sin le réasún. (siollabas) Negative: ní luíonn sé le réasún.","rialacha"],
+  ["as láthair","absent","Má bhíonn tú as láthair, caithfidh tú nóta a thabhairt isteach.","rialacha"],
+  ["ainm briathartha","verbal noun","The -ing/to form: a chaitheamh, a dhéanamh, a úsáid, rith.","rialacha"],
+  ["an tríú leibhéal","third level","College, university, institute of technology, technological university.","triu"],
+  ["ollscoil","university","Ba mhaith liom dul ar an ollscoil.","triu"],
+  ["Institiúid Teicneolaíochta","Institute of Technology","B'fhearr liom dul go dtí an Institiúid Teicneolaíochta ná an Ollscoil. (siollabas)","triu"],
+  ["cúrsa","course","Cúrsa trí bliana atá ann. (siollabas)","triu"],
+  ["pointí","points","Tá súil agam go bhfaighidh mé na pointí. (siollabas)","triu"],
+  ["CAO","Central Applications Office","Lár-Oifig Iontrála: where you apply for college courses. Your best six subjects count.","triu"],
+  ["céim","degree","Céim san eolaíocht: a science degree.","triu"],
+  ["teastas","certificate","Tá sé ar intinn agam teastas a bhaint amach sa dara bliain. (siollabas)","triu"],
+  ["printíseacht","apprenticeship","Déanfaidh mé printíseacht mar leictreoir.","triu"],
+  ["treoirchomhairleoir","guidance counsellor","Labhair mé leis an treoirchomhairleoir.","triu"],
+  ["bliain saor","gap year","Ba mhaith liom bliain saor a ghlacadh.","triu"],
+  ["post / poist","job / jobs","Post páirtaimseartha: a part-time job.","obair"],
+  ["slí bheatha / slite beatha","career / careers","Cén slí bheatha ba mhaith leat?","obair"],
+  ["láthair na hoibre","the workplace","From the syllabus goal: ar scoil agus ar láthair na hoibre.","obair"],
+  ["amuigh faoin aer","outdoors","B'fhearr liom bheith ag obair amuigh faoin aer. (siollabas)","obair"],
+  ["obair oifige","office work","Ní thaitneodh obair oifige liom. (siollabas)","obair"],
+  ["i mo …","as a … (I'd like to be a …)","Ba mhaith liom bheith i mo mhúinteoir. mo lenites; m' before a vowel or fh: i m'altra, i m'fheirmeoir.","obair"],
+  ["taithí oibre","work experience","Rinne mé taithí oibre san idirbhliain.","obair"],
+  ["tuarastal","salary","Tuarastal maith: a good salary. (pá: pay, wages)","obair"],
+  ["ragobair","overtime","An gá dom ragobair a dhéanamh? (siollabas)","obair"],
+  ["fostaí / fostóir","employee / employer","Fostaíocht: employment.","obair"],
+  ["teachtaireacht","message","An bhféadfainn teachtaireacht a thabhairt di? (siollabas)","teachtaireacht"],
+  ["guthphost","voicemail","Ar thriail tú do ghuthphost? (siollabas)","teachtaireacht"],
+  ["cruinniú","meeting","Ag an gcruinniú: at the meeting (ag an + urú).","teachtaireacht"],
+  ["caint indíreach","reported speech","Dúirt sé go / nach…: Dúirt sé nach mbeadh sé ag an gcruinniú. (siollabas)","teachtaireacht"],
+  ["go / nach","that / that … not","Both cause an urú: go mbeadh, nach mbeadh. In the past (regular verbs): gur / nár + séimhiú.","teachtaireacht"],
+  ["moill","delay","Tá moill air sa trácht. (siollabas)","teachtaireacht"],
+  ["faoi láthair","at the moment","Níl sí san oifig faoi láthair. (siollabas)","teachtaireacht"],
+  ["gan mhoill","soon, without delay","Beidh sí chugat gan mhoill. (siollabas)","teachtaireacht"],
+  ["béaltriail","oral exam","240 marks, 40% of the exam, around Easter of 6th year.","comhra"],
+  ["comhrá","conversation","The longest part of the oral: questions about you and your life.","comhra"],
+  ["séimhiú","lenition","Adding h: dhá cheacht, i mo mhúinteoir.","comhra"],
+  ["urú","eclipsis","Adding a letter in front: seacht n-ábhar, ocht gceacht, go mbeadh.","comhra"],
+  ["an aimsir fháistineach","future tense","Rachaidh mé, gheobhaidh mé, déanfaidh mé.","comhra"],
+  ["an modh coinníollach","conditional mood","Ba mhaith liom, bheinn, d'oibreoinn: I would…","comhra"],
+];
+GLOSS.forEach((g,i)=>{ GLOSS[i]=g; });
+const GLOSS_OBJ = GLOSS.map(([t,aka,d,topic])=>({t,aka,d,topic,id:"g-"+t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-")+"-"+t.length}));
+GLOSS.length=0; GLOSS_OBJ.forEach(g=>GLOSS.push(g));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["lenition","séimhiú"],["eclipsis","urú"],["reported speech","caint indíreach"],["comparative","an bhreischéim"],["verbal noun","ainm briathartha"],["guidance counsellor","treoirchomhairleoir"],["apprenticeship","printíseacht"],["oral exam","béaltriail"],["conditional","an modh coinníollach"],["voicemail","guthphost"],["work experience","taithí oibre"]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rr(ctx,x,y,w,h,r){ if(w<0){ x+=w; w=-w; } if(h<0){ y+=h; h=-h; } r=Math.max(0,Math.min(r,h/2,w/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function arrowHead(ctx,x,y,dx,dy,col,s=8){ ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x+dx*s,y+dy*s); ctx.lineTo(x-dx*s*0.6-dy*s*0.7,y-dy*s*0.6+dx*s*0.7); ctx.lineTo(x-dx*s*0.6+dy*s*0.7,y-dy*s*0.6-dx*s*0.7); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const nf = (x,d=0) => { const s=(Math.round(x*10**d)/10**d).toFixed(d); const [i,f]=s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f?"."+f:""); };
+const eur = x => "€"+nf(x, Math.abs(x-Math.round(x))>0.004?2:0);
+const niceStep = (range,n) => { const r=range/Math.max(1,n), p=10**Math.floor(Math.log10(r)), m=r/p; return (m<=1?1:m<=2?2:m<=5?5:10)*p; };
+const tick = v => String(+v.toFixed(6));
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+// Axes: returns mapping functions. o: x0,x1,y0,y1,xl,yl,compact
+function frame(ctx,w,h,o){
+  const cp=o.compact, L=cp?36:50, R=12, T=cp?12:16, B=cp?24:34, fs=cp?9:11;
+  const X=v=>L+(v-o.x0)/(o.x1-o.x0)*(w-L-R), Y=v=>h-B-(v-o.y0)/(o.y1-o.y0)*(h-B-T);
+  const xs=o.xt||niceStep(o.x1-o.x0, Math.max(3,Math.floor((w-L)/70))), ys=o.yt||niceStep(o.y1-o.y0, Math.max(3,Math.floor((h-B)/45)));
+  for(let v=Math.ceil(o.x0/xs)*xs; v<=o.x1+1e-9; v+=xs){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,tick(v),X(v),h-B+(cp?11:14),C.muted,M(fs),"center"); }
+  for(let v=Math.ceil(o.y0/ys)*ys; v<=o.y1+1e-9; v+=ys){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,tick(v),L-5,Y(v)+3,C.muted,M(fs),"right"); }
+  const y0=Y(Math.max(o.y0,Math.min(o.y1,0)));
+  line(ctx,L,y0,w-R,y0,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(o.xl) text(ctx,o.xl,w-R,h-B+(cp?22:30),C.muted,F(cp?10:12),"right");
+  if(o.yl) text(ctx,o.yl,L+6,T+(cp?10:12),C.muted,F(cp?10:12),"left");
+  return {X,Y,L,R,T,B};
+}
+function curve(ctx,f,x0,x1,X,Y,col,lw=2.5,dash,clip){ ctx.save(); if(clip){ ctx.beginPath(); ctx.rect(clip[0],clip[1],clip[2],clip[3]); ctx.clip(); } ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); const n=120; for(let i=0;i<=n;i++){ const x=x0+(x1-x0)*i/n, y=f(x); if(i) ctx.lineTo(X(x),Y(y)); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore(); }
+
+/* ================= MODELS + DRAWINGS ================= */
+function surveyRun(seed,share,N){ const r=rng(seed), c=share.map(()=>0), h=[]; for(let n=1;n<=N;n++){ let x=r(), j=0; while(j<share.length-1 && x>share[j]){ x-=share[j]; j++; } c[j]++; if(n%10===0) h.push({n,c:[...c]}); } return h; }
+const SV_DEMO = surveyRun(5,SUBJ.map(s=>s[2]),200);
+function pointerTap(el,fn){ el.addEventListener("pointerdown",e=>{ const r=el.getBoundingClientRect(); fn(e.clientX-r.left,e.clientY-r.top); }); }
+const wrapText = (ctx,txt,maxW) => { const words=txt.split(" "), lines=[]; let cur=""; words.forEach(wd=>{ const t=cur?cur+" "+wd:wd; if(ctx.measureText(t).width>maxW && cur){ lines.push(cur); cur=wd; } else cur=t; }); lines.push(cur); return lines; };
+// Path after school: stages along a curved road, dot moves with o.t (0..1)
+const STAGES = [["Scoil","school"],["Ardteist","Leaving Cert"],["CAO","applications"],["Coláiste","college"],["Post","a job"]];
+function drawJourney(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, n=STAGES.length, L=cp?24:44, R=w-(cp?24:44);
+  const P=k=>{ const x=L+(R-L)*k/(n-1), y=h*0.5+Math.sin(k/(n-1)*Math.PI*2)*h*(cp?0.16:0.2); return [x,y]; };
+  ctx.save(); ctx.strokeStyle=C.line; ctx.lineWidth=cp?10:16; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.beginPath(); for(let i=0;i<=80;i++){ const k=i/80*(n-1), [x,y]=P(k); if(i) ctx.lineTo(x,y); else ctx.moveTo(x,y); } ctx.stroke();
+  ctx.strokeStyle=C.terra; ctx.lineWidth=cp?3:4; ctx.setLineDash([8,8]); ctx.beginPath(); const kk=(o.t||0)*(n-1); for(let i=0;i<=80;i++){ const k=i/80*kk, [x,y]=P(k); if(i) ctx.lineTo(x,y); else ctx.moveTo(x,y); } ctx.stroke(); ctx.restore();
+  const cols=[C.blush,C.apricot,C.sage,C.olive,C.terra];
+  STAGES.forEach(([ga,en],k)=>{ const [x,y]=P(k), up=k%2===0; circle(ctx,x,y,cp?9:14,k<=kk+0.01?cols[k]:C.surface,C.ink,2);
+    text(ctx,ga,x,up?y-(cp?16:40):y+(cp?24:36),C.ink,F(cp?10:14,800),"center"); if(!cp) text(ctx,en,x,up?y-24:y+52,C.muted,F(11,600),"center"); });
+  const [dx,dy]=P(kk); circle(ctx,dx,dy,cp?5:8,C.terra,C.surface,2);
+  if(!cp) text(ctx,"Tar éis na scoile · after school",w/2,h-10,C.muted,F(12,700),"center");
+}
+// Survey of favourite subjects
+function drawSurvey(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const hist=o.hist||[], nmax=Math.max(50,hist.length? hist[hist.length-1].n:0);
+  const fr=frame(ctx,w,h,{x0:0,x1:nmax,y0:0,y1:50,xl:"students asked",yl:"% choosing",compact:o.compact});
+  SUBJ.forEach((p,k)=>{ if(hist.length<1) return; ctx.save(); ctx.strokeStyle=C[p[3].slice(2)]; ctx.lineWidth=o.compact?2:3; ctx.beginPath(); hist.forEach((pt,i)=>{ const v=pt.c[k]/pt.n*100; if(i) ctx.lineTo(fr.X(pt.n),fr.Y(Math.min(50,v))); else ctx.moveTo(fr.X(pt.n),fr.Y(Math.min(50,v))); }); ctx.stroke(); ctx.restore();
+    const last=hist[hist.length-1]; if(!o.compact) text(ctx,p[0],Math.min(w-14,fr.X(last.n)+4),fr.Y(Math.min(50,last.c[k]/last.n*100))+4,C[p[3].slice(2)],F(11,800),fr.X(last.n)>w-110?"right":"left"); });
+  if(!hist.length) text(ctx,"Ask some students to start the survey",w/2,h/2,C.muted,F(13),"center"); }
+// Two sorting boxes
+function drawBins(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, gap=cp?8:12, bw=(w-3*gap)/2, top=cp?8:12, bh=h-2*top, P=[];
+  [["Níl cead agat…","not allowed",C.blush,0],["Caithfidh tú…","you must",C.sage,1]].forEach(([ga,en,col,cat],i)=>{ const x=gap+i*(bw+gap); P.push([x,top,bw,bh,cat]); rr(ctx,x,top,bw,bh,14); ctx.fillStyle=C["surface-2"]; ctx.fill(); ctx.strokeStyle=o.armed?C.terra:C.line; ctx.lineWidth=o.armed?2.5:1.5; ctx.stroke();
+    text(ctx,ga,x+bw/2,top+(cp?16:24),C.ink,F(cp?11:15,800),"center"); if(!cp) text(ctx,en,x+bw/2,top+42,C.muted,F(11),"center");
+    const items=(o.placed||[]).filter(p=>p.cat===cat); items.forEach((p,j)=>{ const cols=cp?1:2, cw=(bw-16)/cols, cx=x+8+(j%cols)*cw, cy=top+(cp?26:54)+Math.floor(j/cols)*(cp?17:26); rr(ctx,cx+2,cy,cw-4,cp?14:20,6); ctx.fillStyle=p.ok?col:C.bad; ctx.fill();
+      ctx.save(); ctx.font=F(cp?8:11); let lab=p.en; while(ctx.measureText(lab).width>cw-14 && lab.length>4) lab=lab.slice(0,-2); if(lab!==p.en) lab=lab.trim()+"…"; ctx.restore(); text(ctx,lab,cx+cw/2,cy+(cp?10:14),"#3b2b21",F(cp?8:11),"center"); }); });
+  return P; }
+// CAO points: stacked bar of best six + target line
+function caoCalc(grades){ const rows=grades.map((g,i)=>({i,g,pts:gradePts(g,i===0)})); const sorted=[...rows].sort((a,b)=>b.pts-a.pts); const best=sorted.slice(0,6); return {rows,best,total:best.reduce((a,r)=>a+r.pts,0),bonus:(HPTS[grades[0]]!=null&&HPTS[grades[0]]>=46&&best.some(r=>r.i===0))?25:0}; }
+function drawCAO(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, c=caoCalc(o.grades), mx=625, L=cp?14:24, Wd=w-2*L, X=v=>L+v/mx*Wd, by=cp?h*0.34:h*0.32, bh=cp?30:46;
+  text(ctx,`${c.total} pointe`,L,cp?18:28,C.ink,F(cp?13:18,800),"left");
+  if(!cp) text(ctx,"best six subjects",L+150,28,C.muted,F(12,600),"left");
+  const cols=[C.terra,C.apricot,C.sage,C.olive,C.blush,C.warn]; let x=L;
+  c.best.forEach((r,k)=>{ const ww=X(r.pts)-L; if(ww>0){ rr(ctx,x,by,ww-1,bh,6); ctx.fillStyle=cols[k]; ctx.fill(); if(ww>(cp?26:44)) text(ctx,cp?String(r.pts):(CAO_SUBJ[r.i].slice(0,4)+" "+r.pts),x+ww/2,by+bh/2+4,"#3b2b21",F(cp?9:11),"center"); } x+=ww; });
+  const tgt=o.target; if(tgt!=null){ const tx=X(tgt); line(ctx,tx,by-12,tx,by+bh+12,C.ink,2,[5,4]); text(ctx,`${tgt}`,tx,by+bh+(cp?24:28),C.ink,F(cp?10:12,800),"center"); }
+  // dropped subject
+  const dropped=c.rows.filter(r=>!c.best.includes(r)); const y2=by+bh+(cp?40:56);
+  if(dropped.length) text(ctx,`Not counted: ${dropped.map(r=>CAO_SUBJ[r.i]+" ("+r.pts+")").join(", ")}`,L,y2,C.muted,F(cp?9:12,600),"left");
+  if(!cp){ const y3=y2+24; text(ctx,c.bonus?"Mata: +25 bonus points (HL, H6 or better)":"Mata: no bonus (needs HL at H6 or better)",L,y3,c.bonus?C.good:C.muted,F(12,700),"left");
+    for(let v=0; v<=600; v+=100){ line(ctx,X(v),by+bh+4,X(v),by+bh+8,C.muted,1); text(ctx,String(v),X(v),by-6,C.muted,M(10),"center"); } }
+  return c; }
+// Job match bars
+function jobScores(pref){ return JOBS.map((j,i)=>({i,s:Math.max(0,100-j[3].reduce((a,v,k)=>a+Math.abs(v-pref[k]),0)*2.5)})).sort((a,b)=>b.s-a.s); }
+function drawJobs(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, sc=jobScores(o.pref).slice(0,cp?4:6), L=cp?92:150, R=cp?34:54, T=cp?8:14, rowH=(h-2*T)/sc.length;
+  sc.forEach((r,k)=>{ const y=T+k*rowH, bh=Math.min(cp?16:24,rowH*0.65), yy=y+(rowH-bh)/2; text(ctx,JOBS[r.i][0],L-8,yy+bh/2+4,C.ink,F(cp?10:13,k===0?800:600),"right");
+    rr(ctx,L,yy,w-L-R,bh,8); ctx.fillStyle=C.grid; ctx.fill(); rr(ctx,L,yy,Math.max(8,(w-L-R)*r.s/100),bh,8); ctx.fillStyle=k===0?C.terra:k<3?C.apricot:C.sage; ctx.fill();
+    text(ctx,`${Math.round(r.s)}%`,w-R+6,yy+bh/2+4,C.muted,M(cp?9:11),"left"); });
+  return sc; }
+// Voicemail → reported message
+function msgParts(ci,mi,ti){ const [who,g]=CALLERS[ci], p=PRON[g], m=MSGS[mi], t=TIMES[ti][0]; return {who,p,m,t,direct:m.d(t),rep:`Ghlaoigh ${who} agus dúirt ${p.s} ${m.r(p,t)}.`,ch:m.ch(p)}; }
+function drawMsg(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, M_=msgParts(o.c,o.m,o.t), pad=cp?10:18, bw=w-2*pad;
+  const box=(y,label,txt,col,hl)=>{ ctx.font=F(cp?11:15); const lines=wrapText(ctx,txt,bw-28), lh=cp?15:21, bh=lines.length*lh+(cp?26:34);
+    rr(ctx,pad,y,bw,bh,14); ctx.fillStyle=col; ctx.fill(); text(ctx,label,pad+14,y+(cp?13:18),"#3b2b21",F(cp?9:11,800),"left");
+    lines.forEach((l,i)=>{ let x=pad+14; const yy=y+(cp?28:40)+i*lh; l.split(" ").forEach(wd=>{ const hit=hl.some(hw=>hw.split(" ").some(s=>s.replace(/[.,]/g,"")===wd.replace(/[.,]/g,""))); ctx.font=F(cp?11:15,hit?900:600); const ww=ctx.measureText(wd+" ").width; if(hit){ ctx.fillStyle="rgba(180,103,63,.28)"; ctx.fillRect(x-2,yy-(cp?11:15),ww-2,cp?14:19); } ctx.fillStyle="#3b2b21"; ctx.fillText(wd,x,yy); x+=ww; }); });
+    return y+bh; };
+  const y1=box(pad,"🔊 Guthphost · voicemail",`"${M_.direct}"`,C.blush,M_.ch.map(c=>c[0]));
+  const ay=y1+(cp?6:10); arrowHead(ctx,w/2,ay+(cp?8:12),0,1,C.terra,cp?7:10); line(ctx,w/2,ay,w/2,ay+(cp?6:10),C.terra,3);
+  box(ay+(cp?16:24),"✉ Don bhainisteoir · to Máire",M_.rep,C.sage,M_.ch.map(c=>c[1]));
+  return M_; }
+function oralScore(qi,sel){ const P=ORAL[qi].p, chunks=sel.map(i=>P[i]), words=chunks.reduce((a,c)=>a+c[0].split(" ").length,0), tenses=new Set(chunks.map(c=>c[2])).size, links=chunks.filter(c=>c[3]||LINKERS.some(l=>(" "+c[0].toLowerCase()+" ").includes(" "+l+" "))).length;
+  return {words, tenses, links, m:[Math.min(1,words/45), tenses/4, Math.min(1,links/3)]}; }
+function drawMeters(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, s=o.s, rows=[["Fad · length",s.m[0],`${s.words} focal`],["Aimsirí · tenses",s.m[1],`${s.tenses} of 4`],["Nascadh · linking",s.m[2],`${s.links}`]], L=cp?10:20, rowH=(h-20)/3;
+  rows.forEach(([lab,v,val],i)=>{ const y=10+i*rowH; text(ctx,lab,L,y+(cp?14:18),C.ink,F(cp?11:13,800),"left"); if(!cp) text(ctx,val,w-L,y+18,C.muted,M(12),"right"); const ty=y+(cp?20:28), tw=w-2*L; rr(ctx,L,ty,tw,cp?10:16,8); ctx.fillStyle=C.grid; ctx.fill(); rr(ctx,L,ty,Math.max(6,tw*v),cp?10:16,8); ctx.fillStyle=v>0.75?C.olive:v>0.4?C.apricot:C.terra; ctx.fill(); }); }
+/* ================= ROUTER ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "teaghlach", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+$("loList").innerHTML = LO.map(([t,s],i)=>`<li><label><input type="checkbox" id="lo${i}"><span class="mono">${i+1}</span><span>${s} <small style="color:var(--muted)">· ${LO_HEAD[t]}</small></span></label></li>`).join("");
+const loState=store.get("ga2-lo",{});
+LO.forEach((x,i)=>{ const id="lo"+i; $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("ga2-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=LO.filter((x,i)=>$("lo"+i).checked).length; $("stLO").textContent=`${lo}/${LO.length}`; $("stLOb").style.width=(lo/LO.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("ga2-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  abhair:{ vis:[["survey",{hist:SV_DEMO}]], cap:"An illustrative survey of favourite subjects: with more students asked, the percentages settle down.",
+    keys:[["7","Counting subjects: Tá seacht n-ábhar ar siúl agam (siollabas). 3–6 lenite (trí cheacht), 7–10 eclipse (ocht gceacht, seacht n-ábhar)."],["⇄","Preferences: B'fhearr liom Béarla ná Stair (siollabas). Is fearr liom Ceol."],["↑","Comparing: Tá an Fhraincis níos suimiúla (siollabas). níos + comparative + ná: níos deacra ná, níos éasca ná."]],
+    f:"Tá [ábhar] níos [suimiúla] ná [ábhar]", mistake:"\"Tá Mata níos deacair.\" Use the comparative form after níos: níos deacra, níos suimiúla, níos leadránaí." },
+  rialacha:{ vis:[["bins",{placed:[{en:"smoke",cat:0,ok:true},{en:"chew gum",cat:0,ok:true},{en:"wear the uniform",cat:1,ok:true},{en:"be on time",cat:1,ok:true}]}]], cap:"Two kinds of rule: things you can't do and things you must do.",
+    keys:[["✕","Níl cead tobac a chaitheamh (siollabas). Níl cead agat d'fhón póca a úsáid sa rang."],["!","Caithfidh tú an éide scoile a chaitheamh. Caithfidh tú bheith sa rang in am."],["?","Opinion: Tá ciall leis an riail sin. Luíonn sé sin le réasún (siollabas). Apology: Ní raibh fúm cur isteach ort (siollabas)."]],
+    f:"Níl cead agat [rud] a [dhéanamh] · Caithfidh tú [rud] a [dhéanamh]", mistake:"English word order: \"Níl cead agat a chaitheamh tobac.\" The object comes first: \"tobac a chaitheamh\"." },
+  triu:{ vis:[["cao",{grades:["H3","H2","H3","H4","H4","H5","O2"],target:430}]], cap:"CAO points: only your best six subjects count, plus 25 bonus points for HL Maths at H6 or better.",
+    keys:[["🎓","B'fhearr liom dul go dtí an Institiúid Teicneolaíochta ná an Ollscoil. Tá sé níos gaire dom (siollabas)."],["📚","Tá cúrsa an-mhaith i nGaillimh. Cúrsa trí bliana atá ann (siollabas)."],["🤞","Tá súil agam go bhfaighidh mé na pointí, ach tá mé in amhras (siollabas)."]],
+    f:"Ba mhaith liom [cúrsa] a dhéanamh i [áit + urú]", mistake:"\"Tá súil agam go gheobhaidh mé…\". After go use the dependent form + urú: go bhfaighidh mé." },
+  obair:{ vis:[["jobs",{pref:[2,8,6,5]}]], cap:"Jobs ranked against what you like: outdoors, people, creative, technology (illustrative match).",
+    keys:[["⚒","B'fhearr liom bheith ag obair amuigh faoin aer. Ní thaitneodh obair oifige liom (siollabas)."],["👤","Ba mhaith liom bheith i mo mhúinteoir · i m'altra · i m'fheirmeoir: mo lenites, m' before a vowel or fh."],["?","At work: An gá dom ragobair a dhéanamh? An bhfuil cead agam an veain a thiomáint? (siollabas)"]],
+    f:"Ba mhaith liom bheith i mo [phost + séimhiú]", mistake:"\"Ba mhaith liom bheith i mo múinteoir.\" mo lenites: i mo mhúinteoir. Before a vowel: i m'innealtóir." },
+  teachtaireacht:{ vis:[["msg",{c:0,m:0,t:1}]], cap:"Ghlaoigh Mac Uí Shé agus dúirt sé nach mbeadh sé ag an gcruinniú (siollabas).",
+    keys:[["☎","Taking a call: Níl sí san oifig faoi láthair. An bhféadfainn teachtaireacht a thabhairt di? (siollabas)"],["→","Passing it on: Dúirt sé go / nach… with an urú: go mbeadh, nach mbeadh. Ní bheidh → nach mbeadh."],["↺","Change the pronoun: mé → sé / sí, liom → leis / léi, orm → air / uirthi."]],
+    f:"Dúirt sé/sí go/nach [briathar + urú] …", mistake:"Keeping the original words: \"Dúirt sé ní bheidh mé ann.\" Change it: \"Dúirt sé nach mbeadh sé ann.\"" },
+  comhra:{ vis:[["meter",{q:3,sel:[0,1,2,3,4,5,6]}]], cap:"A strong answer: about 50 words, three tenses, and linking words.",
+    keys:[["+","Answer, then add: a detail, an opinion, a reason. Aim for 4–6 sentences per question."],["⏱","Plans need the future and conditional: rachaidh mé, ba mhaith liom, dá bhfaighinn…"],["↔","Link with ach, mar, agus, freisin, áfach, cé go, mura."]],
+    f:"Freagra + sonra + tuairim + cúis", mistake:"One-line answers (\"Tá seacht n-ábhar agam.\"). The examiner can only reward what you say." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  ["abhair","2.1 Ábhair scoile agus scrúduithe","var(--blush)","Your subjects, opinions, preferences, apologies and asking for help.","Tá seacht n-ábhar ar siúl agam. (siollabas)"],
+  ["rialacha","2.2 Rialacha","var(--apricot)","Understanding rules, giving your opinion, apologising.","Tá ciall leis an riail sin. (siollabas)"],
+  ["triu","2.3 An Tríú Leibhéal","var(--sage)","College choices, interests, courses, advice and hopes.","Tá súil agam go bhfaighidh mé na pointí. (siollabas)"],
+  ["obair","2.4 Cúrsaí Oibre","var(--cream)","Work preferences, instructions, messages, apologies and questions at work.","Ní thaitneodh obair oifige liom. (siollabas)"],
+];
+$("cases").innerHTML = CASES.map(([i,n,tn,d,q])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${n}</h3></div><p>${d}</p><p class="ga"><i>${q}</i></p></div>`).join("");
+$("bars").innerHTML = [["An Bhéaltriail (oral)",240,"terra"],["Páipéar 2",200,"sage"],["Ceapadóireacht (P1)",100,"blush"],["Cluastuiscint (P1)",60,"apricot"]].map(([n,v,c])=>`<div class="barrow"><span><b>${n}</b></span><div class="track"><i style="width:${(v/240*100).toFixed(1)}%;background:var(--${c})"></i></div><span class="v">${v}</span></div>`).join("") + `<p class="result">Total 600. The oral alone is worth 40%, and school, college and work come up in almost every comhrá.</p>`;
+const AROUND = [
+  ["tv","TG4 & Raidió na Gaeltachta","Listen to real Irish about school, exams and work: the best free listening practice for the cluastuiscint.",[["Cluastuiscint","real"]],"var(--blush)"],
+  ["phone","Careers with Irish","Teaching, translation, broadcasting, journalism and the public service all use Irish every day.",[["Slite beatha","real"]],"var(--apricot)"],
+  ["map","An Ghaeltacht","Summer courses in the Gaeltacht: many students first think in Irish there, and some work there as leaders.",[["Coláistí samhraidh","real"]],"var(--sage)"],
+  ["radio","Irish in college","Many colleges offer Irish, or courses with Irish, and some courses are taught through Irish.",[["An tríú leibhéal","neutral"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+const QBANK = {
+  abhair:[["Tá seacht n-ábhar ar siúl agam. (siollabas)","I'm doing seven subjects."],["Ceapaim go bhfuil sé suimiúil. (siollabas)","I think it's interesting."],["B'fhearr liom Béarla ná Stair. (siollabas)","I'd prefer English to History."],["Tá an Fhraincis níos suimiúla. (siollabas)","French is more interesting."],["Tá brón orm faoi bheith déanach. (siollabas)","I'm sorry for being late."],["An féidir leat cabhrú liom? (siollabas)","Can you help me?"],["Ní thuigim é sin. (siollabas)","I don't understand that."],["Níor chuala mé riamh faoi… (siollabas)","I never heard of…"]],
+  rialacha:[["Níl cead tobac a chaitheamh. (siollabas)","Smoking isn't allowed."],["Tá ciall leis an riail sin. (siollabas)","That rule makes sense."],["Luíonn sé sin le réasún. (siollabas)","That stands to reason."],["Ní raibh fúm cur isteach ort. (siollabas)","I didn't mean to disturb you."],["Caithfidh tú an éide scoile a chaitheamh.","You must wear the school uniform."]],
+  triu:[["B'fhearr liom dul go dtí an Institiúid Teicneolaíochta ná an Ollscoil. (siollabas)","I'd prefer to go to the Institute of Technology than the University."],["Tá suim agam san fheirmeoireacht. (siollabas)","I'm interested in farming."],["Tá cúrsa an-mhaith i nGaillimh. (siollabas)","There's a very good course in Galway."],["Cúrsa trí bliana atá ann. (siollabas)","It's a three-year course."],["An molfá dom an cúrsa seo a dhéanamh? (siollabas)","Would you recommend I do this course?"],["Tá súil agam go bhfaighidh mé na pointí, ach tá mé in amhras. (siollabas)","I hope I'll get the points, but I'm doubtful."]],
+  obair:[["B'fhearr liom bheith ag obair amuigh faoin aer. (siollabas)","I'd prefer to work outdoors."],["Ní thaitneodh obair oifige liom. (siollabas)","I wouldn't like office work."],["An bhféadfá insint dom faoin sórt oibre a dhéanann tú? (siollabas)","Could you tell me about the kind of work you do?"],["Freagair an fón, le do thoil. (siollabas)","Answer the phone, please."],["An gá dom ragobair a dhéanamh? (siollabas)","Do I have to do overtime?"],["Ba mhaith liom bheith i mo mhúinteoir.","I'd like to be a teacher."]],
+  teachtaireacht:[["An bhféadfainn teachtaireacht a thabhairt di? (siollabas)","Could I give her a message?"],["Ghlaoigh Mac Uí Shé agus dúirt sé nach mbeadh sé ag an gcruinniú. (siollabas)","Mr Ó Sé rang and said he wouldn't be at the meeting."],["Dúirt sí gur mhaith léi bualadh leat inniu ag a trí. (siollabas)","She said she'd like to meet you today at three."],["Níl sí san oifig faoi láthair. (siollabas)","She's not in the office at the moment."],["Beidh sí chugat gan mhoill. (siollabas)","She'll be with you shortly."],["An dteastaíonn uait labhairt le duine ar bith eile? (siollabas)","Do you want to speak to anyone else?"]],
+  comhra:[["Ar an gcéad dul síos…","First of all…"],["Chomh maith leis sin…","As well as that…"],["Mar sin féin…","Even so…"],["Is é an rud is fearr liom faoi ná…","The thing I like best about it is…"],["Dá bhfaighinn na pointí…","If I got the points…"]],
+};
+$("qbank").innerHTML = Object.entries(QBANK).map(([k,rows])=>`<div class="panel fcell"><span class="pill">${tname(k)}</span><ul class="qbank">${rows.map(([g,e])=>`<li><b>${g}</b><br><span>${e}</span></li>`).join("")}</ul></div>`).join("") + `<div class="panel fcell"><span class="pill a">Uimhreacha + ainmfhocal</span><span class="big">ábhar amháin · dhá ábhar · trí ábhar · seacht n-ábhar · ocht n-ábhar</span><dl><dt>Séimhiú (2–6)</dt><dd>dhá cheacht · trí pháipéar · sé theanga</dd><dt>Urú (7–10)</dt><dd>seacht gceacht · ocht bpáipéar · deich dteanga</dd><dt>CAO</dt><dd>H1 100 · H2 88 · H3 77 · H4 66 · H5 56 · H6 46 · H7 37 · O1 56 · O2 46 · O3 37 · O4 28 · O5 20 · O6 12 · +25 HL Maths (H6+)</dd></dl></div>`;
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"abhair",label:"Ábhair",col:"var(--blush)",leaves:[["Líon","seacht n-ábhar"],["Tuairim","Ceapaim go bhfuil…"],["Rogha","B'fhearr liom X ná Y"],["níos","níos suimiúla ná"]]},
+  {id:"rialacha",label:"Rialacha",col:"var(--apricot)",leaves:[["Níl cead","…tobac a chaitheamh"],["Caithfidh tú","…an éide a chaitheamh"],["Tuairim","Tá ciall leis"]]},
+  {id:"triu",label:"An tríú leibhéal",col:"var(--sage)",leaves:[["Ollscoil / IT","B'fhearr liom…"],["Cúrsa","cúrsa trí bliana"],["Pointí","na sé ábhar is fearr"],["Dóchas","Tá súil agam go…"]]},
+  {id:"obair",label:"Cúrsaí oibre",col:"var(--cream)",leaves:[["Rogha","amuigh faoin aer"],["i mo…","i mo mhúinteoir"],["Ceisteanna","An gá dom…?"]]},
+  {id:"teachtaireacht",label:"Teachtaireachtaí",col:"var(--blush)",leaves:[["Guthphost","voicemail"],["Dúirt sé go…","+ urú"],["mé → sé/sí","change pronoun"]]},
+  {id:"comhra",label:"An comhrá",col:"var(--sage)",leaves:[["Fad","4–6 abairtí"],["Aimsirí","4 aimsir"],["Nascadh","ach, mar"],["40%","An bhéaltriail"]]},
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Scoil</text><text x="${cx}" y="${cy+22}" text-anchor="middle">agus obair</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["abhair","I'm doing seven subjects.","Tá seacht n-ábhar ar siúl agam. (siollabas)"],
+  ["abhair","Which numbers add an urú to the noun? Which add a séimhiú?","7–10 add an urú (seacht n-ábhar, ocht gceacht). 2–6 add a séimhiú (dhá cheacht, trí pháipéar)."],
+  ["abhair","French is more interesting.","Tá an Fhraincis níos suimiúla. (siollabas)"],
+  ["abhair","Comparatives: deacair, éasca, leadránach, úsáideach.","níos deacra · níos éasca · níos leadránaí · níos úsáidí"],
+  ["abhair","I'd prefer English to History.","B'fhearr liom Béarla ná Stair. (siollabas)"],
+  ["abhair","I'm sorry for being late.","Tá brón orm faoi bheith déanach. (siollabas) Also: Gabhaim pardún agaibh."],
+  ["abhair","Can you help me? / I don't understand that.","An féidir leat cabhrú liom? / Ní thuigim é sin. (siollabas)"],
+  ["rialacha","Smoking isn't allowed.","Níl cead tobac a chaitheamh. (siollabas)"],
+  ["rialacha","You must wear the school uniform.","Caithfidh tú an éide scoile a chaitheamh."],
+  ["rialacha","That rule makes sense.","Tá ciall leis an riail sin. (siollabas) Also: Luíonn sé sin le réasún."],
+  ["rialacha","Word order: \"to use your phone\" after Níl cead agat…","…d'fhón póca a úsáid: the object comes before a + verbal noun."],
+  ["rialacha","I didn't mean to disturb you.","Ní raibh fúm cur isteach ort. (siollabas)"],
+  ["triu","I'd prefer the Institute of Technology to the University.","B'fhearr liom dul go dtí an Institiúid Teicneolaíochta ná an Ollscoil. (siollabas)"],
+  ["triu","It's a three-year course.","Cúrsa trí bliana atá ann. (siollabas)"],
+  ["triu","I hope I'll get the points.","Tá súil agam go bhfaighidh mé na pointí. (siollabas)"],
+  ["triu","How many subjects count for CAO points?","Your best six, plus 25 bonus points for Higher Level Maths at H6 or better."],
+  ["triu","Would you recommend this course to me?","An molfá dom an cúrsa seo a dhéanamh? (siollabas)"],
+  ["triu","apprenticeship / guidance counsellor","printíseacht / treoirchomhairleoir"],
+  ["obair","I'd prefer to work outdoors.","B'fhearr liom bheith ag obair amuigh faoin aer. (siollabas)"],
+  ["obair","I wouldn't like office work.","Ní thaitneodh obair oifige liom. (siollabas)"],
+  ["obair","I'd like to be a teacher / an engineer.","Ba mhaith liom bheith i mo mhúinteoir / i m'innealtóir."],
+  ["obair","Do I have to do overtime?","An gá dom ragobair a dhéanamh? (siollabas)"],
+  ["obair","work experience / salary","taithí oibre / tuarastal"],
+  ["teachtaireacht","Could I give her a message?","An bhféadfainn teachtaireacht a thabhairt di? (siollabas)"],
+  ["teachtaireacht","He said he wouldn't be at the meeting.","Dúirt sé nach mbeadh sé ag an gcruinniú. (siollabas)"],
+  ["teachtaireacht","She's not in the office at the moment.","Níl sí san oifig faoi láthair. (siollabas)"],
+  ["teachtaireacht","Reported speech: \"Glaofaidh mé ar ais.\" → ?","Dúirt sé go nglaofadh sé ar ais. (future → conditional, mé → sé, go + urú)"],
+  ["comhra","How much is the oral worth?","240 marks out of 600: 40%."],
+  ["comhra","\"If I don't get the points, I'll do an apprenticeship.\"","Mura bhfaighidh mé na pointí, déanfaidh mé printíseacht."],
+];
+let fcKnown = store.get("ga2-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter(c=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("ga2-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("ga2-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("ga2-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["abhair","\"I'm doing seven subjects\" is:",["Tá seacht ábhar ar siúl agam.","Tá seacht n-ábhar ar siúl agam.","Tá seacht hábhar ar siúl agam.","Tá seachtar ábhar ar siúl agam."],1,"7–10 cause an urú; before a vowel that's n-: seacht n-ábhar (siollabas). Seachtar is only for people."],
+  ["abhair","\"three lessons\" is:",["trí ceacht","trí gceacht","trí cheacht","triúr ceacht"],2,"3–6 cause a séimhiú: trí cheacht."],
+  ["abhair","\"Maths is more difficult than English\":",["Tá Mata níos deacair ná Béarla.","Tá Mata níos deacra ná Béarla.","Tá Mata deacra ná Béarla.","Tá Mata níos deacra le Béarla."],1,"níos + comparative (deacra) + ná."],
+  ["abhair","\"Gabhaim pardún agaibh\" is used to:",["Ask for help","Apologise","Give an opinion","Say you prefer something"],1,"It's in the syllabus list for apologising (leithscéal a ghabháil), with \"Tá brón orm faoi bheith déanach\"."],
+  ["rialacha","\"Smoking isn't allowed\":",["Níl cead a chaitheamh tobac.","Níl cead tobac a chaitheamh.","Ní cead tobac caitheamh.","Níl cead tobac chaitheamh."],1,"Object first, then a + verbal noun with séimhiú: tobac a chaitheamh (siollabas)."],
+  ["rialacha","\"Tá ciall leis an riail sin\" means:",["That rule is new","That rule makes sense","I broke that rule","That rule is unfair"],1,"A syllabus example for giving an opinion on a rule."],
+  ["rialacha","Which is an obligation (you must)?",["Níl cead agat rith sna conairí.","Caithfidh tú bheith sa rang in am.","Ní raibh fúm cur isteach ort.","Luíonn sé sin le réasún."],1,"Caithfidh tú… = you must…"],
+  ["triu","\"I hope I'll get the points\":",["Tá súil agam go gheobhaidh mé na pointí.","Tá súil agam go bhfaighidh mé na pointí.","Tá súil agam go fhaighidh mé na pointí.","Tá súil agam gheobhaidh mé na pointí."],1,"After go: the dependent form + urú: go bhfaighidh (siollabas)."],
+  ["triu","Your grades: Maths HL H6, and five other subjects at H4, plus O3. Which counts for most?",["O3 (37)","Maths H6 (46 + 25 = 71)","H4 (66)","They're all equal"],1,"HL Maths at H6 or better gets 25 bonus points: 46 + 25 = 71."],
+  ["triu","How many subjects count for CAO points?",["All of them","Best five","Best six","Best seven"],2,"Your best six results count."],
+  ["obair","\"I'd like to be a nurse\":",["Ba mhaith liom bheith i mo altra.","Ba mhaith liom bheith i m'altra.","Ba mhaith liom bheith i mo haltra.","Ba mhaith liom bheith altra mé."],1,"mo becomes m' before a vowel: i m'altra."],
+  ["obair","\"I'd like to be a doctor\":",["…i mo dochtúir","…i mo dhochtúir","…i m'dochtúir","…i mo ndochtúir"],1,"mo lenites: i mo dhochtúir."],
+  ["obair","\"Ní thaitneodh obair oifige liom\" means:",["I like office work","I wouldn't like office work","I used to work in an office","I'll get an office job"],1,"Taitneodh is conditional (would like); a syllabus example."],
+  ["teachtaireacht","Caller: \"Ní bheidh mé ag an gcruinniú.\" You pass it on:",["Dúirt sé ní bheidh sé ag an gcruinniú.","Dúirt sé nach mbeidh mé ag an gcruinniú.","Dúirt sé nach mbeadh sé ag an gcruinniú.","Dúirt sé go mbeadh sé ag an gcruinniú."],2,"nach + urú + conditional, and mé → sé (siollabas)."],
+  ["teachtaireacht","Caller (a woman): \"Tá moill orm sa trácht.\" You pass it on:",["Dúirt sí go raibh moill uirthi sa trácht.","Dúirt sí go bhfuil moill orm sa trácht.","Dúirt sí go raibh moill air sa trácht.","Dúirt sí tá moill uirthi sa trácht."],0,"Tá → go raibh after dúirt, and orm → uirthi for a woman."],
+  ["teachtaireacht","\"Ar thriail tú do ghuthphost?\" means:",["Did you try your voicemail?","Did you leave a message?","Is your phone broken?","Will you ring back?"],0,"Guthphost = voicemail (siollabas)."],
+  ["comhra","Which sentence is in the conditional (modh coinníollach)?",["Rachaidh mé ar an ollscoil.","Chuaigh mé ar an ollscoil.","Rachainn ar an ollscoil.","Téim ar an ollscoil."],2,"Rachainn = I would go."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("ga2-best",null); if(best==null||pct>best) store.set("ga2-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => { const c=g.t[0].normalize("NFD")[0]; return /[A-Za-z]/.test(c) ? c.toUpperCase() : "#"; };
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/</g,"&lt;")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Cad?","What?","Cad ba mhaith leat a dhéanamh tar éis na scoile?"],
+  ["Cén?","Which / what?","Cén t-ábhar is fearr leat?"],
+  ["Cé mhéad?","How many?","Cé mhéad ábhar atá á ndéanamh agat?"],
+  ["Cén fáth?","Why?","Cén fáth ar roghnaigh tú an cúrsa sin?"],
+  ["Cá?","Where?","Cá rachaidh tú ar an ollscoil?"],
+  ["Conas?","How?","Conas a úsáidtear an gléas seo? (siollabas)"],
+  ["An gá dom…?","Do I have to…?","An gá dom ragobair a dhéanamh? (siollabas)"],
+  ["An bhfuil cead agam…?","Am I allowed to…?","An bhfuil cead agam an veain a thiomáint? (siollabas)"],
+  ["An molfá…?","Would you recommend…?","An molfá dom an cúrsa seo a dhéanamh? (siollabas)"],
+  ["Cad é do bharúil faoi…?","What do you think of…?","Cad é do bharúil faoi na rialacha? (siollabas pattern)"],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("");
+
+// Numbers & grammar trainer (multiple choice)
+const pick=a=>a[Math.floor(Math.random()*a.length)], shuffle=a=>{ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const uniq = a => [...new Set(a)];
+const QT = {
+  uimh:{name:"Number + noun", gen(){ const [w,en]=pick(NOUNS), n=pick([2,3,4,5,6,7,8,9,10]); const right=numNoun(n,w);
+    const alt=n<=6? UNITS[n]+" "+ecl(w) : UNITS[n]+" "+lenH(w), plain=UNITS[n]+" "+w, other=n<=6? UNITS[n]+" "+w+"í" : UNITS[n]+" "+(w[0].match(/[aeiouáéíóú]/)?"h"+w:w+"anna");
+    const opts=uniq([right,alt,plain,other]); [UNITS[n]+" "+w+"a",UNITS[n]+" h"+w,UNITS[n]+" "+w+"anna",UNITS[n]+" "+w+"í"].forEach(e=>{ if(opts.length<4 && !opts.includes(e)) opts.push(e); });
+    return {q:`<div class="ga">How do you say <b>${n} ${en}${n>1?"s":""}</b>?</div>`, opts:shuffle(opts.slice(0,4)), ans:right,
+      why:`${right}. ${n<=6? (lenH(w)===w? `2–6 lenite, but ${w[0]==="s"?"s + c/t/p/m":"this letter"} can't take a séimhiú, so no change.` : "2–6 add a séimhiú.") : (ecl(w)===w? "7–10 eclipse, but this letter can't take an urú, so no change." : "7–10 add an urú"+("aeiouáéíóú".includes(w[0])?" (n- before a vowel).":"."))} The noun stays singular after a number.`}; }},
+  comp:{name:"níos … (comparative)", gen(){ const a=pick(ADJ), [x,y]=shuffle(SUBJ_ALL).slice(0,2); const right=`Tá ${x} níos ${a[1]} ná ${y}.`;
+    const opts=uniq([right,...a[3].map(d=>`Tá ${x} níos ${d} ná ${y}.`), a[0]!==a[1]?`Tá ${x} níos ${a[0]} ná ${y}.`:`Tá ${x} níos ${a[1]} le ${y}.`]).slice(0,4);
+    return {q:`<div class="ga"><b>${SUBJ_EN[x]}</b> is more <b>${a[2]}</b> than <b>${SUBJ_EN[y]}</b>.</div>`, opts:shuffle(opts), ans:right, why:`${a[0]} → níos ${a[1]}. ${a[0]===a[1]?"Some adjectives ending in a vowel don't change.":"Learn the comparative with the adjective."}`}; }},
+  imo:{name:"i mo + job", gen(){ const j=pick(JOBS), right=`Ba mhaith liom bheith ${j[2]}.`, base=j[0];
+    const wrong=uniq([`Ba mhaith liom bheith i mo ${base}.`,`Ba mhaith liom bheith i m'${lenH(base)}.`,`Ba mhaith liom bheith i mo ${ecl(base)}.`,`Ba mhaith liom bheith i mo ${lenH(base)}.`,`Ba mhaith liom bheith i m'${base}.`,`Ba mhaith liom bheith i mo h${base}.`,`Ba mhaith liom bheith ${base} mé.`]).filter(x=>x!==right).slice(0,3);
+    return {q:`<div class="ga">I'd like to be a${"aeiou".includes(j[1][0])?"n":""} <b>${j[1]}</b>.</div>`, opts:shuffle([right,...wrong]), ans:right,
+      why:`${right} ${j[2].includes("m'")? (base[0]==="f"?"f lenites to fh, which is silent, so mo becomes m'." : "mo becomes m' before a vowel.") : lenH(base)===base? `${base[0]} can't take a séimhiú, so no change.` : "mo adds a séimhiú."}`}; }},
+  dúirt:{name:"Dúirt sé go / nach…", gen(){ const ci=Math.floor(Math.random()*CALLERS.length), mi=Math.floor(Math.random()*MSGS.length), ti=Math.floor(Math.random()*TIMES.length); const M_=msgParts(ci,mi,ti), p=M_.p, t=M_.t;
+    const right=`Dúirt ${p.s} ${M_.m.r(p,t)}.`, wrong=M_.m.w(p,t).map(x=>`Dúirt ${p.s} ${x}.`);
+    return {q:`<div class="ga">${M_.who} (${p.en}) says: <b>"${M_.direct}"</b> <span class="en">Pass the message on to your manager.</span></div>`, opts:shuffle([right,...wrong]), ans:right, why:`${right} Changes: ${M_.ch.map(c=>`${c[0]} → ${c[1]}`).join("; ")}.`}; }},
+};
+
+// Practice tasks with marking guides
+const LONGQ = [
+  { title:"An comhrá (oral practice)", intro:"Record yourself answering these, about 30–45 seconds each, then check the guide.",
+    parts:[["a","Inis dom faoi na hábhair atá á ndéanamh agat. Cén t-ábhar is fearr leat? (Tell me about your subjects. Which do you like best?)",30,"Good answers: number of subjects with the right form (seacht n-ábhar); a list of subjects; levels (ag an ardleibhéal); a favourite with a reason (mar…) and a comparison (níos suimiúla ná…); one past detail (fuair mé marc maith…) and one future or conditional (déanfaidh mé…, dá mbeadh an rogha agam…). Fluency and accuracy are both rewarded; range of tenses and linking words lifts an answer."],
+      ["b","Cad é do bharúil faoi na rialacha i do scoil? (What do you think of the rules in your school?)",30,"Two or three rules with Níl cead…/Caithfidh tú… and correct word order (tobac a chaitheamh); an opinion on each (tá ciall leis…, ní luíonn sé le réasún…); a change you'd make in the conditional (dá mbeinn i mo phríomhoide, ligfinn…)."],
+      ["c","Cad ba mhaith leat a dhéanamh tar éis na hArdteistiméireachta? (What would you like to do after the Leaving Cert?)",30,"Course and place (cúrsa … i nGaillimh, with urú); interest (tá suim agam sa/san…); points and hope (tá súil agam go bhfaighidh mé na pointí); a plan B (mura bhfaighidh mé…, déanfaidh mé printíseacht); the job you'd like (i mo + séimhiú) and why."]] },
+  { title:"Ceapadóireacht: teachtaireacht agus ríomhphost", intro:"Practice in the style of a short writing task, not an official SEC paper.",
+    parts:[["a","You took a phone call at your summer job. Mr Ó Sé from the garage rang: he is delayed in traffic, he won't be at the 3 o'clock meeting, and he will ring back tomorrow. Write the note for your manager, Máire (about 50 words).",20,"Opening (A Mháire, a chara / Máire,); time of call; reported speech: Ghlaoigh Mac Uí Shé ón ngaráiste. Dúirt sé go raibh moill air sa trácht, nach mbeadh sé ag an gcruinniú ar a trí, agus go nglaofadh sé ar ais amárach. Signed with your name. Marks for all three points and accurate go/nach + urú + tense."],
+      ["b","Write an email (about 150 words) to a friend who has left school. Tell them about your subjects this year, a school rule you disagree with, and what you hope to do after the Leaving Cert. Ask them two questions about their course or job.",60,"Content: all parts covered, appropriate opening and ending. Language: number + noun forms, comparatives, Níl cead…/Caithfidh tú…, future and conditional for plans, go + urú after tá súil agam, varied vocabulary from this topic, linking words. Most marks go to the quality and accuracy of the Irish."]] },
+  { title:"Ceapadóireacht: díospóireacht (debate)", intro:"Higher Level style practice, about 250 words.",
+    parts:[["a","Write a speech for a debate: \"Tá an iomarca brú ar dhaltaí na hArdteistiméireachta\" (Leaving Cert students are under too much pressure). Argue for or against.",80,"Structure: address the chair, judges and audience (A Chathaoirligh, a mholtóirí, a lucht an fhreasúra…); state your side; three arguments (pointí CAO, an iomarca ábhar, obair bhaile, brú ó thuismitheoirí, or the other side: ullmhúchán don saol); rebut the other side; conclusion. Language: debate phrases (ar an gcéad dul síos, ina theannta sin, mar fhocal scoir), opinion phrases (measaim go…, ní aontaím le…), the conditional for suggestions, accurate grammar. Most marks go to the quality of the Irish."]] },
+];
+
+// Revision checklist (red / amber / green)
+const RAG = ["Name all my subjects in Irish","Count with nouns: seacht n-ábhar, trí cheacht","Compare subjects with níos … ná","Apologise and ask for help in class","Give rules with Níl cead agat / Caithfidh tú","Give an opinion on a rule","Talk about college, courses and the CAO","Use go + urú after tá súil agam","Say the job I'd like with i mo + séimhiú","Take and pass on a phone message (dúirt sé go / nach)","Answer each comhrá question in 4–6 sentences","Use the future and conditional for plans"];
+const SKILLS = [["Say it aloud","Practise answers out loud every day, not just in your head.","An comhrá lab"],["Expand","Answer + detail + opinion + reason.","An comhrá lab"],["Plans","Future and conditional for what comes after school.","An comhrá lab"],["Numbers","Number + noun with séimhiú and urú, without hesitating.","Trainer"],["Accuracy","go / nach + urú, i mo + séimhiú, níos + comparative.","Trainer"],["Listen","A little TG4 or Raidió na Gaeltachta each week.","Infographics"]];
+let qtType="uimh", qtCur=null, qtRight=0, qtTried=0, qtDone=false;
+$("prType").innerHTML = Object.entries(QT).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; qtType=b.dataset.k; qtNew(); });
+function qtNew(){ qtCur=QT[qtType].gen(); qtDone=false; $("pq").innerHTML=qtCur.q; $("qtOpts").innerHTML=qtCur.opts.map((o,i)=>`<button data-i="${i}">${o}</button>`).join(""); $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===qtType)); }
+$("qtOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qtDone) return; const ok=qtCur.opts[+b.dataset.i]===qtCur.ans; qtDone=true; qtTried++; if(ok) qtRight++;
+  [...$("qtOpts").children].forEach((x,i)=>{ x.disabled=true; if(qtCur.opts[i]===qtCur.ans) x.classList.add("on"); });
+  $("paFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Ceart!":"Ní hea."}</b> ${qtCur.why}</div>`; $("paScore").textContent=`This session: ${qtRight} correct out of ${qtTried}.`; });
+$("paNext").addEventListener("click",qtNew);
+qtNew();
+// Cén cheist? drill: an answer chunk → which question?
+let pd = { k:null, shown:false, sel:null, streak:0 };
+let predC=null;
+$("predBtns").innerHTML = ORAL.map((o,i)=>`<button data-a="${i}">${o.q}</button>`).join("");
+function pdNew(){ let qi, pi; do{ qi=Math.floor(Math.random()*ORAL.length); pi=Math.floor(Math.random()*ORAL[qi].p.length); }while(pd.k && pd.k[0]===qi && pd.k[1]===pi); pd={...pd,k:[qi,pi],shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`Which question does this answer?`; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=+b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick a question first.</div>`; return; }
+  const [qi,pi]=pd.k, ok=pd.sel===qi; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Ceart!":"Ní hea."}</b> "${ORAL[qi].q}" (${ORAL[qi].en}) The answer means: ${ORAL[qi].p[pi][1]}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+const ragState=store.get("ga2-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("ga2-rag",ragState); ragRender(); });
+ragRender();
+const skState=store.get("ga2-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("ga2-skills",skState); });
+/* ================= LAB STATE + WIRING ================= */
+const say = (el, rows) => { el.innerHTML = rows.map(([g,e])=>`<p><span class="ga">${g}</span><span class="en">${e}</span></p>`).join(""); };
+const enArt = s => ("aeiou".includes(s[0].toLowerCase())?"an ":"a ")+s;
+// Subjects + survey
+const sv = {hist:[], counts:SUBJ.map(()=>0), n:0, share:SUBJ.map(s=>s[2])};
+const ab = {n:7, x:"Béarla", j:0, y:"Stair"};
+$("abX").innerHTML = SUBJ_ALL.map(s=>`<option value="${s}">${s} (${SUBJ_EN[s]})</option>`).join(""); $("abY").innerHTML=$("abX").innerHTML; $("abX").value=ab.x; $("abY").value=ab.y;
+$("abJ").innerHTML = ADJ.map((a,i)=>`<option value="${i}">${a[0]} (${a[2]})</option>`).join("");
+function svAsk(k){ for(let i=0;i<k;i++){ let r=Math.random(), j=0; while(j<sv.share.length-1 && r>sv.share[j]){ r-=sv.share[j]; j++; } sv.counts[j]++; sv.n++; if(sv.n%10===0) sv.hist.push({n:sv.n,c:[...sv.counts]}); } abUpd(); }
+function svNew(){ const raw=SUBJ.map(p=>p[2]*(0.6+Math.random()*0.8)), s=raw.reduce((a,b)=>a+b,0); sv.share=raw.map(x=>x/s); sv.hist=[]; sv.counts=SUBJ.map(()=>0); sv.n=0; abUpd(); }
+function abUpd(){ $("abNo").textContent=ab.n; const n=sv.n, top=n? sv.counts.indexOf(Math.max(...sv.counts)) : -1, a=ADJ[ab.j];
+  setReadout($("abOut"), n? SUBJ.map((p,i)=>[p[0], `${nf(sv.counts[i]/n*100,0)}%`]) : [["Students asked","0"]]);
+  const rows=[[`Tá ${numNoun(ab.n,"ábhar")} ar siúl agam.`,`I'm doing ${ab.n} subject${ab.n>1?"s":""}.${ab.n>=7?" (7–10: urú → n- before a vowel)":ab.n===1?" (one: noun + amháin)":" (2–6 before a vowel: no change)"}`]];
+  if(ab.x===ab.y) rows.push(["Roghnaigh dhá ábhar dhifriúla.","Pick two different subjects to compare."]);
+  else { rows.push([`Tá ${ab.x} níos ${a[1]} ná ${ab.y}.`,`${SUBJ_EN[ab.x]} is more ${a[2]} than ${SUBJ_EN[ab.y]}. (${a[0]} → níos ${a[1]})`]); rows.push([`B'fhearr liom ${ab.x} ná ${ab.y}.`,`I'd prefer ${SUBJ_EN[ab.x]} to ${SUBJ_EN[ab.y]}. (siollabas pattern)`]); }
+  if(n){ rows.push([`Chuir mé ceist ar ${n} dalta.`,`I asked ${n} students.`]); rows.push([`Is fearr le ${nf(sv.counts[top]/n*100,0)}% de na daltaí ${SUBJ[top][0]}.`,`${nf(sv.counts[top]/n*100,0)}% of students like ${SUBJ[top][1]} best.`]); }
+  else rows.push(["Cén t-ábhar is fearr leat?","What's your favourite subject? Press the button to ask."]);
+  say($("abSay"),rows); if(abC) abC.redraw(); }
+$("abAsk").addEventListener("click",()=>svAsk(10)); $("abAll").addEventListener("click",()=>svAsk(100)); $("abNew").addEventListener("click",svNew);
+$("abN").addEventListener("input",e=>{ ab.n=+e.target.value; abUpd(); });
+$("abX").addEventListener("change",e=>{ ab.x=e.target.value; abUpd(); }); $("abY").addEventListener("change",e=>{ ab.y=e.target.value; abUpd(); }); $("abJ").addEventListener("change",e=>{ ab.j=+e.target.value; abUpd(); });
+// Rules sorter
+const rl = {order:[], placed:[], sel:null, op:1, P:[]};
+function rlNew(){ rl.order=shuffle(RULES.map((x,i)=>i)); rl.placed=[]; rl.sel=null; rlUpd(); }
+function rlUpd(){ $("rlCards").innerHTML = rl.order.map(i=>{ const done=rl.placed.some(p=>p.i===i); return `<button data-i="${i}" class="${done?"done":""}${rl.sel===i?" sel":""}" ${done?"disabled":""}>${RULES[i][0]}</button>`; }).join("");
+  const last=rl.placed[rl.placed.length-1], k=rl.sel!=null? rl.sel : last? last.i : 0, r=RULES[k];
+  say($("rlSay"),[[`${r[2]?"Caithfidh tú":"Níl cead agat"} ${r[1]}.`,`${r[2]?"You must":"You're not allowed to"} ${r[0]}.${r[3]?" (siollabas: Níl cead tobac a chaitheamh.)":""}`], rl.op? ["Tá ciall leis an riail sin.","That rule makes sense. (siollabas)"] : ["Níl ciall ar bith leis an riail sin.","That rule makes no sense at all."],
+    [`Sórtáilte: ${rl.placed.length} as ${RULES.length} · ceart: ${rl.placed.filter(p=>p.ok).length}`, rl.sel==null? "Tap a rule, then tap a box." : `Now tap the box for "${RULES[rl.sel][0]}".`]]);
+  if(rlC) rlC.redraw(); }
+$("rlCards").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; rl.sel=+b.dataset.i; rlUpd(); });
+$("rlO").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; rl.op=+b.dataset.o; pressGroup([...$("rlO").children],b); rlUpd(); });
+$("rlReset").addEventListener("click",rlNew);
+// CAO points
+const ca = {g:["H4","H3","H3","H4","H5","H5","O2"], c:1};
+$("caGrades").innerHTML = CAO_SUBJ.map((s,i)=>`<div class="ctl"><label for="caG${i}">${s} (${SUBJ_EN[s]})${i===0?" · +25 if HL H1–H6":""}</label><select id="caG${i}">${GRADES.map(g=>`<option ${g===ca.g[i]?"selected":""}>${g}</option>`).join("")}</select></div>`).join("");
+$("caCourse").innerHTML = COURSES.map((c,i)=>`<button data-i="${i}" aria-pressed="${i===ca.c}">${c[0]} · ${c[2]}</button>`).join("");
+CAO_SUBJ.forEach((s,i)=>$("caG"+i).addEventListener("change",e=>{ ca.g[i]=e.target.value; caUpd(); }));
+$("caCourse").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ca.c=+b.dataset.i; pressGroup([...$("caCourse").children],b); caUpd(); });
+function caUpd(){ const c=caoCalc(ca.g), [cg,ce,need]=COURSES[ca.c], diff=c.total-need;
+  setReadout($("caOut"),[["Best six",`${c.total}`],["Maths bonus",c.bonus?"+25":"0"],["Course needs",`${need}`],[diff>=0?"Spare":"Short by",`${Math.abs(diff)}`]]);
+  const rows=[[`Gheobhainn ${c.total} pointe leis na gráid seo.`,`I'd get ${c.total} points with these grades.`]];
+  if(c.bonus) rows.push(["Gheobhainn 25 pointe breise as Mata Ardleibhéil.","I'd get 25 bonus points for Higher Level Maths."]);
+  rows.push([`Ba mhaith liom ${cg} a dhéanamh. Teastaíonn ${need} pointe don chúrsa seo.`,`I'd like to do ${ce}. This course needs ${need} points (illustrative).`]);
+  rows.push(diff>=0? ["Bheadh go leor pointí agam! Tá súil agam go bhfaighidh mé na pointí.","I'd have enough points! I hope I'll get the points. (siollabas)"] : [`Bheadh ${-diff} pointe eile ag teastáil uaim.`,`I'd need ${-diff} more points.`]);
+  say($("caSay"),rows); if(caC) caC.redraw(); }
+// Careers
+const ob = {pref:[5,5,5,5]};
+[["obA",0],["obD",1],["obK",2],["obT",3]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ ob.pref[k]=+e.target.value; obUpd(); }));
+function obUpd(){ ["obAo","obDo","obKo","obTo"].forEach((id,k)=>$(id).textContent=ob.pref[k]); const sc=jobScores(ob.pref), j=JOBS[sc[0].i], j2=JOBS[sc[1].i], p=ob.pref, rows=[];
+  rows.push([`Ba mhaith liom bheith ${j[2]}.`,`I'd like to be ${enArt(j[1])}. (best match)`]);
+  rows.push([`Nó b'fhéidir ${j2[2]}.`,`Or maybe ${enArt(j2[1])}.`]);
+  if(p[0]>=7) rows.push(["B'fhearr liom bheith ag obair amuigh faoin aer.","I'd prefer to be working outdoors. (siollabas)"]);
+  if(p[0]>=7 && p[3]<=4) rows.push(["Ní thaitneodh obair oifige liom.","I wouldn't like office work. (siollabas)"]);
+  if(p[1]>=7) rows.push(["Is maith liom bheith ag obair le daoine.","I like working with people."]); else if(p[1]<=3) rows.push(["B'fhearr liom bheith ag obair liom féin.","I'd prefer to work on my own."]);
+  if(p[2]>=7) rows.push(["Is duine cruthaitheach mé.","I'm a creative person."]);
+  if(p[3]>=7) rows.push(["Tá an-suim agam sa teicneolaíocht.","I'm very interested in technology."]);
+  say($("obSay"),rows); if(obC) obC.redraw(); }
+// Phone message
+const gp = {c:0, m:0, t:1};
+$("gpW").innerHTML = CALLERS.map((c,i)=>`<option value="${i}">${c[0]} (${c[2]})</option>`).join("");
+$("gpM").innerHTML = MSGS.map((m,i)=>`<option value="${i}">${m.en}</option>`).join("");
+$("gpT").innerHTML = TIMES.map((t,i)=>`<option value="${i}" ${i===gp.t?"selected":""}>ar ${t[0]} (${t[1]})</option>`).join("");
+[["gpW","c"],["gpM","m"],["gpT","t"]].forEach(([id,k])=>$(id).addEventListener("change",e=>{ gp[k]=+e.target.value; gpUpd(); }));
+function gpUpd(){ const M_=msgParts(gp.c,gp.m,gp.t), en=CALLERS[gp.c][2], tEn=TIMES[gp.t][1]; $("gpT").disabled=!M_.m.t;
+  say($("gpSay"),[[`"${M_.direct}"`,`${en}'s exact words on the voicemail.`],[M_.rep,`${en} rang and said ${M_.m.enR(M_.p,tEn)}.${M_.m.sy?" (siollabas pattern)":""}`],[`Athruithe: ${M_.ch.map(c=>`${c[0]} → ${c[1]}`).join(" · ")}`,"What changed: the pronoun, and go / nach + urú with the tense moved back (tá → go raibh, beidh → go mbeadh)."]]);
+  if(gpC) gpC.redraw(); }
+// Oral builder
+const ch = {q:0, sel:[]};
+$("chQ").innerHTML = ORAL.map((o,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${o.q}</button>`).join("");
+$("chQ").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ch.q=+b.dataset.i; ch.sel=[]; pressGroup([...$("chQ").children],b); chUpd(); });
+$("chP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=+b.dataset.i, k=ch.sel.indexOf(i); if(k>=0) ch.sel.splice(k,1); else ch.sel.push(i); chUpd(); });
+function chUpd(){ const Q=ORAL[ch.q], TN={l:"present",c:"past",f:"future",n:"conditional"};
+  $("chP").innerHTML = Q.p.map((p,i)=>`<button data-i="${i}" aria-pressed="${ch.sel.includes(i)}" class="${ch.sel.includes(i)?"sel":""}">${p[0]} <small style="color:var(--muted)">(${TN[p[2]]})</small></button>`).join("");
+  const s=oralScore(ch.q,ch.sel);
+  say($("chSay"),[[Q.q,Q.en], ch.sel.length? [ch.sel.map(i=>Q.p[i][0]).join(" "), ch.sel.map(i=>Q.p[i][1]).join(" ")] : ["…","Tap phrases to build your answer, in the order you'd say them."], [s.tenses>=3&&s.words>=40? "Freagra láidir!" : "Lean ort…", s.tenses>=3&&s.words>=40? "Strong answer: long, varied tenses, linked." : `Tip: ${s.words<40?"say more. ":""}${s.tenses<3?"use more tenses. ":""}${s.links<2?"link your ideas (mar, ach…).":""}`]]);
+  if(chC) chC.redraw(); }
+
+/* ================= CREATE CANVASES ================= */
+let abC=null, rlC=null, caC=null, obC=null, gpC=null, chC=null;
+const hero = makeCanvas($("heroCanvas"), 0.75, 240, s => { const t=reduce?1:Math.min(1,(heroT*0.18)%1.25); drawJourney(s.ctx,s.w,s.h,{t}); }, 440);
+abC = makeCanvas($("abC"), 0.5, 260, s => drawSurvey(s.ctx,s.w,s.h,{hist:sv.hist}), 420);
+rlC = makeCanvas($("rlC"), 0.5, 260, s => { rl.P=drawBins(s.ctx,s.w,s.h,{placed:rl.placed,armed:rl.sel!=null}); }, 400);
+pointerTap($("rlC"),(x,y)=>{ if(rl.sel==null) return; const b=rl.P.find(([bx,by,bw,bh])=>x>=bx&&x<=bx+bw&&y>=by&&y<=by+bh); if(!b) return; const r=RULES[rl.sel]; rl.placed.push({i:rl.sel,en:r[0],cat:b[4],ok:r[2]===b[4]}); rl.sel=null; rlUpd(); });
+caC = makeCanvas($("caC"), 0.36, 220, s => drawCAO(s.ctx,s.w,s.h,{grades:ca.g,target:COURSES[ca.c][2]}), 320);
+obC = makeCanvas($("obC"), 0.45, 230, s => drawJobs(s.ctx,s.w,s.h,{pref:ob.pref}), 380);
+gpC = makeCanvas($("gpC"), 0.3, 200, s => drawMsg(s.ctx,s.w,s.h,{c:gp.c,m:gp.m,t:gp.t}), 380);
+chC = makeCanvas($("chC"), 0.3, 170, s => drawMeters(s.ctx,s.w,s.h,{s:oralScore(ch.q,ch.sel)}), 260);
+predC = makeCanvas($("predC"), 0.45, 170, s => { bg(s.ctx,s.w,s.h,C["surface-2"]); const k=pd.k||[0,0], txt=ORAL[k[0]].p[k[1]][0]; const pad=16, w=s.w-2*pad;
+  rr(s.ctx,pad,pad,w,s.h-2*pad-14,16); s.ctx.fillStyle=C.surface; s.ctx.fill(); s.ctx.strokeStyle=C.line; s.ctx.stroke();
+  s.ctx.font=F(s.w<380?13:16); const lines=wrapText(s.ctx,txt,w-24);
+  lines.forEach((l,i)=>text(s.ctx,l,s.w/2,pad+28+i*22,C.ink,F(s.w<380?13:16),"center"));
+  if(pd.shown){ s.ctx.font=F(12,800); const ql=wrapText(s.ctx,"→ "+ORAL[k[0]].q,s.w-24); ql.forEach((l,i)=>text(s.ctx,l,s.w/2,s.h-12-(ql.length-1-i)*15,C.terra,F(12,800),"center")); } }, 260);
+pdNew();
+const MINI = {
+  survey:(s,o)=>drawSurvey(s.ctx,s.w,s.h,{...o,compact:true}),
+  bins:(s,o)=>drawBins(s.ctx,s.w,s.h,{...o,compact:true}),
+  cao:(s,o)=>drawCAO(s.ctx,s.w,s.h,{...o,compact:true}),
+  jobs:(s,o)=>drawJobs(s.ctx,s.w,s.h,{...o,compact:true}),
+  msg:(s,o)=>drawMsg(s.ctx,s.w,s.h,{...o,compact:true}),
+  path:(s,o)=>drawJourney(s.ctx,s.w,s.h,{...o,compact:true}),
+  meter:(s,o)=>drawMeters(s.ctx,s.w,s.h,{s:oralScore(o.q,o.sel),compact:true}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, kind==="meter"?0.45:kind==="msg"?0.55:0.62, kind==="msg"?170:150, s=>MINI[kind](s,o), 380); });
+const INFO = { path:["path",{t:1}], cao:["cao",{grades:["H2","H3","H3","H4","H4","H5","O3"],target:430}], msg:["msg",{c:1,m:1,t:1}] };
+document.querySelectorAll("canvas[data-mini]").forEach(el=>{ const [k,o]=INFO[el.dataset.mini]; makeCanvas(el,k==="msg"?0.8:0.7,170,s=>MINI[k](s,{...o,bgc:C["surface-2"]})); });
+abUpd(); rlNew(); caUpd(); obUpd(); gpUpd(); chUpd();
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>
+

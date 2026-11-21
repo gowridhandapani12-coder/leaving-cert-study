@@ -5,7 +5,8 @@ components). Same design and format as the other subjects (see `..\physics\CLAUD
 
 Course progress and build order: `COURSE-PLAN.md`. Update it whenever a page is built.
 
-Built so far: `t1-an-scolaire-fein.html` (Topaic 1: An Scoláire Féin agus a Thimpeallacht).
+Built so far: `t1-an-scolaire-fein.html` (Topaic 1: An Scoláire Féin agus a Thimpeallacht), `t2-cursai-scoile-oibre.html`
+(Topaic 2: Cúrsaí Scoile agus Oibre).
 
 ## The syllabus (source of truth)
 
@@ -30,7 +31,7 @@ Built so far: `t1-an-scolaire-fein.html` (Topaic 1: An Scoláire Féin agus a Th
   plus page data and labs. Bilingual: Irish phrases with English glosses (`.ga` / `.en` classes).
 - Last tab is "Phrase bank" (hash `#formulae`). Trainer = multiple-choice numbers and grammar (ages, personal numbers,
   an- + séimhiú); drill = "Cén cheist?" (match an answer to its oral question).
-- localStorage prefix `ga1-` (topic 1); theme/font keys `ga-theme` / `ga-font`.
+- localStorage prefix `ga1-` (topic 1), `ga2-` (topic 2); theme/font keys `ga-theme` / `ga-font`.
 - Irish accuracy matters most: use standard forms, prefer syllabus examples, and double-check numbers, séimhiú and urú.
 
 ## Quality checks
