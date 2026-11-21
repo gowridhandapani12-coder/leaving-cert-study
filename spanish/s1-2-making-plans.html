@@ -1,0 +1,1639 @@
+<title>Hacer planes · Spanish Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.sh-card{display:grid;gap:8px;padding:16px;align-content:start}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card ul{margin:0;padding-left:18px;font-size:.88rem;color:var(--muted);display:grid;gap:3px}
+.fbbox{padding:0 16px 14px}
+.predopts .btns button{min-width:100px}
+.ctl button[disabled]{opacity:.5}
+</style>
+
+<style>
+.qt{font-family:var(--f-display);font-size:1.15rem;line-height:1.4;padding:12px 16px;border-left:4px solid var(--terra);background:var(--surface-2);border-radius:0 12px 12px 0}
+.qt small{display:block;font-family:var(--f-body);font-size:.82rem;color:var(--muted);margin-top:4px}
+.fbbox{padding:0 16px 14px}
+.esform{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;padding:14px 16px;border-top:1px solid var(--line)}
+.esform input[type=text],.esform select{width:100%;font:inherit;padding:8px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.chk{display:flex;flex-wrap:wrap;gap:6px}
+.chk label{display:flex;gap:5px;align-items:center;font-size:.85rem;border:1.5px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}
+.ptable{border-collapse:collapse;width:100%;font-size:.88rem}
+.ptable td{padding:3px 6px;border-bottom:1px solid var(--line)}
+.ptable td:first-child{color:var(--muted)}
+.sheet>.fcell{min-width:0}
+.ptable td{white-space:normal;overflow-wrap:anywhere}
+</style>
+<!-- ================= TOP BAR ================= -->
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 01-14.3 4.9M4 12a8 8 0 0114.3-4.9"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg></div>
+        <div style="min-width:0"><b>Hacer planes</b><span>Leaving Cert Spanish · Unit I.2 · Making plans</span></div>
+      </div>
+      
+      
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html">Business</a><a href="../maths/index.html">Maths</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html" class="on" aria-current="page">Spanish</a><a href="../irish/index.html">Irish</a><a href="../maths-enrichment/index.html">Maths Enrichment</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Phrase bank</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <details open><summary>I · Basic communication</summary><ol><li class="link"><a href="s1-1-meeting-people.html"><span class="mono">1.1</span>Meeting people</a></li><li class="here"><span class="mono">1.2</span>Making plans</li><li><span class="mono">1.3</span>Weather &amp; climate</li><li><span class="mono">1.4</span>Travel &amp; transport</li><li><span class="mono">1.5</span>Buying goods &amp; services</li><li><span class="mono">1.6</span>Emergencies</li><li><span class="mono">1.7</span>Permission &amp; persuasion</li><li><span class="mono">1.8</span>Feelings &amp; attitudes</li><li><span class="mono">1.9</span>Managing a conversation</li><li><span class="mono">1.10</span>Discussion &amp; opinions</li><li><span class="mono">1.11</span>Passing on messages</li></ol></details>
+      <details><summary>II · Language awareness</summary><ol><li><span class="mono">2.1</span>Learning about language</li><li><span class="mono">2.2</span>Exploring meaning</li><li><span class="mono">2.3</span>Language &amp; attitude</li></ol></details>
+      <details><summary>III · Cultural awareness</summary><ol><li><span class="mono">3.1</span>Present-day culture</li><li><span class="mono">3.2</span>Modern literary texts</li><li><span class="mono">3.3</span>Everyday life</li><li><span class="mono">3.4</span>Spanish-speaking world &amp; Ireland</li><li><span class="mono">3.5</span>Issues across cultures</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon. Units follow the syllabus's General Activities/Themes.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Unit I.2 · Basic communicative proficiency</span>
+          <h1 style="margin-top:12px">¿Quedamos el sábado?<br>¿Qué vas a hacer?<br><em>¡Te lo prometo!</em></h1>
+          <p class="lede">Plans are everywhere in the exam: the oral asks what you'll do after the Leaving Cert, the written paper asks you to invite, arrange and apologise. Learn the future tense and ir a, say what you hope and intend, offer and promise, make and change arrangements, and give your reasons.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated speech bubbles with Spanish phrases for making plans"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Targets ticked</span><b id="stLO">0/12</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the Leaving Certificate Spanish syllabus</p><h2>Performance targets and skills</h2></div><p style="font-size:.88rem">Unit I.2, quoted from the syllabus (scanned text tidied). Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list" id="loList"></ul>
+        <p class="result" style="margin-top:10px">Structures and grammar listed for this unit: forms expressing the future (future tense, regular and irregular); ir a + infinitive, pensar + infinitive, esperar + infinitive; gustaría; impersonal expressions (hay que + infinitive, es importante + infinitive, es importante que + subjunctive); por qué, porque, para que; te prometo que…; conditional + infinitive (yo podría traer…); introductory phrase + present or future (no te preocupes, yo…; si quieres, yo puedo…); place and order of pronouns (¿Lo hago yo? ¿Se las traigo?); present subjunctive after certain verbs (¿Quieres que vaya / lo haga yo?).</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Build future verbs, sort intentions, make offers, keep a diary, survey students' plans and link your reasons.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="futuro">
+        <div class="labhead"><span class="pill t">La máquina del futuro</span><p class="goal">Pick a verb, a person and a way of talking about the future. Watch the stem and the ending join up.</p></div>
+        <div class="panel sim">
+          <canvas id="vmC" aria-label="Verb machine: stem block plus ending block equals the verb form"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Verbo</span><div class="btns" id="vmV"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Persona</span><div class="btns" id="vmP"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Forma</span><div class="btns" id="vmM"><button data-m="fut" aria-pressed="true">Futuro (will)</button><button data-m="ira" aria-pressed="false">Ir a + inf. (going to)</button><button data-m="cond" aria-pressed="false">Condicional (would)</button></div></div>
+          </div>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="vmQ"></div></div>
+          <div class="readout" id="vmOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Try tener, poner and salir in the future. What do their stems have in common?</div><div class="try"><b>2</b>Which future endings have an accent? Which one doesn't?</div><div class="try"><b>3</b>Switch to the conditional. Which part stays the same as the future?</div></div>
+      </div>
+
+      <div class="lab" data-lab="intenciones" hidden>
+        <div class="labhead"><span class="pill t">¿Deseo o promesa?</span><p class="goal">How sure is the speaker? Tap a sentence, then tap its box: a wish, a hope, a plan or a promise.</p></div>
+        <div class="panel sim">
+          <canvas id="imC" aria-label="Four boxes from wish to promise. Tap a box to place the selected sentence."></canvas>
+          <div class="cards2" id="imCards"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="imReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="imOut"></div>
+          <div class="fbbox" id="imFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Sort all twelve. Which words tell you how certain the speaker is?</div><div class="try"><b>2</b>Turn "Me gustaría ser arquitecto" into a firm plan, then a promise.</div><div class="try"><b>3</b>Why does "Pienso estudiar…" sound more decided than "Espero estudiar…"?</div></div>
+      </div>
+
+      <div class="lab" data-lab="ofrecer" hidden>
+        <div class="labhead"><span class="pill t">¿Te ayudo?</span><p class="goal">A situation appears. Choose the best thing to say: an offer, a promise or some reassurance. Watch the register.</p></div>
+        <div class="panel sim">
+          <canvas id="coC" aria-label="Two people talking with a speech bubble showing your phrase"></canvas>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="coQ"></div></div>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">You say…</span><div class="btns" id="coB"></div></div></div>
+          <div class="readout" id="coOut"></div>
+          <div class="fbbox" id="coFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Do all twelve. Which offers use usted, and how can you tell?</div><div class="try"><b>2</b>"¿Quieres que lo haga yo?" Why "haga" and not "hago"?</div><div class="try"><b>3</b>Say yes three ways: keen, neutral and reluctant.</div></div>
+      </div>
+
+      <div class="lab" data-lab="quedar" hidden>
+        <div class="labhead"><span class="pill t">Mi agenda</span><p class="goal">Your friend Nerea sends eight messages. Read each one and tap the right slot in your diary: add, move or cancel the plan.</p></div>
+        <div class="panel sim">
+          <canvas id="agC" aria-label="Weekly diary: seven days, morning, afternoon and evening. Tap a slot."></canvas>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="agQ"></div></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Mensajes</span><div class="btns"><button id="agReset">Start again</button></div></div></div>
+          <div class="readout" id="agOut"></div>
+          <div class="fbbox" id="agFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Get to the end of the week with every plan in the right place.</div><div class="try"><b>2</b>Find three ways Nerea changes a plan (lo cambiamos, en vez de, lo dejamos para…).</div><div class="try"><b>3</b>Write your reply to message 2, accepting the change.</div></div>
+      </div>
+
+      <div class="lab" data-lab="estudios" hidden>
+        <div class="labhead"><span class="pill t">Collect &amp; fit</span><p class="goal">Spanish students tell you their plans. Read each answer, work out how many years they'll study in total, and plot it against the age they hope to start work.</p></div>
+        <div class="panel sim">
+          <canvas id="svC" aria-label="Scatter graph of years of study against the age of starting work, with a line of best fit"></canvas>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="svQ"></div></div>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">¿Cuántos años va a estudiar en total?</span><div class="btns" id="svB"></div></div>
+            <div class="ctl"><span class="lbl">Encuesta</span><div class="btns"><button class="primary" id="svNext">Next student</button><button id="svClr">Clear data</button></div></div>
+          </div>
+          <div class="readout" id="svOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Interview eight students. What is the slope of the line, and why is it close to 1?</div><div class="try"><b>2</b>What does the intercept (the age at 0 years of study) tell you?</div><div class="try"><b>3</b>Say your own plan: "Pienso estudiar… La carrera dura… años."</div></div>
+      </div>
+
+      <div class="lab" data-lab="razones" hidden>
+        <div class="labhead"><span class="pill t">¿Porque o para que?</span><p class="goal">Complete each sentence. Then see the rule: porque + reason, para que + subjunctive, hay que + infinitive.</p></div>
+        <div class="panel sim">
+          <canvas id="gpC" aria-label="The sentence as blocks with the gap highlighted"></canvas>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Choose</span><div class="btns" id="gpB"></div></div></div>
+          <div class="readout" id="gpOut"></div>
+          <div class="fbbox" id="gpFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Get all twelve. Which gaps need the subjunctive?</div><div class="try"><b>2</b>"Es importante dormir" or "Es importante que duermas": what changes?</div><div class="try"><b>3</b>Give a reason for your own study plans with porque.</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of making plans in Spanish"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>Making a plan in five moves</h2></div><p>From the first suggestion to the change of plan, with the Spanish for each.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three pictures</p><h2>Verbs, diary, plans</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="verb"></canvas><h3>Infinitive + ending</h3><p>The future adds -é, -ás, -á, -emos, -éis, -án to the whole infinitive.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="diary"></canvas><h3>A week of plans</h3><p>Quedar, cambiar, cancelar: Nerea's week once every change is made.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="survey"></canvas><h3>Study now, work later</h3><p>Each extra year of study pushes the first job back about a year.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Studying in Spain</p><h2>How long do courses last?</h2></div><p>Typical full-time length in years (university grados in Spain; check each course).</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Culture tips</p><h2>Plans in Spain and Latin America</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+<!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How Spanish is assessed, what this unit means for the oral and the written paper, and practice with feedback.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Higher Level: speaking 25%, listening 20%, reading 30%, writing 25%">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="91.1 364.4" transform="rotate(-90 80 80)"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--apricot)" stroke-width="26" stroke-dasharray="72.9 364.4" stroke-dashoffset="-91.1" transform="rotate(-90 80 80)"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26" stroke-dasharray="109.3 364.4" stroke-dashoffset="-164" transform="rotate(-90 80 80)"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--olive)" stroke-width="26" stroke-dasharray="91.1 364.4" stroke-dashoffset="-273.3" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">4 skills</text><text x="80" y="96" text-anchor="middle" class="dn2">Higher Level</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Speaking · 25%</b><p>Oral: general conversation (you may discuss a literary work) and a role-play. Plans for the future come up in almost every conversation.</p></div></div>
+            <div><i style="background:var(--apricot)"></i><div><b>Listening · 20%</b><p>Messages and phone calls that make or change arrangements; answer in English or Irish.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Reading · 30%</b><p>Emails, chats and articles about plans, studies and careers.</p></div></div>
+            <div><i style="background:var(--olive)"></i><div><b>Writing · 25%</b><p>Invitations, replies, notes changing plans, and opinions. (Ordinary Level: 20 / 25 / 40 / 15.)</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this unit</h3>
+          <ol class="tips">
+            <li>Prepare a strong answer to <b>"¿Qué vas a hacer el año que viene?"</b>: course, place, reason, and a back-up plan.</li>
+            <li>Use <b>three future forms</b> to show range: voy a…, pienso…, me gustaría…, plus one future tense verb (haré, tendré).</li>
+            <li>Learn the <b>irregular future stems</b>: tendr-, har-, saldr-, podr-, vendr-, dir-, pondr-, sabr-, querr-, habr-.</li>
+            <li>Give <b>reasons</b>: porque me interesa…, para + infinitive, para que + subjunctive.</li>
+            <li>When changing plans in writing, <b>apologise, explain and suggest</b>: Lo siento, es que… ¿Lo dejamos para…?</li>
+            <li>Offers to adults use <b>usted</b>: ¿Le ayudo? ¿Quiere que se lo traiga?</li>
+            <li>One <b>subjunctive</b> used correctly (¿Quieres que lo haga yo? / Es importante que…) stands out at Higher Level.</li>
+            <li>Check the SEC for the current exam arrangements. Questions here are practice questions, not official SEC papers.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Instruction words</h2></div><p>Spanish instructions you'll meet on the paper. Meanings are plain-English summaries.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Future, ir a, subjunctive, pronouns</p><h2>Grammar trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" placeholder="Escribe aquí" aria-label="Your answer" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="primary" id="paCheck">Check</button><button id="paShow">Show answer</button><button id="paNext">New question</button></div>
+          <div class="btns" id="accKeys" style="margin-top:6px"></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>What is the speaker doing?</h2></div></div>
+          <canvas id="predC" aria-label="Five functions: offering, promising, arranging, cancelling or changing, stating an intention. The right one lights up after you check."></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" id="predBtns"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next sentence</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+<div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Exam skills</p><h2>Oral and written skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Habits that earn marks in the oral and written papers. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Key Spanish words and phrases for this unit, with their English meaning.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Busca: quedar, tendré, para que…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= PHRASE BANK ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Phrase bank</h2></div><p>Future and conditional tables, irregular stems and the key phrases for plans, offers and arrangements, on one page.</p></div>
+      <div class="sheet" id="pbank"></div>
+      <footer>
+        <p>Based on Unit I.2 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/spanish/" target="_blank" rel="noopener">Leaving Certificate Spanish Syllabus</a> (Department of Education, common modern-languages framework). Performance targets are quoted from the syllabus. Messages, people and survey data are invented for practice; course lengths are typical and vary by course.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("es-theme","auto"), font = store.get("es-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("es-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("es-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  futuro:'<path d="M3 12h14"/><path d="M13 7l5 5-5 5"/><path d="M21 5v14"/>',
+  intenciones:'<path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z"/>',
+  ofrecer:'<path d="M7 11V6a1.5 1.5 0 013 0v4M10 10V4.5a1.5 1.5 0 013 0V10M13 10V5.5a1.5 1.5 0 013 0V12M16 9a1.5 1.5 0 013 0v4a7 7 0 01-7 7h-1a6 6 0 01-5-3l-2-4a1.5 1.5 0 012.5-1.5L7 13"/>',
+  quedar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 15h3"/>',
+  estudios:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>',
+  razones:'<path d="M4 6h10M4 12h16M4 18h8"/><path d="M17 4l3 2-3 2"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/>',
+  hand:'<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
+  kiss:'<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 18h4"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"futuro", name:"Talking about the future", short:"The future tense (regular and irregular), ir a + infinitive and the conditional.", tint:"var(--blush)"},
+  {id:"intenciones", name:"Intentions & hopes", short:"Pensar, esperar, me gustaría: from a wish to a firm decision.", tint:"var(--apricot)"},
+  {id:"ofrecer", name:"Offers, promises & reassurance", short:"¿Te ayudo? ¿Quieres que lo haga yo? Te prometo que… No te preocupes.", tint:"var(--sage)"},
+  {id:"quedar", name:"Making & changing arrangements", short:"Quedar, accepting, refusing with es que…, cancelling and changing plans.", tint:"var(--cream)"},
+  {id:"estudios", name:"Studies & careers", short:"Asking about and describing plans for college, courses and jobs.", tint:"var(--blush)"},
+  {id:"razones", name:"Reasons & obligations", short:"Porque, por qué, para que; hay que and es importante (que).", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+const LO = [
+  ["ofrecer","Offering to do something"],
+  ["intenciones","Declaring intentions"],
+  ["ofrecer","Making promises"],
+  ["quedar","Making arrangements, for example for time to be spent with someone"],
+  ["quedar","Cancelling and altering arrangements"],
+  ["estudios","Asking about someone's plans for future studies and/or his or her career possibilities"],
+  ["estudios","Describing your own plans for future studies and/or your career possibilities"],
+  ["futuro","Expressing the future"],
+  ["intenciones","Expressing and understanding intention of speaker"],
+  ["intenciones","Ability to differentiate intention of speaker; communicating decision or intention with different degrees of urgency or persuasion"],
+  ["razones","Expressing cause and reason, reassurance"],
+  ["ofrecer","Expressing degrees of willingness according to different contexts"],
+];
+const LO_HEAD = LO.map((x,i)=>i<7?"Performance target":"Linguistic skill");
+
+/* ---------- glossary: [Spanish, English, note, topic] ---------- */
+const GLOSS = [
+  ["el futuro","the future tense","Infinitive + -é, -ás, -á, -emos, -éis, -án: hablaré, comerás, vivirá.","futuro"],
+  ["ir a + infinitivo","going to + verb","Voy a estudiar esta noche. The most common way to talk about plans.","futuro"],
+  ["el condicional","the conditional (would)","Future stem + -ía endings: me gustaría, podría, tendría.","futuro"],
+  ["tendré","I will have","tener → tendr-","futuro"],
+  ["haré","I will do / make","hacer → har-","futuro"],
+  ["saldré","I will go out","salir → saldr-","futuro"],
+  ["podré","I will be able to","poder → podr-","futuro"],
+  ["vendré","I will come","venir → vendr-","futuro"],
+  ["diré","I will say / tell","decir → dir-","futuro"],
+  ["pondré","I will put","poner → pondr-","futuro"],
+  ["sabré","I will know","saber → sabr-","futuro"],
+  ["querré","I will want","querer → querr- (double r)","futuro"],
+  ["habrá","there will be","The future of hay: Habrá una fiesta.","futuro"],
+  ["mañana","tomorrow / morning","Mañana por la mañana = tomorrow morning.","futuro"],
+  ["pasado mañana","the day after tomorrow","","futuro"],
+  ["la semana que viene","next week","Also: la próxima semana.","futuro"],
+  ["el año que viene","next year","Also: el próximo año.","futuro"],
+  ["dentro de diez años","in ten years' time","¿Cómo será tu vida dentro de diez años?","futuro"],
+  ["pensar + infinitivo","to intend / plan to","Pienso estudiar Derecho. (pensar: e → ie)","intenciones"],
+  ["esperar + infinitivo","to hope to","Espero aprobar todo.","intenciones"],
+  ["me gustaría","I would like","Me gustaría ser periodista.","intenciones"],
+  ["me encantaría","I would love","Stronger than me gustaría.","intenciones"],
+  ["tener la intención de","to intend to","Tengo la intención de viajar.","intenciones"],
+  ["quizás / tal vez","maybe, perhaps","A weak intention.","intenciones"],
+  ["ojalá","I hope / if only","Ojalá + subjunctive: Ojalá pueda ir.","intenciones"],
+  ["prometer","to promise","Te prometo que te llamaré (+ future).","ofrecer"],
+  ["¿Te ayudo?","Shall I help you?","Usted: ¿Le ayudo?","ofrecer"],
+  ["¿Quieres que…?","Do you want me to…?","+ subjunctive: ¿Quieres que lo haga yo?","ofrecer"],
+  ["si quieres, yo puedo…","if you like, I can…","Si quieres, yo puedo traer la música.","ofrecer"],
+  ["yo podría…","I could…","Conditional + infinitive: Yo podría traer el postre.","ofrecer"],
+  ["no te preocupes","don't worry","Usted: no se preocupe.","ofrecer"],
+  ["tranquilo / tranquila","relax, calm down","Tranquila, todo saldrá bien.","ofrecer"],
+  ["¡claro que sí!","of course!","A keen yes.","ofrecer"],
+  ["vale","OK","Spain. Neutral yes.","ofrecer"],
+  ["si no hay más remedio","if there's no other way","A reluctant yes.","ofrecer"],
+  ["quedar","to arrange to meet","¿Quedamos el sábado? Quedo con mis amigos.","quedar"],
+  ["¿A qué hora quedamos?","What time shall we meet?","","quedar"],
+  ["¿Dónde quedamos?","Where shall we meet?","Also: ¿Dónde nos vemos?","quedar"],
+  ["¿Te viene bien…?","Does … suit you?","¿Te viene bien el jueves? Usted: ¿Le viene bien…?","quedar"],
+  ["lo siento, no puedo","sorry, I can't","Add a reason with es que…","quedar"],
+  ["es que…","it's just that…","Introduces an excuse: Es que tengo que trabajar.","quedar"],
+  ["cancelar","to cancel","","quedar"],
+  ["dejar para","to put off until","¿Lo dejamos para el lunes?","quedar"],
+  ["cambiar de planes","to change plans","¡Cambio de planes!","quedar"],
+  ["en vez de","instead of","El sábado en vez del viernes.","quedar"],
+  ["por la mañana / tarde / noche","in the morning / afternoon / evening","El viernes por la noche.","quedar"],
+  ["la carrera","the degree course","¿Qué carrera vas a hacer?","estudios"],
+  ["el grado","the (bachelor's) degree","Most grados in Spain last four years.","estudios"],
+  ["el máster","the master's degree","Usually one or two years.","estudios"],
+  ["la selectividad","the university entrance exams","Popular name in Spain (officially the PAU).","estudios"],
+  ["el año sabático","the gap year","Tomaré un año sabático.","estudios"],
+  ["la Formación Profesional (FP)","vocational training","Practical courses: cocina, mecánica, informática…","estudios"],
+  ["ser + profesión","to be a (job)","No article: Quiero ser médico.","estudios"],
+  ["trabajar de","to work as","Trabajo de camarero los sábados.","estudios"],
+  ["aprobar / suspender","to pass / to fail","Espero aprobar todo.","estudios"],
+  ["hay que + infinitivo","you have to, one must","Hay que estudiar mucho.","razones"],
+  ["es importante + infinitivo","it's important to","General: Es importante dormir bien.","razones"],
+  ["es importante que + subjuntivo","it's important that (someone)…","Es importante que duermas bien.","razones"],
+  ["¿por qué?","why?","Two words, accent: ¿Por qué no vienes?","razones"],
+  ["porque","because","One word, no accent: porque tengo que trabajar.","razones"],
+  ["para que + subjuntivo","so that","Te ayudo para que termines antes.","razones"],
+  ["el subjuntivo","the subjunctive","Present subjunctive: haga, traiga, vaya, duermas…","razones"],
+].map(([t,aka,d,topic])=>({t,aka,d,topic,id:"g-"+t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-")+"-"+t.length}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["future tense","el futuro"],["conditional","el condicional"],["subjunctive","el subjuntivo"],["quedar","quedar"],["es que","es que…"],["hay que","hay que + infinitivo"]];
+
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rr(ctx,x,y,w,h,r){ if(w<0){ x+=w; w=-w; } if(h<0){ y+=h; h=-h; } r=Math.max(0,Math.min(r,h/2,w/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function arrowHead(ctx,x,y,dx,dy,col,s=8){ ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x+dx*s,y+dy*s); ctx.lineTo(x-dx*s*0.6-dy*s*0.7,y-dy*s*0.6+dx*s*0.7); ctx.lineTo(x-dx*s*0.6+dy*s*0.7,y-dy*s*0.6-dx*s*0.7); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const nf = (x,d=0) => { const s=(Math.round(x*10**d)/10**d).toFixed(d); const [i,f]=s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f?"."+f:""); };
+const eur = x => "€"+nf(x, Math.abs(x-Math.round(x))>0.004?2:0);
+const niceStep = (range,n) => { const r=range/Math.max(1,n), p=10**Math.floor(Math.log10(r)), m=r/p; return (m<=1?1:m<=2?2:m<=5?5:10)*p; };
+const tick = v => String(+v.toFixed(6));
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+// Axes: returns mapping functions. o: x0,x1,y0,y1,xl,yl,compact
+function frame(ctx,w,h,o){
+  const cp=o.compact, L=cp?36:50, R=12, T=cp?12:16, B=cp?24:34, fs=cp?9:11;
+  const X=v=>L+(v-o.x0)/(o.x1-o.x0)*(w-L-R), Y=v=>h-B-(v-o.y0)/(o.y1-o.y0)*(h-B-T);
+  const xs=o.xt||niceStep(o.x1-o.x0, Math.max(3,Math.floor((w-L)/70))), ys=o.yt||niceStep(o.y1-o.y0, Math.max(3,Math.floor((h-B)/45)));
+  for(let v=Math.ceil(o.x0/xs)*xs; v<=o.x1+1e-9; v+=xs){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,tick(v),X(v),h-B+(cp?11:14),C.muted,M(fs),"center"); }
+  for(let v=Math.ceil(o.y0/ys)*ys; v<=o.y1+1e-9; v+=ys){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,tick(v),L-5,Y(v)+3,C.muted,M(fs),"right"); }
+  const y0=Y(Math.max(o.y0,Math.min(o.y1,0)));
+  line(ctx,L,y0,w-R,y0,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(o.xl) text(ctx,o.xl,w-R,h-B+(cp?22:30),C.muted,F(cp?10:12),"right");
+  if(o.yl) text(ctx,o.yl,L+6,T+(cp?10:12),C.muted,F(cp?10:12),"left");
+  return {X,Y,L,R,T,B};
+}
+function curve(ctx,f,x0,x1,X,Y,col,lw=2.5,dash,clip){ ctx.save(); if(clip){ ctx.beginPath(); ctx.rect(clip[0],clip[1],clip[2],clip[3]); ctx.clip(); } ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); const n=120; for(let i=0;i<=n;i++){ const x=x0+(x1-x0)*i/n, y=f(x); if(i) ctx.lineTo(X(x),Y(y)); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore(); }
+
+/* ================= MODELS + DRAWINGS ================= */
+function pointerTap(el,fn){ el.addEventListener("pointerdown",e=>{ const r=el.getBoundingClientRect(); fn(e.clientX-r.left,e.clientY-r.top); }); }
+const pick=a=>a[Math.floor(Math.random()*a.length)], shuffle=a=>{ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+// Spanish numbers 0-100. before=true gives the form before a masculine noun (un año, veintiún años)
+const UNITS = "cero uno dos tres cuatro cinco seis siete ocho nueve diez once doce trece catorce quince dieciséis diecisiete dieciocho diecinueve veinte veintiuno veintidós veintitrés veinticuatro veinticinco veintiséis veintisiete veintiocho veintinueve".split(" ");
+const TENS = {30:"treinta",40:"cuarenta",50:"cincuenta",60:"sesenta",70:"setenta",80:"ochenta",90:"noventa"};
+function numES(n,before){ let s; if(n<30) s=UNITS[n]; else if(n===100) s="cien"; else { const t=Math.floor(n/10)*10, u=n%10; s=TENS[t]+(u?" y "+UNITS[u]:""); }
+  if(before){ if(s==="veintiuno") s="veintiún"; else if(s.endsWith("uno")) s=s.slice(0,-3)+"un"; } return s; }
+/* ---------- models ---------- */
+// Verbs: [infinitive, future stem, irregular?, complement, English phrase]
+const VB = [
+  ["hablar","hablar",false,"con el profesor","speak to the teacher"],
+  ["comer","comer",false,"en casa de mi abuela","eat at my grandmother's house"],
+  ["vivir","vivir",false,"en Madrid","live in Madrid"],
+  ["estudiar","estudiar",false,"Medicina","study medicine"],
+  ["trabajar","trabajar",false,"en un hotel","work in a hotel"],
+  ["viajar","viajar",false,"a México","travel to Mexico"],
+  ["tener","tendr",true,"más tiempo libre","have more free time"],
+  ["hacer","har",true,"los deberes","do the homework"],
+  ["salir","saldr",true,"con mis amigos","go out with my friends"],
+  ["poder","podr",true,"ir a la fiesta","be able to go to the party"],
+  ["venir","vendr",true,"a la fiesta","come to the party"],
+  ["decir","dir",true,"la verdad","tell the truth"],
+  ["poner","pondr",true,"la mesa","set the table"],
+  ["saber","sabr",true,"el resultado mañana","know the result tomorrow"],
+  ["querer","querr",true,"ir a la playa","want to go to the beach"],
+];
+const PERS6 = ["yo","tú","él / ella / usted","nosotros/as","vosotros/as","ellos / ellas / ustedes"];
+const SUBJ_ES = ["Yo","Tú","Ella","Nosotros","Vosotros","Ellos"], SUBJ_EN = ["I","You","She","We","You (all)","They"], BE = ["am","are","is","are","are","are"];
+const FUT = ["é","ás","á","emos","éis","án"], COND = ["ía","ías","ía","íamos","íais","ían"], IRV = ["voy","vas","va","vamos","vais","van"];
+const formOf = (v,p,m) => m==="ira"? `${IRV[p]} a ${VB[v][0]}` : VB[v][1]+(m==="cond"?COND:FUT)[p];
+const sentenceOf = (v,p,m) => ({es:`${SUBJ_ES[p]} ${formOf(v,p,m)} ${VB[v][3]}.`, en:`${SUBJ_EN[p]} ${m==="fut"?"will":m==="cond"?"would":BE[p]+" going to"} ${VB[v][4]}.`});
+// Intentions sorter
+const BINS = [["deseo","Wish|me gustaría","blush"],["esperanza","Hope|espero","apricot"],["plan","Plan|pienso · voy a","sage"],["promesa","Promise|te prometo","olive"]];
+const SORT = [
+  ["Me gustaría ser arquitecto.","deseo","A wish: me gustaría (conditional)."],
+  ["Me encantaría viajar por América del Sur.","deseo","A wish: me encantaría."],
+  ["Quiero vivir en Barcelona algún día.","deseo","A wish: quiero … algún día (some day)."],
+  ["Espero aprobar todos mis exámenes.","esperanza","A hope: espero + infinitive."],
+  ["Espero sacar buenas notas en junio.","esperanza","A hope: espero + infinitive."],
+  ["Ojalá pueda ir a la universidad.","esperanza","A hope: ojalá + subjunctive."],
+  ["Pienso estudiar Derecho en Galway.","plan","A plan: pienso + infinitive."],
+  ["Voy a trabajar en un hotel este verano.","plan","A plan: ir a + infinitive."],
+  ["El año que viene haré un curso de informática.","plan","A firm plan: future tense with a time."],
+  ["Te prometo que te llamaré mañana.","promesa","A promise: te prometo que + future."],
+  ["Prometo ayudarte con los deberes.","promesa","A promise: prometo + infinitive."],
+  ["Te juro que no llegaré tarde.","promesa","A strong promise: te juro que (I swear)."],
+];
+// Offers, promises, reassurance: [situation, who, formal, options, right index, why]
+const SIT = [
+  ["Your friend has too much to carry.","amiga",false,["¿Te ayudo con las bolsas?","¿Me ayudas con las bolsas?","Te prometo que llegaré pronto."],0,"¿Te ayudo…? (present tense) is the simplest offer. ¿Me ayudas? asks for help."],
+  ["Your friend's grandmother is setting the table.","señora",true,["¿Quiere que ponga la mesa?","¿Quieres que ponga la mesa?","Pondré la tele."],0,"Quiere for usted; querer que + subjunctive (ponga)."],
+  ["Your friend is worried you'll forget her birthday.","amiga",false,["No te preocupes, te prometo que no lo olvidaré.","No me preocupo.","Me gustaría olvidarlo."],0,"Reassurance (no te preocupes) + a promise in the future."],
+  ["You're planning a party with friends. Who brings the music?","amigos",false,["Si queréis, yo puedo traer la música.","Si queréis, vosotros traéis la música.","Yo traje la música."],0,"Si quieres / si queréis, yo puedo… offers to do it yourself."],
+  ["Your teacher is carrying a heavy box of books.","profesora",true,["¿Le llevo los libros?","¿Te llevo los libros?","¿Me lleva los libros?"],0,"Le (usted) + llevo makes an offer. ¿Me lleva…? asks her to carry them for you."],
+  ["Your friend asks if you'll come to the match on Saturday. You really want to.","amigo",false,["¡Claro que sí! Allí estaré.","Bueno, a lo mejor.","No, gracias."],0,"¡Claro que sí! sounds keen; a lo mejor only means 'maybe'."],
+  ["Your friend needs help moving house at 7 a.m. on Sunday. You agree, without much enthusiasm.","amigo",false,["Vale, si no hay más remedio…","¡Me encantaría, qué ilusión!","Nunca en la vida."],0,"Si no hay más remedio = if I really have to: a reluctant yes."],
+  ["You promise your parents you'll be home before midnight.","padres",false,["Os prometo que volveré antes de medianoche.","Os prometo que volví antes de medianoche.","Prometéis volver antes de medianoche."],0,"Te / os prometo que + future (volveré). Os for both parents (Spain)."],
+  ["Your Spanish friend's flight lands at 6 a.m. Offer to collect him.","amigo",false,["Si quieres, te recojo en el aeropuerto.","Si quieres, me recoges en el aeropuerto.","Recogeré el aeropuerto."],0,"Si quieres, + present tense: te recojo = I'll pick you up."],
+  ["Your friend is nervous before her oral exam.","amiga",false,["Tranquila, todo saldrá bien.","Tranquila, todo salió mal.","Estoy nerviosa."],0,"Reassurance with the future: saldrá (salir → saldr-)."],
+  ["A customer in the shop where you work can't find her size.","clienta",true,["¿Quiere que se lo busque?","¿Quieres que te lo busque?","¿Me lo busca?"],0,"Usted: quiere; le + lo becomes se lo; busque is the subjunctive."],
+  ["After dinner at your friend's house, offer to do the washing-up.","amiga",false,["¿Lavo yo los platos?","¿Lavas tú los platos?","He lavado los platos."],0,"Present tense + yo makes an offer: ¿Lavo yo…? / ¿Lo hago yo?"],
+];
+// Diary: Nerea's messages. act: add / move / cancel; cells are [day 0-6, slot 0-2]
+const DAYS = ["lunes","martes","miércoles","jueves","viernes","sábado","domingo"], DSH = ["L","M","X","J","V","S","D"], SLOTS = ["mañana","tarde","noche"];
+const AG = [
+  {m:"¿Quedamos el viernes por la noche para ir al cine?", en:"Shall we meet on Friday evening to go to the cinema?", act:"add", to:[4,2], label:"Cine"},
+  {m:"Lo siento, el viernes no puedo porque tengo que trabajar. ¿Lo cambiamos al sábado por la tarde?", en:"Sorry, I can't on Friday because I have to work. Shall we change it to Saturday afternoon?", act:"move", from:[4,2], to:[5,1]},
+  {m:"¿Y si estudiamos juntos en la biblioteca el lunes por la mañana?", en:"What if we study together in the library on Monday morning?", act:"add", to:[0,0], label:"Biblioteca"},
+  {m:"Mi hermano juega un partido el miércoles por la tarde. ¿Vienes conmigo?", en:"My brother is playing a match on Wednesday afternoon. Will you come with me?", act:"add", to:[2,1], label:"Partido"},
+  {m:"Al final la biblioteca está cerrada el lunes. Tenemos que cancelar, ¡lo siento!", en:"It turns out the library is closed on Monday. We have to cancel, sorry!", act:"cancel", to:[0,0]},
+  {m:"¡Cambio de planes! El partido es el jueves por la tarde, no el miércoles.", en:"Change of plan! The match is on Thursday afternoon, not Wednesday.", act:"move", from:[2,1], to:[3,1]},
+  {m:"¿Desayunamos juntos el domingo por la mañana? Te invito yo.", en:"Shall we have breakfast together on Sunday morning? My treat.", act:"add", to:[6,0], label:"Desayuno"},
+  {m:"¿Podemos ir al cine el sábado por la noche en vez de por la tarde? Hay una sesión a las nueve.", en:"Can we go to the cinema on Saturday evening instead of the afternoon? There's a showing at nine.", act:"move", from:[5,1], to:[5,2]},
+];
+const AG_FINAL = [{d:3,s:1,label:"Partido"},{d:5,s:2,label:"Cine"},{d:6,s:0,label:"Desayuno"}];
+// Survey of students' study plans
+const CARR = [["Medicina",6,["médico","médica"]],["Derecho",4,["abogado","abogada"]],["Enfermería",4,["enfermero","enfermera"]],["Ingeniería Informática",4,["ingeniero informático","ingeniera informática"]],["Magisterio",4,["maestro","maestra"]],["Arquitectura",5,["arquitecto","arquitecta"]],["Veterinaria",5,["veterinario","veterinaria"]],["Periodismo",4,["periodista","periodista"]],["un ciclo de FP de cocina",2,["cocinero","cocinera"]],["Psicología",4,["psicólogo","psicóloga"]]];
+const NAMES = [["Lucía","f"],["Hugo","m"],["Martina","f"],["Pablo","m"],["Sofía","f"],["Daniel","m"],["Valeria","f"],["Mateo","m"],["Carmen","f"],["Álex","m"]];
+const CITIES = ["Salamanca","Granada","Sevilla","Valencia","Bilbao","Madrid","Barcelona","Santiago"];
+const SV_SAMPLE = [[6,24],[4,22],[5,24],[2,20],[4,23],[6,25],[5,23],[8,26]];
+// Connectors gap-fill: [sentence with ___, options, right index, rule]
+const GAP = [
+  ["¿___ quieres estudiar Medicina?",["Por qué","Porque","Para que"],0,"¿Por qué…? asks why: two words, accent on qué."],
+  ["Quiero estudiar Medicina ___ me encanta ayudar a la gente.",["por qué","porque","para que"],1,"porque + a reason: because."],
+  ["Te dejo mis apuntes ___ puedas estudiar.",["por qué","porque","para que"],2,"para que + subjunctive (puedas): so that someone else can."],
+  ["Hay que ___ mucho para aprobar.",["estudiar","estudie","estudiará"],0,"hay que + infinitive: you have to, one must."],
+  ["Es importante ___ bien antes del examen.",["dormir","duermas","dormirá"],0,"es importante + infinitive: a general statement."],
+  ["Es importante que ___ bien antes del examen.",["dormir","duermas","duermes"],1,"es importante que + subjunctive (duermas): aimed at a person."],
+  ["Te llamo ___ sepas a qué hora llego.",["porque","para que","por qué"],1,"para que + subjunctive (sepas, from saber)."],
+  ["No sé ___ no ha venido Marta.",["porque","por qué","para que"],1,"Indirect questions keep the accent: no sé por qué…"],
+  ["No te preocupes, ___ te ayudaré.",["yo","me","mí"],0,"Introductory phrase + yo + future: no te preocupes, yo te ayudaré."],
+  ["Es importante que ___ temprano mañana.",["llegamos","lleguemos","llegar"],1,"es importante que + subjunctive: lleguemos (g → gu before e)."],
+  ["Hay que ___ las entradas antes del viernes.",["comprar","compremos","compraremos"],0,"hay que + infinitive."],
+  ["Me quedo en casa ___ tengo que estudiar.",["porque","para que","por qué"],0,"porque + a reason."],
+];
+/* ---------- drawings ---------- */
+function fitFont(ctx,t,max,start,min,w=700){ let fs=start; ctx.font=F(fs,w); while(ctx.measureText(t).width>max && fs>min){ fs--; ctx.font=F(fs,w); } return fs; }
+function drawVerb(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=!!o.compact, m=o.m||"fut", V=VB[o.v], p=o.p;
+  const parts = m==="ira"? [[IRV[p],C.olive,"ir (present)"],["a",C["surface-2"],""],[V[0],C.apricot,"infinitive"]] : [[V[1]+(V[2]?"-":""),V[2]?C.terra:C.apricot,V[2]?"irregular stem":"infinitive"],[(m==="cond"?COND:FUT)[p],C.sage,"ending"]];
+  const pad=cp?8:14, gap=cp?16:(w<440?20:30); let fs=cp?15:(w<440?22:26); ctx.font=F(fs);
+  const tot=()=>parts.reduce((a,[t])=>a+ctx.measureText(t).width+pad*2,0)+gap*(parts.length-1);
+  while(tot()>w-24 && fs>9){ fs--; ctx.font=F(fs); }
+  const bh=fs*1.9, y=cp?14:30; let x=(w-tot())/2;
+  if(!cp) text(ctx,m==="fut"?"FUTURO · will":m==="cond"?"CONDICIONAL · would":"IR A + INFINITIVO · going to",14,20,C.muted,F(12),"left");
+  parts.forEach(([t,col,lab],i)=>{ ctx.font=F(fs); const bw=ctx.measureText(t).width+pad*2; rr(ctx,x,y+(cp?0:10),bw,bh,10); ctx.fillStyle=col; ctx.fill(); text(ctx,t,x+bw/2,y+(cp?0:10)+bh/2+fs*0.35,col===C.terra?(C["on-accent"]||"#fff"):col===C["surface-2"]?C.ink:"#3b2b21",F(fs),"center");
+    if(lab && !cp) text(ctx,lab,x+bw/2,y+10+bh+16,C.muted,F(11,600),"center"); x+=bw; if(i<parts.length-1){ text(ctx,"+",x+gap/2,y+(cp?0:10)+bh/2+fs*0.35,C.ink,F(fs),"center"); x+=gap; } });
+  const res=formOf(o.v,p,m), ay=y+(cp?0:10)+bh+(cp?6:26), ry=ay+(cp?14:30);
+  line(ctx,w/2,ay,w/2,ry-8,C.muted,2); arrowHead(ctx,w/2,ry-6,0,1,C.muted,cp?5:7);
+  const rfs=fitFont(ctx,res,w-60,cp?18:32,10), rw=ctx.measureText(res).width+pad*3, rh=rfs*1.8;
+  rr(ctx,(w-rw)/2,ry,rw,rh,12); ctx.fillStyle=C.blush; ctx.fill(); text(ctx,res,w/2,ry+rh/2+rfs*0.35,"#3b2b21",F(rfs),"center");
+  if(!cp){ const s=sentenceOf(o.v,p,m), sy=ry+rh+30; const f1=fitFont(ctx,s.es,w-30,18,10); text(ctx,s.es,w/2,sy,C.ink,F(f1),"center"); const f2=fitFont(ctx,s.en,w-30,13,9,600); text(ctx,s.en,w/2,sy+22,C.muted,F(f2,600),"center"); }
+}
+function drawSorter(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, n=BINS.length, gap=cp?6:10, bw=(w-gap*(n+1))/n, top=cp?8:12, bh=h-top-(cp?8:12), P=[];
+  BINS.forEach(([id,name,col],i)=>{ const x=gap+i*(bw+gap); P.push([x,top,bw,bh]); rr(ctx,x,top,bw,bh,12); ctx.fillStyle=C["surface-2"]; ctx.fill(); ctx.strokeStyle=o.armed?C.terra:C.line; ctx.lineWidth=o.armed?2.5:1.5; ctx.stroke();
+    name.split("|").forEach((wd,j)=>{ const f=fitFont(ctx,wd,bw-8,j?(cp?9:12):(cp?11:14),7,j?600:700); text(ctx,wd,x+bw/2,top+(cp?16:22)+j*(cp?13:18),j?C.muted:C.ink,F(f,j?600:700),"center"); });
+    const items=(o.placed||[]).filter(p=>p.bin===id); items.forEach((p,j)=>{ const y=top+bh-(cp?12:16)-j*(cp?14:20); rr(ctx,x+4,y-(cp?9:12),bw-8,cp?12:16,5); ctx.fillStyle=p.ok?C[col]:C.blush; ctx.fill(); ctx.save(); ctx.beginPath(); ctx.rect(x+4,y-14,bw-8,20); ctx.clip(); text(ctx,(p.ok?"✓ ":"✗ ")+p.short,x+bw/2,y,"#3b2b21",F(cp?8:10),"center"); ctx.restore(); }); });
+  return P;
+}
+function drawDiary(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, L=cp?30:70, T=cp?18:32, R=6, B=6, cw=(w-L-R)/7, ch=(h-T-B)/3;
+  DAYS.forEach((d,i)=>text(ctx,w<620?DSH[i]:d,L+cw*(i+0.5),T-(cp?6:12),C.ink,F(cp?9:12),"center"));
+  SLOTS.forEach((s,j)=>text(ctx,cp?s.slice(0,3)+".":s,L-6,T+ch*(j+0.5)+4,C.muted,F(cp?8:12,600),"right"));
+  for(let i=0;i<7;i++) for(let j=0;j<3;j++){ rr(ctx,L+i*cw+2,T+j*ch+2,cw-4,ch-4,cp?4:8); ctx.fillStyle=i>=5?C["surface-2"]:C.surface; ctx.fill(); ctx.strokeStyle=C.line; ctx.lineWidth=1; ctx.stroke(); }
+  (o.ev||[]).forEach(e=>{ const x=L+e.d*cw, y=T+e.s*ch; rr(ctx,x+4,y+4,cw-8,ch-8,cp?4:8); ctx.fillStyle=C.apricot; ctx.fill(); const f=fitFont(ctx,e.label,cw-12,cp?9:13,6); text(ctx,e.label,x+cw/2,y+ch/2+f*0.35,"#3b2b21",F(f),"center"); });
+  if(o.flash){ const f=o.flash; rr(ctx,L+f.d*cw+2,T+f.s*ch+2,cw-4,ch-4,cp?4:8); ctx.strokeStyle=f.ok?C.good:C.bad; ctx.lineWidth=3; ctx.stroke(); }
+  return {L,T,cw,ch};
+}
+function drawSurvey(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const pts=o.pts||[], fr=frame(ctx,w,h,{x0:0,x1:9,y0:18,y1:30,xl:"años de estudio",yl:"edad al empezar a trabajar",compact:o.compact,xt:1,yt:2});
+  const f=fitLine(pts); if(f) line(ctx,fr.X(0),fr.Y(f.c),fr.X(9),fr.Y(f.c+f.m*9),C.terra,2.5,[7,5]);
+  pts.forEach(([x,y],i)=>circle(ctx,fr.X(x),fr.Y(y),o.compact?3.5:5,i===pts.length-1&&!o.compact?C.apricot:C.surface,C.ink,2));
+}
+function drawGap(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=!!o.compact, G=GAP[o.k], fs=cp?12:(w<440?17:21), pad=cp?5:9, bh=fs*1.6, lh=bh+(cp?6:10); ctx.font=F(fs);
+  const toks=G[0].split(" ").map(t=>{ const g=t.includes("___"); return {t:g?t.replace("___", o.done? G[1][o.pick!=null?o.pick:G[2]] : "  ?  "):t, g}; });
+  let x=12, y=cp?10:22; toks.forEach(tk=>{ ctx.font=F(fs); tk.w=ctx.measureText(tk.t).width+pad*2; if(x+tk.w>w-12 && x>12){ x=12; y+=lh; } tk.x=x; tk.y=y; x+=tk.w+(cp?4:8); });
+  toks.forEach(tk=>{ rr(ctx,tk.x,tk.y,tk.w,bh,8); ctx.fillStyle=tk.g?(o.done?(o.ok?C.sage:C.blush):C.apricot):C["surface-2"]; ctx.fill(); if(tk.g){ ctx.strokeStyle=C.terra; ctx.lineWidth=2; ctx.stroke(); } text(ctx,tk.t,tk.x+tk.w/2,tk.y+bh/2+fs*0.35,tk.g?"#3b2b21":C.ink,F(fs),"center"); });
+  const ry=y+lh+(cp?6:16), msg=o.done? G[3] : "Which word fills the gap?", f2=fitFont(ctx,msg,w-40,cp?11:15,8,600);
+  rr(ctx,12,ry,w-24,f2*2.4,10); ctx.fillStyle=o.done?C["surface-2"]:C.surface; ctx.fill(); ctx.strokeStyle=C.line; ctx.lineWidth=1.2; ctx.stroke(); text(ctx,msg,w/2,ry+f2*1.2+f2*0.35,o.done?C.ink:C.muted,F(f2,600),"center");
+}
+
+function fitLine(pts){ if(pts.length<2) return null; const n=pts.length, mx=pts.reduce((a,p)=>a+p[0],0)/n, my=pts.reduce((a,p)=>a+p[1],0)/n; let sxy=0,sxx=0; pts.forEach(([x,y])=>{ sxy+=(x-mx)*(y-my); sxx+=(x-mx)**2; }); if(!sxx) return null; const m=sxy/sxx; return {m,c:my-m*mx}; }
+// Conversation scene
+function figure(ctx,x,y,s,col){ ctx.save(); ctx.translate(x,y); ctx.scale(s,s); ctx.fillStyle=col; ctx.beginPath(); ctx.arc(0,-46,13,0,7); ctx.fill(); rr(ctx,-16,-30,32,44,12); ctx.fill(); ctx.fillRect(-12,10,9,26); ctx.fillRect(3,10,9,26); ctx.restore(); }
+function drawScene(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, s=cp?0.7:1.1, yb=h-(cp?14:22);
+  line(ctx,10,yb+2,w-10,yb+2,C.line,2);
+  figure(ctx,w*0.2,yb-36*s,s,C.terra); figure(ctx,w*0.8,yb-36*s,s*(o.small?0.75:1),o.formal?C.olive:C.apricot);
+  if(!cp) text(ctx,"tú",w*0.2,yb+18,C.muted,F(12),"center"); if(!cp && o.who) text(ctx,o.who,w*0.8,yb+18,C.muted,F(12),"center");
+  const msg=o.say||"…", bx=w*0.12, by=cp?8:16, bw=w*0.76, bh=cp?40:64;
+  rr(ctx,bx,by,bw,bh,16); ctx.fillStyle=o.ok==null?C.surface:o.ok?C.sage:C.blush; ctx.fill(); ctx.strokeStyle=C.line; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(w*0.2,by+bh); ctx.lineTo(w*0.24,by+bh); ctx.lineTo(w*0.21,by+bh+(cp?10:16)); ctx.closePath(); ctx.fillStyle=o.ok==null?C.surface:o.ok?C.sage:C.blush; ctx.fill();
+  ctx.font=F(cp?11:17); let fs=cp?11:17; while(ctx.measureText(msg).width>bw-24 && fs>8){ fs--; ctx.font=F(fs); }
+  text(ctx,msg,w/2,by+bh/2+fs/3,"#3b2b21",F(fs),"center");
+  if(o.formal!=null){ const tag=o.formal?"formal · usted":"informal · tú"; text(ctx,tag,w*0.8,by+bh+(cp?16:28),C.muted,F(cp?9:12),"center"); }
+}
+
+/* ================= ROUTER ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "futuro", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+$("loList").innerHTML = LO.map(([t,s],i)=>`<li><label><input type="checkbox" id="lo${i}"><span class="mono">${i+1}</span><span>${s} <small style="color:var(--muted)">· ${LO_HEAD[i]}</small></span></label></li>`).join("");
+const loState=store.get("es12-lo",{});
+LO.forEach((x,i)=>{ const id="lo"+i; $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("es12-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=LO.filter((x,i)=>$("lo"+i).checked).length; $("stLO").textContent=`${lo}/${LO.length}`; $("stLOb").style.width=(lo/LO.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("es12-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  futuro:{ vis:[["verb",{v:6,p:0,m:"fut"}]], cap:"tener → irregular stem tendr- + -é = tendré. Stems can change; the endings never do.",
+    keys:[["→","Future tense: infinitive + -é, -ás, -á, -emos, -éis, -án. Mañana hablaré con él."],["⚙","Ten irregular stems: tendr-, har-, saldr-, podr-, vendr-, dir-, pondr-, sabr-, querr-, habr-."],["🗓","Ir a + infinitive for plans: Voy a estudiar esta noche. The conditional (me gustaría) uses the future stem + -ía."]],
+    f:"voy / vas / va / vamos / vais / van + a + infinitivo", mistake:"Adding future endings to the present stem (\"tengré\"). Use the whole infinitive or the irregular stem: tendré." },
+  intenciones:{ vis:[["sorter",{placed:[{bin:"deseo",ok:true,short:"Me gustaría ser…"},{bin:"esperanza",ok:true,short:"Espero aprobar…"},{bin:"plan",ok:true,short:"Pienso estudiar…"},{bin:"promesa",ok:true,short:"Te prometo que…"}]}]], cap:"From a wish to a promise: the verb you choose shows how sure you are.",
+    keys:[["☁","Wishes: me gustaría, me encantaría, quiero … algún día."],["✦","Hopes and plans: espero + infinitive, pienso + infinitive, voy a + infinitive."],["✓","Promises: te prometo que + future, te juro que…"]],
+    f:"me gustaría < espero < pienso / voy a < te prometo que", mistake:"Using me gustaría for everything. Show range: pienso, espero, tengo la intención de, voy a." },
+  ofrecer:{ vis:[["scene",{say:"Si quieres, yo puedo traer la música.",formal:false,who:"amigos"}]], cap:"An offer to friends: si quieres (or si queréis), yo puedo + infinitive.",
+    keys:[["🤝","Offers: ¿Te ayudo? · Si quieres, yo puedo… · Yo podría traer… · ¿Quieres que lo haga yo? (+ subjunctive)"],["✋","Promises and reassurance: Te prometo que te llamaré. No te preocupes, yo lo hago. Todo saldrá bien."],["⇅","Willingness: ¡Claro que sí! (keen) · Vale (neutral) · Si no hay más remedio… (reluctant). Pronouns: ¿Lo hago yo? ¿Se las traigo?"]],
+    f:"¿Quieres que + subjuntivo? · Si quieres, yo puedo + infinitivo", mistake:"Mixing registers: ¿Te ayudo? to a teacher. With usted: ¿Le ayudo? ¿Quiere que se lo traiga?" },
+  quedar:{ vis:[["diary",{ev:AG_FINAL}]], cap:"Nerea's week after every change: match on Thursday, cinema on Saturday night, breakfast on Sunday.",
+    keys:[["📅","Propose: ¿Quedamos el sábado? ¿Qué tal si vamos al cine? ¿Te viene bien a las ocho?"],["✗","Refuse politely: Lo siento, no puedo. Es que tengo que trabajar. Cancel: Tenemos que cancelar."],["↻","Change: ¿Lo dejamos para el domingo? ¿Lo cambiamos al sábado? A las nueve en vez de a las ocho."]],
+    f:"¿Quedamos…? → ¿A qué hora? → ¿Dónde? → ¡Vale!", mistake:"Translating \"meet\" as encontrar. To arrange to meet a friend, use quedar (con)." },
+  estudios:{ vis:[["survey",{pts:SV_SAMPLE}]], cap:"Invented survey: each extra year of study pushes the first job back about a year.",
+    keys:[["?","Ask: ¿Qué vas a hacer después del colegio? ¿Qué te gustaría estudiar? ¿Dónde?"],["🎓","Describe: Pienso estudiar… en… La carrera dura cuatro años. Después haré un máster."],["💼","Careers: Me gustaría ser enfermera (no article). Primero tomaré un año sabático."]],
+    f:"Pienso estudiar… porque… Me gustaría ser…", mistake:"Saying \"Quiero ser un médico\". No article with ser + job: Quiero ser médico." },
+  razones:{ vis:[["gap",{k:2,done:true,ok:true}]], cap:"Para que + subjunctive: Te dejo mis apuntes para que puedas estudiar.",
+    keys:[["?","¿Por qué? asks why (two words, accent). Porque gives the reason (one word, no accent)."],["→","Para + infinitive (same person): Estudio para aprobar. Para que + subjunctive (different person): Te ayudo para que apruebes."],["!","Hay que + infinitive (one must). Es importante + infinitive; es importante que + subjunctive."]],
+    f:"hay que + inf. · es importante que + subj. · para que + subj.", mistake:"Writing porque in a question. Questions take ¿Por qué…?" },
+};
+
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  ["quedar","1 · Propose","var(--blush)","¿Quedamos el sábado para ir al cine?"],
+  ["quedar","2 · Fix time and place","var(--apricot)","¿A qué hora quedamos? ¿Dónde nos vemos?"],
+  ["ofrecer","3 · Offer","var(--sage)","Si quieres, yo compro las entradas."],
+  ["intenciones","4 · Promise","var(--cream)","Te prometo que llegaré a tiempo."],
+  ["razones","5 · Change it","var(--blush)","Lo siento, es que tengo que trabajar. ¿Lo dejamos para el domingo?"],
+];
+$("cases").innerHTML = CASES.map(([i,n,tn,d])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${n}</h3></div><p style="font-family:var(--f-display);font-size:1.05rem">${d}</p></div>`).join("");
+(()=>{ const B=[["Medicina",6,"6 años"],["Arquitectura",5,"5 años"],["Veterinaria",5,"5 años"],["Most grados (Derecho, Enfermería…)",4,"4 años"],["FP de grado superior",2,"2 años"],["Máster",1.5,"1–2 años"]], mx=6;
+  $("bars").innerHTML = B.map(([n,v,l],i)=>`<div class="barrow"><span><b>${n}</b></span><div class="track"><i style="width:${(v/mx*100).toFixed(1)}%;background:var(--${["terra","apricot","sage","blush","olive","cream"][i]})"></i></div><span class="v">${l}</span></div>`).join("") + `<p class="result">Typical full-time lengths in Spain; some courses differ. Useful phrase: La carrera dura cuatro años.</p>`; })();
+const AROUND = [
+  ["clock","¿A qué hora quedamos?","Spanish evenings start late: meeting at ten at night for dinner or a film is normal, and \"por la tarde\" can last until about nine.",[["Spain","neutral"],["Quedar","real"]],"var(--blush)"],
+  ["globe","La selectividad","The popular name for Spain's university entrance exams (officially the PAU). The results decide which grado you can study.",[["Estudios","real"]],"var(--apricot)"],
+  ["hand","Mañana, mañana","Mañana means both \"tomorrow\" and \"morning\": mañana por la mañana = tomorrow morning.",[["Vocabulary","real"]],"var(--sage)"],
+  ["kiss","WhatsApp Spanish","Friends shorten words in messages: q = que, xq = porque, tb = también, finde = fin de semana. Never in the exam!",[["Register","real"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+// Phrase bank
+const PRON = ["yo","tú","él / ella / Ud.","nosotros/as","vosotros/as","ellos / ellas / Uds."];
+const TABLES = [["Futuro: hablar",FUT.map(e=>"hablar"+e)],["Futuro: tener (irregular)",FUT.map(e=>"tendr"+e)],["Ir a + infinitivo",IRV.map(f=>f+" a + inf.")],["Condicional: poder",COND.map(e=>"podr"+e)]];
+$("pbank").innerHTML = TABLES.map(([v,f])=>`<div class="panel fcell"><span class="pill">Verb</span><span class="big">${v}</span><table class="ptable">${f.map((x,i)=>`<tr><td>${PRON[i]}</td><td><b>${x}</b></td></tr>`).join("")}</table></div>`).join("")
+  + `<div class="panel fcell"><span class="pill a">Irregular stems</span><span class="big">tendr- · har- · saldr- · podr- · vendr- · dir- · pondr- · sabr- · querr- · habr-</span><dl><dt>Endings</dt><dd>-é, -ás, -á, -emos, -éis, -án (future) · -ía… (conditional)</dd></dl></div>`
+  + `<div class="panel fcell"><span class="pill a">Gustar</span><span class="big">me · te · le · nos · os · les gustaría</span><dl><dt>e.g.</dt><dd>Me gustaría ser periodista. ¿Te gustaría venir?</dd></dl></div>`
+  + `<div class="panel fcell"><span class="pill a">Quedar</span><span class="big">¿Quedamos? · ¿A qué hora? · ¿Dónde?</span><dl><dt>Sí</dt><dd>¡Vale! ¡Perfecto! ¡Claro que sí!</dd><dt>No</dt><dd>Lo siento, no puedo. Es que…</dd><dt>Cambiar</dt><dd>¿Lo dejamos para…? · en vez de…</dd></dl></div>`
+  + `<div class="panel fcell"><span class="pill a">Ofrecer y prometer</span><span class="big">¿Te ayudo? · ¿Quieres que lo haga yo?</span><dl><dt>Ofrecer</dt><dd>Si quieres, yo puedo… · Yo podría traer…</dd><dt>Prometer</dt><dd>Te prometo que + futuro</dd><dt>Tranquilizar</dt><dd>No te preocupes. Todo saldrá bien.</dd></dl></div>`
+  + `<div class="panel fcell"><span class="pill a">Razones</span><span class="big">porque · ¿por qué? · para · para que</span><dl><dt>Obligación</dt><dd>hay que + inf. · tengo que + inf.</dd><dt>Importancia</dt><dd>es importante + inf. / que + subj.</dd></dl></div>`;
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"futuro",label:"El futuro",col:"var(--blush)",leaves:[["Futuro","hablaré, comeré."],["Irregulares","tendré, haré."],["Ir a","voy a + inf."],["Condicional","me gustaría."]]},
+  {id:"intenciones",label:"Intenciones",col:"var(--apricot)",leaves:[["Deseo","me gustaría."],["Esperanza","espero + inf."],["Plan","pienso + inf."],["Promesa","te prometo que."]]},
+  {id:"ofrecer",label:"Ofrecer",col:"var(--sage)",leaves:[["¿Te ayudo?","Simple offer."],["¿Quieres que…?","+ subjuntivo."],["Si quieres…","yo puedo…"],["Pronombres","¿Se las traigo?"]]},
+  {id:"quedar",label:"Quedar",col:"var(--cream)",leaves:[["Proponer","¿Quedamos?"],["Aceptar","¡Vale!"],["Rechazar","Lo siento, es que…"],["Cambiar","¿Lo dejamos para…?"]]},
+  {id:"estudios",label:"Estudios",col:"var(--blush)",leaves:[["Carrera","grado, máster."],["Profesión","ser + profesión."],["Año sabático","gap year."],["Preguntar","¿Qué vas a hacer?"]]},
+  {id:"razones",label:"Razones",col:"var(--sage)",leaves:[["porque","because."],["¿por qué?","why?"],["para que","+ subjuntivo."],["hay que","+ infinitivo."]]},
+];
+
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Hacer</text><text x="${cx}" y="${cy+22}" text-anchor="middle">planes</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["futuro","How do you form the future tense of regular verbs?","Infinitive + -é, -ás, -á, -emos, -éis, -án: hablaré, comerás, vivirá."],
+  ["futuro","Give the ten irregular future stems.","tendr- (tener), har- (hacer), saldr- (salir), podr- (poder), vendr- (venir), dir- (decir), pondr- (poner), sabr- (saber), querr- (querer), habr- (haber: habrá)."],
+  ["futuro","How do you say \"I'm going to study\"?","Voy a estudiar (ir a + infinitive)."],
+  ["futuro","Future tense or ir a: when do you use each?","Ir a + infinitive for near, planned events; the future tense for predictions, promises and the further future."],
+  ["futuro","How is the conditional formed?","Future stem + -ía, -ías, -ía, -íamos, -íais, -ían: me gustaría, podría, tendría."],
+  ["intenciones","What does pensar + infinitive mean?","To intend / plan to: Pienso estudiar Medicina."],
+  ["intenciones","What does esperar + infinitive mean?","To hope to: Espero aprobar todo."],
+  ["intenciones","How do you say \"I would like to be a nurse\"?","Me gustaría ser enfermero / enfermera."],
+  ["intenciones","Rank from least to most certain: te prometo que, me gustaría, voy a, espero.","me gustaría → espero → voy a → te prometo que."],
+  ["ofrecer","Give three ways to offer help.","¿Te ayudo? · Si quieres, yo puedo… · ¿Quieres que lo haga yo?"],
+  ["ofrecer","Why \"haga\" in ¿Quieres que lo haga yo?","Querer que + a different subject takes the present subjunctive."],
+  ["ofrecer","How do you make a promise?","Te prometo que + future: Te prometo que te llamaré."],
+  ["ofrecer","How do you reassure someone?","No te preocupes. Tranquilo/a. Todo saldrá bien."],
+  ["ofrecer","¿Se las traigo? Why \"se\"?","Le / les + lo, la, los, las becomes se: le traigo las llaves → se las traigo."],
+  ["quedar","What does quedar mean when making plans?","To arrange to meet: ¿Quedamos el sábado? ¿Dónde quedamos?"],
+  ["quedar","How do you ask if a day suits someone?","¿Te viene bien el jueves? (usted: ¿Le viene bien…?)"],
+  ["quedar","How do you turn down an invitation politely?","Lo siento, no puedo. Es que tengo que trabajar. ¿Otro día?"],
+  ["quedar","How do you put a plan off?","¿Lo dejamos para el lunes? / ¿Lo cambiamos al sábado?"],
+  ["quedar","What does \"en vez de\" mean?","Instead of: el sábado en vez del viernes."],
+  ["estudios","How do you ask someone about their plans?","¿Qué vas a hacer después del colegio? ¿Qué te gustaría estudiar?"],
+  ["estudios","What is la selectividad?","The popular name for Spain's university entrance exams."],
+  ["estudios","How do you say \"I want to be an engineer\"?","Quiero ser ingeniero / ingeniera (no article)."],
+  ["estudios","What is un año sabático?","A gap year: Tomaré un año sabático para viajar."],
+  ["razones","Porque or por qué?","¿Por qué? asks why. Porque gives the reason (because)."],
+  ["razones","Para + infinitive or para que + subjunctive?","Same person: Estudio para aprobar. Different person: Te ayudo para que apruebes."],
+  ["razones","Es importante + infinitive or es importante que + subjunctive?","General: Es importante dormir. For a person: Es importante que duermas."],
+  ["razones","What follows hay que?","The infinitive: Hay que estudiar mucho."],
+];
+
+let fcKnown = store.get("es12-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter(c=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("es12-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("es12-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("es12-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["futuro","The future of tener for yo is:",["teneré","tendré","tenré","tengo"],1,"tener has the irregular stem tendr-: tendré."],
+  ["futuro","Which future form of hablar is correct for nosotros?",["hablaremos","hablarémos","hablamos","hablaramos"],0,"-emos has no accent: hablaremos."],
+  ["futuro","\"Voy a estudiar\" means:",["I studied","I'm going to study","I would study","I study"],1,"Ir a + infinitive = going to."],
+  ["intenciones","Which sentence shows the firmest intention?",["Me gustaría ir a Chile.","Espero ir a Chile.","Voy a ir a Chile en julio.","Quizás vaya a Chile."],2,"Voy a + infinitive with a date is a decided plan."],
+  ["intenciones","\"Pienso estudiar Derecho\" means:",["I think Law is hard","I'm planning to study Law","I thought about Law","I studied Law"],1,"Pensar + infinitive = to intend or plan to."],
+  ["intenciones","Complete: Me ___ ser periodista.",["gustaría","gustaré","gusto","gustarías"],0,"Me gustaría = I would like (conditional)."],
+  ["ofrecer","Which one is an offer?",["¿Me ayudas?","¿Te ayudo?","Ayúdame.","Me ayudaste."],1,"¿Te ayudo? = Shall I help you?"],
+  ["ofrecer","\"¿Quieres que lo haga yo?\" uses haga because:",["it's the future","querer que + another subject takes the subjunctive","it's a command","it's the past"],1,"Querer que + different subject → present subjunctive."],
+  ["ofrecer","To offer help to a teacher (usted), you say:",["¿Te ayudo?","¿Le ayudo?","¿Os ayudo?","¿Me ayuda?"],1,"Le is the usted object pronoun."],
+  ["quedar","\"¿Quedamos a las ocho?\" means:",["Shall we stay at eight?","Shall we meet at eight?","Are we staying until eight?","Is it eight already?"],1,"Quedar = to arrange to meet."],
+  ["quedar","Which phrase cancels a plan politely?",["¡Hasta luego!","Lo siento, al final no puedo ir.","¿Quedamos?","¡Qué bien!"],1,"An apology + al final no puedo (in the end I can't)."],
+  ["quedar","\"¿Lo dejamos para el lunes?\" suggests:",["cancelling for ever","putting it off until Monday","leaving it there on Monday","meeting every Monday"],1,"Dejar para = to put off until."],
+  ["estudios","In a talk about the future, \"la carrera\" usually means:",["the race","the university degree course","the career ladder","the road"],1,"¿Qué carrera vas a hacer? = What degree are you going to do?"],
+  ["estudios","\"Quiero ser médico\": why is there no article?",["It's plural","With ser, jobs usually take no article","It's the future","Médico is an adjective"],1,"Ser + job, no article: Es profesora."],
+  ["razones","Choose: Te dejo mis apuntes ___ puedas estudiar.",["porque","para que","por qué","que"],1,"Para que + subjunctive (puedas)."],
+  ["razones","\"Hay que\" is followed by:",["the subjunctive","the infinitive","the future","a noun only"],1,"Hay que estudiar = one has to study."],
+];
+
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("es12-best",null); if(best==null||pct>best) store.set("es12-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[A-Za-z]/.test(g.t[0]) ? g.t[0].toUpperCase() : "#";
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/</g,"&lt;")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Contesta en inglés","Answer in English (listening and reading questions are usually answered in English or Irish).","Contesta en inglés a las preguntas."],
+  ["Lee el texto","Read the text.","Lee el texto y contesta a las preguntas."],
+  ["Escucha","Listen.","Escucha la conversación."],
+  ["Escribe","Write.","Escribe un correo electrónico a tu amigo."],
+  ["unas 90 palabras","about 90 words: stay close to the limit.","Escribe unas 90 palabras."],
+  ["Busca / encuentra","Find (a word or phrase in the text).","Busca en el texto una palabra que significa…"],
+  ["Explica","Explain.","Explica por qué…"],
+  ["Menciona","Mention / name.","Menciona dos cosas que…"],
+  ["Rellena","Fill in.","Rellena la ficha."],
+  ["Verdadero o falso","True or false.","¿Verdadero o falso?"],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("");
+// Grammar trainer (typed answers; accents checked)
+const PERS = [["yo",0],["tú",1],["él",2],["ella",2],["usted",2],["nosotros",3],["vosotros",4],["ellos",5],["ustedes",5]];
+const IRA = [["study medicine","estudiar medicina"],["travel to Spain","viajar a España"],["work in a shop","trabajar en una tienda"],["live in Dublin","vivir en Dublín"],["go to university","ir a la universidad"],["learn to drive","aprender a conducir"],["visit Madrid","visitar Madrid"],["buy a car","comprar un coche"]];
+const IRP = [["I","am","voy","yo"],["You (tú)","are","vas","tú"],["She","is","va","ella"],["We","are","vamos","nosotros"],["They","are","van","ellos"]];
+const SUBJV = [["hacer","haga","la cena","hago → hag- + -a"],["traer","traiga","las bebidas","traigo → traig- + -a"],["ir","vaya","a por el pan","irregular: vaya"],["llamar","llame","a tu madre","llamo → llam- + -e"],["comprar","compre","las entradas","compro → compr- + -e"],["preparar","prepare","los bocadillos","preparo → prepar- + -e"],["llevar","lleve","la maleta","llevo → llev- + -e"],["poner","ponga","la mesa","pongo → pong- + -a"],["reservar","reserve","una mesa","reservo → reserv- + -e"],["buscar","busque","un taxi","busco → busc- + -e, spelled busque"],["pagar","pague","la cuenta","pago → pag- + -e, spelled pague"],["venir","venga","contigo","vengo → veng- + -a"]];
+const PRONS = [["¿Hago yo la cena?",["la hago yo","la hago"],"la cena → la"],["¿Traigo las bebidas?",["las traigo"],"las bebidas → las"],["¿Compro los billetes?",["los compro"],"los billetes → los"],["¿Llamo a Marta?",["la llamo"],"a Marta → la"],["¿Te traigo el libro?",["te lo traigo"],"indirect te comes before direct lo"],["¿Te compro las entradas?",["te las compro"],"te + las"],["¿Le traigo las llaves? (a usted)",["se las traigo"],"le + las → se las"],["¿Le reservo la mesa? (a usted)",["se la reservo"],"le + la → se la"],["¿Os preparo los bocadillos?",["os los preparo"],"os + los"],["¿Les mando el correo? (a ustedes)",["se lo mando"],"les + lo → se lo"],["¿Te llevo la maleta?",["te la llevo"],"te + la"],["¿Busco el restaurante?",["lo busco"],"el restaurante → lo"]];
+const strip = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[¿?¡!.,]/g,"").replace(/\s+/g," ").trim();
+const clean = s => s.toLowerCase().replace(/[¿?¡!.,]/g,"").replace(/\s+/g," ").trim();
+const cap1 = s => s.charAt(0).toUpperCase()+s.slice(1);
+const PTYPES = {
+  verb:{ name:"Future tense", gen(){ const v=pick(VB), [p,i]=pick(PERS), ans=v[1]+FUT[i];
+      return { q:`Write the future tense of <b>${v[0]}</b> for <b>${p}</b>.`, ans:[ans], steps:[`${v[0]} → ${v[2]?`irregular stem <b>${v[1]}-</b>`:`stem = the whole infinitive <b>${v[0]}</b>`}`,`${p} → ending <b>-${FUT[i]}</b>`,`<b>${ans}</b>`] }; } },
+  ira:{ name:"Ir a + infinitive", gen(){ const [en,es]=pick(IRA), [s,be,ir,pr]=pick(IRP), ans=`${ir} a ${es}`;
+      return { q:`Translate: <b>${s} ${be} going to ${en}.</b>`, ans:[ans,`${pr} ${ans}`], steps:[`ir (present): voy, vas, va, vamos, vais, van`,`${ir} + a + infinitive`,`<b>${cap1(ans)}.</b>`] }; } },
+  subj:{ name:"¿Quieres que…?", gen(){ const [inf,sj,obj,how]=pick(SUBJV);
+      return { q:`Complete the offer: <b>"¿Quieres que (yo) ___ ${obj}?"</b> (${inf})`, ans:[sj], steps:[`querer que + a different subject → present subjunctive`,`${inf}: ${how}`,`<b>¿Quieres que ${sj} ${obj}?</b>`] }; } },
+  pron:{ name:"Pronouns", gen(){ const [q,ans,how]=pick(PRONS);
+      return { q:`Replace the noun with a pronoun: <b>${q}</b>`, ans, steps:[how,`Pronouns go before the verb; indirect (te, os, se) before direct (lo, la, los, las)`,`<b>¿${cap1(ans[0])}?</b>`] }; } },
+};
+
+let pType="verb", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+$("accKeys").innerHTML = ["á","é","í","ó","ú","ñ","ü","¿","¡"].map(c=>`<button data-c="${c}" style="min-width:38px">${c}</button>`).join("");
+$("accKeys").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const el=$("paIn"), s=el.selectionStart??el.value.length; el.value=el.value.slice(0,s)+b.dataset.c+el.value.slice(el.selectionEnd??s); el.focus(); el.setSelectionRange(s+1,s+1); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paIn").value=""; $("paFb").innerHTML=""; document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{ const v=$("paIn").value; if(!v.trim()){ $("paFb").innerHTML=`<div class="fb no">Type your answer first.</div>`; return; }
+  const exact=pCur.ans.some(a=>clean(a)===clean(v)), close=!exact && pCur.ans.some(a=>strip(a)===strip(v)), needQ=pType==="qw" && exact && !/^¿.*\?$/.test(v.trim());
+  if(!pDone){ pTried++; if(exact&&!needQ) pRight++; pDone=true; }
+  $("paFb").innerHTML = exact&&!needQ? `<div class="fb ok"><b style="color:var(--good)">¡Correcto!</b>${pSteps()}</div>` : exact&&needQ? `<div class="fb no"><b style="color:var(--bad)">Almost.</b> Right word, but a Spanish question needs ¿ at the start and ? at the end.${pSteps()}</div>` : close? `<div class="fb no"><b style="color:var(--bad)">Almost.</b> Check the accents: <b>${pCur.ans[0]}</b>. Accents count in the exam.</div>` : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Try again or show the answer.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; });
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Answer</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+// What is the speaker doing? drill
+const FUNCS = ["Offering","Promising","Arranging","Cancelling / changing","Intention"];
+const FN = [
+  ["¿Te ayudo con la maleta?",0],["Si quieres, yo puedo cocinar.",0],["¿Quieres que vaya yo a por el pan?",0],
+  ["Te prometo que no se lo diré a nadie.",1],["Te juro que llegaré a tiempo.",1],["Prometo escribirte todas las semanas.",1],
+  ["¿Quedamos a las ocho en la plaza?",2],["¿Qué tal si vamos al cine el sábado?",2],["¿Te viene bien el jueves por la tarde?",2],
+  ["Lo siento, al final no puedo ir.",3],["¿Lo dejamos para la semana que viene?",3],["¿Podemos quedar a las nueve en vez de a las ocho?",3],
+  ["Pienso estudiar Derecho en Dublín.",4],["Voy a buscar un trabajo este verano.",4],["El año que viene haré un curso de alemán.",4],["Me gustaría ser periodista.",4],
+];
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+$("predBtns").innerHTML = FUNCS.map((f,i)=>`<button data-a="${i}">${f}</button>`).join("");
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*FN.length); }while(k===pd.k); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>"${FN[k][0]}"</b> What is the speaker doing?`; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=+b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{ if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick one first.</div>`; return; }
+  const ans=FN[pd.k][1], ok=pd.sel===ans; pd.streak=ok?pd.streak+1:0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Correcto!":"Not quite."}</b> ${FUNCS[ans]}. ${["Offers: ¿Te ayudo?, si quieres yo puedo…, ¿quieres que…?","Promises: te prometo que, te juro que, prometo + infinitive.","Arranging: ¿quedamos?, ¿qué tal si…?, ¿te viene bien…?","Cancelling or changing: al final no puedo, ¿lo dejamos para…?, en vez de.","Intentions: pienso, voy a, the future tense, me gustaría."][ans]}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`; });
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions (practice, marks illustrative)
+const LONGQ = [
+  { title:"Written production: a visit in July", intro:"Tu amigo/a español/a, Javier o Lucía, va a visitarte en Irlanda en julio. Escribe un correo electrónico (unas 90 palabras). Write in Spanish; the marks shown are illustrative.",
+    parts:[["a","Dile qué vais a hacer durante su visita (dos actividades).",8,"Content (4): two activities. Language (4): ir a + infinitive or the future tense, correct vosotros/nosotros forms. <i>Cuando vengas, iremos a Galway y haremos una excursión a los acantilados de Moher. También vamos a ver un partido de hurling.</i>"],
+      ["b","Ofrécete a ir a buscarlo/la al aeropuerto y pregúntale a qué hora llega.",6,"Offer (3) and a correct question (3). <i>Si quieres, te recojo en el aeropuerto de Dublín. ¿A qué hora llega tu vuelo?</i>"],
+      ["c","Explica que tienes que cambiar un plan y por qué.",8,"Apology, change and reason (4); language (4): es que / porque, ¿lo dejamos para…? <i>Lo siento, pero el sábado no podré ir a la playa porque tengo que trabajar. ¿Lo dejamos para el domingo?</i>"],
+      ["d","Prométele algo y termina el correo.",6,"A promise with te prometo que + future (4), informal closing (2). <i>Te prometo que lo pasarás genial. ¡Hasta pronto! Un abrazo, Aoife</i>"]] },
+  { title:"The oral: plans for the future", intro:"These questions come up in almost every conversation. Prepare a full answer to each, then compare with the guide. Marks are illustrative.",
+    parts:[["a","¿Qué vas a hacer este verano?",8,"Two or three plans with ir a or the future, a time phrase and an opinion. <i>Este verano voy a trabajar en un hotel en Kerry. En agosto iré a España con mi familia. ¡Tengo muchas ganas!</i>"],
+      ["b","¿Qué piensas hacer después del Leaving Cert?",10,"A clear plan, a reason, a back-up. <i>Pienso estudiar Enfermería en Cork porque me gusta ayudar a la gente. Si no consigo los puntos, haré un curso de FP primero.</i>"],
+      ["c","¿Qué te gustaría estudiar y por qué?",10,"Me gustaría + infinitive, porque, a detail about the course. <i>Me gustaría estudiar Periodismo porque me encanta escribir. La carrera dura cuatro años y hay prácticas en un periódico.</i>"],
+      ["d","¿Dónde te gustaría vivir en el futuro?",8,"Place, reason, contrast. <i>Me gustaría vivir en Barcelona unos años, porque hace buen tiempo y hay mucha cultura, pero al final volveré a Irlanda.</i>"],
+      ["e","¿Cómo será tu vida dentro de diez años?",10,"Several future-tense verbs, including irregulars. <i>Dentro de diez años tendré veintisiete años. Trabajaré como enfermera, viviré en un piso en la ciudad y podré viajar mucho.</i> Examiners reward range and natural extension."]] },
+  { title:"Reading comprehension: a change of plan", intro:"Lee los mensajes y contesta en inglés. (Invented text, marks illustrative.) — Nerea: \"¡Hola, Pablo! ¿Quedamos el viernes para ver la nueva película de miedo?\" Pablo: \"¡Vale! Pero el viernes trabajo hasta las nueve. ¿Te viene bien el sábado?\" Nerea: \"El sábado por la mañana tengo clase de conducir, pero por la tarde estoy libre. ¿Quedamos a las seis en la puerta del cine?\" Pablo: \"Perfecto. Si quieres, compro yo las entradas por internet.\" Nerea: \"¡Genial! Te prometo que esta vez no llegaré tarde.\"",
+    parts:[["a","What does Nerea suggest, and for which day?",4,"To go and see the new horror film (2), on Friday (2)."],
+      ["b","Why can't Pablo go on that day?",4,"He works until nine (o'clock) on Friday (4)."],
+      ["c","What is Nerea doing on Saturday morning?",4,"She has a driving lesson (4)."],
+      ["d","Where and when do they agree to meet?",4,"At the cinema door / outside the cinema (2), at six on Saturday (2)."],
+      ["e","What does Pablo offer to do, and what does Nerea promise?",4,"He offers to buy the tickets online (2); she promises not to be late this time (2)."]] },
+];
+
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+// Revision checklist (red / amber / green)
+const RAG = ["Form the future tense of regular verbs","Use the ten irregular future stems","Use ir a + infinitive","Say what I'd like to do (me gustaría)","Show different degrees of intention (espero, pienso, voy a)","Offer to do something (¿Te ayudo? ¿Quieres que…?)","Make a promise (te prometo que + future)","Reassure someone (no te preocupes, todo saldrá bien)","Propose, accept and refuse an arrangement","Cancel or change a plan politely","Describe my plans for studies and a career","Ask someone about their plans","Give reasons with porque, para and para que","Use hay que and es importante (que)"];
+
+const ragState=store.get("es12-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("es12-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Show range","Mix voy a, pienso, espero, me gustaría and one future tense verb.","Máquina del futuro lab"],["Give reasons","Every plan needs a porque or a para.","¿Porque o para que? lab"],["Register","¿Te ayudo? to a friend, ¿Le ayudo? to an adult.","¿Te ayudo? lab"],["Change plans politely","Apologise, explain with es que, suggest another time.","Mi agenda lab"],["Numbers and times","Say days, times and ages without hesitating.","Collect & fit lab"],["Accuracy","Accents on future endings (-é, -ás, -á, -éis, -án) and on question words.","Grammar trainer"]];
+
+const skState=store.get("es12-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("es12-skills",skState); });
+/* ================= LAB STATE + WIRING ================= */
+const btnRow = (id,items,cur) => { $(id).innerHTML = items.map((t,i)=>`<button data-i="${i}" aria-pressed="${i===cur}">${t}</button>`).join(""); };
+// Verb machine
+const vm = {v:6, p:0, m:"fut"};
+btnRow("vmV",VB.map(v=>v[0]+(v[2]?" *":"")),vm.v); btnRow("vmP",PERS6,vm.p);
+$("vmV").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; vm.v=+b.dataset.i; pressGroup([...$("vmV").children],b); vmUpd(); });
+$("vmP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; vm.p=+b.dataset.i; pressGroup([...$("vmP").children],b); vmUpd(); });
+$("vmM").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; vm.m=b.dataset.m; pressGroup([...$("vmM").children],b); vmUpd(); });
+function vmUpd(){ const V=VB[vm.v], s=sentenceOf(vm.v,vm.p,vm.m), all=PERS6.map((x,i)=>formOf(vm.v,i,vm.m));
+  $("vmQ").innerHTML=`${s.es}<small>${s.en}</small>`;
+  setReadout($("vmOut"),[["Verb",`${V[0]}${V[2]&&vm.m!=="ira"?` · irregular stem ${V[1]}-`:" · regular"}`],["Form",formOf(vm.v,vm.p,vm.m)],["All persons",all.join(", ")]]);
+  if(vmC) vmC.redraw(); }
+// Intentions sorter
+const im = {order:[], placed:[], sel:null, P:[]};
+function imNew(){ im.order=shuffle(SORT.map((x,i)=>i)); im.placed=[]; im.sel=null; $("imFb").innerHTML=""; imUpd(); }
+function imUpd(){ $("imCards").innerHTML = im.order.map(i=>{ const done=im.placed.some(p=>p.i===i); return `<button data-i="${i}" class="${done?"done":""}${im.sel===i?" sel":""}" ${done?"disabled":""}>${SORT[i][0]}</button>`; }).join("");
+  const ok=im.placed.filter(p=>p.ok).length; setReadout($("imOut"),[["Sorted",`${im.placed.length} of ${SORT.length}`],["Correct",ok],["Selected",im.sel==null?"tap a sentence":SORT[im.sel][0]]]);
+  if(imC) imC.redraw(); }
+$("imCards").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; im.sel=+b.dataset.i; imUpd(); });
+$("imReset").addEventListener("click",imNew);
+// Offers scene
+const co = {order:[], i:0, pick:null, right:0, perm:[0,1,2]};
+function coNew(){ co.order=shuffle(SIT.map((s,i)=>i)); co.i=0; co.pick=null; co.right=0; co.perm=shuffle([0,1,2]); coUpd(); }
+function coUpd(){ const done=co.i>=SIT.length; if(done){ $("coQ").innerHTML=`¡Terminado! ${co.right} of ${SIT.length} correct. <button class="primary" id="coAgain" style="margin-left:8px">Again</button>`; $("coAgain").addEventListener("click",coNew); $("coB").innerHTML=""; setReadout($("coOut"),[["Score",`${co.right} / ${SIT.length}`]]); if(coC) coC.redraw(); return; }
+  const s=SIT[co.order[co.i]]; $("coQ").innerHTML=`${s[0]}<small>Situation ${co.i+1} of ${SIT.length}</small>`;
+  $("coB").innerHTML = co.perm.map(i=>`<button data-i="${i}" ${co.pick!=null?"disabled":""} class="${co.pick!=null&&i===s[4]?"on":""}">${s[3][i]}</button>`).join("") + (co.pick!=null?`<button class="primary" id="coNext">Next →</button>`:"");
+  if(co.pick!=null) $("coNext").addEventListener("click",()=>{ co.i++; co.pick=null; co.perm=shuffle([0,1,2]); $("coFb").innerHTML=""; coUpd(); });
+  setReadout($("coOut"),[["Score",`${co.right} / ${co.i+(co.pick!=null?1:0)}`],["Register",s[2]?"formal (usted)":"informal (tú / vosotros)"]]); if(coC) coC.redraw(); }
+$("coB").addEventListener("click",e=>{ const b=e.target.closest("button[data-i]"); if(!b||co.pick!=null) return; const s=SIT[co.order[co.i]]; co.pick=+b.dataset.i; const ok=co.pick===s[4]; if(ok) co.right++;
+  $("coFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Muy bien!":"Not quite."}</b> "${s[3][s[4]]}" ${s[5]}</div>`; coUpd(); });
+// Diary
+const ag = {i:0, ev:[], tries:0, right:0, flash:null, G:null};
+function agNew(){ ag.i=0; ag.ev=[]; ag.tries=0; ag.right=0; ag.flash=null; $("agFb").innerHTML=""; agUpd(); }
+function agUpd(){ const done=ag.i>=AG.length;
+  $("agQ").innerHTML = done? `¡Semana completa!<small>${ag.right} of ${AG.length} messages right first time. Final plans: ${ag.ev.map(e=>`${e.label} (${DAYS[e.d]} por la ${SLOTS[e.s]})`).join(", ")}.</small>` : `Nerea: «${AG[ag.i].m}»<small>Message ${ag.i+1} of ${AG.length}. Tap the slot to ${AG[ag.i].act==="add"?"add the plan":AG[ag.i].act==="move"?"move the plan to":"cancel"}.</small>`;
+  setReadout($("agOut"),[["Messages",`${Math.min(ag.i,AG.length)} of ${AG.length} done`],["Right first time",`${ag.right}`],["In your diary",ag.ev.length? ag.ev.map(e=>`${e.label}: ${DAYS[e.d]} ${SLOTS[e.s]}`).join(" · ") : "nothing yet"]]);
+  if(agC) agC.redraw(); }
+function agTap(d,s){ if(ag.i>=AG.length) return; const M=AG[ag.i], ok=M.to[0]===d && M.to[1]===s; ag.tries++; ag.flash={d,s,ok};
+  if(ok){ if(ag.tries===1) ag.right++;
+    if(M.act==="add") ag.ev.push({d,s,label:M.label});
+    if(M.act==="move"){ const e=ag.ev.find(e=>e.d===M.from[0]&&e.s===M.from[1]); if(e){ e.d=d; e.s=s; } }
+    if(M.act==="cancel") ag.ev=ag.ev.filter(e=>!(e.d===d&&e.s===s));
+    $("agFb").innerHTML=`<div class="fb ok"><b style="color:var(--good)">¡Eso es!</b> "${M.en}"</div>`; ag.i++; ag.tries=0; }
+  else $("agFb").innerHTML=`<div class="fb no"><b style="color:var(--bad)">Not quite.</b> You tapped ${DAYS[d]} por la ${SLOTS[s]}. Read the message again: look for the day and mañana / tarde / noche.</div>`;
+  agUpd(); }
+$("agReset").addEventListener("click",agNew);
+// Survey
+const sv = {pts:[], cur:null, answered:false};
+function svGen(){ const [car,yrs,job]=pick(CARR), [name,g]=pick(NAMES), city=pick(CITIES), m=Math.random()<0.35&&yrs>2?rnd(1,2):0, sab=Math.random()<0.3?1:0, total=yrs+m, age=18+total+sab+(Math.random()<0.3?1:0);
+  const say=`${name}: «Pienso estudiar ${car} en ${city}. ${yrs===2?"El curso":"La carrera"} dura ${numES(yrs,true)} años${m?`, y después haré un máster de ${m===1?"un año":"dos años"}`:""}.${sab?" Antes de empezar, tomaré un año sabático para viajar.":""} Me gustaría ser ${job[g==="f"?1:0]} y espero empezar a trabajar a los ${numES(age,true)} años.»`;
+  return {total,age,say,sab}; }
+function svNew(){ sv.cur=svGen(); sv.answered=false; svUpd(); }
+function svUpd(){ const c=sv.cur; $("svQ").innerHTML=`${c.say}<small>Count the years of study only (a gap year isn't study).</small>`;
+  $("svB").innerHTML = [2,3,4,5,6,7,8].map(o=>`<button data-o="${o}" ${sv.answered?"disabled":""} class="${sv.answered&&o===c.total?"on":""}">${o}</button>`).join("");
+  const f=fitLine(sv.pts); setReadout($("svOut"),[["Students interviewed",sv.pts.length],["Line of best fit",f?`edad = ${nf(f.m,2)} × años + ${nf(f.c,1)}`:"interview two or more"],["In words",f?`Each extra year of study ≈ ${nf(f.m,1)} more year${Math.abs(f.m-1)<0.05?"":"s"} before the first job; with no study, about ${nf(f.c,0)}.`:"–"]]);
+  if(svC) svC.redraw(); }
+$("svB").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||sv.answered) return; const ok=+b.dataset.o===sv.cur.total; sv.answered=true; sv.pts.push([sv.cur.total,sv.cur.age]);
+  svUpd(); $("svQ").innerHTML+=`<div class="fb ${ok?"ok":"no"}" style="margin-top:8px"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Correcto!":"No."}</b> ${sv.cur.total} años de estudio${sv.cur.sab?" (plus a gap year)":""}; empieza a trabajar a los ${sv.cur.age}. Point added to the graph.</div>`; });
+$("svNext").addEventListener("click",svNew);
+$("svClr").addEventListener("click",()=>{ sv.pts=[]; svNew(); });
+// Gap-fill
+const gp = {order:[], i:0, pick:null, right:0};
+function gpNew(){ gp.order=shuffle(GAP.map((g,i)=>i)); gp.i=0; gp.pick=null; gp.right=0; $("gpFb").innerHTML=""; gpUpd(); }
+function gpUpd(){ const done=gp.i>=GAP.length;
+  if(done){ $("gpB").innerHTML=`<button class="primary" id="gpAgain">Again</button>`; $("gpAgain").addEventListener("click",gpNew); setReadout($("gpOut"),[["Score",`${gp.right} / ${GAP.length}`]]); if(gpC) gpC.redraw(); return; }
+  const G=GAP[gp.order[gp.i]];
+  $("gpB").innerHTML = G[1].map((o,i)=>`<button data-i="${i}" ${gp.pick!=null?"disabled":""} class="${gp.pick!=null&&i===G[2]?"on":""}">${o}</button>`).join("") + (gp.pick!=null?`<button class="primary" id="gpNext">Next →</button>`:"");
+  if(gp.pick!=null) $("gpNext").addEventListener("click",()=>{ gp.i++; gp.pick=null; $("gpFb").innerHTML=""; gpUpd(); });
+  setReadout($("gpOut"),[["Sentence",`${gp.i+1} of ${GAP.length}`],["Score",`${gp.right} / ${gp.i+(gp.pick!=null?1:0)}`]]); if(gpC) gpC.redraw(); }
+$("gpB").addEventListener("click",e=>{ const b=e.target.closest("button[data-i]"); if(!b||gp.pick!=null) return; const G=GAP[gp.order[gp.i]]; gp.pick=+b.dataset.i; const ok=gp.pick===G[2]; if(ok) gp.right++;
+  $("gpFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Correcto!":"Not quite."}</b> ${G[0].replace("___","<b>"+G[1][G[2]]+"</b>")}</div>`; gpUpd(); });
+
+/* ================= CREATE CANVASES ================= */
+let vmC=null, imC=null, coC=null, agC=null, svC=null, gpC=null;
+const HERO = ["¿Quedamos el sábado?","¡Vale! ¿A qué hora?","¿A las ocho en la plaza?","¡Perfecto! Allí estaré.","Si quieres, compro yo las entradas.","¡Te prometo que no llegaré tarde!"];
+const hero = makeCanvas($("heroCanvas"), 0.75, 240, s => { const k=Math.floor((reduce?0:heroT)/1.8)%HERO.length; drawScene(s.ctx,s.w,s.h,{say:HERO[k],formal:null}); }, 440);
+vmC = makeCanvas($("vmC"), 0.5, 250, s => drawVerb(s.ctx,s.w,s.h,{v:vm.v,p:vm.p,m:vm.m}), 340);
+imC = makeCanvas($("imC"), 0.45, 260, s => { im.P=drawSorter(s.ctx,s.w,s.h,{placed:im.placed,armed:im.sel!=null}); }, 400);
+pointerTap($("imC"),(x,y)=>{ if(im.sel==null) return; const k=im.P.findIndex(([bx,by,bw,bh])=>x>=bx&&x<=bx+bw&&y>=by&&y<=by+bh); if(k<0) return; const it=SORT[im.sel], bin=BINS[k][0], ok=it[1]===bin;
+  im.placed.push({i:im.sel,bin,ok,short:it[0].split(" ").slice(0,3).join(" ")+"…"}); $("imFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Sí!":"Not quite."}</b> "${it[0]}" ${it[2]}</div>`; im.sel=null; imUpd(); });
+coC = makeCanvas($("coC"), 0.42, 220, s => { if(co.i>=SIT.length) return drawScene(s.ctx,s.w,s.h,{say:"¡Terminado!",ok:true}); const st=SIT[co.order[co.i]]; drawScene(s.ctx,s.w,s.h,{say:co.pick==null?"…":st[3][co.pick],ok:co.pick==null?null:co.pick===st[4],formal:st[2],who:st[1],small:false}); }, 360);
+agC = makeCanvas($("agC"), 0.42, 220, s => { ag.G=drawDiary(s.ctx,s.w,s.h,{ev:ag.ev,flash:ag.flash}); }, 360);
+pointerTap($("agC"),(x,y)=>{ const g=ag.G; if(!g) return; const d=Math.floor((x-g.L)/g.cw), sl=Math.floor((y-g.T)/g.ch); if(d<0||d>6||sl<0||sl>2) return; agTap(d,sl); });
+svC = makeCanvas($("svC"), 0.5, 260, s => drawSurvey(s.ctx,s.w,s.h,{pts:sv.pts}), 420);
+gpC = makeCanvas($("gpC"), 0.3, 170, s => { if(gp.i>=GAP.length) return drawGap(s.ctx,s.w,s.h,{k:gp.order[GAP.length-1]??0,done:true,ok:true}); drawGap(s.ctx,s.w,s.h,{k:gp.order[gp.i],done:gp.pick!=null,pick:gp.pick,ok:gp.pick===GAP[gp.order[gp.i]][2]}); }, 320);
+predC = makeCanvas($("predC"), 0.6, 210, s => { bg(s.ctx,s.w,s.h,C["surface-2"]); const gh=(s.h-24)/2;
+  FUNCS.forEach((f,i)=>{ const row=i<3?0:1, n=row?2:3, gw=(s.w-24)/n, x=12+(row?i-3:i)*gw, y=12+row*gh, hit=pd.shown && pd.k>=0 && FN[pd.k][1]===i; rr(s.ctx,x+4,y+4,gw-8,gh-8,12); s.ctx.fillStyle=hit?C.terra:C.surface; s.ctx.fill(); s.ctx.strokeStyle=C.line; s.ctx.lineWidth=1.5; s.ctx.stroke();
+    const fs=fitFont(s.ctx,f,gw-20,s.w<380?11:14,8); text(s.ctx,f,x+gw/2,y+gh/2+5,hit?(C["on-accent"]||"#fff"):C.ink,F(fs),"center"); }); }, 320);
+pdNew();
+const MINI = {
+  verb:(s,o)=>drawVerb(s.ctx,s.w,s.h,{...o,compact:true}),
+  sorter:(s,o)=>drawSorter(s.ctx,s.w,s.h,{...o,compact:true}),
+  scene:(s,o)=>drawScene(s.ctx,s.w,s.h,{...o,compact:true}),
+  diary:(s,o)=>drawDiary(s.ctx,s.w,s.h,{...o,compact:true}),
+  survey:(s,o)=>drawSurvey(s.ctx,s.w,s.h,{...o,compact:true}),
+  gap:(s,o)=>drawGap(s.ctx,s.w,s.h,{...o,compact:true}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, 0.62, 150, s=>MINI[kind](s,o), 380); });
+const INFO = { verb:["verb",{v:6,p:0,m:"fut"}], diary:["diary",{ev:AG_FINAL}], survey:["survey",{pts:SV_SAMPLE}] };
+document.querySelectorAll("canvas[data-mini]").forEach(el=>{ const [k,o]=INFO[el.dataset.mini]; makeCanvas(el,0.7,160,s=>MINI[k](s,{...o,bgc:C["surface-2"]})); });
+vmUpd(); imNew(); coNew(); agNew(); svNew(); gpNew();
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>
