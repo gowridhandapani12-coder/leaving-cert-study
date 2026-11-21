@@ -42,7 +42,7 @@ blocks, sentence with English) · ¿Deseo o promesa? (12 sentences into wish / h
 offers, promises, reassurance, degrees of willingness, tú/usted) · Mi agenda (8 messages from Nerea: tap the diary slot to add,
 move or cancel) · Collect & fit (invented students' study plans read in Spanish; total years of study against age starting
 work, fitted line, slope about 1) · ¿Porque o para que? (12 gap-fills: por qué / porque / para que, hay que, es importante (que)
-+ subjunctive). 7 performance targets + 5 linguistic skills, 27 flashcards, 16 quiz questions, 61 glossary entries, typed
++ subjunctive). 7 performance targets + 5 linguistic skills, 27 flashcards, 16 quiz questions, 62 glossary entries, typed
 grammar trainer (future tense, ir a, ¿quieres que…? + subjunctive, pronoun order), "What is the speaker doing?" drill (16),
 3 practice tasks (email, oral, reading). localStorage prefix `es12-`.
 
