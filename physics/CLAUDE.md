@@ -7,7 +7,7 @@ is `refraction-lenses.html` (section 2.3). Every new section must look and work 
 Course progress and the build order live in `COURSE-PLAN.md`. Update it whenever a section is built.
 
 Built so far: `s1-1-motion.html` (1.1), `s1-2-forces.html` (1.2), `s1-3-hookes-law.html` (1.3), `s1-4-work-energy.html` (1.4), `s1-5-gravity.html` (1.5), `s1-6-circular-motion.html` (1.6), `s2-1-heat.html` (2.1), `s2-2-travelling-waves.html` (2.2), `refraction-lenses.html` (2.3), `s2-4-electromagnetic-energy.html` (2.4),
-`s2-5-sound-energy.html` (2.5), `s2-6-superposition.html` (2.6), `s2-7-doppler.html` (2.7), `s3-1-charge.html` (3.1), `s3-2-electric-fields.html` (3.2), `s3-3-circuits.html` (3.3), `s3-4-magnetic-fields.html` (3.4), plus the hub `index.html`.
+`s2-5-sound-energy.html` (2.5), `s2-6-superposition.html` (2.6), `s2-7-doppler.html` (2.7), `s3-1-charge.html` (3.1), `s3-2-electric-fields.html` (3.2), `s3-3-circuits.html` (3.3), `s3-4-magnetic-fields.html` (3.4), `s3-5-motor-effect.html` (3.5), plus the hub `index.html`.
 
 ## Run it locally
 
