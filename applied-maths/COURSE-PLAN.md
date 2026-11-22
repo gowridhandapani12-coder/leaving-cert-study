@@ -7,7 +7,7 @@ One page per topic, built in this order. Numbering is this course's (the spec ha
 | 1.1 | Mathematical modelling: the modelling cycle | `s1-1-mathematical-modelling.html` | Done (2026-11-08) |
 | 2.1 | Networks and terminology | `s2-1-networks.html` | Done (2026-11-17) |
 | 2.2 | Matrices and adjacency | `s2-2-adjacency-matrices.html` | Done (2026-11-20) |
-| 2.3 | Minimum spanning trees (Kruskal, Prim) | | To do |
+| 2.3 | Minimum spanning trees (Kruskal, Prim) | `s2-3-minimum-spanning-trees.html` | Done (2026-11-22) |
 | 2.4 | Shortest paths and dynamic programming (Dijkstra, Bellman) | | To do |
 | 2.5 | Comparing algorithms (greedy vs dynamic programming) | | To do |
 | 2.6 | Project scheduling (critical path, floats) | | To do |
@@ -57,6 +57,10 @@ only for gravity here, full treatment in 3.3), 26 flashcards, 16 quiz questions,
 
 Labs: Graph → matrix (tap to add/remove edges; matrix with row and column sums, symmetry, total = 2E) · Matrix → graph (edit cells with mirroring, or a challenge: draw the graph of a mystery matrix and check it) · Directed graphs (five-person follow network; row = from, column = to; out/in-degrees as row/column sums) · Multiply by hand (2 × 2 and 3 × 3 step through row × column with working; 5 × 5 by computer with the n³ work count; swap to BA) · Powers count walks (A to A⁴, tap a cell to list the walks and animate one; collect & fit: trace(A²) against E gives gradient 2, trace(A³) = 6 × triangles) · Two-flight planner (illustrative six-airport network; A, A², A³ and A + A² for any pair; cancel routes). 4 learning outcomes (Matrices, matrix algebra and adjacency), 28 flashcards, 19 quiz questions, 41 glossary terms, 8 trainer types, "match the matrix" drill (undirected and directed, with transpose and one-edge distractors), 3 long questions with full matrices in the marking guides. Built from the 2.1 page with a splice script.
 
+## 2.3 contents
+
+Labs: Tree or not? (six vertices, nine possible edges; tap to switch; connected / cycle / tree readouts, cycle edges in red) · Beat the algorithm (seven villages, 12 weighted routes; pick a spanning tree, compare with the 33 km minimum; collect & fit: random networks, tree edges against n → gradient 1, intercept −1) · Kruskal step by step (sorted edge list with accept/reject and the cycle path; components coloured; seven villages or random weights) · Prim step by step (any start vertex; edges leaving the tree, cheapest dashed; random weights) · Prim on a table (distance table with crossed-out rows, numbered columns, circled entries; tap the next entry yourself with feedback on wrong taps; random tables) · Cable planner (cost per km slider, forced route, blocked route, add village H: same 33 km with one more village). 5 learning outcomes (2 MST + 3 from the "Algorithms" block, shared with 2.4/2.5), 28 flashcards, 18 quiz questions, 45 glossary terms, 6 trainer types (tree edges, edges left out, Kruskal MST length from a table, Prim third edge, network cost, forced link), "Which edge next?" drill (Kruskal or Prim part-way, cycle and non-adjacent traps), 3 long questions (Kruskal/Prim/blocked link; Prim on a table with costs; seven villages with forced CF and greedy v DP). Infographics: 5 uses, tree/spanning/minimum comparison, Cayley nⁿ⁻² table (labelled not on the course), history (Borůvka 1926, Kruskal 1956, Prim 1957/Jarník 1930, Spanning Tree Protocol 1985). Built from the 2.2 page with a splice script.
+
 ## Run log
 
 | Date | Built | Weekly usage before → after |
@@ -66,3 +70,4 @@ Labs: Graph → matrix (tap to add/remove edges; matrix with row and column sums
 | 2026-11-18 | 3.2 Vectors and projectiles (asked for by the user) | 78% → 79% (5-hour window 9% → 16%) |
 | 2026-11-18 | Nothing (weekly run skipped: weekly 83%, above the 70% limit; 5-hour 29%) | 83% → 83% |
 | 2026-11-20 | 2.2 Matrices and adjacency (5-hour scheduled run, 2nd page after Physics 3.4) | 13% → 18% (5-hour window 21% → 54%: over the 50% goal; the start was below the 40% cap) |
+| 2026-11-22 | 2.3 Minimum spanning trees (5-hour scheduled run, 1 page) | 43% → 45% (5-hour window 22% → 36%) |
