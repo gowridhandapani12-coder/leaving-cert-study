@@ -1,0 +1,1590 @@
+<title>Probability · LC Maths</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.sh-card{display:grid;gap:8px;padding:16px;align-content:start}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card ul{margin:0;padding-left:18px;font-size:.88rem;color:var(--muted);display:grid;gap:3px}
+.fbbox{padding:0 16px 14px}
+.predopts .btns button{min-width:100px}
+.ctl button[disabled]{opacity:.5}
+</style>
+
+<style>
+.tiles{display:flex;flex-wrap:wrap;gap:6px}
+</style>
+<!-- ================= TOP BAR ================= -->
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 01-14.3 4.9M4 12a8 8 0 0114.3-4.9"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg></div>
+        <div style="min-width:0"><b>Probability</b><span>Leaving Cert Maths · Strand 1 · 1.2</span></div>
+      </div>
+      
+      
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html">Business</a><a href="../maths/index.html" class="on" aria-current="page">Maths</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a><a href="../maths-enrichment/index.html">Maths Enrichment</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Formulae</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <details open><summary>1 · Statistics &amp; probability</summary><ol><li class="link"><a href="s1-1-counting.html"><span class="mono">1.1</span>Counting</a></li><li class="here"><span class="mono">1.2</span>Concepts of probability</li><li><span class="mono">1.3</span>Outcomes of random processes</li><li><span class="mono">1.4</span>Statistical reasoning &amp; data</li><li><span class="mono">1.6</span>Representing data</li><li><span class="mono">1.7</span>Inference</li></ol></details>
+      <details><summary>2 · Geometry &amp; trigonometry</summary><ol><li><span class="mono">2.1</span>Synthetic geometry</li><li><span class="mono">2.2</span>Co-ordinate geometry</li><li><span class="mono">2.3</span>Trigonometry</li><li><span class="mono">2.4</span>Transformations</li></ol></details>
+      <details><summary>3 · Number</summary><ol><li><span class="mono">3.1</span>Number systems</li><li><span class="mono">3.2</span>Indices</li><li><span class="mono">3.3</span>Arithmetic</li><li><span class="mono">3.4</span>Length, area, volume</li></ol></details>
+      <details><summary>4 · Algebra</summary><ol><li><span class="mono">4.1</span>Expressions</li><li><span class="mono">4.2</span>Solving equations</li><li><span class="mono">4.3</span>Inequalities</li><li><span class="mono">4.4</span>Complex numbers</li></ol></details>
+      <details><summary>5 · Functions</summary><ol><li><span class="mono">5.1</span>Functions</li><li><span class="mono">5.2</span>Calculus</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon. Numbering follows the syllabus.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Strand 1 · Statistics and probability</span>
+          <h1 style="margin-top:12px">How likely?<br>Between 0 and 1.<br><em>Work it out.</em></h1>
+          <p class="lede">Dice, Venn diagrams, bags of sweets, medical tests and fair games: probability puts a number on chance. Learn the rules for AND and OR, when to multiply, why P(A | B) isn't P(B | A), and how expected value helps you decide.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated sample space of two dice with different events lighting up"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Learning outcomes ticked</span><b id="stLO">0/9</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the syllabus</p><h2>Learning outcomes</h2></div><p style="font-size:.88rem">Students working at OL should be able to… and, in addition, at HL… Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list" id="loList"></ul>
+        <p class="result" style="margin-top:10px">Students learn about: 1.2 Concepts of probability. The Foundation Level column describes the topic as "the probability of an event occurring", moving from informal to formal descriptions, and the difference between experimental and theoretical probability: outcome 2 comes from there and is useful background at every level. Counting (1.1) gives the sizes of sample spaces; 1.3 builds Bernoulli trials on these rules.</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Roll dice, spin a mystery spinner, shade Venn diagrams, draw from a bag, test a population and design a fair game. Every result updates live.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="space">
+        <div class="labhead"><span class="pill t">Two dice</span><p class="goal">The sample space for rolling two dice has 36 equally likely outcomes. Pick an event: its outcomes light up and P(E) = favourable ÷ total.</p></div>
+        <div class="panel sim">
+          <canvas id="dsC" aria-label="Six by six grid of outcomes for two dice, with the chosen event highlighted"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Event E</span><div class="btns" id="dsE"></div></div>
+            <div class="ctl"><span class="lbl">Show in cells</span><div class="btns" id="dsShow"><button data-s="sum" aria-pressed="true">Sum</button><button data-s="pair" aria-pressed="false">Pair (a, b)</button></div></div>
+          </div>
+          <div class="readout" id="dsOut"></div>
+          <div class="working" id="dsWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Which total is most likely? Count the cells for each sum.</div><div class="try"><b>2</b>"At least one 6": why is it 11 cells, not 12?</div><div class="try"><b>3</b>Check P(E) + P(not E) = 1 for three different events.</div></div>
+      </div>
+
+      <div class="lab" data-lab="freq" hidden>
+        <div class="labhead"><span class="pill t">Collect &amp; estimate</span><p class="goal">Repeat an experiment many times. The relative frequency (hits ÷ trials) wobbles at first, then settles near the probability. Estimate the hidden probability of the mystery spinner from your data.</p></div>
+        <div class="panel sim">
+          <canvas id="rfC" aria-label="Graph of the running relative frequency against the number of trials"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Experiment</span><div class="btns" id="rfX"><button data-x="0" aria-pressed="true">Fair die: P(6)</button><button data-x="1" aria-pressed="false">Coin: P(heads)</button><button data-x="2" aria-pressed="false">Mystery spinner: P(red)</button></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Trials</span><div class="btns"><button class="primary" id="rf1">1 trial</button><button id="rf10">10</button><button id="rf100">100</button><button id="rf1k">1 000</button><button id="rfR">Reset</button><button id="rfShow">Reveal the spinner</button></div></div>
+          </div>
+          <div class="readout" id="rfOut"></div>
+          <div class="working" id="rfWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Do 10 trials of the die, reset and do 10 again. Why are the answers so different?</div><div class="try"><b>2</b>Mystery spinner: after 1 000 trials, what's your estimate? Then reveal it.</div><div class="try"><b>3</b>Expected number of hits = trials × probability. Check it against your count.</div></div>
+      </div>
+
+      <div class="lab" data-lab="venn" hidden>
+        <div class="labhead"><span class="pill t">Venn diagram</span><p class="goal">A class of 30: A = plays a sport, B = plays an instrument. Set the numbers in each region, then pick a region to shade and find its probability.</p></div>
+        <div class="panel sim">
+          <canvas id="vnC" aria-label="Venn diagram of sets A and B in a universal set of 30 students, with the chosen region shaded"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="vnA">A only <output id="vnAo">10</output></label><input type="range" id="vnA" min="0" max="25" step="1" value="10"></div>
+            <div class="ctl"><label for="vnAB">Both A and B <output id="vnABo">6</output></label><input type="range" id="vnAB" min="0" max="15" step="1" value="6"></div>
+            <div class="ctl"><label for="vnB">B only <output id="vnBo">8</output></label><input type="range" id="vnB" min="0" max="25" step="1" value="8"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Shade</span><div class="btns" id="vnR"></div></div>
+          </div>
+          <div class="readout" id="vnOut"></div>
+          <div class="working" id="vnWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Shade A ∪ B. Why do you subtract the overlap when you add P(A) and P(B)?</div><div class="try"><b>2</b>Set "Both" to 0. What does mutually exclusive look like?</div><div class="try"><b>3</b>Shade A′ and A. Do their probabilities always add to 1?</div></div>
+      </div>
+
+      <div class="lab" data-lab="indep" hidden>
+        <div class="labhead"><span class="pill t">Bag and tree</span><p class="goal">Take two sweets from a bag, with or without putting the first one back. The tree shows the probability on every branch: multiply along a path, add the paths you want.</p></div>
+        <div class="panel sim">
+          <canvas id="tpC" aria-label="Two-stage probability tree for drawing two sweets, with the paths for the chosen event highlighted"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="tpR">Red sweets <output id="tpRo">5</output></label><input type="range" id="tpR" min="1" max="9" step="1" value="5"></div>
+            <div class="ctl"><label for="tpB">Blue sweets <output id="tpBo">3</output></label><input type="range" id="tpB" min="1" max="9" step="1" value="3"></div>
+            <div class="ctl"><span class="lbl">Sampling</span><div class="btns" id="tpM"><button data-m="0" aria-pressed="true">Without replacement</button><button data-m="1" aria-pressed="false">With replacement</button></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Event</span><div class="btns" id="tpE"></div></div>
+            <div class="ctl"><span class="lbl">Check by experiment</span><div class="btns"><button id="tpSim">Draw 1 000 pairs</button></div></div>
+          </div>
+          <div class="readout" id="tpOut"></div>
+          <div class="working" id="tpWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Switch between with and without replacement. Which branches change, and why?</div><div class="try"><b>2</b>Find "at least one red" two ways: add three paths, or 1 − P(both blue).</div><div class="try"><b>3</b>With replacement, is P(2nd red | 1st red) equal to P(2nd red)? That's independence.</div></div>
+      </div>
+
+      <div class="lab" data-lab="cond" hidden>
+        <div class="labhead"><span class="pill t">Screening test</span><p class="goal">1 000 people take a test for a rare condition. Change how common it is and how good the test is. Compare P(positive | condition) with P(condition | positive).</p></div>
+        <div class="panel sim">
+          <canvas id="mtC" aria-label="Grid of 1000 people coloured by condition and test result"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="mtP">Has the condition <output id="mtPo">2%</output></label><input type="range" id="mtP" min="1" max="30" step="1" value="2"></div>
+            <div class="ctl"><label for="mtS">P(positive | condition) <output id="mtSo">90%</output></label><input type="range" id="mtS" min="50" max="100" step="1" value="90"></div>
+            <div class="ctl"><label for="mtF">P(positive | no condition) <output id="mtFo">5%</output></label><input type="range" id="mtF" min="1" max="20" step="1" value="5"></div>
+          </div>
+          <div class="readout" id="mtOut"></div>
+          <div class="working" id="mtWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>With the defaults, most positives are false alarms. Count them on the grid.</div><div class="try"><b>2</b>Raise "has the condition" to 20%. What happens to P(condition | positive)?</div><div class="try"><b>3</b>Which matters more here: a better test, or a lower false positive rate?</div></div>
+      </div>
+
+      <div class="lab" data-lab="expect" hidden>
+        <div class="labhead"><span class="pill t">Design a game</span><p class="goal">Pay to roll a fair die. A 6 wins one prize, a 5 wins a smaller prize, anything else wins nothing. Find the expected winnings, then set the price so the game is fair.</p></div>
+        <div class="panel sim">
+          <canvas id="evC" aria-label="Running average winnings per game compared with the expected value"></canvas>
+          <div class="controls">
+            <div class="ctl"><label for="evS">Prize for a 6 <output id="evSo">€6</output></label><input type="range" id="evS" min="0" max="24" step="1" value="6"></div>
+            <div class="ctl"><label for="evF">Prize for a 5 <output id="evFo">€3</output></label><input type="range" id="evF" min="0" max="12" step="1" value="3"></div>
+            <div class="ctl"><label for="evC2">Cost to play <output id="evCo">€2.00</output></label><input type="range" id="evC2" min="0" max="6" step="0.5" value="2"></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Play</span><div class="btns"><button class="primary" id="ev1">Play once</button><button id="ev100">Play 100</button><button id="ev1k">Play 1 000</button><button id="evR">Reset</button></div></div>
+          </div>
+          <div class="readout" id="evOut"></div>
+          <div class="working" id="evWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>The expected winnings are €1.50, but can you ever win exactly €1.50 in one game?</div><div class="try"><b>2</b>Find the cost that makes the game fair. Play 1 000 games to check.</div><div class="try"><b>3</b>You run the stall at a fundraiser. What price do you choose, and why?</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of probability"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>Your probability toolkit</h2></div><p>Which rule for which job.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three pictures</p><h2>Grid, Venn, tree</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="dice"></canvas><h3>List the sample space</h3><p>Two dice: 36 outcomes. A total of 7 happens in 6 of them, so P = 6/36 = 1/6.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="venn"></canvas><h3>Shade the region</h3><p>Count in the Venn diagram, then divide by the total. Don't count the overlap twice.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="tree"></canvas><h3>Multiply along, add down</h3><p>Two reds without replacement: 5/8 × 4/7 = 20/56 = 5/14.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">From impossible to certain</p><h2>The probability scale</h2></div><p>Every probability is between 0 and 1. Bar length = probability.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Probability in real life</p><h2>Where the rules matter</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+<!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How Maths is examined, what the question words mean, and unlimited practice with worked solutions.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Two papers of equal weight, each with a Section A and a Section B">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="182.2 364.4" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">P1 · P2</text><text x="80" y="96" text-anchor="middle" class="dn2">two papers</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Paper 1</b><p>Higher or Ordinary Level. Section A: core concepts and skills. Section B: context-based applications.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Paper 2</b><p>Same structure. Probability (Strand 1) usually appears on Paper 2. Foundation Level has one paper.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for probability</h3>
+          <ol class="tips">
+            <li><b>Write the sample space</b> (a grid, a list or a tree) when the outcomes are equally likely, then count.</li>
+            <li>Every probability is between <b>0 and 1</b>. An answer of 1.3 or −0.2 means something went wrong.</li>
+            <li>"Not": use <b>P(A′) = 1 − P(A)</b>. "At least one" is usually <b>1 − P(none)</b>.</li>
+            <li>"Or": <b>add, then subtract the overlap</b>: P(A ∪ B) = P(A) + P(B) − P(A ∩ B).</li>
+            <li>"And": <b>multiply</b>, but only use P(A) × P(B) if A and B are independent. Otherwise use P(B | A).</li>
+            <li><b>Without replacement</b>: the second branch has one fewer in the total (and maybe the top).</li>
+            <li>Read "given" carefully: <b>P(A | B) is not P(B | A)</b>. The thing after the bar is what you already know.</li>
+            <li>Expected value = <b>Σ x × P(x)</b>. A game is fair when the expected gain is 0. Questions here are practice questions, not official SEC papers.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Question words</h2></div><p>Common instructions in Maths questions. The meanings are plain-English summaries, not official definitions.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Probability problems</p><h2>Calculation trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" inputmode="decimal" placeholder="e.g. 5/12 or 0.42" aria-label="Your answer" autocomplete="off"><span id="paUnit" class="mono"></span><button class="primary" id="paCheck">Check</button><button id="paShow">Show solution</button><button id="paNext">New question</button></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which rule?</h2></div></div>
+          <canvas id="predC" aria-label="Icons for four probability rules; the right one lights up after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns"><button data-a="0">Add (OR)</button><button data-a="1">Multiply: independent</button><button data-a="2">Multiply: P(A) × P(B | A)</button><button data-a="3">Expected value</button></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next one</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+<div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Habits that earn marks</p><h2>Problem-solving skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Habits that turn probability questions into marks. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Every term and symbol in this chapter. Precise words earn marks in "define" and "explain" questions.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: sample space, union, expected…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= FORMULAE ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Formula sheet</h2></div><p>Probability on one page. The rules are given in the syllabus; check which ones are in your Formulae and Tables booklet.</p></div>
+      <div class="sheet">
+        <div class="panel fcell"><span class="pill">Equally likely</span><span class="big">P(E) = favourable outcomes ÷ total outcomes</span><dl><dt>Range</dt><dd>0 ≤ P(E) ≤ 1</dd></dl><div class="ex">Sum of 7 with two dice: 6/36 = 1/6</div></div>
+        <div class="panel fcell"><span class="pill">Experiment</span><span class="big">Relative frequency = hits ÷ trials</span><dl><dt>Expected count</dt><dd>trials × P(E)</dd></dl><div class="ex">600 rolls: expect 600 × 1/6 = 100 sixes</div></div>
+        <div class="panel fcell"><span class="pill">Not</span><span class="big">P(A′) = 1 − P(A)</span><dl><dt>At least one</dt><dd>1 − P(none)</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Addition rule</span><span class="big">P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</span><div class="ex">0.5 + 0.4 − 0.2 = 0.7</div></div>
+        <div class="panel fcell"><span class="pill">Mutually exclusive</span><span class="big">P(A ∩ B) = 0, so P(A ∪ B) = P(A) + P(B)</span><dl><dt>Venn</dt><dd>circles don't overlap</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Multiplication (independent)</span><span class="big">P(A ∩ B) = P(A) × P(B)</span><div class="ex">Two sixes: 1/6 × 1/6 = 1/36</div></div>
+        <div class="panel fcell"><span class="pill a">Multiplication (general)</span><span class="big">P(A ∩ B) = P(A) × P(B | A)</span><div class="ex">Two reds from 5R 3B, no replacement: 5/8 × 4/7 = 5/14</div></div>
+        <div class="panel fcell"><span class="pill a">Conditional</span><span class="big">P(B | A) = P(A ∩ B) ÷ P(A)</span><dl><dt>Careful</dt><dd>in general P(A | B) ≠ P(B | A)</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Independent</span><span class="big">P(B | A) = P(B)</span><dl><dt>Means</dt><dd>knowing A doesn't change the chance of B</dd></dl></div>
+        <div class="panel fcell"><span class="pill a">Expected value</span><span class="big">E(X) = Σ x · P(x)</span><div class="ex">€6 × 1/6 + €3 × 1/6 = €1.50</div></div>
+        <div class="panel fcell"><span class="pill">Fair game</span><span class="big">Expected gain = 0</span><dl><dt>So</dt><dd>cost to play = expected winnings</dd></dl></div>
+        <div class="panel fcell"><span class="pill">Tree diagrams</span><span class="big">Multiply along a path, add the paths</span><dl><dt>Check</dt><dd>all the end probabilities add to 1</dd></dl></div>
+      </div>
+      <footer>
+        <p>Built on Strand 1, topic 1.2 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/mathematics/" target="_blank" rel="noopener">Leaving Certificate Mathematics Syllabus</a> (for examination from 2015). Learning outcomes are quoted from the syllabus. Scenarios and test figures are illustrative, not real medical data.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("ma-theme","auto"), font = store.get("ma-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("ma-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("ma-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  space:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.3"/><circle cx="16" cy="16" r="1.3"/><circle cx="12" cy="12" r="1.3"/>',
+  freq:'<path d="M3 20h18M3 20V4"/><path d="M5 8l3 9 3-6 3 3 3-2 3 1"/><path d="M5 12h16" stroke-dasharray="2 2"/>',
+  venn:'<circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/>',
+  indep:'<circle cx="4" cy="12" r="2"/><circle cx="13" cy="6" r="2"/><circle cx="13" cy="18" r="2"/><path d="M6 11l5-4M6 13l5 4M15 6h6M15 18h6"/>',
+  cond:'<path d="M12 4v16"/><circle cx="6" cy="9" r="2.5"/><circle cx="18" cy="15" r="2.5"/><path d="M3 18h6M15 6h6"/>',
+  expect:'<circle cx="12" cy="12" r="9"/><path d="M15 8.5a4 4 0 100 7M7 11h6M7 13.5h6"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  med:'<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/>',
+  cloud:'<path d="M7 18a4 4 0 010-8 5 5 0 019.6-1.5A4 4 0 0117 18z"/><path d="M9 21l1-2M13 21l1-2"/>',
+  lotto:'<circle cx="7" cy="8" r="3"/><circle cx="16" cy="7" r="3"/><circle cx="11" cy="16" r="3"/><circle cx="19" cy="16" r="2"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"space", name:"Sample spaces & events", short:"Experiments, outcomes, sample spaces and P(E) = favourable ÷ total.", tint:"var(--blush)"},
+  {id:"freq", name:"Relative frequency", short:"Experimental v theoretical probability; the long run.", tint:"var(--apricot)"},
+  {id:"venn", name:"Venn diagrams: AND, OR", short:"Union, intersection, complement and mutually exclusive events.", tint:"var(--sage)"},
+  {id:"indep", name:"Multiplying & sampling", short:"Independent events, tree diagrams, with or without replacement. HL", tint:"var(--cream)"},
+  {id:"cond", name:"Conditional probability", short:"P(A | B), and why it isn't P(B | A). HL", tint:"var(--blush)"},
+  {id:"expect", name:"Expected value & fair games", short:"The long-run average, decisions and fair games.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+const LO = [
+  ["space","use set theory to discuss experiments, outcomes, sample spaces"],
+  ["freq","associate the probability of an event with its long-run, relative frequency"],
+  ["venn","discuss basic rules of probability (AND/OR, mutually exclusive) through the use of Venn diagrams"],
+  ["expect","calculate expected value and understand that this does not need to be one of the outcomes"],
+  ["expect","recognise the role of expected value in decision making and explore the issue of fair games"],
+  ["indep","extend their understanding of the basic rules of probability (AND/OR, mutually exclusive) through the use of formulae: Addition Rule: P(A ∪ B) = P(A) + P(B) − P(A ∩ B); Multiplication Rule (Independent Events): P(A ∩ B) = P(A) × P(B); Multiplication Rule (General Case): P(A ∩ B) = P(A) × P(B | A)"],
+  ["indep","solve problems involving sampling, with or without replacement"],
+  ["cond","appreciate that in general P(A | B) ≠ P(B | A)"],
+  ["cond","examine the implications of P(A | B) ≠ P(B | A) in context"],
+];
+const LO_HEAD = {space:"1.2 · OL", freq:"1.2 · Foundation Level outcome, background for all", venn:"1.2 · OL", expect:"1.2 · OL", indep:"1.2 · HL", cond:"1.2 · HL"};
+
+/* ---------- maths helpers ---------- */
+const fact = n => { let p=1; for(let i=2;i<=n;i++) p*=i; return p; };
+const nCr = (n,r) => { if(r<0||r>n) return 0; r=Math.min(r,n-r); let c=1; for(let i=1;i<=r;i++) c=c*(n-r+i)/i; return Math.round(c); };
+const big = x => nf(x);
+const gcd = (a,b) => { a=Math.abs(a); b=Math.abs(b); while(b){ [a,b]=[b,a%b]; } return a||1; };
+const fr = (n,d) => { if(d===0) return "–"; if(n===0) return "0"; const g=gcd(n,d); return d/g===1? String(n/g) : `${n/g}/${d/g}`; };
+const frRaw = (n,d) => `${n}/${d}`;
+const frFull = (n,d) => { const s=fr(n,d); return s===frRaw(n,d)? s : `${frRaw(n,d)} = ${s}`; };
+
+/* ---------- glossary ---------- */
+const GLOSS = [
+  ["Experiment","trial","An action whose result is uncertain, such as rolling a die or tossing a coin.","space"],
+  ["Outcome","","One possible result of an experiment.","space"],
+  ["Sample space","S","The set of all possible outcomes of an experiment.","space","Two dice: #S = 36"],
+  ["Event","","A set of outcomes: a subset of the sample space, e.g. \"an even number\" = {2, 4, 6}.","space"],
+  ["Equally likely","","Outcomes that all have the same chance, like the faces of a fair die.","space"],
+  ["Probability","P(E)","A number from 0 (impossible) to 1 (certain) that measures how likely an event is.","space","P(E) = favourable ÷ total"],
+  ["Favourable outcome","","An outcome that belongs to the event you want.","space"],
+  ["Impossible","P = 0","An event that can't happen.","space"],
+  ["Certain","P = 1","An event that must happen.","space"],
+  ["Fair","unbiased","A die, coin or spinner where every outcome is equally likely.","space"],
+  ["Biased","","Not fair: some outcomes are more likely than others.","freq"],
+  ["Relative frequency","experimental probability","The number of times an event happens divided by the number of trials.","freq","hits ÷ trials"],
+  ["Theoretical probability","","The probability worked out by reasoning, e.g. 1/6 for a fair die.","freq"],
+  ["Long run","law of large numbers","As the number of trials grows, the relative frequency settles close to the probability.","freq"],
+  ["Expected frequency","expected count","The number of times you expect an event in n trials: n × P(E).","freq","n × P(E)"],
+  ["Simulation","","Using random trials (real or on a computer) to estimate a probability.","freq"],
+  ["Universal set","U","The set of everything being considered: the rectangle in a Venn diagram.","venn"],
+  ["Venn diagram","","A rectangle (U) with circles for events. Regions show the outcomes that are in A, B, both or neither.","venn"],
+  ["Intersection","A ∩ B, A and B","The outcomes in both A and B: the overlap.","venn","A ∩ B"],
+  ["Union","A ∪ B, A or B","The outcomes in A or B or both.","venn","A ∪ B"],
+  ["Complement","A′, not A","The outcomes not in A.","venn","P(A′) = 1 − P(A)"],
+  ["Mutually exclusive","disjoint","Events that can't happen at the same time: P(A ∩ B) = 0.","venn"],
+  ["Addition rule","OR rule","P(A ∪ B) = P(A) + P(B) − P(A ∩ B). Subtract the overlap so it isn't counted twice.","venn","P(A ∪ B) = P(A) + P(B) − P(A ∩ B)"],
+  ["#A","n(A), cardinality","The number of elements (outcomes) in set A.","venn"],
+  ["Exhaustive","","Events that together cover the whole sample space.","venn"],
+  ["Independent events","","Events where one happening doesn't change the probability of the other: P(B | A) = P(B).","indep","P(A ∩ B) = P(A) × P(B)"],
+  ["Dependent events","","Events where one happening changes the probability of the other.","indep"],
+  ["Multiplication rule","AND rule","P(A ∩ B) = P(A) × P(B | A). For independent events this is P(A) × P(B).","indep","P(A ∩ B) = P(A) × P(B | A)"],
+  ["Tree diagram","","A diagram with a branch for each outcome at each stage, labelled with probabilities. Multiply along, add down.","indep"],
+  ["With replacement","","The item is put back, so the probabilities stay the same for the next draw.","indep"],
+  ["Without replacement","","The item is kept out, so the totals change for the next draw.","indep"],
+  ["At least one","","One or more. Usually easiest as 1 − P(none).","indep","1 − P(none)"],
+  ["Conditional probability","P(B | A)","The probability of B given that A has happened.","cond","P(B | A) = P(A ∩ B) ÷ P(A)"],
+  ["Given","|","The bar in P(B | A) is read \"given\": A is what you already know.","cond"],
+  ["Two-way table","contingency table","A table of counts split by two categories. Read conditional probabilities from one row or column.","cond"],
+  ["False positive","","A test says \"positive\" for someone who doesn't have the condition.","cond"],
+  ["False negative","","A test says \"negative\" for someone who does have the condition.","cond"],
+  ["Prosecutor's fallacy","confusing the inverse","Treating P(A | B) as if it were P(B | A), for example in court or in medical results.","cond"],
+  ["Expected value","E(X), mean","The long-run average value of an outcome: Σ x × P(x). It doesn't have to be a possible outcome.","expect","E(X) = Σ x · P(x)"],
+  ["Random variable","X","A number that depends on the outcome of an experiment, such as the prize you win.","expect"],
+  ["Fair game","","A game where the expected gain is 0: in the long run you neither win nor lose.","expect"],
+  ["Expected gain","expected profit","Expected winnings minus the cost to play.","expect","E(gain) = E(winnings) − cost"],
+  ["Probability distribution","","A table listing every value of X with its probability. The probabilities add to 1.","expect"],
+  ["Σ","sigma","\"Add them all up.\"","expect"],
+  ["Hence","","Use the previous answer to do the next part.","expect"],
+  ["Show that","","Prove a given result step by step; the working earns the marks.","venn"],
+];
+GLOSS.forEach((g,i)=>{ GLOSS[i]=(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"-")+"-"+t.length}))(g); });
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["sample space","Sample space"],["relative frequency","Relative frequency"],["mutually exclusive","Mutually exclusive"],["intersection","Intersection"],["union","Union"],["complement","Complement"],["independent","Independent events"],["tree","Tree diagram"],["without replacement","Without replacement"],["expected value","Expected value"],["fair game","Fair game"],["false positives","False positive"],["equally likely","Equally likely"]];
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rr(ctx,x,y,w,h,r){ if(w<0){ x+=w; w=-w; } if(h<0){ y+=h; h=-h; } r=Math.max(0,Math.min(r,h/2,w/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function arrowHead(ctx,x,y,dx,dy,col,s=8){ ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x+dx*s,y+dy*s); ctx.lineTo(x-dx*s*0.6-dy*s*0.7,y-dy*s*0.6+dx*s*0.7); ctx.lineTo(x-dx*s*0.6+dy*s*0.7,y-dy*s*0.6-dx*s*0.7); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const nf = (x,d=0) => { const s=(Math.round(x*10**d)/10**d).toFixed(d); const [i,f]=s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f?"."+f:""); };
+const eur = x => "€"+nf(x, Math.abs(x-Math.round(x))>0.004?2:0);
+const niceStep = (range,n) => { const r=range/Math.max(1,n), p=10**Math.floor(Math.log10(r)), m=r/p; return (m<=1?1:m<=2?2:m<=5?5:10)*p; };
+const tick = v => String(+v.toFixed(6));
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+// Axes: returns mapping functions. o: x0,x1,y0,y1,xl,yl,compact
+function frame(ctx,w,h,o){
+  const cp=o.compact, L=cp?36:50, R=12, T=cp?12:16, B=cp?24:34, fs=cp?9:11;
+  const X=v=>L+(v-o.x0)/(o.x1-o.x0)*(w-L-R), Y=v=>h-B-(v-o.y0)/(o.y1-o.y0)*(h-B-T);
+  const xs=o.xt||niceStep(o.x1-o.x0, Math.max(3,Math.floor((w-L)/70))), ys=o.yt||niceStep(o.y1-o.y0, Math.max(3,Math.floor((h-B)/45)));
+  for(let v=Math.ceil(o.x0/xs)*xs; v<=o.x1+1e-9; v+=xs){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,tick(v),X(v),h-B+(cp?11:14),C.muted,M(fs),"center"); }
+  for(let v=Math.ceil(o.y0/ys)*ys; v<=o.y1+1e-9; v+=ys){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,tick(v),L-5,Y(v)+3,C.muted,M(fs),"right"); }
+  const y0=Y(Math.max(o.y0,Math.min(o.y1,0)));
+  line(ctx,L,y0,w-R,y0,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(o.xl) text(ctx,o.xl,w-R,h-B+(cp?22:30),C.muted,F(cp?10:12),"right");
+  if(o.yl) text(ctx,o.yl,L+6,T+(cp?10:12),C.muted,F(cp?10:12),"left");
+  return {X,Y,L,R,T,B};
+}
+function curve(ctx,f,x0,x1,X,Y,col,lw=2.5,dash,clip){ ctx.save(); if(clip){ ctx.beginPath(); ctx.rect(clip[0],clip[1],clip[2],clip[3]); ctx.clip(); } ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); const n=120; for(let i=0;i<=n;i++){ const x=x0+(x1-x0)*i/n, y=f(x); if(i) ctx.lineTo(X(x),Y(y)); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore(); }
+
+/* ================= MODELS + DRAWINGS ================= */
+function pointerTap(el,fn){ el.addEventListener("pointerdown",e=>{ const r=el.getBoundingClientRect(); fn(e.clientX-r.left,e.clientY-r.top); }); }
+const DEV = [
+  ["Sum = 7",(a,b)=>a+b===7],
+  ["A double",(a,b)=>a===b],
+  ["At least one 6",(a,b)=>a===6||b===6],
+  ["Sum ≥ 10",(a,b)=>a+b>=10],
+  ["Sum is even",(a,b)=>(a+b)%2===0],
+  ["Both odd",(a,b)=>a%2===1&&b%2===1],
+  ["Sum = 7 OR a double",(a,b)=>a+b===7||a===b],
+  ["At least one 6 AND sum ≥ 10",(a,b)=>(a===6||b===6)&&a+b>=10],
+];
+// 1. Two-dice sample space grid
+function drawDice(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, ev=DEV[o.ev||0][1], lab=cp?16:26, extra=cp?0:18, side=Math.min(w-lab-16,h-lab-12-extra), cs=side/6, x0=(w-side-lab)/2+lab, y0=(h-side-lab-extra)/2+lab+extra;
+  if(!cp) text(ctx,"1st die",x0+side/2,y0-lab-4,C.muted,F(11),"center","middle");
+  for(let i=1;i<=6;i++){ text(ctx,String(i),x0+(i-0.5)*cs,y0-(cp?5:8),C.ink,F(cp?9:13,800),"center"); text(ctx,String(i),x0-(cp?6:10),y0+(i-0.5)*cs+4,C.ink,F(cp?9:13,800),"center"); }
+  for(let a=1;a<=6;a++) for(let b=1;b<=6;b++){ const x=x0+(a-1)*cs, y=y0+(b-1)*cs, on=ev(a,b); rr(ctx,x+1.5,y+1.5,cs-3,cs-3,cp?3:6); ctx.fillStyle=on?C.terra:C["surface-2"]; ctx.fill(); ctx.strokeStyle=C.line; ctx.lineWidth=1; ctx.stroke();
+    const t=o.show==="pair"? `${a},${b}` : String(a+b); text(ctx,t,x+cs/2,y+cs/2+1,on?C["on-accent"]||"#fff":C.ink,F(Math.max(8,Math.min(cp?11:16,cs*(o.show==="pair"?0.28:0.38))),700),"center","middle"); }
+  if(!cp){ ctx.save(); ctx.translate(x0-lab+6,y0+side/2); ctx.rotate(-Math.PI/2); text(ctx,"2nd die",0,0,C.muted,F(11),"center","middle"); ctx.restore(); } }
+// 2. Running relative frequency
+function drawFreq(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, hist=o.hist||[], N=Math.max(10,hist.length? hist[hist.length-1][0] : 0);
+  const f=frame(ctx,w,h,{x0:0,x1:N,y0:0,y1:1,yt:0.25,xl:"trials",yl:"relative frequency",compact:cp});
+  if(o.p!=null){ line(ctx,f.L,f.Y(o.p),w-f.R,f.Y(o.p),C.olive,2,[6,5]); text(ctx,`probability ${nf(o.p,3)}`,w-f.R-4,f.Y(o.p)-6,C.olive,F(cp?9:12,800),"right"); }
+  else text(ctx,"probability hidden: estimate it",w-f.R-4,f.T+14,C.muted,F(cp?9:12,800),"right");
+  if(hist.length){ ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=cp?2:2.8; ctx.lineJoin="round"; ctx.beginPath(); hist.forEach(([t,k],i)=>{ const x=f.X(t), y=f.Y(k/t); if(i) ctx.lineTo(x,y); else ctx.moveTo(x,y); }); ctx.stroke(); ctx.restore();
+    const [t,k]=hist[hist.length-1]; circle(ctx,f.X(t),f.Y(k/t),cp?3:5,C.terra); }
+  if(o.last!=null&&!cp){ rr(ctx,f.L+12,f.T+24,150,26,8); ctx.fillStyle=C["surface-2"]; ctx.fill(); text(ctx,"last: "+o.last,f.L+22,f.T+41,C.ink,F(12,800)); } }
+// 3. Venn diagram
+function vennGeom(w,h,cp){ const pad=cp?8:14, top=cp?8:22, r=Math.min((w-2*pad)*0.25,(h-top-pad)*0.42), cy=top+(h-top-pad)/2, d=r*0.62; return {pad,top,r,cy,ax:w/2-d,bx:w/2+d}; }
+function drawVenn(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, g=vennGeom(w,h,cp), back=o.bgc||C.surface, sh=C.apricot;
+  const cA=()=>{ ctx.beginPath(); ctx.arc(g.ax,g.cy,g.r,0,7); }, cB=()=>{ ctx.beginPath(); ctx.arc(g.bx,g.cy,g.r,0,7); }, fillWith=(p,c)=>{ p(); ctx.fillStyle=c; ctx.fill(); };
+  const rect=()=>{ ctx.beginPath(); ctx.rect(g.pad,g.top-(cp?2:6),w-2*g.pad,h-g.top-g.pad+(cp?2:6)); };
+  ctx.save();
+  switch(o.reg){
+    case "A": fillWith(cA,sh); break; case "B": fillWith(cB,sh); break;
+    case "AB": cA(); ctx.clip(); fillWith(cB,sh); break;
+    case "AuB": fillWith(cA,sh); fillWith(cB,sh); break;
+    case "Ac": fillWith(rect,sh); fillWith(cA,back); break;
+    case "Aonly": fillWith(cA,sh); fillWith(cB,back); break;
+    case "none": fillWith(rect,sh); fillWith(cA,back); fillWith(cB,back); break;
+  }
+  ctx.restore();
+  rect(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.5; ctx.stroke();
+  cA(); ctx.strokeStyle=C.terra; ctx.lineWidth=cp?2:3; ctx.stroke(); cB(); ctx.strokeStyle=C.olive; ctx.stroke();
+  const fs=cp?13:20;
+  text(ctx,"A",g.ax-g.r*0.75,g.cy-g.r*0.78,C.terra,F(cp?12:17,800),"center"); text(ctx,"B",g.bx+g.r*0.75,g.cy-g.r*0.78,C.olive,F(cp?12:17,800),"center"); text(ctx,"U",g.pad+(cp?8:12),g.top+(cp?8:12),C.muted,F(cp?10:13,800),"center");
+  text(ctx,String(o.a),g.ax-g.r*0.45,g.cy+6,C.ink,F(fs,800),"center"); text(ctx,String(o.ab),w/2,g.cy+6,C.ink,F(fs,800),"center"); text(ctx,String(o.b),g.bx+g.r*0.45,g.cy+6,C.ink,F(fs,800),"center");
+  text(ctx,String(o.n),w-g.pad-(cp?12:20),h-g.pad-(cp?8:12),C.ink,F(fs,800),"center"); }
+// 4. Two-stage probability tree
+function treeProbs(r,b,rep){ const n=r+b, m=rep? n : n-1;
+  const p1=[[r,n],[b,n]], p2=rep? [[[r,n],[b,n]],[[r,n],[b,n]]] : [[[r-1,m],[b,m]],[[r,m],[b-1,m]]];
+  const leaves=[["RR",0,0],["RB",0,1],["BR",1,0],["BB",1,1]].map(([lab,i,j])=>({lab,num:p1[i][0]*p2[i][j][0],den:p1[i][1]*p2[i][j][1],path:`${frRaw(...p1[i])} × ${frRaw(...p2[i][j])}`}));
+  return {p1,p2,leaves}; }
+function drawPTree(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, T=treeProbs(o.r,o.b,o.rep), hl=o.hl||[];
+  const x0=cp?14:30, x1=cp?w*0.36:w*0.3, x2=cp?w*0.66:w*0.56, top=cp?14:24, bot=h-(cp?12:20), ly=k=>top+(k+0.5)*(bot-top)/4, my=i=>(ly(2*i)+ly(2*i+1))/2, y0=(top+bot)/2;
+  const cols=[C.terra,C.olive], names=["R","B"], fs=cp?10:13;
+  for(let i=0;i<2;i++){ const lit=hl.some(k=>Math.floor(k/2)===i); line(ctx,x0,y0,x1,my(i),lit?C.ink:C.line,lit?3:2);
+    const mx=(x0+x1)/2, myy=(y0+my(i))/2; text(ctx,frRaw(...T.p1[i]),mx,myy+(i?16:-8),C.ink,M(fs),"center");
+    for(let j=0;j<2;j++){ const k=2*i+j, on=hl.includes(k); line(ctx,x1,my(i),x2,ly(k),on?C.ink:C.line,on?3:2); text(ctx,frRaw(...T.p2[i][j]),(x1+x2)/2,(my(i)+ly(k))/2+(j?15:-7),C.ink,M(fs),"center");
+      circle(ctx,x2,ly(k),cp?8:12,cols[j]); text(ctx,names[j],x2,ly(k)+1,"#fff",F(cp?9:12,800),"center","middle");
+      const L=T.leaves[k]; rr(ctx,x2+(cp?12:18),ly(k)-(cp?9:13),w-x2-(cp?16:26),cp?18:26,8); ctx.fillStyle=on?C.apricot:C["surface-2"]; ctx.fill();
+      text(ctx,cp? `${L.lab}: ${fr(L.num,L.den)}` : `${L.lab}   ${L.path} = ${fr(L.num,L.den)}`,x2+(cp?18:28),ly(k)+(cp?4:5),C.ink,cp?F(10,800):M(12),"left"); }
+    circle(ctx,x1,my(i),cp?9:13,cols[i]); text(ctx,names[i],x1,my(i)+1,"#fff",F(cp?9:12,800),"center","middle"); }
+  circle(ctx,x0,y0,cp?4:6,C.ink);
+  if(!cp){ text(ctx,"1st sweet",x1,top-8,C.muted,F(11),"center"); text(ctx,"2nd sweet",x2,top-8,C.muted,F(11),"center"); } }
+// 5. Screening test: 1 000 people
+function testCounts(p,s,f){ const D=Math.round(1000*p/100), TP=Math.round(D*s/100), ND=1000-D, FP=Math.round(ND*f/100); return {D,TP,FN:D-TP,ND,FP,TN:ND-FP}; }
+function drawTest(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, c=o.c, legH=cp?0:30, fit=c=>Math.min((w-16)/c,(h-legH-12)/(1000/c)), cols=[20,25,40,50].reduce((a,c)=>fit(c)>fit(a)?c:a,20), rows=1000/cols, cs=fit(cols), gx=(w-cs*cols)/2, gy=6;
+  const kinds=[[c.TP,C.terra,"has it, tests positive"],[c.FN,C.apricot,"has it, tests negative"],[c.FP,C.olive,"doesn't have it, tests positive"],[c.TN,C.sage,"doesn't have it, negative"]];
+  let idx=0; kinds.forEach(([n,col],ki)=>{ ctx.fillStyle=col; ctx.globalAlpha=ki===3?0.4:1; for(let q=0;q<n;q++,idx++){ const x=gx+(idx%cols)*cs, y=gy+Math.floor(idx/cols)*cs; ctx.fillRect(x+0.6,y+0.6,cs-1.2,cs-1.2); } }); ctx.globalAlpha=1;
+  if(!cp){ let x=12; const y=h-12; kinds.forEach(([n,col,lab])=>{ ctx.fillStyle=col; ctx.fillRect(x,y-10,12,12); ctx.strokeStyle=C.line; ctx.strokeRect(x,y-10,12,12); const t=`${lab} (${n})`; text(ctx,t,x+16,y,C.ink,F(w<700?9:11),"left"); x+=16+ctx.measureText(t).width+(w<700?10:16); ctx.font=F(w<700?9:11); x=Math.min(x,w); }); } }
+// 6. Expected value game: running mean gain
+function drawEV(ctx,w,h,o){ bg(ctx,w,h,o.bgc); const cp=o.compact, hist=o.hist||[], N=Math.max(20,hist.length? hist[hist.length-1][0] : 0), hiP=Math.max(o.s,o.f,1);
+  const f=frame(ctx,w,h,{x0:0,x1:N,y0:-o.cost-0.25,y1:hiP-o.cost+0.25,xl:"games played",yl:"average gain per game (€)",compact:cp});
+  line(ctx,f.L,f.Y(o.E),w-f.R,f.Y(o.E),C.olive,2,[6,5]); text(ctx,`expected gain ${o.E<-1e-9?"−":""}€${nf(Math.abs(o.E),2)}`,w-f.R-4,f.Y(o.E)+(o.E>=0?-6:14),C.olive,F(cp?9:12,800),"right");
+  if(hist.length){ ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=cp?2:2.8; ctx.lineJoin="round"; ctx.beginPath(); hist.forEach(([t,g],i)=>{ const x=f.X(t), y=f.Y(g/t); if(i) ctx.lineTo(x,y); else ctx.moveTo(x,y); }); ctx.stroke(); ctx.restore(); }
+  if(o.last&&!cp){ const s=34, x=f.L+12, y=f.T+24; rr(ctx,x,y,s,s,8); ctx.fillStyle=C.apricot; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.5; ctx.stroke();
+    const P={1:[[0,0]],2:[[-1,-1],[1,1]],3:[[-1,-1],[0,0],[1,1]],4:[[-1,-1],[1,-1],[-1,1],[1,1]],5:[[-1,-1],[1,-1],[0,0],[-1,1],[1,1]],6:[[-1,-1],[1,-1],[-1,0],[1,0],[-1,1],[1,1]]}[o.last];
+    P.forEach(([dx,dy])=>circle(ctx,x+s/2+dx*9,y+s/2+dy*9,3,"#3b2b21")); text(ctx,o.last>=5? `won €${o.last===6?o.s:o.f}` : "won €0",x+s+8,y+s/2+4,C.ink,F(12,800)); } }
+
+/* ================= ROUTER ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "fpc", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+$("loList").innerHTML = LO.map(([t,s],i)=>`<li><label><input type="checkbox" id="lo${i}"><span class="mono">${i+1}</span><span>${s} <small style="color:var(--muted)">· ${LO_HEAD[t]}</small></span></label></li>`).join("");
+const loState=store.get("m12-lo",{});
+LO.forEach((x,i)=>{ const id="lo"+i; $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("m12-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=LO.filter((x,i)=>$("lo"+i).checked).length; $("stLO").textContent=`${lo}/${LO.length}`; $("stLOb").style.width=(lo/LO.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("m12-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  space:{ vis:[["dice",{ev:0}]], cap:"Two dice: 36 equally likely outcomes. 6 of them give a total of 7, so P(sum = 7) = 6/36 = 1/6.",
+    keys:[["S","The sample space is the set of all possible outcomes. An event is a subset of it."],["÷","If the outcomes are equally likely, P(E) = favourable outcomes ÷ total outcomes."],["0–1","0 = impossible, 1 = certain. P(not E) = 1 − P(E)."]],
+    f:"P(E) = #E ÷ #S", mistake:"Treating the totals 2 to 12 as equally likely. A total of 2 happens 1 way; a total of 7 happens 6 ways." },
+  freq:{ vis:[["freq",{p:1/6,seed:7,n:400}]], cap:"Rolling a die again and again: the proportion of 6s wobbles at first, then settles near 1/6 ≈ 0.167.",
+    keys:[["≈","Relative frequency = hits ÷ trials. It's an estimate of the probability."],["∞","More trials usually give a better estimate: it settles down in the long run."],["n×p","Expected count = trials × probability, e.g. 600 × 1/6 = 100 sixes."]],
+    f:"Relative frequency = hits ÷ trials", mistake:"Thinking a 6 is \"due\" after a run without one. The die has no memory: every roll is still 1/6." },
+  venn:{ vis:[["venn",{a:10,ab:6,b:8,n:6,reg:"AuB"}]], cap:"30 students: 16 play sport (A), 14 play an instrument (B), 6 do both. P(A ∪ B) = (16 + 14 − 6) ÷ 30 = 24/30 = 4/5.",
+    keys:[["∩","A ∩ B (AND) is the overlap. A ∪ B (OR) is everything inside either circle."],["−","P(A ∪ B) = P(A) + P(B) − P(A ∩ B): the overlap was counted twice."],["⊘","Mutually exclusive: no overlap, so P(A ∩ B) = 0 and you simply add."]],
+    f:"P(A ∪ B) = P(A) + P(B) − P(A ∩ B)", mistake:"Adding P(A) + P(B) when the events overlap: the students who do both get counted twice." },
+  indep:{ vis:[["tree",{r:5,b:3,rep:false,hl:[0]}]], cap:"5 red and 3 blue sweets, two taken without replacement: P(both red) = 5/8 × 4/7 = 20/56 = 5/14.",
+    keys:[["×","AND: multiply along the branches of a tree. Then add the paths you want."],["⫫","Independent events: P(A ∩ B) = P(A) × P(B). Otherwise use P(A) × P(B | A)."],["↩","With replacement, the second draw is like the first. Without it, the total drops by 1."]],
+    f:"P(A ∩ B) = P(A) × P(B | A)", mistake:"Keeping the same fractions on the second branches when the first sweet isn't put back." },
+  cond:{ vis:[["test",{c:testCounts(2,90,5)}]], cap:"1 000 people, 2% have the condition: 18 true positives (terracotta) but 49 false positives (olive). P(positive | condition) = 0.9, yet P(condition | positive) = 18/67 ≈ 0.27.",
+    keys:[["|","P(B | A) is the probability of B given A. Keep only the outcomes in A, then count."],["÷","P(B | A) = P(A ∩ B) ÷ P(A)."],["≠","In general P(A | B) ≠ P(B | A). Mixing them up causes real mistakes in medicine and in court."]],
+    f:"P(B | A) = P(A ∩ B) ÷ P(A)", mistake:"Reading \"90% of people with the condition test positive\" as \"90% of people who test positive have the condition\"." },
+  expect:{ vis:[["ev",{s:6,f:3,cost:2,seed:11,n:300}]], cap:"Pay €2, win €6 for a 6 or €3 for a 5. Expected winnings = 6 × 1/6 + 3 × 1/6 = €1.50, so on average you lose 50c a game.",
+    keys:[["Σ","E(X) = Σ x × P(x): multiply each value by its probability, then add."],["≈","It's the long-run average. It needn't be a possible outcome: you can't win €1.50 in one game."],["0","A fair game has expected gain 0, so the cost to play = the expected winnings."]],
+    f:"E(X) = Σ x · P(x)", mistake:"Forgetting to subtract the cost of playing when you work out the expected gain." },
+};
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  ["space","Favourable ÷ total","var(--blush)","Equally likely outcomes you can list.","Dice, cards, coins, spinners"],
+  ["venn","Add, minus the overlap","var(--sage)","OR: either event, or both.","Sport or music, a heart or a king"],
+  ["indep","Multiply","var(--cream)","AND: both events, one after the other.","Two sixes, two sweets, rain on two days"],
+  ["cond","Restrict, then count","var(--blush)","GIVEN: you already know something.","Test results, two-way tables"],
+  ["expect","Σ x × P(x)","var(--sage)","What happens on average in the long run.","Games, insurance, decisions"],
+];
+$("cases").innerHTML = CASES.map(([i,n,tn,d,ex])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${n}</h3></div><p>${d}</p><p style="color:var(--muted)">e.g. ${ex}</p></div>`).join("");
+(()=>{ const S=[["Roll a 7 on one die",0,"0 (impossible)"],["Win the Lotto jackpot with one line",1/10737573,"1/10 737 573"],["Roll a double six",1/36,"1/36"],["Roll a 6",1/6,"1/6"],["Toss heads",1/2,"1/2"],["Two dice: total of 3 or more",35/36,"35/36"],["A die shows 1, 2, 3, 4, 5 or 6",1,"1 (certain)"]];
+  $("bars").innerHTML = S.map(([l,p,v],i)=>`<div class="barrow"><span><b>${l}</b></span><div class="track"><i style="width:${(p*100).toFixed(2)}%;background:var(--${["apricot","sage","blush","cream"][i%4]})"></i></div><span class="v">${v}</span></div>`).join("") + `<p class="result">The Lotto bar is there, but at about 0.0000001 it's far too thin to see.</p>`; })();
+const AROUND = [
+  ["shield","Insurance","Insurers price policies with expected values: the premium is more than the expected payout, so they make money in the long run.",[["E(X)","neutral"]],"var(--blush)"],
+  ["med","Medical screening","When a condition is rare, even a good test gives lots of false positives: P(condition | positive) can be far below P(positive | condition).",[["P(A | B) ≠ P(B | A)","alert"]],"var(--apricot)"],
+  ["cloud","Weather forecasts","\"70% chance of rain\" can be read as a long-run relative frequency: on days like this, it rained about 7 times in 10.",[["Long run","neutral"]],"var(--sage)"],
+  ["lotto","Lotteries","Lotteries pay out less in prizes than they take in, so a ticket's expected value is less than its price: not a fair game.",[["Not fair","alert"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"space",label:"Sample space",col:"var(--blush)",leaves:[["S","Every possible outcome."],["Event","A subset of S."],["fav ÷ total","When outcomes are equally likely."]]},
+  {id:"freq",label:"Long run",col:"var(--apricot)",leaves:[["hits ÷ trials","Relative frequency."],["More trials","A better estimate."],["n × p","Expected count."]]},
+  {id:"venn",label:"Venn",col:"var(--sage)",leaves:[["A ∩ B","AND: the overlap."],["A ∪ B","OR: either, or both."],["A′","P(A′) = 1 − P(A)."],["Exclusive","No overlap: just add."]]},
+  {id:"indep",label:"Multiply",col:"var(--cream)",leaves:[["Independent","P(A) × P(B)."],["General","P(A) × P(B | A)."],["Tree","Multiply along, add down."],["No replacement","The totals drop."]]},
+  {id:"cond",label:"Given",col:"var(--blush)",leaves:[["P(B | A)","P(A ∩ B) ÷ P(A)."],["≠","P(A | B) ≠ P(B | A) in general."],["Tests","Watch the false positives."]]},
+  {id:"expect",label:"E(X)",col:"var(--sage)",leaves:[["Σ x · P(x)","The long-run average."],["Not an outcome","You can't win €1.50."],["Fair","Expected gain = 0."]]},
+];
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Probability</text><text x="${cx}" y="${cy+22}" text-anchor="middle">1.2</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["space","What is a sample space?","The set of all possible outcomes of an experiment."],
+  ["space","What is an event?","A set of outcomes: a subset of the sample space."],
+  ["space","Two dice are rolled. How many outcomes are in the sample space?","6 × 6 = 36."],
+  ["space","P(total of 7) with two fair dice?","6/36 = 1/6."],
+  ["space","If P(A) = 0.3, what is P(A′)?","1 − 0.3 = 0.7."],
+  ["freq","What is relative frequency?","The number of times the event happened ÷ the number of trials."],
+  ["freq","How does the number of trials affect the estimate?","More trials usually give a better estimate of the probability."],
+  ["freq","A fair die is rolled 600 times. Expected number of 6s?","600 × 1/6 = 100."],
+  ["freq","A drawing pin lands point up 62 times in 200 throws. Estimate P(point up).","62 ÷ 200 = 0.31."],
+  ["venn","What does A ∩ B mean?","A and B: the outcomes in both."],
+  ["venn","What does A ∪ B mean?","A or B (or both)."],
+  ["venn","State the addition rule.","P(A ∪ B) = P(A) + P(B) − P(A ∩ B)."],
+  ["venn","What are mutually exclusive events?","Events that can't happen together: P(A ∩ B) = 0."],
+  ["venn","P(A) = 0.5, P(B) = 0.4, P(A ∩ B) = 0.2. Find P(A ∪ B).","0.5 + 0.4 − 0.2 = 0.7."],
+  ["indep","What are independent events?","Events where one happening doesn't change the probability of the other."],
+  ["indep","Multiplication rule for independent events?","P(A ∩ B) = P(A) × P(B)."],
+  ["indep","Multiplication rule, general case?","P(A ∩ B) = P(A) × P(B | A)."],
+  ["indep","Two sweets from 5 red and 3 blue, without replacement. P(both red)?","5/8 × 4/7 = 20/56 = 5/14."],
+  ["indep","Same bag, with replacement. P(both red)?","5/8 × 5/8 = 25/64."],
+  ["indep","Quickest way to find P(at least one 6) in two rolls?","1 − P(no 6) = 1 − 25/36 = 11/36."],
+  ["cond","What does P(B | A) mean?","The probability of B given that A has happened."],
+  ["cond","Formula for P(B | A)?","P(A ∩ B) ÷ P(A)."],
+  ["cond","Is P(A | B) equal to P(B | A)?","Not in general. P(four legs | dog) is close to 1, but P(dog | four legs) is much smaller."],
+  ["cond","What is a false positive?","A positive test result for someone who doesn't have the condition."],
+  ["expect","What is expected value?","The long-run average: E(X) = Σ x × P(x)."],
+  ["expect","Must the expected value be a possible outcome?","No. Expected winnings can be €1.50 when you can only win €0, €3 or €6."],
+  ["expect","What makes a game fair?","The expected gain is 0: the cost to play equals the expected winnings."],
+  ["expect","Win €10 with probability 0.2, otherwise nothing. Expected winnings?","10 × 0.2 = €2."],
+];
+let fcKnown = store.get("m12-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter(c=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("m12-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("m12-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("m12-fc",fcKnown); fcBuild(); });
+fcBuild();
+
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["space","A fair die is rolled. P(a number greater than 4) =",["1/6","1/3","1/2","2/3"],1,"{5, 6}: 2 out of 6 = 1/3."],
+  ["space","Two fair dice are rolled. How many outcomes give a total of 8?",["4","5","6","7"],1,"(2,6), (3,5), (4,4), (5,3), (6,2): 5 outcomes, so P = 5/36."],
+  ["space","P(rain tomorrow) = 0.35. P(no rain tomorrow) =",["0.35","0.65","0.75","1.35"],1,"Complement: 1 − 0.35 = 0.65."],
+  ["freq","A spinner lands on red 45 times in 150 spins. Estimate P(red).",["0.3","0.45","0.15","0.33"],0,"Relative frequency = 45 ÷ 150 = 0.3."],
+  ["freq","Which gives the best estimate of a probability?",["10 trials","50 trials","100 trials","1 000 trials"],3,"With more trials, the relative frequency settles closer to the probability."],
+  ["freq","A fair coin has landed heads 5 times in a row. P(heads on the next toss) =",["less than 1/2","1/2","more than 1/2","0"],1,"Tosses are independent: the coin has no memory."],
+  ["venn","P(A) = 0.6, P(B) = 0.3, P(A ∩ B) = 0.1. P(A ∪ B) =",["0.9","0.8","0.7","0.18"],1,"0.6 + 0.3 − 0.1 = 0.8."],
+  ["venn","A and B are mutually exclusive. P(A ∩ B) =",["0","P(A) × P(B)","1","P(A) + P(B)"],0,"They can't happen together, so the overlap is empty."],
+  ["venn","In a class of 30, 18 play sport, 12 play music and 5 do both. How many do neither?",["0","5","7","10"],1,"Sport or music = 18 + 12 − 5 = 25, so 30 − 25 = 5 do neither."],
+  ["indep","A coin is tossed and a die is rolled. P(heads and a 6) =",["1/12","1/8","2/3","1/6"],0,"Independent: 1/2 × 1/6 = 1/12."],
+  ["indep","A bag has 4 red and 6 blue discs. Two are taken without replacement. P(both red) =",["4/25","2/15","4/45","2/5"],1,"4/10 × 3/9 = 12/90 = 2/15. (4/25 would be with replacement.)"],
+  ["indep","A and B are independent, P(A) = 0.5 and P(B) = 0.4. P(A ∩ B) =",["0.9","0.2","0.1","0.45"],1,"0.5 × 0.4 = 0.2."],
+  ["indep","Three fair coins are tossed. P(at least one head) =",["1/8","3/8","1/2","7/8"],3,"1 − P(no heads) = 1 − 1/8 = 7/8."],
+  ["cond","P(A ∩ B) = 0.12 and P(A) = 0.4. P(B | A) =",["0.048","0.3","0.52","0.28"],1,"0.12 ÷ 0.4 = 0.3."],
+  ["cond","Of 200 students, 80 walk to school, and 30 of the walkers are in 6th year. P(6th year | walks) =",["30/200","30/80","80/200","50/80"],1,"Keep only the 80 walkers: 30/80 = 3/8."],
+  ["cond","A test is positive for 95% of people who have a rare disease. This tells you:",["P(disease | positive) = 0.95","P(positive | disease) = 0.95","P(disease) = 0.95","P(negative) = 0.05"],1,"It's the probability of a positive given the disease. P(disease | positive) could be much lower."],
+  ["expect","Win €12 with probability 1/4, otherwise nothing. Expected winnings =",["€12","€4","€3","€0"],2,"12 × 1/4 = €3."],
+  ["expect","It costs €3 to play the game in the last question. The game is:",["fair","in the player's favour","against the player","impossible to judge"],0,"Expected gain = €3 − €3 = 0, so it's fair."],
+];
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("m12-best",null); if(best==null||pct>best) store.set("m12-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => { const c=g.t[0].normalize("NFD")[0]; return /[A-Za-z]/.test(c) ? c.toUpperCase() : "#"; };
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/</g,"&lt;")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Find","Work out the answer, showing your method.","Find the probability that both discs are red."],
+  ["Calculate","Work out a numerical value, with working.","Calculate the expected winnings."],
+  ["Write down","Give the answer; little or no working needed.","Write down the sample space."],
+  ["List","Write out every outcome, in a clear order.","List all the outcomes with a total of 9."],
+  ["Show that","Prove a given result step by step; the working earns the marks.","Show that P(A ∪ B) = 0.8."],
+  ["Hence","Use the previous answer to do the next part.","Hence find the expected gain."],
+  ["Explain","Give a reason in words.","Explain why the events are not independent."],
+  ["Justify","Back up your answer with mathematical reasoning.","Is the game fair? Justify your answer."],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("");
+
+// Calculation trainer (answers as fractions or decimals)
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+const d2 = x => String(+x.toFixed(4));
+const PTYPES = {
+  dice:{ name:"Two dice", gen(){ const k=rnd(2,12), list=[]; for(let a=1;a<=6;a++){ const b=k-a; if(b>=1&&b<=6) list.push(`(${a},${b})`); }
+      return { q:`Two fair dice are rolled. Find the probability that the total is <b>${k}</b>.`, ans:list.length/36, unit:"",
+        steps:[`36 equally likely outcomes`,`Total ${k}: ${list.join(", ")} → ${list.length} outcome${list.length>1?"s":""}`,`P = ${frFull(list.length,36)} ≈ ${d2(list.length/36)}`] }; } },
+  comp:{ name:"Not (complement)", gen(){ const r=rnd(2,9), g=rnd(2,9), y=rnd(1,8), n=r+g+y;
+      return { q:`A bag has <b>${r} red</b>, <b>${g} green</b> and <b>${y} yellow</b> counters. One is picked at random. Find P(<b>not green</b>).`, ans:(r+y)/n, unit:"",
+        steps:[`P(green) = ${frRaw(g,n)}`,`P(not green) = 1 − ${frRaw(g,n)} = ${frFull(n-g,n)}`,`(or count: ${r} + ${y} = ${r+y} non-green out of ${n})`] }; } },
+  add:{ name:"Addition rule", gen(){ let a,b,c; do{ a=rnd(2,7); b=rnd(2,6); c=rnd(1,Math.min(a,b)-1); }while(a+b-c>10);
+      return { q:`P(A) = <b>${a/10}</b>, P(B) = <b>${b/10}</b> and P(A ∩ B) = <b>${c/10}</b>. Find P(A ∪ B).`, ans:(a+b-c)/10, unit:"",
+        steps:[`P(A ∪ B) = P(A) + P(B) − P(A ∩ B)`,`= ${a/10} + ${b/10} − ${c/10}`,`= ${d2((a+b-c)/10)}`] }; } },
+  vennq:{ name:"Venn: neither", gen(){ let N,S,M,X; do{ N=pick([25,30,32,40]); S=rnd(8,N-8); M=rnd(5,N-10); X=rnd(1,Math.min(S,M)-1); }while(S+M-X>N-1);
+      const u=S+M-X;
+      return { q:`In a group of <b>${N}</b> students, <b>${S}</b> play a sport, <b>${M}</b> play an instrument and <b>${X}</b> do both. A student is picked at random. Find P(<b>neither</b>).`, ans:(N-u)/N, unit:"",
+        steps:[`Sport or instrument: ${S} + ${M} − ${X} = ${u}`,`Neither: ${N} − ${u} = ${N-u}`,`P(neither) = ${frFull(N-u,N)} ≈ ${d2((N-u)/N)}`] }; } },
+  ind:{ name:"Independent events", gen(){ const a=rnd(1,8)/10, b=rnd(1,8)/10, k=rnd(0,2), A=`P(rain on Saturday) = <b>${a}</b> and P(rain on Sunday) = <b>${b}</b>. Assume the days are independent.`;
+      if(k===0) return { q:`${A} Find P(rain on <b>both</b> days).`, ans:a*b, unit:"", steps:[`Independent, AND: multiply`,`${a} × ${b} = ${d2(a*b)}`] };
+      if(k===1) return { q:`${A} Find P(rain on <b>neither</b> day).`, ans:(1-a)*(1-b), unit:"", steps:[`P(no rain Sat) = ${d2(1-a)}, P(no rain Sun) = ${d2(1-b)}`,`${d2(1-a)} × ${d2(1-b)} = ${d2((1-a)*(1-b))}`] };
+      return { q:`${A} Find P(rain on <b>at least one</b> day).`, ans:1-(1-a)*(1-b), unit:"", steps:[`P(neither) = ${d2(1-a)} × ${d2(1-b)} = ${d2((1-a)*(1-b))}`,`P(at least one) = 1 − ${d2((1-a)*(1-b))} = ${d2(1-(1-a)*(1-b))}`] }; } },
+  norep:{ name:"Without replacement", gen(){ const r=rnd(2,7), b=rnd(2,7), n=r+b, both=Math.random()<0.5;
+      if(both) return { q:`A bag has <b>${r} red</b> and <b>${b} blue</b> sweets. Two are taken at random <b>without replacement</b>. Find P(<b>both red</b>).`, ans:r*(r-1)/(n*(n-1)), unit:"",
+        steps:[`P(1st red) = ${frRaw(r,n)}; then ${r-1} red out of ${n-1}`,`${frRaw(r,n)} × ${frRaw(r-1,n-1)} = ${frFull(r*(r-1),n*(n-1))}`] };
+      return { q:`A bag has <b>${r} red</b> and <b>${b} blue</b> sweets. Two are taken at random <b>without replacement</b>. Find P(<b>one of each colour</b>).`, ans:2*r*b/(n*(n-1)), unit:"",
+        steps:[`RB: ${frRaw(r,n)} × ${frRaw(b,n-1)} = ${frRaw(r*b,n*(n-1))}`,`BR: ${frRaw(b,n)} × ${frRaw(r,n-1)} = ${frRaw(r*b,n*(n-1))}`,`Add: ${frFull(2*r*b,n*(n-1))}`] }; } },
+  condq:{ name:"Given (conditional)", gen(){ const N=pick([100,120,150,200]), A=rnd(20,Math.floor(N/2)), B=rnd(15,Math.floor(N/2)), X=rnd(5,Math.min(A,B)-3), rev=Math.random()<0.5;
+      const intro=`In a survey of <b>${N}</b> people, <b>${A}</b> own a dog, <b>${B}</b> own a cat and <b>${X}</b> own both.`;
+      return rev? { q:`${intro} One person is picked at random. Find P(<b>owns a dog | owns a cat</b>).`, ans:X/B, unit:"", steps:[`Given a cat: keep only the ${B} cat owners`,`${X} of them own a dog`,`P = ${frFull(X,B)} ≈ ${d2(X/B)}`,`Compare P(cat | dog) = ${frRaw(X,A)}: not the same`] }
+        : { q:`${intro} One person is picked at random. Find P(<b>owns a cat | owns a dog</b>).`, ans:X/A, unit:"", steps:[`Given a dog: keep only the ${A} dog owners`,`${X} of them own a cat`,`P = ${frFull(X,A)} ≈ ${d2(X/A)}`,`Compare P(dog | cat) = ${frRaw(X,B)}: not the same`] }; } },
+  ev:{ name:"Expected value", gen(){ const x1=pick([10,20,50]), x2=pick([2,4,5]), p1=rnd(1,2)/10, p2=rnd(2,4)/10, E=x1*p1+x2*p2;
+      return { q:`A spinner pays <b>€${x1}</b> with probability <b>${p1}</b>, <b>€${x2}</b> with probability <b>${p2}</b>, and nothing otherwise. Find the expected winnings per spin.`, ans:E, unit:"€", tol:0.006,
+        steps:[`P(nothing) = 1 − ${p1} − ${p2} = ${d2(1-p1-p2)}`,`E = ${x1} × ${p1} + ${x2} × ${p2} + 0 × ${d2(1-p1-p2)}`,`= ${d2(x1*p1)} + ${d2(x2*p2)} = €${E.toFixed(2)}`] }; } },
+  fair:{ name:"Fair price", gen(){ let s,f; do{ s=rnd(3,12); f=rnd(0,s-1); }while((s+f)%3!==0); const E=(s+f)/6;
+      return { q:`You roll a fair die. A 6 wins <b>€${s}</b>, a 5 wins <b>€${f}</b>, anything else wins nothing. What should it cost to play for the game to be fair?`, ans:E, unit:"€", tol:0.006,
+        steps:[`E(winnings) = ${s} × 1/6 + ${f} × 1/6 + 0 × 4/6`,`= ${s+f}/6 = €${E.toFixed(2)}`,`Fair: expected gain 0, so cost = €${E.toFixed(2)}`] }; } },
+};
+let pType="dice", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paUnit").textContent=pCur.unit; $("paIn").value=""; $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+function parseAns(raw){ const s=raw.replace(/[€\s]/g,"").replace(/,/g,"."); let m;
+  if((m=s.match(/^(-?\d*\.?\d+)\/(\d*\.?\d+)$/))) return +m[2]? +m[1]/+m[2] : NaN;
+  if((m=s.match(/^(-?\d*\.?\d+)%$/))) return +m[1]/100;
+  return /^-?\d*\.?\d+$/.test(s)? +s : NaN; }
+$("paCheck").addEventListener("click",()=>{
+  const x=parseAns($("paIn").value);
+  if(!Number.isFinite(x)){ $("paFb").innerHTML=`<div class="fb no">Type a fraction like 5/12 or a decimal like 0.42.</div>`; return; }
+  const ok=Math.abs(x-pCur.ans) <= (pCur.tol||0.0051);
+  if(!pDone){ pTried++; if(ok) pRight++; pDone=true; }
+  $("paFb").innerHTML = ok? `<div class="fb ok"><b style="color:var(--good)">Correct!</b>${pSteps()}</div>`
+    : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Ask: is it OR (add, minus the overlap), AND (multiply), NOT (1 − P) or GIVEN (restrict, then count)? Decimals need 2 or more places. Try again or show the solution.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`;
+});
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Worked solution</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+
+// Which rule? [scenario, 0 add / 1 multiply independent / 2 multiply general / 3 expected value, why]
+const PRED = [
+  ["P(a card drawn from a deck is a heart or a king)?",0,"OR with an overlap (the king of hearts): 13/52 + 4/52 − 1/52 = 16/52 = 4/13."],
+  ["P(two sixes when a die is rolled twice)?",1,"The rolls are independent: 1/6 × 1/6 = 1/36."],
+  ["Two cards are dealt from a deck. P(both are aces)?",2,"Without replacement the second card depends on the first: 4/52 × 3/51 = 1/221."],
+  ["A raffle ticket costs €5. How much do you win per ticket, on average?",3,"A long-run average: Σ prize × P(prize)."],
+  ["P(a 1 or a 6 on one roll of a die)?",0,"Mutually exclusive, so just add: 1/6 + 1/6 = 1/3."],
+  ["P(heads on a coin and an even number on a die)?",1,"Independent: 1/2 × 1/2 = 1/4."],
+  ["Two students are picked from 12 girls and 10 boys. P(both girls)?",2,"No replacement: 12/22 × 11/21 = 2/7."],
+  ["Is it worth paying €2 to play a game with these prizes?",3,"Compare the expected winnings with the €2 cost."],
+  ["From a Venn diagram: P(a student plays sport or music)?",0,"OR: add the regions without counting the overlap twice."],
+  ["P(rain on Saturday and on Sunday), if the days are assumed independent?",1,"Independent by assumption: P(Sat) × P(Sun)."],
+  ["You eat one sweet from a bag, then take another. P(both are red)?",2,"The bag has changed: P(1st red) × P(2nd red | 1st red)."],
+  ["An insurer works out the average payout per policy.",3,"The average payout in the long run is an expected value."],
+];
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*PRED.length); }while(k===pd.k); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>${PRED[k][0]}</b> Which rule do you use?`; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=+b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick a rule first.</div>`; return; }
+  const [,ans,why]=PRED[pd.k], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${why}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+// Long questions
+const LONGQ = [
+  { title:"Two dice", intro:"Two fair six-sided dice are rolled and the scores are noted.",
+    parts:[["a","How many outcomes are in the sample space? Show them in a grid or a list.",5,"6 × 6 = 36 outcomes, shown in a 6 × 6 grid or listed as pairs (5)."],
+      ["b","Find the probability that the total is 9.",5,"(3,6), (4,5), (5,4), (6,3): 4 outcomes (3). P = 4/36 = 1/9 (2)."],
+      ["c","Find the probability of getting at least one 4.",10,"No 4 on either die: 5 × 5 = 25 outcomes (4). P(at least one 4) = 1 − 25/36 (3) = 11/36 (3). Counting 6 + 6 − 1 = 11 outcomes also earns full marks."],
+      ["d","Find the probability of getting a double or a total of 10.",10,"Doubles: 6 outcomes; total of 10: (4,6), (5,5), (6,4) = 3 outcomes (3). (5,5) is in both (2). 6 + 3 − 1 = 8 outcomes (3). P = 8/36 = 2/9 (2)."],
+      ["e","Are the events \"a double\" and \"a total of 7\" mutually exclusive? Explain.",5,"Yes (2). A double always has an even total, so it can never be 7: the events have no outcomes in common (3)."]] },
+  { title:"Languages (Venn diagram)", intro:"In a group of 40 students, 22 study French, 15 study Spanish and 6 study both.",
+    parts:[["a","Show this information in a Venn diagram.",10,"French only 22 − 6 = 16, both 6, Spanish only 15 − 6 = 9 (6). Neither: 40 − (16 + 6 + 9) = 9 (4)."],
+      ["b","A student is picked at random. Find the probability that the student studies French or Spanish.",5,"16 + 6 + 9 = 31, so 31/40 (5). Or 22/40 + 15/40 − 6/40 = 31/40."],
+      ["c","Find the probability that the student studies neither language.",5,"9/40 (5)."],
+      ["d","(HL) Find P(studies Spanish | studies French).",5,"Keep the 22 French students: 6/22 = 3/11 (5)."],
+      ["e","(HL) Find P(studies French | studies Spanish). Explain why this is different from your answer to (d).",10,"6/15 = 2/5 (5). The \"given\" group is different: 22 French students in (d), 15 Spanish students here, so P(A | B) ≠ P(B | A) (5)."]] },
+  { title:"Is the game fair? (HL style)", intro:"A bag contains 3 red and 2 blue discs. A player takes two discs at random, without replacement. Two reds win €5, one of each colour wins €1, and two blues win nothing.",
+    parts:[["a","Draw a tree diagram showing all the outcomes and their probabilities.",10,"1st disc: R 3/5, B 2/5 (2). After R: R 2/4, B 2/4; after B: R 3/4, B 1/4 (4). Ends: RR 6/20, RB 6/20, BR 6/20, BB 2/20, which add to 1 (4)."],
+      ["b","Find the probability of two reds.",5,"3/5 × 2/4 = 6/20 = 3/10 (5)."],
+      ["c","Find the probability of one disc of each colour.",5,"RB + BR = 6/20 + 6/20 = 12/20 = 3/5 (5)."],
+      ["d","Find the expected winnings per game.",10,"E = 5 × 3/10 + 1 × 3/5 + 0 × 1/10 (5) = €1.50 + €0.60 = €2.10 (5)."],
+      ["e","It costs €2.50 to play. Is the game fair? What should it cost for the game to be fair?",5,"Expected gain = €2.10 − €2.50 = −€0.40, so it isn't fair: the player loses 40c a game on average (3). A fair price is €2.10 (2)."]] },
+];
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+
+// Revision checklist (red / amber / green)
+const RAG = ["Write down a sample space (grid, list or tree)","Find P(E) = favourable ÷ total for equally likely outcomes","Use P(not A) = 1 − P(A)","Estimate a probability from relative frequency","Find an expected count: trials × probability","Fill in and read a Venn diagram","Use the addition rule and spot mutually exclusive events","Multiply for independent events","Draw a tree for sampling with and without replacement","Find P(at least one) as 1 − P(none)","Find P(B | A) from a table, a Venn diagram or a tree","Explain why P(A | B) ≠ P(B | A) in context","Calculate an expected value","Decide whether a game is fair and find a fair price"];
+const ragState=store.get("m12-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("m12-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["List before you calculate","Write the sample space for small problems: it catches mistakes.","Two dice lab"],["Check 0 ≤ P ≤ 1","Any answer outside 0 to 1 is wrong.","Calculation trainer"],["Turn words into symbols","\"or\" → ∪, \"and\" → ∩, \"not\" → ′, \"given\" → |.","Which rule? drill"],["Draw a picture","Venn for overlaps, tree for stages, table for two categories.","Venn and Bag labs"],["Use the complement","At least one = 1 − none.","Bag and tree lab"],["Test by simulation","Run trials and compare the relative frequency with your answer.","Collect & estimate lab"]];
+const skState=store.get("m12-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("m12-skills",skState); });
+
+/* ================= LAB STATE + WIRING ================= */
+// Two dice
+const ds = {ev:0, show:"sum"};
+$("dsE").innerHTML = DEV.map(([l],i)=>`<button data-i="${i}" aria-pressed="${i===0}">${l}</button>`).join("");
+function dsUpd(){ const [lab,fn]=DEV[ds.ev], list=[]; for(let a=1;a<=6;a++) for(let b=1;b<=6;b++) if(fn(a,b)) list.push(`(${a},${b})`); const n=list.length;
+  setReadout($("dsOut"),[["Event E",lab],["Outcomes in E",`${n} of 36`],["P(E)",`${frFull(n,36)} ≈ ${nf(n/36,3)}`],["P(not E)",`1 − ${fr(n,36)} = ${fr(36-n,36)}`]]);
+  let extra="";
+  if(ds.ev===6) extra=` · <b>OR:</b> sum = 7 (6 outcomes) and doubles (6 outcomes) never happen together (a double has an even total), so they're mutually exclusive: 6 + 6 = 12.`;
+  if(ds.ev===7) extra=` · <b>AND:</b> only the cells in both events: at least one 6 (11 cells) and sum ≥ 10 (6 cells) overlap in 5.`;
+  if(ds.ev===2) extra=` · Row of 6s (6) + column of 6s (6) − (6,6) counted twice = 11. Or 1 − P(no 6) = 1 − 25/36.`;
+  $("dsWork").innerHTML=`<b>E = </b>{${n<=12? list.join(", ") : list.slice(0,8).join(", ")+", …"}}${extra}`; if(dsC) dsC.redraw(); }
+$("dsE").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ds.ev=+b.dataset.i; pressGroup([...$("dsE").children],b); dsUpd(); });
+$("dsShow").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ds.show=b.dataset.s; pressGroup([...$("dsShow").children],b); dsUpd(); });
+// Relative frequency
+const rf = {x:0, t:0, k:0, hist:[], last:null, mp:pick([0.15,0.2,0.25,0.3,0.35,0.4,0.45]), shown:false};
+const RFX = [
+  {p:()=>1/6, hit:"6", go(){ const v=1+Math.floor(Math.random()*6); return [v===6,String(v)]; }},
+  {p:()=>0.5, hit:"heads", go(){ const h=Math.random()<0.5; return [h,h?"heads":"tails"]; }},
+  {p:()=>rf.mp, hit:"red", go(){ const u=Math.random(); return u<rf.mp? [true,"red"] : [false,u<rf.mp+(1-rf.mp)/2?"blue":"green"]; }},
+];
+const rfP = () => (rf.x<2||rf.shown)? RFX[rf.x].p() : null;
+function rfDo(m){ const X=RFX[rf.x]; for(let i=0;i<m;i++){ const [h,l]=X.go(); rf.t++; if(h) rf.k++; rf.last=l; if(rf.t<=60||rf.t%Math.max(1,Math.floor(rf.t/250))===0) rf.hist.push([rf.t,rf.k]); }
+  if(rf.hist.length&&rf.hist[rf.hist.length-1][0]!==rf.t) rf.hist.push([rf.t,rf.k]); rfUpd(); }
+function rfReset(){ rf.t=0; rf.k=0; rf.hist=[]; rf.last=null; }
+function rfUpd(){ const p=rfP(), est=rf.t? rf.k/rf.t : null, X=RFX[rf.x];
+  setReadout($("rfOut"),[["Trials",big(rf.t)],[`Hits (${X.hit})`,big(rf.k)],["Relative frequency",est==null?"–":nf(est,3)],["Probability",p==null?"hidden":nf(p,3)],["Expected hits",p==null?"hidden":nf(rf.t*p,1)]]);
+  $("rfWork").innerHTML = `<b>Relative frequency</b> = hits ÷ trials${rf.t?` = ${big(rf.k)} ÷ ${big(rf.t)} = ${nf(est,3)}`:""}. ` + (p==null? `Your estimate of P(red) is ${est==null?"…":nf(est,2)}. The more trials, the more you can trust it.` : `Expected hits = trials × probability${rf.t?` = ${big(rf.t)} × ${nf(p,3)} = ${nf(rf.t*p,1)}`:""}. ${est!=null?`Difference from the probability: ${nf(Math.abs(est-p),3)}.`:""}`);
+  $("rfShow").disabled = rf.x!==2 || rf.shown; if(rfC) rfC.redraw(); }
+$("rfX").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; rf.x=+b.dataset.x; pressGroup([...$("rfX").children],b); rfReset(); if(rf.x===2&&rf.shown){ rf.mp=pick([0.15,0.2,0.25,0.3,0.35,0.4,0.45]); rf.shown=false; } rfUpd(); });
+$("rf1").addEventListener("click",()=>rfDo(1)); $("rf10").addEventListener("click",()=>rfDo(10)); $("rf100").addEventListener("click",()=>rfDo(100)); $("rf1k").addEventListener("click",()=>rfDo(1000));
+$("rfR").addEventListener("click",()=>{ rfReset(); rfUpd(); }); $("rfShow").addEventListener("click",()=>{ rf.shown=true; rfUpd(); });
+// Venn
+const vn = {a:10, ab:6, b:8, reg:"AuB"}, VN=30;
+const VREG = [["A","A"],["B","B"],["AB","A ∩ B"],["AuB","A ∪ B"],["Ac","A′"],["Aonly","A only"],["none","(A ∪ B)′"]];
+$("vnR").innerHTML = VREG.map(([k,l])=>`<button data-k="${k}" aria-pressed="${k===vn.reg}">${l}</button>`).join("");
+function vnUpd(){ const n=VN-vn.a-vn.ab-vn.b, A=vn.a+vn.ab, B=vn.b+vn.ab, cnt={A,B,AB:vn.ab,AuB:vn.a+vn.ab+vn.b,Ac:vn.b+n,Aonly:vn.a,none:n}[vn.reg], lab=VREG.find(r=>r[0]===vn.reg)[1];
+  ["A","AB","B"].forEach(k=>$("vn"+k+"o").textContent=vn[k.toLowerCase()]);
+  setReadout($("vnOut"),[["Shaded",lab],["Students",`${cnt} of ${VN}`],[`P(${lab})`,frFull(cnt,VN)],["P(A), P(B)",`${fr(A,VN)}, ${fr(B,VN)}`],["Neither",n],["Mutually exclusive?",vn.ab===0?"yes: no overlap":"no"]]);
+  const W={AuB:`<b>Addition rule:</b> P(A) + P(B) − P(A ∩ B) = ${A}/30 + ${B}/30 − ${vn.ab}/30 = ${A+B-vn.ab}/30${vn.ab===0?" (no overlap to subtract: mutually exclusive)":""}`,
+    Ac:`<b>Complement:</b> P(A′) = 1 − P(A) = 1 − ${A}/30 = ${30-A}/30`, none:`<b>Neither:</b> 30 − (${vn.a} + ${vn.ab} + ${vn.b}) = ${n}, so P = ${n}/30`, AB:`<b>AND:</b> only the overlap: ${vn.ab}/30`,
+    A:`<b>A:</b> A only + both = ${vn.a} + ${vn.ab} = ${A}`, B:`<b>B:</b> B only + both = ${vn.b} + ${vn.ab} = ${B}`, Aonly:`<b>A only (A ∩ B′):</b> in A but not in B: ${vn.a}`};
+  $("vnWork").innerHTML=W[vn.reg]; if(vnC) vnC.redraw(); }
+[["vnA","a"],["vnAB","ab"],["vnB","b"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ vn[k]=+e.target.value; const over=vn.a+vn.ab+vn.b-VN; if(over>0){ vn[k]-=over; e.target.value=vn[k]; } vnUpd(); }));
+$("vnR").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; vn.reg=b.dataset.k; pressGroup([...$("vnR").children],b); vnUpd(); });
+// Bag and tree
+const tp = {r:5, b:3, rep:false, ev:0, sim:null};
+const TEV = [["Both red",[0]],["Both blue",[3]],["One of each",[1,2]],["At least one red",[0,1,2]],["Same colour",[0,3]]];
+$("tpE").innerHTML = TEV.map(([l],i)=>`<button data-i="${i}" aria-pressed="${i===0}">${l}</button>`).join("");
+function tpUpd(){ $("tpRo").textContent=tp.r; $("tpBo").textContent=tp.b; const T=treeProbs(tp.r,tp.b,tp.rep), ks=TEV[tp.ev][1], den=T.leaves[0].den, num=ks.reduce((s,k)=>s+T.leaves[k].num,0), n=tp.r+tp.b;
+  const c2=tp.rep? [tp.r,n] : [tp.r-1,n-1];
+  setReadout($("tpOut"),[["Event",TEV[tp.ev][0]],["P(event)",`${fr(num,den)} ≈ ${nf(num/den,3)}`],["P(2nd red | 1st red)",fr(...c2)],["P(2nd red)",fr(tp.r,n)],["Independent?",tp.rep?"yes: the same":"no: they differ"],["Simulated",tp.sim==null?"–":nf(tp.sim,3)]]);
+  const parts=ks.map(k=>`${T.leaves[k].lab} ${T.leaves[k].path} = ${frRaw(T.leaves[k].num,den)}`);
+  $("tpWork").innerHTML=`<b>${tp.rep?"With":"Without"} replacement:</b> ${parts.join(" · ")}${ks.length>1?` · add: ${frRaw(num,den)}`:""} = ${fr(num,den)}${tp.ev===3?` · check: 1 − P(BB) = 1 − ${frRaw(T.leaves[3].num,den)} = ${fr(den-T.leaves[3].num,den)}`:""}`;
+  if(tpC) tpC.redraw(); }
+function tpSim(){ const ks=TEV[tp.ev][1]; let hits=0; for(let i=0;i<1000;i++){ const bag=[...Array(tp.r).fill(0),...Array(tp.b).fill(1)]; const i1=Math.floor(Math.random()*bag.length), c1=bag[i1]; if(!tp.rep) bag.splice(i1,1); const c2=bag[Math.floor(Math.random()*bag.length)]; if(ks.includes(2*c1+c2)) hits++; } tp.sim=hits/1000; tpUpd(); }
+$("tpR").addEventListener("input",e=>{ tp.r=+e.target.value; tp.sim=null; tpUpd(); }); $("tpB").addEventListener("input",e=>{ tp.b=+e.target.value; tp.sim=null; tpUpd(); });
+$("tpM").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; tp.rep=b.dataset.m==="1"; tp.sim=null; pressGroup([...$("tpM").children],b); tpUpd(); });
+$("tpE").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; tp.ev=+b.dataset.i; tp.sim=null; pressGroup([...$("tpE").children],b); tpUpd(); });
+$("tpSim").addEventListener("click",tpSim);
+// Screening test
+const mt = {p:2, s:90, f:5};
+function mtUpd(){ $("mtPo").textContent=mt.p+"%"; $("mtSo").textContent=mt.s+"%"; $("mtFo").textContent=mt.f+"%"; const c=testCounts(mt.p,mt.s,mt.f), pos=c.TP+c.FP, neg=c.FN+c.TN;
+  setReadout($("mtOut"),[["Have the condition",`${c.D} of 1 000`],["Test positive",pos],["P(positive | condition)",nf(mt.s/100,2)],["P(condition | positive)",pos?`${c.TP}/${pos} ≈ ${nf(c.TP/pos,2)}`:"–"],["P(no condition | negative)",neg?`${c.TN}/${neg} ≈ ${nf(c.TN/neg,3)}`:"–"]]);
+  $("mtWork").innerHTML=`<b>Of 1 000 people:</b> ${c.D} have the condition and ${c.TP} of them test positive (terracotta; ${c.FN} missed, apricot). ${c.ND} don't have it, but ${c.FP} of them test positive anyway (olive). So of the ${pos} positives, only ${c.TP} have the condition: P(condition | positive) = ${c.TP}/${pos||1}${pos?` ≈ ${nf(c.TP/pos,2)}`:""}, not ${nf(mt.s/100,2)}.`;
+  if(mtC) mtC.redraw(); }
+[["mtP","p"],["mtS","s"],["mtF","f"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ mt[k]=+e.target.value; mtUpd(); }));
+// Expected value game
+const ev = {s:6, f:3, cost:2, t:0, g:0, hist:[], last:null};
+const evE = () => (ev.s+ev.f)/6;
+function evDo(m){ for(let i=0;i<m;i++){ const r=1+Math.floor(Math.random()*6); ev.t++; ev.g += (r===6?ev.s:r===5?ev.f:0)-ev.cost; ev.last=r; if(ev.t<=60||ev.t%Math.max(1,Math.floor(ev.t/250))===0) ev.hist.push([ev.t,ev.g]); }
+  if(ev.hist.length&&ev.hist[ev.hist.length-1][0]!==ev.t) ev.hist.push([ev.t,ev.g]); evUpd(); }
+function evReset(){ ev.t=0; ev.g=0; ev.hist=[]; ev.last=null; }
+function evUpd(){ $("evSo").textContent="€"+ev.s; $("evFo").textContent="€"+ev.f; $("evCo").textContent="€"+ev.cost.toFixed(2); const E=evE(), G=E-ev.cost, eps=1e-9;
+  setReadout($("evOut"),[["Expected winnings",`€${E.toFixed(2)}`],["Expected gain",`${G<-eps?"−":""}€${Math.abs(G).toFixed(2)}`],["Verdict",Math.abs(G)<eps?"fair":G>0?"favours the player":"favours the stall"],["Games played",big(ev.t)],["Average gain so far",ev.t?`${ev.g<0?"−":""}€${Math.abs(ev.g/ev.t).toFixed(2)}`:"–"]]);
+  $("evWork").innerHTML=`<b>E(winnings)</b> = ${ev.s} × 1/6 + ${ev.f} × 1/6 + 0 × 4/6 = ${ev.s+ev.f}/6 = €${E.toFixed(2)}${Math.abs(E-Math.round(E*100)/100)>1e-9?" (rounded)":""} · <b>Expected gain</b> = winnings − cost = ${E.toFixed(2)} − ${ev.cost.toFixed(2)} = ${G.toFixed(2)} · <b>Fair cost:</b> €${E.toFixed(2)}${(ev.s+ev.f)%3?" (not a multiple of 50c, so no slider setting is exactly fair)":""}`;
+  if(evC) evC.redraw(); }
+[["evS","s"],["evF","f"],["evC2","cost"]].forEach(([id,k])=>$(id).addEventListener("input",e=>{ ev[k]=+e.target.value; evReset(); evUpd(); }));
+$("ev1").addEventListener("click",()=>evDo(1)); $("ev100").addEventListener("click",()=>evDo(100)); $("ev1k").addEventListener("click",()=>evDo(1000)); $("evR").addEventListener("click",()=>{ evReset(); evUpd(); });
+
+/* ================= CREATE CANVASES ================= */
+let dsC=null, rfC=null, vnC=null, tpC=null, mtC=null, evC=null;
+function simHist(p,n,seed){ const R=rng(seed); let k=0; const h=[]; for(let t=1;t<=n;t++){ if(R()<p) k++; h.push([t,k]); } return h; }
+function evHist(o){ const R=rng(o.seed); let g=0; const h=[]; for(let t=1;t<=o.n;t++){ const r=1+Math.floor(R()*6); g+=(r===6?o.s:r===5?o.f:0)-o.cost; h.push([t,g]); } return h; }
+const hero = makeCanvas($("heroCanvas"), 0.75, 240, s => drawDice(s.ctx,s.w,s.h,{ev: reduce? 0 : Math.floor(heroT/2.2)%DEV.length, show:"sum"}), 440);
+dsC = makeCanvas($("dsC"), 0.6, 300, s => drawDice(s.ctx,s.w,s.h,ds), 480);
+rfC = makeCanvas($("rfC"), 0.5, 260, s => drawFreq(s.ctx,s.w,s.h,{hist:rf.hist,p:rfP(),last:rf.last}), 420);
+vnC = makeCanvas($("vnC"), 0.5, 240, s => drawVenn(s.ctx,s.w,s.h,{...vn,n:VN-vn.a-vn.ab-vn.b}), 400);
+tpC = makeCanvas($("tpC"), 0.5, 280, s => drawPTree(s.ctx,s.w,s.h,{r:tp.r,b:tp.b,rep:tp.rep,hl:TEV[tp.ev][1]}), 420);
+mtC = makeCanvas($("mtC"), 0.5, 330, s => drawTest(s.ctx,s.w,s.h,{c:testCounts(mt.p,mt.s,mt.f)}), 460);
+evC = makeCanvas($("evC"), 0.5, 260, s => drawEV(s.ctx,s.w,s.h,{s:ev.s,f:ev.f,cost:ev.cost,E:evE()-ev.cost,hist:ev.hist,last:ev.last}), 420);
+predC = makeCanvas($("predC"), 0.42, 160, s => { bg(s.ctx,s.w,s.h,C["surface-2"]); const labs=[["+","Add"],["×","Independent"],["×|","General"],["Σ","E(X)"]], cw=(s.w-32)/4;
+  labs.forEach(([sym,l],i)=>{ const x=16+i*cw, hit=pd.shown&&PRED[pd.k][1]===i; rr(s.ctx,x+3,16,cw-6,s.h-32,14); s.ctx.fillStyle=hit?C.terra:C.surface; s.ctx.fill(); s.ctx.strokeStyle=C.line; s.ctx.stroke();
+    text(s.ctx,sym,x+cw/2,s.h/2-2,hit?C["on-accent"]||"#fff":C.ink,F(s.w<380?18:26,800),"center"); text(s.ctx,l,x+cw/2,s.h/2+22,hit?C["on-accent"]||"#fff":C.muted,F(s.w<380?9:12),"center"); }); }, 240);
+pdNew();
+const MINI = {
+  dice:(s,o)=>drawDice(s.ctx,s.w,s.h,{show:"sum",...o,compact:true}),
+  freq:(s,o)=>drawFreq(s.ctx,s.w,s.h,{...o,hist:simHist(o.p,o.n,o.seed),compact:true}),
+  venn:(s,o)=>drawVenn(s.ctx,s.w,s.h,{...o,compact:true}),
+  tree:(s,o)=>drawPTree(s.ctx,s.w,s.h,{...o,compact:true}),
+  test:(s,o)=>drawTest(s.ctx,s.w,s.h,{...o,compact:true}),
+  ev:(s,o)=>drawEV(s.ctx,s.w,s.h,{...o,E:(o.s+o.f)/6-o.cost,hist:evHist(o),compact:true}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, kind==="test"?0.5:0.62, 160, s=>MINI[kind](s,o), 380); });
+const INFO = { dice:["dice",{ev:0}], venn:["venn",{a:10,ab:6,b:8,n:6,reg:"AB"}], tree:["tree",{r:5,b:3,rep:false,hl:[0]}] };
+document.querySelectorAll("canvas[data-mini]").forEach(el=>{ const [k,o]=INFO[el.dataset.mini]; makeCanvas(el,0.7,160,s=>MINI[k](s,{...o,bgc:C["surface-2"]})); });
+dsUpd(); rfUpd(); vnUpd(); tpUpd(); mtUpd(); evUpd();
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>
+

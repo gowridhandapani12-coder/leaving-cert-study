@@ -5,7 +5,7 @@ syllabus topic. Same design and format as the other subjects (see `..\physics\CL
 
 Course progress and build order: `COURSE-PLAN.md`. Update it whenever a page is built.
 
-Built so far: `s1-1-counting.html` (1.1 Counting).
+Built so far: `s1-1-counting.html` (1.1 Counting), `s1-2-probability.html` (1.2 Concepts of probability).
 
 ## The syllabus (source of truth)
 
