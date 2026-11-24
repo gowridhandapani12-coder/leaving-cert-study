@@ -1,0 +1,1636 @@
+<title>Comprehension Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.sh-card{display:grid;gap:8px;padding:16px;align-content:start}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card ul{margin:0;padding-left:18px;font-size:.88rem;color:var(--muted);display:grid;gap:3px}
+.fbbox{padding:0 16px 14px}
+.predopts .btns button{min-width:100px}
+.ctl button[disabled]{opacity:.5}
+</style>
+
+<style>
+.qt{font-family:var(--f-display);font-size:1.15rem;line-height:1.4;padding:12px 16px;border-left:4px solid var(--terra);background:var(--surface-2);border-radius:0 12px 12px 0}
+.qt small{display:block;font-family:var(--f-body);font-size:.82rem;color:var(--muted);margin-top:4px}
+.cards2{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px}
+.cards2 button{text-align:left;max-width:100%;white-space:normal}
+.cards2 button.done{opacity:.45}
+.cards2 button.sel{outline:3px solid var(--terra)}
+.qbank{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.qbank li{font-size:.9rem}
+.qbank li b{font-family:var(--f-display);font-weight:600}
+.qbank li span{color:var(--muted);font-size:.8rem}
+</style>
+<!-- ================= TOP BAR ================= -->
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 01-14.3 4.9M4 12a8 8 0 0114.3-4.9"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg></div>
+        <div style="min-width:0"><b>Comprehension (Question A)</b><span>Leaving Cert English · Paper 1 · Section I (HL)</span></div>
+      </div>
+      
+      
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html">Business</a><a href="../maths/index.html">Maths</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html" class="on" aria-current="page">English</a><a href="../spanish/index.html">Spanish</a><a href="../irish/index.html">Irish</a><a href="../maths-enrichment/index.html">Maths Enrichment</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Text bank</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <details><summary>Paper 2 · Texts</summary><ol><li class="link"><a href="hamlet.html"><span class="mono">S</span>Single text: Hamlet (HL, 2028)</a></li><li><span class="mono">C</span>Comparative study</li><li><span class="mono">P</span>Prescribed poetry</li><li class="link"><a href="unseen-poetry.html"><span class="mono">U</span>Unseen poetry</a></li></ol></details>
+      <details><summary>Paper 1 · Language</summary><ol><li class="link"><a href="paper1-comprehension.html"><span class="mono">A</span>Comprehension (Question A)</a></li><li><span class="mono">B</span>Functional writing (Question B)</li><li><span class="mono">Co</span>Composition</li><li><span class="mono">G</span>The five language genres</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon. Texts follow the Department's prescribed list for the 2028 exam.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Paper 1 · Section I · Comprehending · Question A</span>
+          <h1 style="margin-top:12px">Read closely.<br>Find the proof.<br><em>Say how it works.</em></h1>
+          <p class="lede">Question A asks you to understand a text, back up your points with evidence and explain how the writer's language works. Practise on three short public-domain extracts: annotate them, sort their techniques, track their tone, measure their sentences, map their genres and plan a full answer.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="formulae">Read the texts</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated genre compass moving between the three practice texts"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Syllabus aims ticked</span><b id="stLO">0/6</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the Leaving Certificate English syllabus</p><h2>What you must be able to do</h2></div><p style="font-size:.88rem">Quoted from the syllabus (sections 4.1 to 4.4, "Comprehending"). Tick each one when you can do it.</p></div>
+        <ul class="lo-list" id="loList"></ul>
+        <p class="result" style="margin-top:10px">The syllabus (7.3) says Paper 1 "will be specifically aimed at testing the comprehending and composing abilities of students", using "a variety of texts", and that students "will be required to answer a number of comprehension questions". It also says the five language genres "will continually mix and mingle within texts" (2.5).</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Annotate, sort, track, measure and compare three practice texts, then plan an answer.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="read">
+        <div class="labhead"><span class="pill t">Annotator</span><p class="goal">Pick a text and a lens. The highlighted phrases are the ones worth quoting. Tap one (or press "Next note") to read what it does.</p></div>
+        <div class="panel sim">
+          <canvas id="poC" aria-label="The selected extract with highlighted phrases. Tap a highlighted phrase to read its note."></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Text</span><div class="btns" id="poP"></div></div>
+            <div class="ctl"><span class="lbl">Lens</span><div class="btns" id="poL"></div></div>
+            <div class="ctl"><span class="lbl">Notes</span><div class="btns"><button class="primary" id="poNext">Next note</button></div></div>
+          </div>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="poQ"></div></div>
+          <div class="readout" id="poOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Read the Synge extract with the Evidence lens. List three details that show how hard life on Aran is.</div><div class="try"><b>2</b>Switch Pankhurst to the Style lens. Which technique would you quote first in a "persuasive" answer?</div><div class="try"><b>3</b>Read Jerome with the Tone lens. How does he make a weakness sound like a talent?</div></div>
+      </div>
+
+      <div class="lab" data-lab="style" hidden>
+        <div class="labhead"><span class="pill t">Technique sorter</span><p class="goal">Tap a phrase, then tap the box it belongs in. Fourteen phrases from the three texts.</p></div>
+        <div class="panel sim">
+          <canvas id="imC" aria-label="Four boxes: imagery and figurative language, rhetorical devices, anecdote and analogy, opinion and claim. Tap a box to place the selected phrase."></canvas>
+          <div class="cards2" id="imCards"></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Sorter</span><div class="btns"><button id="imReset">Shuffle &amp; reset</button></div></div></div>
+          <div class="readout" id="imOut"></div>
+          <div class="fbbox" id="imFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Sort all fourteen. Which text relies most on rhetorical devices? Why does that suit a speech?</div><div class="try"><b>2</b>"Idleness, like kisses, to be sweet must be stolen" is also a claim. Why is "imagery" the better box?</div><div class="try"><b>3</b>The syllabus asks you to "distinguish between opinion, anecdote and evidence". Which box is missing real evidence (facts, figures)?</div></div>
+      </div>
+
+      <div class="lab" data-lab="tone" hidden>
+        <div class="labhead"><span class="pill t">Tone tracker</span><p class="goal">Each text split into sections, plotted from heavier to lighter in tone (our reading, for discussion). Tap a point or a section to see the words and the tone.</p></div>
+        <div class="panel sim">
+          <canvas id="moC" aria-label="Line graph of tone through the sections of the selected text. Tap a point."></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Text</span><div class="btns" id="moP"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Section</span><div class="btns" id="moS"></div></div>
+          </div>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="moQ"></div></div>
+          <div class="readout" id="moOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Pankhurst starts light and ends heavy. Find the sentence where the story becomes an argument.</div><div class="try"><b>2</b>Synge's tone lifts once. What causes it, and why does it fall again?</div><div class="try"><b>3</b>Jerome stays light throughout. Which tone words would you use instead of "funny"?</div></div>
+      </div>
+
+      <div class="lab" data-lab="structure" hidden>
+        <div class="labhead"><span class="pill t">Collect &amp; fit: sentence lengths</span><p class="goal">Count the words in each sentence, one at a time. Short sentences, questions and exclamations get their own colours. Then fit a trend line and look for the pattern.</p></div>
+        <div class="panel sim">
+          <canvas id="shC" aria-label="Bar chart of words per sentence for the selected text, with a fitted trend line"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Text</span><div class="btns" id="shP"></div></div>
+            <div class="ctl"><span class="lbl">Data</span><div class="btns"><button class="primary" id="shRec">Count the next sentence</button><button id="shAll">Count all</button><button id="shClr">Clear</button></div></div>
+            <div class="ctl"><span class="lbl">Measure</span><div class="btns" id="shM"><button data-m="words" aria-pressed="true">Words</button><button data-m="avg" aria-pressed="false">Average word length</button></div></div>
+          </div>
+          <div class="readout" id="shOut"></div>
+          <div class="working" id="shWork"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Count all of Synge. Where does the one very short sentence fall, and what does it do?</div><div class="try"><b>2</b>Count Pankhurst. The last sentence is the longest by far. Why might a speaker build up like that?</div><div class="try"><b>3</b>Switch to average word length. Which writer uses the plainest words? Does plain mean simple?</div></div>
+      </div>
+
+      <div class="lab" data-lab="genre" hidden>
+        <div class="labhead"><span class="pill t">Genre compass</span><p class="goal">How strongly each text uses the syllabus's five language genres (0 to 5, our judgement). Overlay two texts to compare them.</p></div>
+        <div class="panel sim">
+          <canvas id="raC" aria-label="Radar chart of the five language genres for one or two texts"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Text A (terracotta)</span><div class="btns" id="raA"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Text B (olive)</span><div class="btns" id="raB"></div></div>
+          </div>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="raQ"></div></div>
+          <div class="readout" id="raOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Overlay Jerome and Pankhurst. Both argue a case: how are their purposes different?</div><div class="try"><b>2</b>Which text is the most "aesthetic"? Find two phrases that prove it.</div><div class="try"><b>3</b>None of the texts scores high on information. Where would you find the language of information on a real paper?</div></div>
+      </div>
+
+      <div class="lab" data-lab="answer" hidden>
+        <div class="labhead"><span class="pill t">Answer builder</span><p class="goal">Choose a question, an opening sentence and three paragraphs. See how your plan would score on the four marking criteria.</p></div>
+        <div class="panel sim">
+          <canvas id="esC" aria-label="Answer plan diagram with estimated scores for purpose, coherence, language and mechanics"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Question</span><div class="btns" id="esQ"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Opening (your answer in one sentence)</span><div class="btns" id="esT"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Paragraphs (pick three)</span><div class="btns" id="esP"></div></div>
+          </div>
+          <div class="readout" id="esOut"></div>
+          <div class="fbbox" id="esFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Build a plan that scores well on Purpose. What did you leave out?</div><div class="try"><b>2</b>Swap in a paragraph that only retells the text. What happens to the score?</div><div class="try"><b>3</b>Write out your best plan in full, in about 25 minutes for a 25-mark part.</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of comprehension (Question A) skills"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>Three practice texts</h2></div><p>Who wrote them, what kind of writing they are, and a line worth quoting.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three ways to see a text</p><h2>Tone, genre, sentences</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="mood"></canvas><h3>Building pressure</h3><p>Pankhurst begins with a homely story and ends with a forceful demand.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="radar"></canvas><h3>Same skills, new mix</h3><p>Synge's travel writing is narrative and aesthetic; Pankhurst's speech is argument and persuasion.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="shape"></canvas><h3>The punchline sentence</h3><p>Jerome mixes long confessions with very short, joke-like sentences.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">Counted from the texts</p><h2>How long is each extract?</h2></div><p>Words, sentences and mean sentence length. Exam texts are usually longer: about one or two pages.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">On the day</p><h2>About 45 minutes, well spent</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+<!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>Where Question A sits in the exam, how answers are marked, and practice with feedback.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Higher Level English: Question A 50 marks, rest of Paper 1 150 marks, Paper 2 200 marks">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--blush)" stroke-width="26" stroke-dasharray="136.65 364.4" transform="rotate(-90 80 80)"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="45.55 364.4" stroke-dashoffset="-136.65" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">50 / 400</text><text x="80" y="96" text-anchor="middle" class="dn2">Question A</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Question A · 50 marks</b><p>Comprehension questions on one of the three texts in Section I. In recent papers it has usually had three parts; check the marks printed beside each part.</p></div></div>
+            <div><i style="background:var(--blush)"></i><div><b>Rest of Paper 1 · 150 marks</b><p>Question B (50, functional writing on a different text) and a composition (100) in Section II.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Paper 2 · 200 marks</b><p>Single text 60, comparative study 70, unseen poem 20, prescribed poetry 50.</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for Question A</h3>
+          <ol class="tips">
+            <li><b>Read all three texts' questions first</b>, then pick the Question A you can answer best. Question B must be on a different text.</li>
+            <li>Spend about <b>45 minutes</b>: roughly one minute per mark, plus reading time.</li>
+            <li><b>Answer in your first sentence</b>, using the question's key words.</li>
+            <li>One point per paragraph: <b>point, short quotation, explanation</b>.</li>
+            <li>Match the <b>number of points</b> to the marks and the question ("three reasons", "four features").</li>
+            <li>For style questions, <b>name the technique and say what it does</b> to the reader.</li>
+            <li>Use <b>your own words</b> when asked to explain; quote when asked to support.</li>
+            <li><b>Proofread</b> names and quotations. Questions here are practice questions, not official SEC papers.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Question words</h2></div><p>Common phrasings in Question A. The meanings are plain-English summaries, not official definitions.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Know the texts closely</p><h2>Text trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="btns" id="qtOpts" style="margin-top:8px"></div>
+          <div id="paFb" style="margin-top:10px"></div>
+          <div class="btns" style="margin-top:8px"><button id="paNext">Next question</button></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>Which technique?</h2></div></div>
+          <canvas id="predC" aria-label="Six techniques; the right one lights up after you check"></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" id="predBtns"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next phrase</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+<div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Full Question A practice with marking guides</h2></div><p>The texts are in the Text bank. Each question is worth 50 marks, split as in recent papers.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">How answers are marked</p><h2>Answer skills (PCLM)</h2></div></div>
+          <p class="result" style="margin-bottom:10px">The four marking criteria and the habits behind them. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Terms for style, tone, argument and genre. Precise vocabulary earns marks under Language.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Search: anecdote, tone, rhetorical…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= TEXT BANK ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Practice texts</p><h2>Text bank</h2></div><p>The three practice extracts in full, with their genre and context. Treat each one as an exam text: read it cold, then use the labs.</p></div>
+      <div class="sheet" id="qbank"></div>
+      <footer>
+        <p>Based on the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/english/" target="_blank" rel="noopener">Leaving Certificate English Syllabus</a> (for examination to June 2028). Extracts are public domain and were checked against Wikisource: J. M. Synge, <i>The Aran Islands</i>, Part I (1907); Jerome K. Jerome, "On Being Idle", <i>Idle Thoughts of an Idle Fellow</i> (1886); Emmeline Pankhurst, "Freedom or Death", speech at Hartford, Connecticut (1913). Tone scores and genre scores are our interpretation. Practice questions are not official SEC papers.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("en-theme","auto"), font = store.get("en-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("en-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("en-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  read:'<path d="M2 6s4-2 10 0 10 0 10 0v13s-4-2-10 0-10 0-10 0z"/><path d="M12 6v13"/>',
+  style:'<circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/>',
+  tone:'<path d="M3 17l5-6 4 3 4-8 5 6"/><path d="M3 21h18"/>',
+  structure:'<path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/>',
+  genre:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/><path d="M12 7l3 5-3 5-3-5z"/>',
+  answer:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  wave:'<path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M2 19c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M8 11l4-7 4 7"/>',
+  chair:'<path d="M6 3v10h12V3"/><path d="M5 13h14v3H5zM7 16v5M17 16v5"/>',
+  mic:'<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v4M8 22h8"/>',
+  book:'<path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"read", name:"Reading for meaning", short:"The gist, the details and the evidence: read the question, then the text twice.", tint:"var(--blush)"},
+  {id:"style", name:"Style & technique", short:"Imagery, rhetorical devices, anecdote and claim: name it, quote it, say what it does.", tint:"var(--apricot)"},
+  {id:"tone", name:"Tone & point of view", short:"The writer's attitude, purpose and audience, and how the tone shifts.", tint:"var(--sage)"},
+  {id:"structure", name:"Structure & sentences", short:"Openings, endings, paragraph order and sentence length as tools.", tint:"var(--cream)"},
+  {id:"genre", name:"The five language genres", short:"Information, argument, persuasion, narration and the aesthetic use of language.", tint:"var(--blush)"},
+  {id:"answer", name:"Writing Question A answers", short:"50 marks in about 45 minutes: plan, quote, explain, PCLM.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+const LO = [
+  ["read","Give an account of the gist of a text. Specify appropriate details for relevant purposes."],
+  ["style","Identify the techniques being used to persuade eg. tone, image, rhythm, choice of words, selection of detail."],
+  ["tone","Identify the point of view of an author."],
+  ["structure","Outline the stages of an argument and identify the conclusion."],
+  ["genre","Indicate the genre of a text."],
+  ["answer","Develop an awareness of their own response to texts and analyze and justify that response."],
+];
+const LO_HEAD = {read:"Syllabus 4.1.1",style:"Syllabus 4.3.1",tone:"Syllabus 4.1.1",structure:"Syllabus 4.2.1",genre:"Syllabus 4.1.1",answer:"Syllabus 4.4.1"};
+
+/* ---------- the three practice texts (public domain; checked against Wikisource) ---------- */
+// paras: paragraphs (exact text). mood: [sentences, section, score -5 heavier .. +5 lighter (our reading), what happens, tone words]
+// th: genre scores 0-5 for THM (our judgement); msg: the gist in one sentence (our reading)
+const THM = ["Information","Argument","Persuasion","Narration","Aesthetic"];
+const POEMS = [
+  {id:"aran", short:"Synge", title:"The Aran Islands", author:"J. M. Synge", year:"1907", icon:"wave",
+   fs:"Travel writing", form:"Travel writing: a first-person account of a walk on Inis Mór, rich in description",
+   ctx:"John Millington Synge (1871–1909), the Dublin playwright, spent several summers on the Aran Islands from 1898. This extract from Part I of his book The Aran Islands (1907) describes his first walk on Aranmor (Inis Mór), soon after landing.",
+   paras:["A little later I was wandering out along the one good roadway of the island, looking over low walls on either side into small flat fields of naked rock. I have seen nothing so desolate. Grey floods of water were sweeping everywhere upon the limestone, making at times a wild torrent of the road, which twined continually over low hills and cavities in the rock or passed between a few small fields of potatoes or grass hidden away in corners that had shelter. Whenever the cloud lifted I could see the edge of the sea below me on the right, and the naked ridge of the island above me on the other side. Occasionally I passed a lonely chapel or schoolhouse, or a line of stone pillars with crosses above them and inscriptions asking a prayer for the soul of the person they commemorated.",
+          "I met few people; but here and there a band of tall girls passed me on their way to Kilronan, and called out to me with humorous wonder, speaking English with a slight foreign intonation that differed a good deal from the brogue of Galway. The rain and cold seemed to have no influence on their vitality, and as they hurried past me with eager laughter and great talking in Gaelic, they left the wet masses of rock more desolate than before."],
+   mood:[["1-2","The bare road",-3,"Walls, flat fields and \"naked rock\"; a blunt verdict.","stark, desolate"],["3","Floods on the limestone",-3,"Water sweeps everywhere; crops hide in sheltered corners.","wild, harsh"],["4-5","Sea, ridge and chapels",-2,"Glimpses of sea and ridge; lonely chapels and prayers for the dead.","lonely, solemn"],["6","The tall girls",3,"Girls call out \"with humorous wonder\".","lively, amused"],["7","Left behind",-1,"Their laughter makes the rock seem \"more desolate than before\".","wistful, bleak"]],
+   th:[3,0,0,4,5], msg:"Aran is a bare, lonely, rain-swept place, yet its people are full of life, and that contrast makes the land seem even emptier."},
+  {id:"idle", short:"Jerome", title:"On Being Idle", author:"Jerome K. Jerome", year:"1886", icon:"chair",
+   fs:"Comic personal essay", form:"Personal essay: a humorous argument built from confession, paradox and epigram",
+   ctx:"Jerome K. Jerome (1859–1927), the English humorist best known for Three Men in a Boat, first published this essay in 1885; it opens Idle Thoughts of an Idle Fellow (1886). Just before this extract he tells us his grandmother predicted he would leave undone almost everything he ought to do.",
+   paras:["I am afraid I have somewhat belied half the dear old lady's prophecy. Heaven help me! I have done a good many things that I ought not to have done, in spite of my laziness. But I have fully confirmed the accuracy of her judgment so far as neglecting much that I ought not to have neglected is concerned. Idling always has been my strong point. I take no credit to myself in the matter—it is a gift. Few possess it. There are plenty of lazy people and plenty of slow-coaches, but a genuine idler is a rarity. He is not a man who slouches about with his hands in his pockets. On the contrary, his most startling characteristic is that he is always intensely busy.",
+          "It is impossible to enjoy idling thoroughly unless one has plenty of work to do. There is no fun in doing nothing when you have nothing to. Wasting time is merely an occupation then, and a most exhausting one. Idleness, like kisses, to be sweet must be stolen."],
+   mood:[["1-4","The confession",2,"He admits, in mock-solemn words, how much he has neglected.","self-mocking, rueful"],["5-7","A rare gift",3,"Idling is presented as a talent: \"Few possess it.\"","mock-proud, boastful"],["8-10","The true idler",2,"A paradox: the genuine idler is \"always intensely busy\".","playful, teasing"],["11-14","Stolen idleness",4,"The argument ends in a witty rule and a simile.","witty, wry"]],
+   th:[0,4,2,2,3], msg:"Idleness is only enjoyable when you have work you should be doing: rest is sweetest when it is stolen."},
+  {id:"pank", short:"Pankhurst", title:"Freedom or Death", author:"Emmeline Pankhurst", year:"1913", icon:"mic",
+   fs:"Persuasive speech", form:"Persuasive speech: an extended analogy turned into a political argument",
+   ctx:"Emmeline Pankhurst (1858–1928) led the militant campaign for women's right to vote in Britain. She gave this speech in Hartford, Connecticut, in November 1913, while on bail from a prison sentence. Mrs Hepburn, whom she addresses, chaired the meeting.",
+   paras:["I don't know, Mrs Hepburn, whether I have used the domestic illustration in Hartford, but it is a very good one: it is quite worth using again. You have two babies very hungry and wanting to be fed. One baby is a patient baby, and waits indefinitely until its mother is ready to feed it. The other baby is an impatient baby and cries lustily, screams and kicks and makes everybody unpleasant until it is fed. Well, we know perfectly well which baby is attended to first. That is the whole history of politics. Putting sentiment aside, people who really want reforms learn that lesson very quickly. It is only the people who are quite content to go on advocating them indefinitely who play the part of the patient baby in politics. You have to make more noise than anybody else, you have to make yourself more obtrusive than anybody else, you have to fill all the papers more than anybody else, in fact you have to be there all the time and see that they do not snow you under, if you are really going to get your reform realised."],
+   mood:[["1","A favourite story",2,"Friendly and relaxed: she addresses the chair and the audience.","conversational, warm"],["2-4","Two hungry babies",1,"A homely, comic picture of two babies.","vivid, humorous"],["5-6","The lesson",-1,"\"That is the whole history of politics.\"","knowing, blunt"],["7-8","Patient reformers",-2,"Polite campaigners are cast as the patient baby.","pointed, scornful"],["9","Make more noise",-4,"A long, repetitive call to be forceful.","urgent, determined"]],
+   th:[1,4,5,2,1], msg:"Reformers who wait patiently are ignored; to win change you have to make more noise than anyone else."},
+];
+const splitS = p => p.match(/[^.!?]+[.!?]+(?=\s|$)/g).map(s=>s.trim());
+POEMS.forEach(P=>{ P.L=P.paras.flatMap(splitS); });
+const wordsIn = l => l.split(/[\s—]+/).filter(x=>/[A-Za-z]/.test(x)).length;
+const lettersIn = l => (l.match(/[A-Za-z]/g)||[]).length;
+const avgLen = l => lettersIn(l)/Math.max(1,wordsIn(l));
+
+/* ---------- glossary: [term, also known as, definition, topic, key line] ---------- */
+const GLOSS = [
+  ["Comprehension","comprehending","Understanding a text and answering questions on it. Paper 1, Section I.","read"],
+  ["Question A","","The comprehension questions on one of the three texts in Paper 1, Section I. 50 marks.","read"],
+  ["Question B","","The functional writing task in Section I, answered on a different text from your Question A. 50 marks.","read"],
+  ["Gist","","The main idea of a text in a sentence or two.","read"],
+  ["Skimming","","Reading quickly for the gist.","read"],
+  ["Scanning","","Searching a text for a particular detail or word.","read"],
+  ["Evidence","","Words from the text (a quotation) or a close reference that supports your point.","read"],
+  ["Quotation","","Exact words copied from the text, in quotation marks.","read"],
+  ["Paraphrase","","Putting the text's meaning into your own words.","read"],
+  ["Inference","","Working out something the text suggests but does not say directly.","read"],
+  ["Imagery","","Language that creates pictures or sensations for the senses: \"Grey floods of water\".","style"],
+  ["Simile","","A comparison using \"like\" or \"as\": \"Idleness, like kisses, to be sweet must be stolen.\"","style"],
+  ["Metaphor","","Describing one thing as if it were another: \"see that they do not snow you under\".","style"],
+  ["Personification","","Giving human qualities to something non-human: \"naked rock\".","style"],
+  ["Analogy","","An extended comparison that explains an idea: Pankhurst's two hungry babies.","style"],
+  ["Anecdote","","A short personal story used to make a point.","style"],
+  ["Rhetorical question","","A question asked for effect, not for an answer.","style"],
+  ["Rhetorical device","","A technique of persuasive language: repetition, direct address, triads, questions.","style"],
+  ["Direct address","","Speaking straight to the reader or listener: \"You have two babies…\"","style"],
+  ["Inclusive language","","\"We\" and \"us\" to make the audience feel on the speaker's side: \"we know perfectly well\".","style"],
+  ["Repetition","","Repeating words or structures for emphasis: \"you have to… you have to… you have to…\"","style"],
+  ["Triad","rule of three","A group of three words, phrases or examples for rhythm and emphasis.","style"],
+  ["Hyperbole","exaggeration","Deliberate exaggeration for effect: wasting time is \"a most exhausting\" occupation.","style"],
+  ["Epigram","","A short, witty saying: \"Idleness, like kisses, to be sweet must be stolen.\"","style"],
+  ["Diction","word choice","The writer's choice of words: plain or formal, gentle or harsh.","style"],
+  ["Register","","The level of formality of the language.","style"],
+  ["Tone","","The writer's attitude, shown through word choice: scornful, wistful, playful.","tone"],
+  ["Mood","atmosphere","The feeling a text creates in the reader.","tone"],
+  ["Point of view","viewpoint","The writer's position or opinion; also first-person (\"I\") or third-person narration.","tone"],
+  ["Purpose","","Why the text was written: to inform, argue, persuade, entertain or describe.","tone"],
+  ["Audience","","Who the text is written for.","tone"],
+  ["Irony","","A gap between what is said and what is meant, or between what is expected and what happens.","tone"],
+  ["Paradox","","A statement that seems to contradict itself but holds a truth: the idler is \"always intensely busy\".","tone"],
+  ["Wry","","Dry, gently mocking humour.","tone"],
+  ["Self-deprecating","","Making fun of yourself: Jerome's \"Idling always has been my strong point.\"","tone"],
+  ["Scornful","","Showing contempt for someone or something.","tone"],
+  ["Structure","","How a text is organised: opening, order of paragraphs, ending.","structure"],
+  ["Topic sentence","","The sentence that states the main point of a paragraph.","structure"],
+  ["Circular structure","","An ending that echoes the opening: Synge's \"desolate\" returns in the last line.","structure"],
+  ["Short sentence","minor sentence","A brief sentence for impact or emphasis: \"Few possess it.\"","structure"],
+  ["Climax","","The high point of tension or argument, often near the end.","structure"],
+  ["Connective","discourse marker","A linking word that shows the logic: therefore, because, nevertheless, on the contrary.","structure"],
+  ["Conclusion","","The final point an argument leads to.","structure"],
+  ["Language of information","","Language whose main purpose is to inform: reports, records, bulletins.","genre"],
+  ["Language of argument","","Language that reasons towards a conclusion, with evidence and logic.","genre"],
+  ["Language of persuasion","","Language that tries to move an audience, using tone, image, rhythm and selected detail.","genre"],
+  ["Language of narration","","Language that tells a story or recounts events.","genre"],
+  ["Aesthetic use of language","","Language crafted for beauty and effect: imagery, sound, rhythm.","genre"],
+  ["Travel writing","","Non-fiction about journeys and places, mixing narration and description.","genre"],
+  ["Personal essay","","A short prose piece giving the writer's own views and experiences.","genre"],
+  ["Speech","","A text written to be spoken aloud to an audience.","genre"],
+  ["Fact","","Something that can be checked and shown to be true.","genre"],
+  ["Opinion","","A view or belief that can be argued with.","genre"],
+  ["PCLM","","The four marking criteria: Purpose 30%, Coherence 30%, Language 30%, Mechanics 10%.","answer","25 marks → P 7.5 · C 7.5 · L 7.5 · M 2.5"],
+  ["Coherence","","Putting points in a logical order and linking them.","answer"],
+  ["Mechanics","","Spelling, grammar and punctuation.","answer"],
+  ["Point, quote, explain","PQE","A paragraph shape: make a point, quote briefly, explain the effect.","answer"],
+  ["Own words","","Explaining meaning without copying the text: often asked for in part (i).","answer"],
+].map(([t,aka,d,topic,f])=>({t,aka,d,topic,f,id:"g-"+t.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+t.length}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["imagery","Imagery"],["anecdote","Anecdote"],["analogy","Analogy"],["direct address","Direct address"],["paradox","Paradox"],["epigram","Epigram"],["tone","Tone"],["gist","Gist"],["inference","Inference"],["PCLM","PCLM",1],["triad","Triad"],["connective","Connective"],["simile","Simile"],["rhetorical device","Rhetorical device"],["circular structure","Circular structure"],["evidence","Evidence"],["purpose","Purpose"]];
+
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rr(ctx,x,y,w,h,r){ if(w<0){ x+=w; w=-w; } if(h<0){ y+=h; h=-h; } r=Math.max(0,Math.min(r,h/2,w/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function arrowHead(ctx,x,y,dx,dy,col,s=8){ ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x+dx*s,y+dy*s); ctx.lineTo(x-dx*s*0.6-dy*s*0.7,y-dy*s*0.6+dx*s*0.7); ctx.lineTo(x-dx*s*0.6+dy*s*0.7,y-dy*s*0.6-dx*s*0.7); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const nf = (x,d=0) => { const s=(Math.round(x*10**d)/10**d).toFixed(d); const [i,f]=s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f?"."+f:""); };
+const eur = x => "€"+nf(x, Math.abs(x-Math.round(x))>0.004?2:0);
+const niceStep = (range,n) => { const r=range/Math.max(1,n), p=10**Math.floor(Math.log10(r)), m=r/p; return (m<=1?1:m<=2?2:m<=5?5:10)*p; };
+const tick = v => String(+v.toFixed(6));
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+// Axes: returns mapping functions. o: x0,x1,y0,y1,xl,yl,compact
+function frame(ctx,w,h,o){
+  const cp=o.compact, L=cp?36:50, R=12, T=cp?12:16, B=cp?24:34, fs=cp?9:11;
+  const X=v=>L+(v-o.x0)/(o.x1-o.x0)*(w-L-R), Y=v=>h-B-(v-o.y0)/(o.y1-o.y0)*(h-B-T);
+  const xs=o.xt||niceStep(o.x1-o.x0, Math.max(3,Math.floor((w-L)/70))), ys=o.yt||niceStep(o.y1-o.y0, Math.max(3,Math.floor((h-B)/45)));
+  for(let v=Math.ceil(o.x0/xs)*xs; v<=o.x1+1e-9; v+=xs){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,tick(v),X(v),h-B+(cp?11:14),C.muted,M(fs),"center"); }
+  for(let v=Math.ceil(o.y0/ys)*ys; v<=o.y1+1e-9; v+=ys){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,tick(v),L-5,Y(v)+3,C.muted,M(fs),"right"); }
+  const y0=Y(Math.max(o.y0,Math.min(o.y1,0)));
+  line(ctx,L,y0,w-R,y0,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(o.xl) text(ctx,o.xl,w-R,h-B+(cp?22:30),C.muted,F(cp?10:12),"right");
+  if(o.yl) text(ctx,o.yl,L+6,T+(cp?10:12),C.muted,F(cp?10:12),"left");
+  return {X,Y,L,R,T,B};
+}
+function curve(ctx,f,x0,x1,X,Y,col,lw=2.5,dash,clip){ ctx.save(); if(clip){ ctx.beginPath(); ctx.rect(clip[0],clip[1],clip[2],clip[3]); ctx.clip(); } ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); const n=120; for(let i=0;i<=n;i++){ const x=x0+(x1-x0)*i/n, y=f(x); if(i) ctx.lineTo(X(x),Y(y)); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore(); }
+/* ================= MODELS + DRAWINGS ================= */
+// Annotations: [text id, paragraph index, lens, exact phrase, note]
+const LENS = {evidence:["Evidence","apricot"], style:["Style","sage"], tone:["Tone","blush"]};
+const ANN = [
+  ["aran",0,"style","small flat fields of naked rock","Adjectives pile up (small, flat, naked). \"Naked\" personifies the rock: the land looks stripped bare."],
+  ["aran",0,"tone","I have seen nothing so desolate.","A short, blunt sentence after a long one: the writer's verdict lands with force."],
+  ["aran",0,"style","Grey floods of water were sweeping everywhere","Colour and a strong verb (\"sweeping\"): the water is restless and everywhere."],
+  ["aran",0,"evidence","a wild torrent of the road","Detail: the road itself turns into a river in the rain."],
+  ["aran",0,"evidence","hidden away in corners that had shelter","Evidence of hard farming: crops survive only where they are sheltered."],
+  ["aran",0,"style","Whenever the cloud lifted","We see the island in glimpses, exactly as Synge did."],
+  ["aran",0,"tone","a lonely chapel or schoolhouse","\"Lonely\": even the buildings share the island's isolation."],
+  ["aran",0,"evidence","inscriptions asking a prayer for the soul","Evidence of faith and of death: the dead are remembered by the roadside."],
+  ["aran",1,"tone","humorous wonder","The mood lifts: the girls find the stranger funny and strange."],
+  ["aran",1,"evidence","speaking English with a slight foreign intonation","Detail about language: Irish is their first language, so English sounds foreign on them."],
+  ["aran",1,"style","eager laughter and great talking in Gaelic","Sound imagery and warm adjectives: life and energy against the cold rock."],
+  ["aran",1,"tone","more desolate than before","The ending echoes \"desolate\": a circular structure. Their energy makes the emptiness feel worse."],
+  ["idle",0,"tone","Heaven help me!","A mock-dramatic exclamation: he pretends to be shocked at himself."],
+  ["idle",0,"style","I have done a good many things that I ought not to have done","Echoes the prayer-book confession (\"we have done those things which we ought not to have done\"): mock-solemn humour."],
+  ["idle",0,"tone","Idling always has been my strong point.","Comic boast: a weakness presented as a talent. Self-deprecating."],
+  ["idle",0,"style","Few possess it.","A three-word sentence timed like a punchline."],
+  ["idle",0,"evidence","a genuine idler is a rarity","His first claim: real idling is rare, not the same as laziness."],
+  ["idle",0,"style","slouches about with his hands in his pockets","A vivid picture of the lazy man he says the true idler is not."],
+  ["idle",0,"evidence","he is always intensely busy","The paradox at the heart of the essay: the true idler is busy."],
+  ["idle",1,"evidence","unless one has plenty of work to do","His main argument, stated as a general rule."],
+  ["idle",1,"style","There is no fun in doing nothing when you have nothing to.","Wordplay and repetition of \"nothing\": neat and quotable."],
+  ["idle",1,"tone","a most exhausting one","Comic exaggeration (hyperbole): wasting time is tiring."],
+  ["idle",1,"style","Idleness, like kisses, to be sweet must be stolen.","A simile and an epigram: a witty, memorable ending."],
+  ["pank",0,"tone","it is quite worth using again","Relaxed and confiding: she shares a favourite story with friends."],
+  ["pank",0,"style","You have two babies very hungry","Direct address (\"You\") and a homely analogy: every listener can picture it."],
+  ["pank",0,"style","One baby is a patient baby","Contrast (patient v impatient) sets up the argument."],
+  ["pank",0,"style","cries lustily, screams and kicks","A list of strong verbs: noise and energy."],
+  ["pank",0,"tone","we know perfectly well","Inclusive \"we\": she assumes the audience already agrees. Confident."],
+  ["pank",0,"evidence","That is the whole history of politics.","The claim: her story becomes a rule about politics. A short sentence for impact."],
+  ["pank",0,"tone","Putting sentiment aside","She presents herself as practical and realistic, not emotional."],
+  ["pank",0,"evidence","people who really want reforms learn that lesson very quickly","Her point: serious reformers are forceful."],
+  ["pank",0,"tone","quite content to go on advocating them indefinitely","Scornful: polite campaigners are made to sound idle."],
+  ["pank",0,"style","you have to make yourself more obtrusive than anybody else","Repetition of \"you have to… than anybody else\" builds rhythm and urgency."],
+  ["pank",0,"style","snow you under","Metaphor: buried and forgotten under other news."],
+  ["pank",0,"evidence","if you are really going to get your reform realised","Her conclusion: noise is the price of success."],
+];
+// Technique sorter
+const BINS = [["img","Imagery & figurative","apricot"],["rhet","Rhetorical devices","sage"],["anec","Anecdote & analogy","blush"],["claim","Opinion & claim","olive"]];
+const SORT = [
+  ["small flat fields of naked rock","img","Synge"],
+  ["Grey floods of water were sweeping everywhere","img","Synge"],
+  ["eager laughter and great talking in Gaelic","img","Synge"],
+  ["Idleness, like kisses, to be sweet must be stolen.","img","Jerome"],
+  ["see that they do not snow you under","img","Pankhurst"],
+  ["You have two babies very hungry and wanting to be fed.","anec","Pankhurst"],
+  ["a band of tall girls passed me on their way to Kilronan","anec","Synge"],
+  ["I have somewhat belied half the dear old lady's prophecy","anec","Jerome"],
+  ["You have to make more noise… you have to make yourself more obtrusive… you have to fill all the papers","rhet","Pankhurst"],
+  ["Heaven help me!","rhet","Jerome"],
+  ["Well, we know perfectly well which baby is attended to first.","rhet","Pankhurst"],
+  ["That is the whole history of politics.","claim","Pankhurst"],
+  ["a genuine idler is a rarity","claim","Jerome"],
+  ["I have seen nothing so desolate.","claim","Synge"],
+];
+// Answer builder
+const ESSAYS = [
+  {s:"Synge (25)", m:25, q:"(Synge) Identify and discuss three features of Synge's writing style that make this extract vivid and memorable. Support your answer with reference to the text. (25 marks)", t:[["Synge's sensory imagery, his blunt short sentence and his contrast between the bleak land and the lively girls make this walk vivid.",3],["Synge writes in a really good, descriptive style.",1],["The extract is about Synge walking on Aran in the rain.",0]],
+    p:[["Sensory imagery: \"Grey floods of water were sweeping everywhere\" lets us see and almost feel the storm.",1],["A short sentence, \"I have seen nothing so desolate.\", lands his verdict after a long description.",1],["Contrast: the girls' \"eager laughter\" leaves the rock \"more desolate than before\".",1],["Repeated key words (\"naked\", \"desolate\", \"lonely\") build one strong impression.",1],["Synge was born in Dublin in 1871 and wrote plays for the Abbey Theatre.",0],["He walks along the road, sees some fields and meets some girls.",0]]},
+  {s:"Pankhurst (15)", m:15, q:"(Pankhurst) Do you find Pankhurst's argument persuasive? Explain your answer with reference to her use of language. (15 marks)", t:[["Yes: Pankhurst makes a radical idea sound like common sense through a homely analogy, inclusive language and powerful repetition.",3],["Yes, it is a good speech and she makes some good points.",1],["Emmeline Pankhurst was a suffragette who gave this speech in 1913.",0]],
+    p:[["The analogy of two hungry babies is simple and familiar, so every listener follows her logic.",1],["\"we know perfectly well\" assumes the audience already agrees with her.",1],["The repeated \"you have to… than anybody else\" builds to a forceful climax.",1],["The blunt claim \"That is the whole history of politics.\" turns a story into a rule.",1],["Hartford is a city in Connecticut in the United States.",0],["She says one baby is patient and one is impatient.",0]]},
+  {s:"Jerome (15)", m:15, q:"(Jerome) What impression of the writer do you form from this extract? Support your answer with reference to the text. (15 marks)", t:[["Jerome comes across as a witty, self-mocking writer who enjoys turning his own laziness into a clever argument.",3],["He seems like a nice man.",1],["The extract comes from Idle Thoughts of an Idle Fellow, published in 1886.",0]],
+    p:[["Self-mocking: he calls idling \"my strong point\" and \"a gift\", boasting about a weakness.",1],["Witty: \"Few possess it.\" is timed like a punchline.",1],["Clever: the paradox that a true idler is \"always intensely busy\" shows a sharp mind.",1],["Playful: \"Idleness, like kisses, to be sweet must be stolen\" ends on a charming joke.",1],["Jerome also wrote Three Men in a Boat.",0],["He says he has done things he ought not to have done.",0]]},
+];
+/* ---------- drawings ---------- */
+function pointerTap(el,fn){ el.addEventListener("pointerdown",e=>{ const r=el.getBoundingClientRect(); fn(e.clientX-r.left,e.clientY-r.top); }); }
+function layoutText(ctx,P,fs,x0,maxW,top,lh,pgap){ const toks=[]; let y=top; ctx.font=F(fs,600); const sp=ctx.measureText(" ").width;
+  P.paras.forEach((para,pi)=>{ let x=x0; const re=/\S+/g; let m; while((m=re.exec(para))){ const w=ctx.measureText(m[0]).width; if(x>x0 && x+w>x0+maxW){ x=x0; y+=lh; } toks.push({pi,s:m.index,e:m.index+m[0].length,x,y,w,t:m[0],sp}); x+=w+sp; } y+=lh+pgap; });
+  return {toks,end:y-pgap}; }
+function drawPoem(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const P=POEMS[o.p], cp=o.compact||w<440, padX=cp?10:18, top=cp?32:52, bot=cp?6:12;
+  text(ctx,P.title,padX,cp?17:26,C.ink,`700 ${cp?12:18}px ${C.fd}`);
+  text(ctx,`${P.author} (${P.year})${cp?"":" · "+P.fs}`,cp?padX:w-padX,cp?28:26,C.muted,F(cp?9:12,600),cp?"left":"right");
+  let fs=o.compact?14:cp?13:16, L;
+  for(;;){ const lh=fs*1.5; L=layoutText(ctx,P,fs,padX,w-padX*2,top+lh/2,lh,lh*0.45); L.lh=lh; if(L.end+lh/2<=h-bot || fs<=6.5) break; fs-=0.5; }
+  const anns=ANN.map((a,k)=>[a,k]).filter(([a])=>a[0]===P.id&&a[2]===o.lens).map(([a,k])=>{ const s=P.paras[a[1]].indexOf(a[3]); return {k,pi:a[1],s,e:s+a[3].length}; }).filter(a=>a.s>=0);
+  L.toks.forEach((t,i)=>{ const a=anns.find(a=>a.pi===t.pi&&t.s<a.e&&t.e>a.s); t.ann=a?a.k:null; });
+  for(let i=0;i<L.toks.length;){ const t=L.toks[i]; if(t.ann==null){ i++; continue; } let j=i; while(j+1<L.toks.length && L.toks[j+1].ann===t.ann && L.toks[j+1].y===t.y) j++; const e=L.toks[j];
+    rr(ctx,t.x-2,t.y-fs*0.72,e.x+e.w-t.x+4,fs*1.44,4); ctx.globalAlpha=t.ann===o.sel?0.95:0.5; ctx.fillStyle=C[LENS[o.lens][1]]; ctx.fill(); ctx.globalAlpha=1; i=j+1; }
+  L.toks.forEach(t=>text(ctx,t.t,t.x,t.y,C.ink,F(fs,600),"left","middle"));
+  if(o.sel!=null){ const sel=L.toks.filter(t=>t.ann===o.sel); sel.forEach((t,i)=>{ const nx=sel[i+1], join=nx&&nx.y===t.y; ctx.save(); ctx.strokeStyle=C.terra; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(t.x-2,t.y+fs*0.78); ctx.lineTo((join?nx.x:t.x+t.w)+2,t.y+fs*0.78); ctx.stroke(); ctx.restore(); }); }
+  return L;
+}
+function drawMood(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, L=cp?14:30, R=cp?10:20, T=cp?14:24, B=cp?20:34, Y=v=>T+(5-v)/10*(h-T-B);
+  line(ctx,L,Y(0),w-R,Y(0),C.muted,1.5,[5,5]);
+  if(!cp){ text(ctx,"lighter ↑",L+2,T+4,C.olive,F(11),"left"); text(ctx,"heavier ↓",L+2,h-B-6,C.terra,F(11),"left"); }
+  const cols=[C.terra,C.olive,C.apricot], ps=o.all?POEMS.map((x,i)=>i):[o.p]; let pts=[];
+  ps.forEach((pi,j)=>{ const Md=POEMS[pi].mood, n=Md.length, X=k=>L+(k+0.5)/n*(w-L-R), col=o.all?cols[j]:C.apricot, upto=o.t==null?n-1:o.t*(n-1);
+    if(!o.all) Md.forEach((s,k)=>{ const x0=L+k/n*(w-L-R), x1=L+(k+1)/n*(w-L-R); if(k%2){ ctx.fillStyle=C["surface-2"]; ctx.fillRect(x0,T,x1-x0,h-T-B); } text(ctx,(cp?"s":"sentences ")+s[0],X(k),h-B+(cp?13:18),C.muted,F(cp?9:11),"center"); });
+    if(!o.all) line(ctx,L,Y(0),w-R,Y(0),C.muted,1.5,[5,5]);
+    ctx.save(); ctx.strokeStyle=col; ctx.lineWidth=cp?2.2:3.2; ctx.lineJoin="round"; ctx.beginPath();
+    Md.forEach((s,k)=>{ if(k>Math.ceil(upto)) return; let x=X(k), y=Y(s[2]); if(k>upto){ const f=upto-Math.floor(upto); x=X(k-1)+(x-X(k-1))*f; y=Y(Md[k-1][2])+(y-Y(Md[k-1][2]))*f; } k?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke(); ctx.restore();
+    Md.forEach((s,k)=>{ if(k>upto) return; const x=X(k), y=Y(s[2]), sel=!o.all&&k===o.sel; circle(ctx,x,y,sel?(cp?6:10):(cp?3.5:6),o.all?col:(s[2]>=0?C.sage:C.blush),sel?C.terra:(o.all?C.surface:C.ink),sel?3:1.5);
+      if(!cp&&!o.all) text(ctx,s[4],Math.max(L+50,Math.min(w-R-50,x)),y+(s[2]>=0?-16:24),C.ink,F(11),"center"); pts.push([x,y]); });
+  });
+  return pts;
+}
+const sentType = l => /\?$/.test(l)?"question":/!$/.test(l)?"exclamation":wordsIn(l)<=6?"short":"statement";
+const TYPECOL = {statement:"sage",short:"olive",exclamation:"terra",question:"apricot"};
+function shapeVals(p,m){ return POEMS[p].L.map(m==="avg"?avgLen:wordsIn); }
+function shapeFit(p,m,rec){ if(!rec||rec.length<2) return null; const v=shapeVals(p,m), xs=rec.map(i=>i+1), ys=rec.map(i=>v[i]); const mx=xs.reduce((a,b)=>a+b,0)/xs.length, my=ys.reduce((a,b)=>a+b,0)/ys.length; let sxy=0,sxx=0; xs.forEach((x,i)=>{ sxy+=(x-mx)*(ys[i]-my); sxx+=(x-mx)**2; }); if(!sxx) return null; const m2=sxy/sxx; return {m:m2,c:my-m2*mx}; }
+function drawShape(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const P=POEMS[o.p], v=shapeVals(o.p,o.m), n=v.length, rec=o.rec||v.map((x,i)=>i), narrow=o.compact||w<500;
+  const fr=frame(ctx,w,h,{x0:0.4,x1:n+0.6,y0:0,y1:Math.max(...v)*1.2,xl:"sentence",yl:o.m==="avg"?"letters per word":"words",compact:o.compact,xt:o.compact?(n>10?4:2):(narrow&&n>10?2:1)});
+  const bw=(fr.X(1)-fr.X(0))*0.62;
+  rec.forEach(i=>{ const val=v[i]; rr(ctx,fr.X(i+1)-bw/2,fr.Y(val),bw,fr.Y(0)-fr.Y(val),3); ctx.fillStyle=C[TYPECOL[sentType(P.L[i])]]; ctx.fill();
+    if(!o.compact && bw>14) text(ctx,o.m==="avg"?nf(val,1):String(val),fr.X(i+1),fr.Y(val)-5,C.ink,M(narrow?9:11),"center"); });
+  const f=shapeFit(o.p,o.m,rec); if(f) line(ctx,fr.X(0.7),fr.Y(f.c+f.m*0.7),fr.X(n+0.3),fr.Y(f.c+f.m*(n+0.3)),C.terra,2.5,[7,5]);
+  if(!o.compact){ let x=fr.L+8; [["statement","statement"],["short","short (≤6 words)"],["exclamation","exclamation"]].forEach(([k,lab])=>{ rr(ctx,x,fr.T+2,10,10,2); ctx.fillStyle=C[TYPECOL[k]]; ctx.fill(); text(ctx,lab,x+14,fr.T+11,C.muted,F(narrow?9:11),"left"); ctx.font=F(narrow?9:11); x+=ctx.measureText(lab).width+28; }); }
+}
+function drawRadar(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, n=THM.length, cx=w/2, cy=h/2+(cp?4:10), R=Math.max(30,Math.min(w*(cp?0.25:0.28), h/2-(cp?20:36))), ang=k=>-Math.PI/2+k*2*Math.PI/n;
+  for(let r=1;r<=5;r++){ ctx.beginPath(); for(let k=0;k<=n;k++){ const a=ang(k%n), x=cx+Math.cos(a)*R*r/5, y=cy+Math.sin(a)*R*r/5; k?ctx.lineTo(x,y):ctx.moveTo(x,y); } ctx.strokeStyle=C.grid; ctx.lineWidth=1; ctx.stroke(); }
+  THM.forEach((t,k)=>{ const a=ang(k), c=Math.cos(a); line(ctx,cx,cy,cx+c*R,cy+Math.sin(a)*R,C.grid,1); const lx=cx+c*(R+(cp?6:12)), ly=cy+Math.sin(a)*(R+(cp?9:16)); text(ctx,t,lx,ly+4,C.ink,F(cp?9:12),Math.abs(c)<0.2?"center":c>0?"left":"right"); });
+  const poly=(sc,col,fa)=>{ ctx.beginPath(); sc.forEach((v,k)=>{ const a=ang(k), x=cx+Math.cos(a)*R*v/5, y=cy+Math.sin(a)*R*v/5; k?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.closePath(); ctx.globalAlpha=fa; ctx.fillStyle=col; ctx.fill(); ctx.globalAlpha=1; ctx.strokeStyle=col; ctx.lineWidth=cp?2:3; ctx.lineJoin="round"; ctx.stroke(); };
+  if(o.b!=null && o.b>=0) poly(POEMS[o.b].th,C.olive,0.22);
+  poly(o.sc||POEMS[o.a].th,C.terra,0.3);
+  if(!cp){ text(ctx,o.label||POEMS[o.a].short,12,20,C.terra,F(13),"left"); if(o.b!=null&&o.b>=0) text(ctx,POEMS[o.b].short,12,38,C.olive,F(13),"left"); }
+  else if(o.label) text(ctx,o.label,8,14,C.terra,F(10),"left");
+}
+function drawSorter(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, n=BINS.length, gap=cp?6:10, bw=(w-gap*(n+1))/n, top=cp?8:12, bh=h-top-(cp?8:12), P=[];
+  BINS.forEach(([id,name,col],i)=>{ const x=gap+i*(bw+gap); P.push([x,top,bw,bh]); rr(ctx,x,top,bw,bh,12); ctx.fillStyle=C["surface-2"]; ctx.fill(); ctx.strokeStyle=o.armed?C.terra:C.line; ctx.lineWidth=o.armed?2.5:1.5; ctx.stroke();
+    const words=name.split(" "); words.forEach((wd,j)=>text(ctx,wd,x+bw/2,top+(cp?16:22)+j*(cp?13:17),C.ink,F(cp?10:13),"center"));
+    const items=(o.placed||[]).filter(p=>p.bin===id); items.forEach((p,j)=>{ const y=top+bh-(cp?12:16)-j*(cp?14:20); rr(ctx,x+4,y-(cp?9:12),bw-8,cp?12:16,5); ctx.fillStyle=p.ok?C[col]:C.blush; ctx.fill(); ctx.save(); ctx.beginPath(); ctx.rect(x+4,y-14,bw-8,20); ctx.clip(); text(ctx,(p.ok?"✓ ":"✗ ")+p.short,x+bw/2,y,"#3b2b21",F(cp?8:10),"center"); ctx.restore(); }); });
+  return P;
+}
+const PCLM = [["Purpose","P",30],["Coherence","C",30],["Language","L",30],["Mechanics","M",10]];
+function essayScore(es){ const E=ESSAYS[es.q], t=es.t==null?0:E.t[es.t][1], rel=es.p.filter(i=>E.p[i][1]).length, n=es.p.length;
+  const P=Math.min(1,(t/3)*0.5+rel/3*0.5), Cq=Math.min(1,(t>0?0.3:0)+n/3*0.4+rel/3*0.3), L=0.6+0.1*rel, Mm=0.8; return [P,Cq,Math.min(1,L),Mm]; }
+function drawEssay(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=o.compact||w<440, es=o.es, E=ESSAYS[es.q], sc=essayScore(es);
+  const leftW = cp? w : w*0.6, boxes=[["Opening: your answer", es.t==null?null:E.t[es.t][1]>=3]].concat([0,1,2].map(k=>[`Paragraph ${k+1}`, es.p[k]==null?null:!!E.p[es.p[k]][1]])).concat([["One-line conclusion",es.t==null?null:true]]);
+  const bh=cp?20:30, gap=cp?6:10, top=12, bx=14, bwid=leftW-28;
+  boxes.forEach(([lab,ok],i)=>{ const y=top+i*(bh+gap); rr(ctx,bx,y,bwid,bh,8); ctx.fillStyle= ok==null? C["surface-2"] : ok? C.sage : C.blush; ctx.fill(); ctx.strokeStyle=C.line; ctx.lineWidth=1.2; ctx.stroke();
+    text(ctx,lab+(ok==null?" (empty)":ok?" ✓":" ✗ off the question"),bx+12,y+bh/2+1,"#3b2b21",F(cp?10:12),"left","middle"); if(i<boxes.length-1) line(ctx,bx+bwid/2,y+bh,bx+bwid/2,y+bh+gap,C.muted,1.5); });
+  const gx= cp? 14 : leftW+10, gy = cp? top+boxes.length*(bh+gap)+6 : top, gw= cp? w-28 : w-leftW-24, rowH= cp? 18 : 34;
+  PCLM.forEach(([name,k,pct],i)=>{ const y=gy+i*rowH, v=sc[i]; text(ctx,`${k} ${pct}%`,gx,y+(cp?12:14),C.ink,F(cp?10:12),"left"); const tx=gx+(cp?50:60), tw=gw-(cp?50:60); rr(ctx,tx,y+4,tw,cp?10:14,6); ctx.fillStyle=C.grid; ctx.fill(); rr(ctx,tx,y+4,Math.max(4,tw*v),cp?10:14,6); ctx.fillStyle=v>0.75?C.olive:v>0.5?C.apricot:C.terra; ctx.fill(); });
+  if(!cp) text(ctx,`${E.m} marks`,gx,gy+4*rowH+16,C.muted,F(12),"left");
+}
+
+/* ================= ROUTER ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "plot", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+$("loList").innerHTML = LO.map(([t,s],i)=>`<li><label><input type="checkbox" id="lo${i}"><span class="mono">${i+1}</span><span>${s} <small style="color:var(--muted)">· ${LO_HEAD[t]}</small></span></label></li>`).join("");
+const loState=store.get("enc-lo",{});
+LO.forEach((x,i)=>{ const id="lo"+i; $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("enc-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=LO.filter((x,i)=>$("lo"+i).checked).length; $("stLO").textContent=`${lo}/${LO.length}`; $("stLOb").style.width=(lo/LO.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("enc-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+
+/* ================= LEARN ================= */
+const LEARN = {
+  read:{ vis:[["poem",{p:0,lens:"evidence",sel:3}]], cap:"Annotate for evidence: the details that prove a point. Here, the Synge extract.",
+    keys:[["1","Read the questions first, then the text twice: once for the gist, once with a pen, marking evidence for each part."],["❝","Evidence means a short quotation or close reference. Quote when asked to \"support\"; use your own words when asked to \"explain\"."],["?","Inference: say what the text suggests but doesn't state. The roadside prayers suggest how close death is on Aran."]],
+    f:"Question → gist → evidence → explanation", mistake:"Retelling the text. Every sentence should answer the question." },
+  style:{ vis:[["sorter",{placed:[{bin:"img",ok:true,short:"naked rock"},{bin:"rhet",ok:true,short:"Heaven help me!"},{bin:"anec",ok:true,short:"two babies"},{bin:"claim",ok:true,short:"history of politics"}]}]], cap:"Sort techniques by type: imagery, rhetorical devices, anecdote and analogy, opinion and claim.",
+    keys:[["👁","Imagery and figurative language: \"Grey floods of water\", the simile \"Idleness, like kisses\", the metaphor \"snow you under\"."],["📣","Rhetorical devices: direct address (\"You have…\"), inclusive \"we\", repetition and the triad."],["⚖","Anecdote and analogy make ideas concrete; opinions and claims are what the writer wants you to accept."]],
+    f:"Name it → quote it → say what it does to the reader", mistake:"Naming a technique without its effect (\"there is repetition\"). Always explain why it works." },
+  tone:{ vis:[["mood",{p:2,sel:4}]], cap:"Pankhurst: friendly and light at first, then pointed, then urgent.",
+    keys:[["◐","Tone is the writer's attitude (wry, scornful, wistful); mood is what you feel as a reader."],["🎯","Purpose and audience shape tone: Pankhurst wants action from a live audience; Synge wants readers to see Aran."],["↘","Tone shifts. Quote a phrase before and after the shift and name both tones."]],
+    f:"Tone = attitude · Purpose = why · Audience = who", mistake:"Vague tone words such as \"sad\" or \"happy\". Use precise ones: desolate, wry, scornful, urgent." },
+  structure:{ vis:[["shape",{p:1,m:"words"}]], cap:"Jerome: longer confessions broken up by very short punchline sentences (olive and terracotta bars).",
+    keys:[["▁","A short sentence after long ones gives impact: \"I have seen nothing so desolate.\" \"Few possess it.\""],["↻","Openings and endings matter: Synge's circular structure returns to \"desolate\"; Pankhurst ends on her longest sentence."],["→","Connectives show the logic of an argument: \"But\", \"On the contrary\", \"in fact\". Trace the stages to the conclusion."]],
+    f:"Opening → development → turn → conclusion", mistake:"Saying \"the text is well structured\" without showing how the order affects the reader." },
+  genre:{ vis:[["radar",{a:0,b:2}]], cap:"Synge (terracotta) is narrative and aesthetic; Pankhurst (olive) is argument and persuasion.",
+    keys:[["5","The syllabus names five genres: information, argument, persuasion, narration and the aesthetic use of language."],["≈","They \"mix and mingle\": Jerome's essay is an argument told through comic narration."],["🔎","Spot the dominant genre from purpose and technique: facts inform, reasons argue, emotion and rhythm persuade, events narrate, imagery delights."]],
+    f:"Purpose + techniques → genre", mistake:"Treating genres as boxes. Most texts mix two or three; say which dominates and why." },
+  answer:{ vis:[["essay",{es:{q:0,t:0,p:[0,1,2]}}]], cap:"A strong plan: an opening that answers, three relevant paragraphs, a one-line conclusion.",
+    keys:[["50","Question A is worth 50 marks, usually split into three parts. Allow about 45 minutes, roughly a minute a mark."],["¶","Open with your answer, then one point per paragraph: point, short quotation, explanation."],["✓","Longer answers are judged on PCLM: Purpose 30%, Coherence 30%, Language 30%, Mechanics 10%."]],
+    f:"25 marks: P 7.5 · C 7.5 · L 7.5 · M 2.5", mistake:"Writing the same amount for every part. Match the length and the number of points to the marks." },
+};
+
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+/* ================= INFOGRAPHICS ================= */
+$("cases").innerHTML = POEMS.map((P,i)=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${["var(--blush)","var(--apricot)","var(--sage)"][i]}">${svg(P.icon)}</div><div><h3>${P.title}</h3><p style="color:var(--muted)">${P.author}, ${P.year}</p></div></div><p>${P.form}.</p><p style="color:var(--muted)"><i>"${[P.L[1],P.L[13],P.L[5]][i]}"</i></p><button data-go="formulae">Read it</button></div>`).join("");
+(()=>{ const tot=POEMS.map(P=>P.L.reduce((a,l)=>a+wordsIn(l),0)), mx=Math.max(...tot);
+  $("bars").innerHTML = POEMS.map((P,i)=>`<div class="barrow"><span><b>${P.short}</b></span><div class="track"><i style="width:${(tot[i]/mx*100).toFixed(1)}%;background:var(--${["terra","apricot","sage"][i]})"></i></div><span class="v">${tot[i]} words · ${P.L.length} sentences · ${nf(tot[i]/P.L.length,1)} per sentence</span></div>`).join("") + `<p class="result">Counted from the texts (hyphenated words count as one). Synge writes the fewest, longest sentences; Jerome the most, shortest ones.</p>`; })();
+const AROUND = [
+  ["clock","Minutes 0 to 10: read","Read all three texts' questions, choose your Question A, then read that text twice, marking evidence for each part.",[["Annotator lab","real"]],"var(--blush)"],
+  ["answer","Plan each part","Count the points the marks need. Jot a one-line answer and the quotations you will use.",[["Answer builder","real"]],"var(--apricot)"],
+  ["book","About a minute a mark","Roughly 10, 15 and 25 minutes for parts worth 10, 15 and 25. Point, quote, explain.",[["PCLM","neutral"]],"var(--sage)"],
+  ["read","All year: read widely","Read one opinion piece, speech or travel article a week. Ask: what is the gist, the tone, the genre?",[["Syllabus 4.1 to 4.5","real"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+$("qbank").innerHTML = POEMS.map(P=>`<div class="panel fcell"><span class="pill">${P.author} · ${P.year}</span><h3 style="font-size:1.25rem">${P.title}</h3><p style="color:var(--muted);font-size:.85rem">${P.fs}</p><div style="line-height:1.65;font-size:1rem;display:grid;gap:10px">${P.paras.map(p=>`<p>${p}</p>`).join("")}</div><p style="font-size:.85rem;color:var(--muted)">${P.ctx}</p></div>`).join("") + `<div class="panel fcell"><span class="pill">How to practise</span><h3 style="font-size:1.25rem">Read it cold</h3><p>Cover the notes. Set a timer for 10 minutes and write the gist of one text in two sentences, then list three techniques with a quotation for each. Then check with the Annotator lab.</p></div>`;
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"read",label:"Reading",col:"var(--blush)",leaves:[["Gist","The main idea in a sentence."],["Evidence","Quote or close reference."],["Inference","What it suggests."],["Own words","When asked to explain."]]},
+  {id:"style",label:"Style",col:"var(--apricot)",leaves:[["Imagery","\"Grey floods of water\"."],["Rhetoric","You, we, repetition."],["Anecdote","A story to make a point."],["Claim","What you should accept."]]},
+  {id:"tone",label:"Tone",col:"var(--sage)",leaves:[["Attitude","Wry, scornful, wistful."],["Purpose","Why it was written."],["Audience","Who it is for."],["Shift","Name both tones."]]},
+  {id:"structure",label:"Structure",col:"var(--cream)",leaves:[["Short sentence","Impact."],["Opening","How it hooks you."],["Ending","Circular? A climax?"],["Connectives","But, therefore."]]},
+  {id:"genre",label:"Genres",col:"var(--blush)",leaves:[["Information","Facts, reports."],["Argument","Reasons, conclusion."],["Persuasion","Emotion, rhythm."],["Narration & aesthetic","Story, imagery."]]},
+  {id:"answer",label:"The answer",col:"var(--sage)",leaves:[["50 marks","About 45 minutes."],["Opening","Answer at once."],["PQE","Point, quote, explain."],["PCLM","30 · 30 · 30 · 10 %"]]},
+];
+
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">Question</text><text x="${cx}" y="${cy+22}" text-anchor="middle">A</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["read","How is Paper 1, Section I organised?","Three texts on a shared theme. You answer Question A on one text and Question B on a different text."],
+  ["read","How many marks is Question A worth?","50 marks, usually split into three parts. Section I is 100 marks in total."],
+  ["read","What is the gist of a text?","Its main idea in a sentence or two."],
+  ["read","When should you quote, and when use your own words?","Quote to support a point. Use your own words when the question asks you to explain or summarise."],
+  ["read","What is inference?","Working out what the text suggests but doesn't say: the roadside prayers in Synge suggest how present death is on Aran."],
+  ["style","What is an analogy? Give an example.","An extended comparison that explains an idea: Pankhurst's patient and impatient babies stand for two kinds of reformer."],
+  ["style","What is direct address?","Speaking straight to the audience: \"You have two babies very hungry…\" It draws listeners in."],
+  ["style","What does inclusive language do?","\"We\" and \"us\" make the audience feel they already agree: \"we know perfectly well\"."],
+  ["style","What is an epigram?","A short, witty saying: \"Idleness, like kisses, to be sweet must be stolen.\""],
+  ["style","How do you write about a technique?","Name it, quote it briefly, then explain its effect on the reader."],
+  ["style","Opinion, anecdote or evidence: what's the difference?","An opinion is a view; an anecdote is a personal story; evidence is fact or data that can be checked. The syllabus asks you to tell them apart."],
+  ["tone","Tone or mood?","Tone is the writer's attitude. Mood is the atmosphere the reader feels."],
+  ["tone","Give five precise tone words.","Wry, scornful, wistful, urgent, self-deprecating (also playful, solemn, defiant, nostalgic, detached)."],
+  ["tone","What is the writer's point of view?","Their position or opinion on the subject; also whether they write as \"I\" (first person)."],
+  ["tone","How does purpose affect tone?","A speech to win support (Pankhurst) grows urgent; a comic essay (Jerome) stays playful; travel writing (Synge) observes and reflects."],
+  ["tone","What is a paradox?","A statement that seems to contradict itself but holds a truth: the true idler is \"always intensely busy\"."],
+  ["structure","Why use a short sentence?","For impact after longer ones: \"I have seen nothing so desolate.\" or the punchline \"Few possess it.\""],
+  ["structure","What is a circular structure?","An ending that echoes the opening. Synge's \"desolate\" returns in his last line."],
+  ["structure","What are connectives for in an argument?","They show the logic: but, therefore, because, on the contrary, in fact."],
+  ["structure","How do you outline the stages of an argument?","Find the claim, the reasons or examples, any turn, and the conclusion."],
+  ["genre","Name the five language genres in the syllabus.","Information, argument, persuasion, narration and the aesthetic use of language."],
+  ["genre","Argument or persuasion?","Argument reasons towards a conclusion. Persuasion moves the audience with tone, image, rhythm and chosen detail. Many texts do both."],
+  ["genre","What is the aesthetic use of language?","Language crafted for beauty and effect: imagery, sound and rhythm, as in Synge's description of Aran."],
+  ["answer","How long should you spend on Question A?","About 45 minutes: roughly a minute per mark plus reading time."],
+  ["answer","What does PCLM stand for?","Purpose 30%, Coherence 30%, Language 30%, Mechanics 10%."],
+  ["answer","How many points for a 25-mark style question?","Usually three or four well-developed points, or exactly the number the question asks for."],
+  ["answer","What is a good opening sentence?","Your direct answer to the question, using its key words."],
+];
+
+let fcKnown = store.get("enc-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter(c=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("enc-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("enc-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("enc-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["read","In Paper 1, Section I, Question A and Question B must be answered on:",["the same text","different texts","any two texts, even the same one","Text 3 only"],1,"You answer Question A on one text and Question B on a different text."],
+  ["read","Question A is worth:",["20 marks","40 marks","50 marks","100 marks"],2,"50 marks; Section I (Questions A and B) is 100."],
+  ["read","A question says \"in your own words\". You should:",["quote as much as possible","explain without copying the text","write a list","give your opinion only"],1,"Explain the meaning yourself; a short quotation may support it, but don't copy."],
+  ["read","Which is the best one-sentence gist of the Synge extract?",["Synge goes for a walk.","Aran is bleak and lonely, but its lively people make that bleakness even plainer.","Synge likes rain.","The girls are going to Kilronan."],1,"A gist says what the text is about and what it says about it."],
+  ["style","\"Idleness, like kisses, to be sweet must be stolen\" uses:",["a simile","onomatopoeia","a rhetorical question","direct address"],0,"\"like kisses\" is a comparison with \"like\". It is also an epigram."],
+  ["style","Pankhurst's two hungry babies are an example of:",["statistics","an analogy","a pun","a rhetorical question"],1,"An extended comparison that explains how politics works."],
+  ["style","\"Well, we know perfectly well which baby is attended to first.\" mainly uses:",["inclusive language","imagery","alliteration","a statistic"],0,"\"we\" puts the audience on her side."],
+  ["style","Which phrase is mainly imagery?",["\"That is the whole history of politics.\"","\"Grey floods of water were sweeping everywhere\"","\"Few possess it.\"","\"Putting sentiment aside\""],1,"It creates a picture of the storm."],
+  ["tone","The best word for Jerome's tone is:",["furious","wry","tragic","neutral"],1,"Dry, self-mocking humour."],
+  ["tone","\"It is only the people who are quite content to go on advocating them indefinitely…\" The tone towards patient campaigners is:",["admiring","scornful","nostalgic","fearful"],1,"She mocks them as the patient baby that gets ignored."],
+  ["tone","Calling the genuine idler a man who \"is always intensely busy\" is an example of:",["paradox","simile","fact","statistic"],0,"It seems self-contradictory but makes a point."],
+  ["structure","\"I have seen nothing so desolate.\" is effective mainly because:",["it rhymes","it is a short sentence after a long one","it uses a statistic","it is a question"],1,"Its brevity gives the verdict force."],
+  ["structure","Synge's extract ends with \"more desolate than before\". This creates:",["a circular structure","a cliffhanger","a rhetorical question","a pun"],0,"It echoes \"I have seen nothing so desolate\" from the opening."],
+  ["genre","Which genre dominates Pankhurst's speech?",["information","persuasion","narration","aesthetic"],1,"She wants her audience to act. Argument is strong too."],
+  ["genre","Which is NOT one of the syllabus's five language genres?",["the language of argument","the language of persuasion","the language of poetry","the aesthetic use of language"],2,"The five are information, argument, persuasion, narration and the aesthetic use of language."],
+  ["answer","Longer answers in English are marked on PCLM. The \"P\" stands for:",["Punctuation","Purpose","Paragraphs","Personal"],1,"Purpose 30%, Coherence 30%, Language 30%, Mechanics 10%."],
+];
+
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("enc-best",null); if(best==null||pct>best) store.set("enc-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[A-Za-z]/.test(g.t[0]) ? g.t[0].toUpperCase() : "#";
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/</g,"&lt;")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Based on your reading of…","Use only what the text says or suggests; every point needs a reference to it.","Based on your reading of Text 1, what is the writer's attitude to Aran?"],
+  ["Identify and explain","Name the point or feature, then show how it works or why it matters.","Identify and explain two reasons the writer gives…"],
+  ["In your own words","Explain the meaning without copying; brief quotation only to support.","Explain, in your own words, the writer's view of idleness."],
+  ["What impression…?","Say what picture of a person, place or idea you form, and prove it.","What impression of the writer do you form from this extract?"],
+  ["Discuss features of style","Name each technique, quote it and explain its effect on the reader.","Identify and discuss three features of the writer's style…"],
+  ["Do you agree…? / Do you find…?","Take a clear position, then justify it with the text and your reasoning.","Do you find this argument persuasive?"],
+  ["Persuasive / effective","Show how language tries to move the reader, and judge how well it works.","Is this an effective piece of persuasive writing?"],
+  ["Support your answer…","Every point needs a short quotation or close reference.","…with reference to the text."],
+];
+
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("");
+// Line trainer (multiple choice)
+const pick=a=>a[Math.floor(Math.random()*a.length)], shuffle=a=>{ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const ALLL = POEMS.flatMap((P,p)=>P.L.map((l,i)=>({l,p,i})));
+const half = l => { const w=l.split(" "), c=Math.ceil(w.length/2); return [w.slice(0,c).join(" "), w.slice(c).join(" ")]; };
+const VOCAB = [
+  ["desolate","aran","bleak, empty and lonely"],["torrent","aran","a fast, violent rush of water"],["intonation","aran","the rise and fall of the voice"],["vitality","aran","energy and liveliness"],["commemorated","aran","honoured the memory of"],
+  ["belied","idle","proved false"],["prophecy","idle","a prediction"],["rarity","idle","something seldom found"],["characteristic","idle","a typical feature"],
+  ["lustily","pank","loudly and with energy"],["indefinitely","pank","for an unlimited time"],["obtrusive","pank","noticeable in an unwelcome way"],["sentiment","pank","feelings, emotion"],["advocating","pank","publicly arguing for"],
+];
+const QT = {
+  text:{name:"Which text?", gen(){ const x=pick(ALLL.filter(z=>wordsIn(z.l)>=5)), P=POEMS[x.p]; return {q:`<div class="qt">"${x.l}"</div>`, opts:POEMS.map(Q=>Q.short), ans:P.short, why:`${P.title} by ${P.author}, sentence ${x.i+1}.`}; }},
+  finish:{name:"Finish the sentence", gen(){ const pool=ALLL.filter(z=>wordsIn(z.l)>=7&&wordsIn(z.l)<=30), x=pick(pool), [a,end]=half(x.l);
+    const others=[...new Set(shuffle(pool.filter(z=>z!==x)).map(z=>half(z.l)[1]))].filter(e=>e!==end).slice(0,3);
+    return {q:`<div class="qt">"${a} …"<small>${POEMS[x.p].title}</small></div>`, opts:shuffle([end,...others]), ans:end, why:`"${x.l}" (${POEMS[x.p].author}, sentence ${x.i+1}).`}; }},
+  vocab:{name:"Word in context", gen(){ const v=pick(VOCAB), P=POEMS.find(Q=>Q.id===v[1]), s=P.L.find(l=>new RegExp("\\b"+v[0]+"\\b","i").test(l));
+    const others=shuffle(VOCAB.filter(z=>z!==v)).slice(0,3).map(z=>z[2]);
+    return {q:`<div class="qt">"${s.replace(new RegExp("\\b("+v[0]+")\\b","i"),"<b>$1</b>")}"<small>${P.author}: what does "${v[0]}" mean here?</small></div>`, opts:shuffle([v[2],...others]), ans:v[2], why:`"${v[0]}" means ${v[2]}. Use the sentence around a word to work out its meaning.`}; }},
+};
+let qtType="text", qtCur=null, qtRight=0, qtTried=0, qtDone=false;
+
+$("prType").innerHTML = Object.entries(QT).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; qtType=b.dataset.k; qtNew(); });
+function qtNew(){ qtCur=QT[qtType].gen(); qtDone=false; $("pq").innerHTML=qtCur.q; $("qtOpts").innerHTML=qtCur.opts.map((o,i)=>`<button data-i="${i}">${o}</button>`).join(""); $("paFb").innerHTML="";
+  document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===qtType)); }
+$("qtOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qtDone) return; const pickd=qtCur.opts[+b.dataset.i], ok=pickd===qtCur.ans; qtDone=true; qtTried++; if(ok) qtRight++;
+  [...$("qtOpts").children].forEach((x,i)=>{ x.disabled=true; if(qtCur.opts[i]===qtCur.ans) x.classList.add("on"); });
+  $("paFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> ${qtCur.why}</div>`; $("paScore").textContent=`This session: ${qtRight} correct out of ${qtTried}.`; });
+$("paNext").addEventListener("click",qtNew);
+qtNew();
+// Which technique? drill
+const DEVK = ["Imagery","Simile & metaphor","Repetition","Contrast","Direct address","Short sentence"];
+const DEV = [
+  ["small flat fields of naked rock","Synge",0],
+  ["Grey floods of water were sweeping everywhere upon the limestone","Synge",0],
+  ["eager laughter and great talking in Gaelic","Synge",0],
+  ["I have seen nothing so desolate.","Synge",5],
+  ["as they hurried past me with eager laughter… they left the wet masses of rock more desolate than before","Synge",3],
+  ["Few possess it.","Jerome",5],
+  ["Heaven help me!","Jerome",5],
+  ["Idleness, like kisses, to be sweet must be stolen.","Jerome",1],
+  ["plenty of lazy people and plenty of slow-coaches","Jerome",2],
+  ["There is no fun in doing nothing when you have nothing to.","Jerome",2],
+  ["He is not a man who slouches about… On the contrary, his most startling characteristic is that he is always intensely busy.","Jerome",3],
+  ["You have two babies very hungry and wanting to be fed.","Pankhurst",4],
+  ["One baby is a patient baby… The other baby is an impatient baby","Pankhurst",3],
+  ["That is the whole history of politics.","Pankhurst",5],
+  ["you have to make more noise than anybody else, you have to make yourself more obtrusive than anybody else","Pankhurst",2],
+  ["see that they do not snow you under","Pankhurst",1],
+];
+let pd = { k:null, shown:false, sel:null, streak:0 };
+let predC=null;
+$("predBtns").innerHTML = DEVK.map((k,i)=>`<button data-a="${i}">${k}</button>`).join("");
+function pdNew(){ let q; do{ q=pick(DEV); }while(pd.k && q===pd.k); pd={...pd,k:q,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>"${q[0]}"</b> (${q[1]}). Which technique stands out most?`;
+  if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=+b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{
+  if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick a device first.</div>`; return; }
+  const ans=pd.k[2], ok=pd.sel===ans; pd.streak = ok? pd.streak+1 : 0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Correct!":"Not quite."}</b> Best fit: ${DEVK[ans]}. ${ok?"":"Many phrases use more than one technique; in an answer, name the one that matters most and explain its effect."}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`;
+});
+$("predNext").addEventListener("click",pdNew);
+// Full Question A practice (50 marks each)
+const LONGQ = [
+  { title:"Text 1: The Aran Islands (J. M. Synge)", intro:"Read the extract in the Text bank, then answer all three parts.",
+    parts:[["i","Based on your reading of the extract, what impression of the island of Aranmor do you form? Support your answer with reference to the text.",10,"<b>Expect</b> two or three supported points, e.g. bare and harsh (\"small flat fields of naked rock\"); wet and stormy (\"Grey floods of water\", \"a wild torrent of the road\"); lonely (\"I have seen nothing so desolate\", \"a lonely chapel\"); a place of faith and remembered death (\"inscriptions asking a prayer for the soul\"); people full of life despite it. Credit any reasonable impression that is supported."],
+      ["ii","Explain, in your own words, why the tall girls make the rock seem \"more desolate than before\".",15,"<b>Expect</b> a clear explanation: their energy, laughter and talk are full of life, so when they hurry away the contrast makes the empty, wet landscape seem even lonelier and more lifeless. Better answers notice that \"desolate\" echoes the writer's earlier verdict (a circular structure) and that the rain and cold have \"no influence on their vitality\". Mostly own words, with brief reference."],
+      ["iii","Identify and discuss three features of Synge's writing style that make this a vivid piece of travel writing. Support your answer with reference to the text.",25,"Marked on PCLM (P 7.5, C 7.5, L 7.5, M 2.5). <b>Possible features:</b> sensory imagery and colour (\"Grey floods of water\"); strong verbs (\"sweeping\", \"twined\"); piled-up adjectives (\"small flat fields of naked rock\"); the short blunt sentence among long ones; the moving viewpoint (\"Whenever the cloud lifted\"); contrast between rock and people; repetition of \"naked\", \"lonely\", \"desolate\"; the circular ending. Three developed, well-quoted points with clear effects score well."]] },
+  { title:"Text 2: Freedom or Death (Emmeline Pankhurst)", intro:"Read the extract in the Text bank, then answer all three parts.",
+    parts:[["i","Outline, in your own words, the main point Pankhurst makes in this extract.",10,"<b>Expect:</b> politicians attend to those who make the most noise, as a mother feeds the screaming baby first; campaigners who wait politely are ignored; to win a reform you must be loud, visible and persistent. Own words; brief reference allowed."],
+      ["ii","Do you find Pankhurst's argument persuasive? Explain your answer with reference to her use of language.",15,"<b>Either view</b> if supported. For: the familiar, comic analogy; direct address (\"You have…\"); inclusive \"we know perfectly well\"; the blunt claim \"That is the whole history of politics\"; the repetitive build-up to the final demand. Against: the analogy oversimplifies politics; it treats noise as the only way; no facts or evidence are given (only an analogy and a claim). Reward a clear stance and 2-3 developed points."],
+      ["iii","Identify and discuss three features of language that make this an effective speech. Support your answer with reference to the text.",25,"PCLM (P 7.5, C 7.5, L 7.5, M 2.5). <b>Possible features:</b> the extended analogy and contrast (patient v impatient baby); conversational openings (\"I don't know, Mrs Hepburn…\") that build rapport; strong verbs (\"cries lustily, screams and kicks\"); the short summarising claim; scornful tone towards polite campaigners; repetition and rhythm (\"you have to… than anybody else\") building to a climax; the metaphor \"snow you under\". Credit links to the listening audience."]] },
+  { title:"Text 3: On Being Idle (Jerome K. Jerome)", intro:"Read the extract in the Text bank, then answer all three parts.",
+    parts:[["i","According to the writer, what is the difference between a lazy person and \"a genuine idler\"?",10,"<b>Expect:</b> a lazy person simply does nothing and \"slouches about\"; a genuine idler is rare and \"always intensely busy\", because idling is only enjoyable when you have \"plenty of work to do\". Two clear points, briefly supported."],
+      ["ii","What impression of the writer do you form from this extract? Support your answer with reference to the text.",15,"<b>Possible impressions:</b> witty and playful (\"Few possess it.\"); self-deprecating (idling is \"my strong point\"); clever (the paradox of the busy idler); fond of his grandmother (\"the dear old lady\"); mock-solemn (the prayer-book echo). Reward a clear impression with 2-3 accurate quotations."],
+      ["iii","\"Jerome uses humour to make a serious point.\" Discuss this statement with reference to the extract.",25,"PCLM (P 7.5, C 7.5, L 7.5, M 2.5). <b>Expect</b> engagement with both parts: the humour (mock confession, comic boast, hyperbole \"a most exhausting one\", the epigram about kisses) and the serious point (rest is only valuable when balanced with work; doing nothing at all is empty and tiring). Candidates may agree or partly disagree (the piece may be mainly entertainment). Reward a clear stance, developed points and accurate quotation."]] },
+];
+
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+const RAG = ["Explain how Paper 1, Section I works","Write the gist of a text in two sentences","Find evidence for a point quickly","Explain in my own words","Make an inference and support it","Name and explain five techniques of style","Tell opinion, anecdote and evidence apart","Use five precise tone words","Describe a shift in tone","Explain the effect of a short sentence","Outline the stages of an argument","Name the five language genres and spot them","Match length and points to the marks"];
+
+const ragState=store.get("enc-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("enc-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Purpose","Answer the exact question; give your answer in the first sentence.","Answer builder lab"],["Coherence","One point per paragraph, in a sensible order, linked to the question.","Answer builder lab"],["Language","Precise terms: analogy, inclusive language, paradox, wry.","Glossary"],["Mechanics","Spell the writer's name and copy quotations exactly.","Text trainer"],["Evidence","Short quotations, each followed by an explanation of its effect.","Annotator lab"],["Own words","Explain meaning without copying when the question asks.","Word in context trainer"]];
+
+const skState=store.get("enc-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("enc-skills",skState); });
+/* ================= LAB STATE + WIRING ================= */
+const btnRow = (id,items,cur) => { $(id).innerHTML = items.map((t,i)=>`<button data-i="${i}" aria-pressed="${i===cur}">${t}</button>`).join(""); };
+// Annotator
+const po = {p:0, lens:"evidence", sel:null, L:null, msg:""};
+btnRow("poP",POEMS.map(P=>P.short),0);
+$("poP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; po.p=+b.dataset.i; po.sel=null; po.msg=""; pressGroup([...$("poP").children],b); poUpd(); });
+$("poL").innerHTML = Object.entries(LENS).map(([k,[n]])=>`<button data-k="${k}" aria-pressed="${k===po.lens}">${n}</button>`).join("");
+$("poL").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; po.lens=b.dataset.k; po.sel=null; po.msg=""; pressGroup([...$("poL").children],b); poUpd(); });
+const poList = () => ANN.map((a,k)=>k).filter(k=>ANN[k][0]===POEMS[po.p].id && ANN[k][2]===po.lens);
+$("poNext").addEventListener("click",()=>{ const l=poList(); if(!l.length) return; const j=l.indexOf(po.sel); po.sel=l[(j+1)%l.length]; po.msg=""; poUpd(); });
+function poUpd(){ const P=POEMS[po.p], l=poList();
+  setReadout($("poOut"),[["Text",`${P.title} · ${P.author} (${P.year})`],["Genre",P.fs],["Lens",`${LENS[po.lens][0]}: ${l.length} highlighted phrase${l.length===1?"":"s"}`]]);
+  $("poQ").innerHTML = po.msg? po.msg : po.sel==null? `Tap a highlighted phrase, or press "Next note".<small>${P.ctx}</small>` : `"${ANN[po.sel][3]}"<small>${LENS[po.lens][0]}: ${ANN[po.sel][4]}</small>`;
+  if(poC) poC.redraw(); }
+// Technique sorter
+const im = {order:[], placed:[], sel:null, P:[]};
+function imNew(){ im.order=shuffle(SORT.map((x,i)=>i)); im.placed=[]; im.sel=null; $("imFb").innerHTML=""; imUpd(); }
+function imUpd(){ $("imCards").innerHTML = im.order.map(i=>{ const done=im.placed.some(p=>p.i===i); return `<button data-i="${i}" class="${done?"done":""}${im.sel===i?" sel":""}" ${done?"disabled":""}>"${SORT[i][0]}"</button>`; }).join("");
+  const ok=im.placed.filter(p=>p.ok).length; setReadout($("imOut"),[["Sorted",`${im.placed.length} of ${SORT.length}`],["Correct",ok],["Selected",im.sel==null?"tap a phrase":SORT[im.sel][2]]]);
+  if(imC) imC.redraw(); }
+$("imCards").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; im.sel=+b.dataset.i; imUpd(); });
+$("imReset").addEventListener("click",imNew);
+// Tone tracker
+const mo = {p:2, sel:0, P:[]};
+btnRow("moP",POEMS.map(P=>P.short),2);
+$("moP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; mo.p=+b.dataset.i; mo.sel=0; pressGroup([...$("moP").children],b); moUpd(); });
+$("moS").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; mo.sel=+b.dataset.i; moUpd(); });
+function moUpd(){ const P=POEMS[mo.p], s=P.mood[mo.sel], [a,b]=(s[0]+"-"+s[0]).split("-").map(Number), bb=s[0].includes("-")?+s[0].split("-")[1]:a;
+  btnRow("moS",P.mood.map(x=>`${x[0]}: ${x[1]}`),mo.sel);
+  $("moQ").innerHTML=`${P.L.slice(a-1,bb).join(" ")}<small>${P.title}, sentence${a===bb?"":"s"} ${s[0]}</small>`;
+  setReadout($("moOut"),[["Section",`${s[1]} (sentence${a===bb?"":"s"} ${s[0]})`],["Tone score (our reading)",s[2]>0?`+${s[2]}`:String(s[2])],["Tone words",s[4]],["What happens",s[3]]]);
+  if(moC) moC.redraw(); }
+// Sentence lengths
+const sh = {p:0, m:"words", rec:[]};
+btnRow("shP",POEMS.map(P=>P.short),0);
+$("shP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sh.p=+b.dataset.i; sh.rec=[]; pressGroup([...$("shP").children],b); shUpd(); });
+$("shM").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; sh.m=b.dataset.m; pressGroup([...$("shM").children],b); shUpd(); });
+$("shRec").addEventListener("click",()=>{ const n=POEMS[sh.p].L.length; if(sh.rec.length<n){ sh.rec.push(sh.rec.length); shUpd(); } });
+$("shAll").addEventListener("click",()=>{ sh.rec=POEMS[sh.p].L.map((x,i)=>i); shUpd(); });
+$("shClr").addEventListener("click",()=>{ sh.rec=[]; shUpd(); });
+function shUpd(){ const P=POEMS[sh.p], v=shapeVals(sh.p,sh.m), f=shapeFit(sh.p,sh.m,sh.rec), n=sh.rec.length, mean=n? sh.rec.reduce((a,i)=>a+v[i],0)/n : 0, last=n? sh.rec[n-1] : null, unit=sh.m==="avg"?"letters per word":"words";
+  const ws=P.L.map(wordsIn), mx=Math.max(...ws), mn=Math.min(...ws);
+  setReadout($("shOut"),[["Genre",P.fs],["Sentences counted",`${n} of ${P.L.length}`+(n?` · mean ${nf(mean,1)} ${unit}`:"")],["Longest / shortest",`${mx} words (sentence ${ws.indexOf(mx)+1}) / ${mn} words (sentence ${ws.indexOf(mn)+1})`],["Trend",f? `${Math.abs(f.m)<0.05?"about level":f.m>0?"sentences get longer":"sentences get shorter"} (${f.m<0?"−":"+"}${nf(Math.abs(f.m),2)} per sentence)` : "count two or more sentences"]]);
+  $("shWork").innerHTML = (last!=null? `Sentence ${last+1}: "${P.L[last]}" → <b>${sh.m==="avg"?nf(v[last],2):v[last]} ${unit}</b> (${sentType(P.L[last])}). ` : "") + (f? `<b>Line of best fit:</b> y = ${nf(f.m,2)}x ${f.c<0?"−":"+"} ${nf(Math.abs(f.c),2)} (x = sentence number). Counted from the text; hyphenated words count as one word.` : "Olive bars are short sentences (6 words or fewer); terracotta bars are exclamations.");
+  $("shRec").disabled = n>=P.L.length; if(shC) shC.redraw(); }
+// Genre compass
+const ra = {a:0, b:2};
+const argmax = a => a.indexOf(Math.max(...a));
+btnRow("raA",POEMS.map(P=>P.short),0);
+$("raB").innerHTML = POEMS.map((P,i)=>`<button data-i="${i}" aria-pressed="${i===2}">${P.short}</button>`).join("") + `<button data-i="-1" aria-pressed="false">None</button>`;
+$("raA").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ra.a=+b.dataset.i; pressGroup([...$("raA").children],b); raUpd(); });
+$("raB").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; ra.b=+b.dataset.i; pressGroup([...$("raB").children],b); raUpd(); });
+function raUpd(){ const A=POEMS[ra.a], B=ra.b>=0&&ra.b!==ra.a? POEMS[ra.b] : null;
+  const shared = B? THM.filter((t,k)=>A.th[k]>=3&&B.th[k]>=3) : [];
+  const diff = B? THM.map((t,k)=>[t,A.th[k]-B.th[k]]).sort((x,y)=>Math.abs(y[1])-Math.abs(x[1]))[0] : null;
+  setReadout($("raOut"),[["Text A (terracotta)",`${A.short}: dominant genre ${THM[argmax(A.th)].toLowerCase()}`],["Text B (olive)",B?`${B.short}: dominant genre ${THM[argmax(B.th)].toLowerCase()}`:(ra.b===ra.a?"same as text A: pick another":"none: pick one to compare")],["Shared (both 3 or more)",B?(shared.join(", ")||"none"):"–"],["Biggest difference",B&&diff[1]!==0?`${diff[0]} (much stronger in ${diff[1]>0?A.short:B.short})`:"–"]]);
+  $("raQ").innerHTML=`${A.msg}<small>${A.title}: the gist in one sentence (our reading)</small>`; if(raC) raC.redraw(); }
+// Answer builder
+const es = {q:0, t:null, p:[]};
+$("esQ").innerHTML = ESSAYS.map((x,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${x.s}</button>`).join("");
+$("esQ").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; es.q=+b.dataset.i; es.t=null; es.p=[]; pressGroup([...$("esQ").children],b); esUpd(); });
+$("esT").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; es.t=+b.dataset.i; esUpd(); });
+$("esP").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=+b.dataset.i, k=es.p.indexOf(i); if(k>=0) es.p.splice(k,1); else if(es.p.length<3) es.p.push(i); esUpd(); });
+const half5 = x => Math.round(x*2)/2;
+function esUpd(){ const E=ESSAYS[es.q];
+  $("esT").innerHTML = E.t.map((t,i)=>`<button data-i="${i}" aria-pressed="${es.t===i}">${t[0]}</button>`).join("");
+  $("esP").innerHTML = E.p.map((p,i)=>`<button data-i="${i}" aria-pressed="${es.p.includes(i)}">${p[0]}</button>`).join("");
+  const sc=essayScore(es), marks=[0.3,0.3,0.3,0.1].map((f,i)=>half5(E.m*f*sc[i])), tot=marks.reduce((a,b)=>a+b,0);
+  setReadout($("esOut"),[["Question",E.q],["Estimated marks",`P ${nf(marks[0],1)} · C ${nf(marks[1],1)} · L ${nf(marks[2],1)} · M ${nf(marks[3],1)} = ${nf(tot,1)} / ${E.m}`]]);
+  const tips=[]; if(es.t==null) tips.push("Choose an opening: your answer to the question in one sentence."); else if(E.t[es.t][1]<3) tips.push(E.t[es.t][1]===0?"That opening gives background; it doesn't answer the question.":"That opening is too vague: say how and why, and take a clear view.");
+  if(es.p.some(i=>!E.p[i][1])) tips.push("At least one paragraph gives background or retells the text without answering the question.");
+  if(es.p.length<3) tips.push(`Pick ${3-es.p.length} more paragraph${3-es.p.length===1?"":"s"}.`);
+  $("esFb").innerHTML = `<div class="fb ${tips.length?"no":"ok"}">${tips.length? tips.join(" ") : "<b style=\"color:var(--good)\">Strong plan.</b> Now write it: each paragraph needs a point, a short quotation and an explanation of its effect. Language and Mechanics depend on your writing, so these bars are only a guide."}</div>`;
+  if(esC) esC.redraw(); }
+
+/* ================= CREATE CANVASES ================= */
+let poC=null, imC=null, moC=null, shC=null, raC=null, esC=null;
+const hero = makeCanvas($("heroCanvas"), 0.8, 260, s => { const t=reduce?0:heroT*0.35, i=Math.floor(t)%POEMS.length, j=(i+1)%POEMS.length, fr=t-Math.floor(t), e=fr<0.6?0:(fr-0.6)/0.4, k=e*e*(3-2*e);
+  const sc=POEMS[i].th.map((v,m)=>v+(POEMS[j].th[m]-v)*k); drawRadar(s.ctx,s.w,s.h,{a:i,sc,label:(k<0.5?POEMS[i]:POEMS[j]).title}); }, 460);
+poC = makeCanvas($("poC"), 0.5, 460, s => { po.L=drawPoem(s.ctx,s.w,s.h,{p:po.p,lens:po.lens,sel:po.sel}); }, 620);
+pointerTap($("poC"),(x,y)=>{ const L=po.L; if(!L) return; const t=L.toks.find(t=>x>=t.x-3&&x<=t.x+t.w+t.sp&&Math.abs(y-t.y)<=L.lh/2); if(!t) return;
+  if(t.ann!=null){ po.sel=t.ann; po.msg=""; } else { po.sel=null; po.msg=`No ${LENS[po.lens][0].toLowerCase()} note on "${t.t.replace(/[^\w'-]/g,"")}".<small>Try another lens, or write your own note on this sentence.</small>`; } poUpd(); });
+imC = makeCanvas($("imC"), 0.45, 260, s => { im.P=drawSorter(s.ctx,s.w,s.h,{placed:im.placed,armed:im.sel!=null}); }, 400);
+pointerTap($("imC"),(x,y)=>{ if(im.sel==null) return; const k=im.P.findIndex(([bx,by,bw,bh])=>x>=bx&&x<=bx+bw&&y>=by&&y<=by+bh); if(k<0) return; const it=SORT[im.sel], bin=BINS[k][0], ok=it[1]===bin;
+  im.placed.push({i:im.sel,bin,ok,short:it[0].split(" ").slice(0,3).join(" ")+"…"}); $("imFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"Yes.":"Not quite."}</b> "${it[0]}" (${it[2]}) belongs in <b>${BINS.find(p=>p[0]===it[1])[1]}</b>.</div>`; im.sel=null; imUpd(); });
+moC = makeCanvas($("moC"), 0.45, 250, s => { mo.P=drawMood(s.ctx,s.w,s.h,{p:mo.p,sel:mo.sel}); }, 420);
+pointerTap($("moC"),(x,y)=>{ let b=-1,bd=34; mo.P.forEach(([px,py],i)=>{ const d=Math.hypot(px-x,py-y); if(d<bd){ bd=d; b=i; } }); if(b>=0){ mo.sel=b; moUpd(); } });
+shC = makeCanvas($("shC"), 0.5, 260, s => drawShape(s.ctx,s.w,s.h,{p:sh.p,m:sh.m,rec:sh.rec}), 440);
+raC = makeCanvas($("raC"), 0.72, 280, s => drawRadar(s.ctx,s.w,s.h,{a:ra.a,b:ra.b===ra.a?-1:ra.b}), 460);
+esC = makeCanvas($("esC"), 0.42, 240, s => drawEssay(s.ctx,s.w,s.h,{es}), 400);
+predC = makeCanvas($("predC"), 0.6, 210, s => { bg(s.ctx,s.w,s.h,C["surface-2"]); const cols=3, gw=(s.w-24)/cols, gh=(s.h-24)/2;
+  DEVK.forEach((k,i)=>{ const x=12+(i%cols)*gw, y=12+Math.floor(i/cols)*gh, hit=pd.shown && pd.k && pd.k[2]===i; rr(s.ctx,x+4,y+4,gw-8,gh-8,12); s.ctx.fillStyle=hit?C.terra:C.surface; s.ctx.fill(); s.ctx.strokeStyle=C.line; s.ctx.lineWidth=1.5; s.ctx.stroke();
+    const wds=k.split(" "); const mid=Math.ceil(wds.length/2); [wds.slice(0,mid).join(" "),wds.slice(mid).join(" ")].filter(Boolean).forEach((t,j,arr)=>text(s.ctx,t,x+gw/2,y+gh/2+(j-(arr.length-1)/2)*16+4,hit?C["on-accent"]||"#fff":C.ink,F(s.w<380?11:13),"center")); }); }, 320);
+pdNew();
+const MINI = {
+  poem:(s,o)=>drawPoem(s.ctx,s.w,s.h,{...o,compact:true}),
+  sorter:(s,o)=>drawSorter(s.ctx,s.w,s.h,{...o,compact:true}),
+  mood:(s,o)=>drawMood(s.ctx,s.w,s.h,{...o,compact:true}),
+  shape:(s,o)=>drawShape(s.ctx,s.w,s.h,{...o,compact:true}),
+  radar:(s,o)=>drawRadar(s.ctx,s.w,s.h,{...o,compact:true}),
+  essay:(s,o)=>drawEssay(s.ctx,s.w,s.h,{...o,compact:true}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, kind==="poem"?1.0:0.62, kind==="poem"?300:150, s=>MINI[kind](s,o), kind==="poem"?460:380); });
+const INFO = { mood:["mood",{p:2,sel:4}], radar:["radar",{a:0,b:2}], shape:["shape",{p:1,m:"words"}] };
+document.querySelectorAll("canvas[data-mini]").forEach(el=>{ const [k,o]=INFO[el.dataset.mini]; makeCanvas(el,0.7,160,s=>MINI[k](s,{...o,bgc:C["surface-2"]})); });
+poUpd(); imNew(); moUpd(); shUpd(); raUpd(); esUpd();
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>
