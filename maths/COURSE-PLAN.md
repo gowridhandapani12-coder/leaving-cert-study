@@ -54,3 +54,4 @@ schemes (two dice; Venn diagram with conditional parts; fair game with a tree).
 | 2026-11-18 | Subject set up (notes, plan, site tab); no page yet | 88% |
 | 2026-11-19 | 1.1 Counting (asked for by the user) | 91% → 92% (5-hour window 16% → 23%) |
 | 2026-11-22 | 1.2 Concepts of probability (5-hour scheduled run) | 36% → 39% (5-hour window 4% → 24%) |
+| 2026-11-26 | Nothing (weekly run 2026-11-25/26: not reached. The run started at 21:44 (weekly 62%), spent its time on Physics 3.6 (left as a draft), and the computer slept past the weekly reset (2026-11-26 09:00), so it stopped without building.) | 62% → 3% (new week) |

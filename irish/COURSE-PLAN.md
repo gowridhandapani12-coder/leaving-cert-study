@@ -42,3 +42,4 @@ noun, comparatives, i mo + job, dúirt sé go/nach), "Cén cheist?" drill, 3 pra
 |------|-------|-----------------------------|
 | 2026-11-18 | Topic 1 (asked for by the user) | 83% → about 85% |
 | 2026-11-21 | Topic 2 Cúrsaí Scoile agus Oibre (5-hour scheduled run) | 32% → 34% (5-hour window 6% → 18%) |
+| 2026-11-26 | Nothing (weekly run 2026-11-25/26: not reached. The run started at 21:44 (weekly 62%), spent its time on Physics 3.6 (left as a draft), and the computer slept past the weekly reset (2026-11-26 09:00), so it stopped without building.) | 62% → 3% (new week) |

@@ -71,3 +71,4 @@ Labs: Tree or not? (six vertices, nine possible edges; tap to switch; connected 
 | 2026-11-18 | Nothing (weekly run skipped: weekly 83%, above the 70% limit; 5-hour 29%) | 83% → 83% |
 | 2026-11-20 | 2.2 Matrices and adjacency (5-hour scheduled run, 2nd page after Physics 3.4) | 13% → 18% (5-hour window 21% → 54%: over the 50% goal; the start was below the 40% cap) |
 | 2026-11-22 | 2.3 Minimum spanning trees (5-hour scheduled run, 1 page) | 43% → 45% (5-hour window 22% → 36%) |
+| 2026-11-26 | Nothing (weekly run 2026-11-25/26: not reached. The run started at 21:44 (weekly 62%), spent its time on Physics 3.6 (left as a draft), and the computer slept past the weekly reset (2026-11-26 09:00), so it stopped without building.) | 62% → 3% (new week) |
