@@ -6,7 +6,7 @@ One page per syllabus unit (General Activity/Theme), built in syllabus order.
 |---|------|------|--------|
 | I.1 | Meeting and getting to know people and maintaining social relations | `s1-1-meeting-people.html` | Done (2026-11-18) |
 | I.2 | Making plans and discussing future action | `s1-2-making-plans.html` | Done (2026-11-21) |
-| I.3 | Seeking and giving information about climate and weather | | To do |
+| I.3 | Seeking and giving information about climate and weather | `s1-3-weather.html` | Done (2026-11-26) |
 | I.4 | Coping with travel and transport | | To do |
 | I.5 | Buying goods and services | | To do |
 | I.6 | Dealing with emergencies | | To do |
@@ -46,9 +46,22 @@ work, fitted line, slope about 1) · ¿Porque o para que? (12 gap-fills: por qu�
 grammar trainer (future tense, ir a, ¿quieres que…? + subjunctive, pronoun order), "What is the speaker doing?" drill (16),
 3 practice tasks (email, oral, reading). localStorage prefix `es12-`.
 
+## I.3 contents
+
+Labs: ¿Qué tiempo hace? (15 weather pictures drawn on canvas; pick the right sentence with hace / hay / está or a weather verb) ·
+Llueve, nieva, truena (6 weather verbs × 6 tenses, stem change highlighted in the present) · El mapa del tiempo (schematic map of
+Spain with 9 regions incl. Baleares and a Canarias inset; tap the region for 10 forecast lines; weather icons fill the map) ·
+Collect & fit (invented forecasts for 16 towns at real, rounded altitudes; read the maximum in words, plot against altitude,
+slope ≈ −6.5 °C per 1 000 m) · ¿Qué han dicho? (12 indirect-speech gap-fills, options shuffled) · ¿Se podrá? (12 forecast +
+activity decisions with si + present, future model answers). 4 performance targets + 3 linguistic skills, 27 flashcards,
+16 quiz questions, 63 glossary entries, typed trainer (weather phrases, weather verbs, pass it on, temperatures in words incl.
+bajo cero), "What is the speaker doing?" drill (16), 3 practice tasks (postcard, oral incl. role-play, reading). Rainfall bars
+are rounded approximations (Santiago ≈ 1 800 mm … Almería ≈ 200 mm). localStorage prefix `es13-`.
+
 ## Run log
 
 | Date | Built | Weekly usage before → after |
 |------|-------|-----------------------------|
 | 2026-11-18 | I.1 Meeting people (asked for by the user) | 83% → 86% (5-hour window 30% → 48%) |
 | 2026-11-21 | I.2 Making plans (5-hour scheduled run, 2nd page after English unseen poetry) | 23% → 26% (5-hour window 18% → 39%) |
+| 2026-11-26 | I.3 Weather and climate (5-hour scheduled run) | 1% → 4% (5-hour window 7% → 29%) |

@@ -1,0 +1,1687 @@
+<title>El tiempo · Spanish Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a study app. Sticky top bar (brand + view tabs), course sidebar on the left (strands, then this chapter's topics),
+   one view visible at a time. Palette: terracotta, blush, apricot, cream, sage, olive. */
+:root{
+  --bg:#f7efe5; --surface:#fffaf4; --surface-2:#f2e3d2; --ink:#3b2b21; --muted:#7a6555; --line:#e4d3c0; --grid:#efe2d3;
+  --terra:#b4673f; --terra-ink:#9a5130; --blush:#dfc0aa; --apricot:#d4956a; --cream:#f2e3d2; --sage:#cacbbc; --olive:#9d9a80; --olive-ink:#6b6850;
+  --accent:var(--terra); --on-accent:#fffaf4;
+  --ray:#b4532b; --ray2:#5f6f3a; --ray3:#c9832f; --img:#946a84;
+  --glass:rgba(157,154,128,.2); --glass-edge:#8f8b6c;
+  --good:#5d7a35; --bad:#b0442a; --warn:#c08022;
+  --f-display:"Fredoka", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#211b16; --surface:#2a231d; --surface-2:#342b23; --ink:#f2e3d2; --muted:#bca996; --line:#463a30; --grid:#382e26;
+  --terra:#de8a5e; --terra-ink:#e9a079; --blush:#dfc0aa; --apricot:#e3a77c; --cream:#f2e3d2; --sage:#cacbbc; --olive:#b5b297; --olive-ink:#cacbbc;
+  --on-accent:#211b16;
+  --ray:#ec8a5c; --ray2:#b8c287; --ray3:#ebb673; --img:#d6a6c2;
+  --glass:rgba(202,203,188,.13); --glass-edge:#a9a68a;
+  --good:#a9c27a; --bad:#ef8d70; --warn:#ebb673; color-scheme:dark;
+}
+/* Font pairings (switchable in the top bar) */
+:root[data-font="easy"]{ --f-display:"Lexend", system-ui, sans-serif; --f-body:"Lexend", system-ui, sans-serif; }
+:root[data-font="clear"]{ --f-display:"Bricolage Grotesque", system-ui, sans-serif; --f-body:"Atkinson Hyperlegible", system-ui, sans-serif; }
+:root[data-font="notebook"]{ --f-display:"Caveat", "Segoe Print", cursive; --f-body:"Nunito", system-ui, sans-serif; }
+:root[data-font="notebook"] h1, :root[data-font="notebook"] h2{ letter-spacing:0; font-size:calc(var(--hs,1)*1.25em) }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.1;margin:0;font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3.5rem)}
+h2{font-size:clamp(1.45rem,2.6vw,1.95rem)}
+h3{font-size:1.12rem}
+p{margin:0}
+a{color:var(--terra-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2.5px solid var(--terra);outline-offset:2px;border-radius:6px}
+button,select{font:inherit}
+button{font-size:.9rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700}
+button:hover{border-color:var(--terra)}
+button.primary{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+button.ghost{background:transparent}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font-size:.9rem;padding:7px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--terra)}
+[hidden]{display:none!important}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--terra);display:grid;place-items:center;color:var(--on-accent);flex:none}
+.brand b{font-family:var(--f-display);font-size:1.15rem;display:block;line-height:1.1}
+.brand span{font-size:.78rem;color:var(--muted);display:block}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tools label{font-size:.78rem;color:var(--muted)}
+#menuBtn{display:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.tabs a{flex:none;display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px}
+.tabs a svg{width:18px;height:18px}
+.tabs a:hover{color:var(--ink);background:var(--surface-2)}
+.tabs a.on{background:var(--terra);color:var(--on-accent)}
+
+/* ---------- Shell ---------- */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;max-width:1360px;margin:0 auto;padding-block:22px 60px}
+.side{position:sticky;top:120px;align-self:start;max-height:calc(100vh - 140px);overflow:auto;display:grid;gap:18px;padding-right:4px}
+.side h4{margin:0 0 6px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.topiclist{display:grid;gap:3px}
+.topiclist button{display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;padding:8px 10px;background:transparent;font-weight:700;font-size:.92rem;color:var(--ink)}
+.topiclist button svg{width:22px;height:22px;flex:none;color:var(--terra)}
+.topiclist button:hover{background:var(--surface-2)}
+.topiclist button.on{background:var(--blush);color:#3b2b21}
+.topiclist button.on svg{color:#9a5130}
+.course details{border-radius:12px}
+.course summary{cursor:pointer;font-weight:800;font-size:.88rem;padding:6px 8px;border-radius:10px;list-style:none;display:flex;justify-content:space-between;gap:6px}
+.course summary::-webkit-details-marker{display:none}
+.course summary::after{content:"+";color:var(--muted)}
+.course details[open] summary::after{content:"–"}
+.course summary:hover{background:var(--surface-2)}
+.course ol{list-style:none;margin:2px 0 8px;padding:0 0 0 8px;display:grid;gap:1px}
+.course li{font-size:.83rem;color:var(--muted);padding:3px 8px;border-radius:8px;display:flex;gap:8px}
+.course li .mono{font-size:.72rem;min-width:2.1em;padding-top:2px}
+.course li.here{background:var(--terra);color:var(--on-accent);font-weight:800}
+.course li.here .mono{color:var(--on-accent)}
+.soon{font-size:.72rem;color:var(--muted);padding:0 8px}
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.scrim{display:none}
+
+/* ---------- Generic blocks ---------- */
+.view{display:grid;gap:28px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.pad{padding:20px}
+.head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.head p{color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--sage);color:#3b2b21}
+.pill.t{background:var(--blush)} .pill.a{background:var(--apricot);color:#3b2b21}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:800;padding:3px 11px;border-radius:999px;border:1.5px solid currentColor}
+.chip.real{color:var(--good)} .chip.virtual{color:var(--img)} .chip.neutral{color:var(--muted)} .chip.alert{color:var(--bad)}
+.formula{font-family:var(--f-mono);font-size:1rem;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:inline-block}
+canvas{display:block;width:100%;touch-action:none}
+
+/* ---------- Overview ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:center}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero .lede{font-size:1.1rem;color:var(--muted);margin-top:12px;max-width:52ch}
+.cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.herobox{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stat{padding:16px 18px;display:grid;gap:6px}
+.stat b{font-family:var(--f-display);font-size:2rem;line-height:1}
+.stat span{font-size:.85rem;color:var(--muted)}
+.prog{height:8px;border-radius:999px;background:var(--grid);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--terra);border-radius:999px;transition:width .3s}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{padding:18px;display:grid;gap:10px;align-content:start;position:relative;overflow:hidden}
+.tcard .ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.tcard .ico svg{width:28px;height:28px}
+.tcard p{color:var(--muted);font-size:.93rem}
+.tcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.tcard button{font-size:.82rem;padding:6px 12px}
+.lo-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.lo-list label{display:grid;grid-template-columns:22px 3.3em minmax(0,1fr);gap:10px;align-items:start;cursor:pointer}
+.lo-list input{width:19px;height:19px;margin-top:3px;accent-color:var(--good)}
+.lo-list .mono{font-size:.78rem;color:var(--terra-ink);padding-top:3px}
+
+/* ---------- Learn ---------- */
+.learn{display:grid;gap:20px}
+.lcard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;overflow:hidden;scroll-margin-top:130px}
+.lcard .vis{background:var(--surface-2);display:grid;gap:8px;padding:14px;align-content:center}
+.lcard .vis canvas{border-radius:12px;background:var(--surface)}
+.lcard .vis .cap{font-size:.8rem;color:var(--muted);text-align:center}
+.lcard .txt{padding:20px 22px;display:grid;gap:14px;align-content:start}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.keys li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.keys li i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--f-display);color:#3b2b21}
+.mistake{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:.92rem}
+.mistake b{color:var(--bad)}
+.vis3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vis2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+
+/* ---------- Labs ---------- */
+.labtabs{display:flex;gap:6px;flex-wrap:wrap}
+.labtabs button{display:flex;align-items:center;gap:8px}
+.labtabs button svg{width:18px;height:18px}
+.labtabs button.on{background:var(--terra);color:var(--on-accent);border-color:var(--terra)}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.labhead .goal{font-size:.98rem;color:var(--muted);max-width:70ch}
+.sim{overflow:hidden}
+.sim canvas{cursor:crosshair}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 20px;padding:16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ctl{display:grid;gap:5px;min-width:0}
+.ctl label,.ctl .lbl{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.ctl output{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{font-size:.83rem;padding:6px 12px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.readout div{background:var(--surface);padding:10px 14px;display:grid;gap:2px}
+.readout span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.readout b{font-family:var(--f-mono);font-size:1.04rem;font-weight:600}
+.simchips{padding:12px 16px;border-top:1px solid var(--line)}
+.working{font-family:var(--f-mono);font-size:.86rem;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);overflow-x:auto;white-space:nowrap}
+.working b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+.legend button{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 11px}
+.legend i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.legend button[aria-pressed=true]{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.legend button[aria-pressed=false]{opacity:.45}
+.tries{display:flex;flex-wrap:wrap;gap:8px}
+.try{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--olive);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.try b{font-family:var(--f-display);color:var(--terra-ink)}
+.exp-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px}
+.screen-view{border-left:1px solid var(--line);display:grid;align-content:start;gap:8px;padding:12px;background:var(--surface-2)}
+.screen-view canvas{border-radius:10px;cursor:default}
+.meter{height:9px;border-radius:999px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--good);transition:width .15s}
+.datapanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.tablewrap{overflow:auto;max-height:260px;border-right:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:6px 10px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{font-family:var(--f-body);font-weight:800;color:var(--muted);font-size:.75rem;position:sticky;top:0;background:var(--surface)}
+td button{padding:1px 8px;font-size:.75rem}
+.empty{padding:20px 16px;color:var(--muted);font-size:.9rem}
+.graphbox{padding:10px;display:grid;gap:6px}
+.graphbox canvas{cursor:default}
+.result{font-size:.88rem;color:var(--muted)}
+.result b{color:var(--ink);font-family:var(--f-mono)}
+
+/* ---------- Mind map ---------- */
+.mmwrap{overflow-x:auto}
+#mm{width:100%;min-width:760px;display:block}
+#mm .link{fill:none;stroke-width:3;stroke-linecap:round}
+#mm .node{cursor:pointer}
+#mm .node rect{stroke-width:1.5}
+#mm .node text{font-family:var(--f-body);fill:var(--ink);font-size:14px;font-weight:700}
+#mm .branch text{font-family:var(--f-display);font-size:17px;fill:#3b2b21}
+#mm .center text{font-family:var(--f-display);font-size:22px;fill:var(--on-accent)}
+#mm .node:hover rect,#mm .node:focus rect{stroke:var(--ink)}
+#mm .node.sel rect{stroke:var(--ink);stroke-width:2.5}
+.mmdetail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.mmdetail .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.mmdetail .ico svg{width:26px;height:26px}
+
+/* ---------- Infographics ---------- */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{padding:12px;display:grid;gap:8px;align-content:start}
+.case canvas{border-radius:10px;background:var(--surface-2);cursor:default}
+.case h3{font-size:1rem}
+.case .use{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.case .use svg{width:22px;height:22px;color:var(--terra)}
+.boundary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.boundary .case p{font-size:.9rem;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.barrow{display:grid;grid-template-columns:130px minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:.9rem}
+.barrow .track{height:22px;background:var(--grid);border-radius:8px;overflow:hidden}
+.barrow .track i{display:block;height:100%;border-radius:8px;background:var(--apricot)}
+.barrow .v{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);text-align:right}
+.around{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.around .panel{padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:start}
+.around .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#3b2b21}
+.around .ico svg{width:30px;height:30px}
+.around p{font-size:.88rem;color:var(--muted)}
+.around .chips{margin-top:6px}
+.around .chip{font-size:.72rem;padding:2px 8px}
+
+/* ---------- Flashcards ---------- */
+.fc-wrap{display:grid;gap:16px;justify-items:center}
+.fc-filter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.fc-filter button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.deck{perspective:1400px;width:min(560px,100%);aspect-ratio:3/2;max-width:100%}
+.card3d{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px;display:grid;align-content:center;gap:12px;text-align:center;border:1px solid var(--line);box-shadow:0 10px 30px rgba(59,43,33,.12)}
+.face.front{background:var(--surface)}
+.face.back{background:var(--blush);color:#3b2b21;transform:rotateY(180deg)}
+.face .tag{justify-self:center}
+.face h3{font-size:clamp(1.3rem,3.2vw,1.9rem)}
+.face .ans{font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.45}
+.face .hint{font-size:.78rem;color:var(--muted);position:absolute;bottom:14px;left:0;right:0}
+.face.back .hint{color:#6b5545}
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.fc-meta{font-size:.9rem;color:var(--muted);text-align:center}
+button.got{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+button.again{border-color:var(--bad);color:var(--bad)}
+
+/* ---------- Quiz ---------- */
+.qz{max-width:760px;width:100%;margin:0 auto;display:grid;gap:16px}
+.qz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--grid);display:block}
+.dots i.cur{background:var(--ink)} .dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)}
+.qcard{padding:24px;display:grid;gap:14px}
+.qcard h3{font-size:1.3rem}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border-radius:14px;padding:12px 14px;font-weight:700;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;align-items:center}
+.opts button span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-family:var(--f-display)}
+.opts button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.why{background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:.95rem}
+.final{padding:28px;display:grid;gap:14px;justify-items:center;text-align:center}
+.ring{width:150px;height:150px}
+.review{width:100%;display:grid;gap:8px;text-align:left}
+.review div{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:.92rem}
+
+/* ---------- Formulae ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fcell{padding:18px;display:grid;gap:10px;align-content:start}
+.fcell .big{font-family:var(--f-mono);font-size:1.35rem;font-weight:600}
+.fcell dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.88rem}
+.fcell dt{font-family:var(--f-mono);font-weight:600;color:var(--terra-ink)}
+.fcell dd{margin:0;color:var(--muted)}
+.fcell .ex{font-size:.86rem;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-family:var(--f-mono)}
+footer{color:var(--muted);font-size:.84rem;display:grid;gap:4px;padding-top:10px}
+
+/* ---------- Glossary ---------- */
+.glbar{display:grid;gap:12px}
+input[type=search],input[type=text]{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+input:focus{outline:none;border-color:var(--terra)}
+#glTopics button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.letters{display:flex;flex-wrap:wrap;gap:4px}
+.letters button{width:32px;height:32px;padding:0;border-radius:9px;font-size:.85rem}
+.letters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.letters button:disabled{opacity:.3;cursor:default}
+.gllist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:16px 18px;display:grid;gap:8px;align-content:start;scroll-margin-top:130px}
+.gl-item header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.gl-item h3{font-size:1.2rem}
+.gl-item .aka{font-family:var(--f-mono);font-size:.78rem;color:var(--terra-ink)}
+.gl-item p{font-size:.95rem}
+.gl-item .foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gl-item .foot button{font-size:.78rem;padding:4px 10px}
+.gl-item.flash{outline:3px solid var(--apricot)}
+.gl{all:unset;cursor:help;border-bottom:2px dotted var(--terra);font-weight:800;color:inherit}
+.gl:focus-visible{outline:2px solid var(--terra)}
+#glPop{position:absolute;z-index:50;max-width:min(340px,calc(100vw - 32px));background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-size:.9rem;box-shadow:0 12px 30px rgba(0,0,0,.25);display:grid;gap:6px}
+#glPop b{font-family:var(--f-display);font-size:1.05rem}
+#glPop button{justify-self:start;font-size:.78rem;padding:3px 10px;background:transparent;color:var(--bg);border-color:var(--bg)}
+
+/* ---------- Exam prep ---------- */
+.exgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.donutbox{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.donut{width:150px;height:150px}
+.dn1{font:700 24px var(--f-display);fill:var(--ink)} .dn2{font:600 11px var(--f-body);fill:var(--muted)}
+.splits{display:grid;gap:12px}
+.splits>div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.splits i{width:14px;height:14px;border-radius:4px;margin-top:4px}
+.splits p{font-size:.88rem;color:var(--muted)}
+.tips{margin:0;padding-left:1.3em;display:grid;gap:6px;font-size:.94rem}
+.cmds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmd{background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.cmd b{font-family:var(--f-display);font-size:1.1rem;color:var(--terra-ink)}
+.cmd p{font-size:.88rem}
+.cmd em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.practice,.predict{display:grid;gap:12px}
+#prType button.on{background:var(--terra);border-color:var(--terra);color:var(--on-accent)}
+.pq{font-size:1.08rem;background:var(--surface-2);border-radius:14px;padding:14px 16px;min-height:72px}
+.pa{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pa input{flex:1 1 140px;width:auto}
+.fb{border-radius:12px;padding:12px 14px;font-size:.94rem;display:grid;gap:4px}
+.fb.ok{background:color-mix(in srgb,var(--good) 16%,var(--surface))}
+.fb.no{background:color-mix(in srgb,var(--bad) 13%,var(--surface))}
+.fb .steps{font-family:var(--f-mono);font-size:.86rem;display:grid;gap:2px;overflow-x:auto}
+.predict canvas{border-radius:12px;background:var(--surface-2);cursor:default}
+.predopts{display:grid;gap:8px}
+.predopts button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.longqs{display:grid;gap:14px}
+.lq{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lq>header{background:var(--surface-2);padding:14px 16px;display:grid;gap:6px}
+.lq table{font-size:.86rem;width:auto}
+.lq .parts{display:grid}
+.lq .part{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:6px}
+.lq .part .q{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start}
+.lq .part .q b{font-family:var(--f-display)}
+.lq .marks{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.lq details summary{font-size:.86rem;font-weight:800;color:var(--terra-ink);cursor:pointer}
+.lq .ms{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-top:6px;display:grid;gap:4px}
+.rag,.skills{display:grid;gap:6px}
+.ragrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem}
+.ragrow .btns button{width:30px;height:30px;padding:0;border-radius:50%}
+.ragrow button[data-c="r"]{border-color:var(--bad)} .ragrow button[data-c="a"]{border-color:var(--warn)} .ragrow button[data-c="g"]{border-color:var(--good)}
+.ragrow button.r{background:var(--bad);border-color:var(--bad)} .ragrow button.a{background:var(--warn);border-color:var(--warn)} .ragrow button.g{background:var(--good);border-color:var(--good)}
+.skills label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:.92rem;cursor:pointer}
+.skills input{width:18px;height:18px;margin-top:2px;accent-color:var(--good)}
+.skills small{display:block;color:var(--muted);font-size:.82rem}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){ .topics,.cases,.around,.cmds{grid-template-columns:repeat(2,minmax(0,1fr))} .exgrid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:680px){ .gllist,.cmds{grid-template-columns:minmax(0,1fr)} .donutbox{grid-template-columns:minmax(0,1fr);justify-items:center} }
+@media (max-width:980px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  #menuBtn{display:inline-flex}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);max-height:none;z-index:40;background:var(--surface);padding:calc(18px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .25s}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(33,27,22,.4)}
+  .hero,.lcard{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .topics,.cases,.around,.boundary,.stats{grid-template-columns:minmax(0,1fr)}
+  .exp-grid{grid-template-columns:minmax(0,1fr)}
+  .screen-view{border-left:0;border-top:1px solid var(--line);grid-template-columns:110px minmax(0,1fr);align-items:center}
+  .datapanel{grid-template-columns:minmax(0,1fr)}
+  .tablewrap{border-right:0;border-bottom:1px solid var(--line)}
+  .barrow{grid-template-columns:90px minmax(0,1fr);}
+  .barrow .v{grid-column:2;text-align:left;margin-top:-6px}
+  .mmdetail{grid-template-columns:auto minmax(0,1fr)}
+  .mmdetail button{grid-column:1/-1}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+.course li a{display:flex;gap:8px;color:inherit;text-decoration:none;flex:1;min-width:0}
+.course li.link{color:var(--ink);font-weight:700}
+.course li.link:hover{background:var(--surface-2)}
+.sh-card{display:grid;gap:8px;padding:16px;align-content:start}
+.sh-card .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#3b2b21}
+.sh-card .ico svg{width:24px;height:24px}
+.sh-card p{font-size:.9rem;margin:0}
+.sh-card ul{margin:0;padding-left:18px;font-size:.88rem;color:var(--muted);display:grid;gap:3px}
+.fbbox{padding:0 16px 14px}
+.predopts .btns button{min-width:100px}
+.ctl button[disabled]{opacity:.5}
+</style>
+
+<style>
+.qt{font-family:var(--f-display);font-size:1.15rem;line-height:1.4;padding:12px 16px;border-left:4px solid var(--terra);background:var(--surface-2);border-radius:0 12px 12px 0}
+.qt small{display:block;font-family:var(--f-body);font-size:.82rem;color:var(--muted);margin-top:4px}
+.fbbox{padding:0 16px 14px}
+.esform{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;padding:14px 16px;border-top:1px solid var(--line)}
+.esform input[type=text],.esform select{width:100%;font:inherit;padding:8px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.chk{display:flex;flex-wrap:wrap;gap:6px}
+.chk label{display:flex;gap:5px;align-items:center;font-size:.85rem;border:1.5px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}
+.ptable{border-collapse:collapse;width:100%;font-size:.88rem}
+.ptable td{padding:3px 6px;border-bottom:1px solid var(--line)}
+.ptable td:first-child{color:var(--muted)}
+.sheet>.fcell{min-width:0}
+.ptable td{white-space:normal;overflow-wrap:anywhere}
+</style>
+<!-- ================= TOP BAR ================= -->
+<!--subj-nav--><style id="subj-css">
+.subj{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%;min-width:0;margin-right:auto}
+.subj::-webkit-scrollbar{display:none}
+.subj a{white-space:nowrap;text-decoration:none;color:var(--muted);font-weight:700;font-size:.86rem;padding:6px 12px;border-radius:999px;border:1.5px solid transparent}
+.subj a:hover{color:var(--ink);background:var(--surface-2)}
+.subj a.on{color:var(--ink);background:color-mix(in srgb,var(--terra) 16%,transparent);border-color:color-mix(in srgb,var(--terra) 40%,transparent)}
+@media (max-width:1180px){.subj{order:3;flex-basis:100%;margin-right:0}}
+</style><!--/subj-nav-->
+<header class="top">
+  <div class="gut">
+    <div class="brandrow" style="max-width:1360px;margin:0 auto">
+      <div class="brand">
+        <button id="menuBtn" class="ghost" aria-label="Open course menu" style="padding:6px 10px">☰</button>
+        <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 01-14.3 4.9M4 12a8 8 0 0114.3-4.9"/><path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/></svg></div>
+        <div style="min-width:0"><b>El tiempo</b><span>Leaving Cert Spanish · Unit I.3 · Weather &amp; climate</span></div>
+      </div>
+      
+      
+      
+      <!--subj-nav--><nav class="subj" aria-label="Subjects"><a href="../index.html">Home</a><a href="../physics/index.html">Physics</a><a href="../business/index.html">Business</a><a href="../maths/index.html">Maths</a><a href="../applied-maths/index.html">Applied Maths</a><a href="../english/index.html">English</a><a href="../spanish/index.html" class="on" aria-current="page">Spanish</a><a href="../irish/index.html">Irish</a><a href="../maths-enrichment/index.html">Maths Enrichment</a></nav><!--/subj-nav-->
+      <div class="tools">
+        <label for="fontSel">Font</label>
+        <select id="fontSel">
+          <option value="playful">Playful: Fredoka + Nunito</option>
+          <option value="easy">Easy-read: Lexend</option>
+          <option value="clear">Clear: Bricolage + Atkinson</option>
+          <option value="notebook">Notebook: Caveat + Nunito</option>
+        </select>
+        <button id="themeBtn" class="ghost" aria-label="Change colour theme" title="Theme">◐ <span id="themeLbl">Auto</span></button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Views" style="max-width:1360px;margin:0 auto">
+      <a href="#overview" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Overview</a>
+      <a href="#learn" data-v="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg>Learn</a>
+      <a href="#labs" data-v="labs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4 19a1 1 0 001 2h14a1 1 0 001-2l-6-10V3"/></svg>Labs</a>
+      <a href="#mindmap" data-v="mindmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M6 6l4 4M18 6l-4 4M6 18l4-4M18 18l-4-4"/></svg>Mind map</a>
+      <a href="#infographics" data-v="infographics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Infographics</a>
+      <a href="#flashcards" data-v="flashcards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4h14v14h-4"/></svg>Flashcards</a>
+      <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>Quiz</a>
+      <a href="#exam" data-v="exam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="M9 13l2 2 4-4"/></svg>Exam prep</a>
+      <a href="#glossary" data-v="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M8 9h6M8 13h4"/></svg>Glossary</a>
+      <a href="#formulae" data-v="formulae"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Phrase bank</a>
+    </nav>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<div class="gut">
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side" id="side" aria-label="Course navigation">
+    <div>
+      <h4>This chapter</h4>
+      <div class="topiclist" id="topicList"></div>
+    </div>
+    <div class="course">
+      <h4>Full course</h4>
+      <details open><summary>I · Basic communication</summary><ol><li class="link"><a href="s1-1-meeting-people.html"><span class="mono">1.1</span>Meeting people</a></li><li class="link"><a href="s1-2-making-plans.html"><span class="mono">1.2</span>Making plans</a></li><li class="here"><span class="mono">1.3</span>Weather &amp; climate</li><li><span class="mono">1.4</span>Travel &amp; transport</li><li><span class="mono">1.5</span>Buying goods &amp; services</li><li><span class="mono">1.6</span>Emergencies</li><li><span class="mono">1.7</span>Permission &amp; persuasion</li><li><span class="mono">1.8</span>Feelings &amp; attitudes</li><li><span class="mono">1.9</span>Managing a conversation</li><li><span class="mono">1.10</span>Discussion &amp; opinions</li><li><span class="mono">1.11</span>Passing on messages</li></ol></details>
+      <details><summary>II · Language awareness</summary><ol><li><span class="mono">2.1</span>Learning about language</li><li><span class="mono">2.2</span>Exploring meaning</li><li><span class="mono">2.3</span>Language &amp; attitude</li></ol></details>
+      <details><summary>III · Cultural awareness</summary><ol><li><span class="mono">3.1</span>Present-day culture</li><li><span class="mono">3.2</span>Modern literary texts</li><li><span class="mono">3.3</span>Everyday life</li><li><span class="mono">3.4</span>Spanish-speaking world &amp; Ireland</li><li><span class="mono">3.5</span>Issues across cultures</li></ol></details>
+      <p class="soon">Bold sections are ready. Others are coming soon. Units follow the syllabus's General Activities/Themes.</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="view" data-view="overview">
+      <div class="hero">
+        <div>
+          <span class="pill t">Unit I.3 · Basic communicative proficiency</span>
+          <h1 style="margin-top:12px">¿Qué tiempo hace?<br>¿Qué tiempo hará?<br><em>¡Han dicho que va a nevar!</em></h1>
+          <p class="lede">Weather comes up in every part of the exam: postcards and emails from holidays, forecasts on the listening paper, and "¿Cómo es el clima en Irlanda?" in the oral. Learn hace, hay and está, the stem-changing weather verbs, the map of Spain, how to read and pass on a forecast, and how to ask whether a plan will still work in that weather.</p>
+          <div class="cta"><button class="primary" data-go="learn">Start learning</button><button data-go="labs">Open the labs</button><button data-go="quiz">Test yourself</button></div>
+        </div>
+        <div class="herobox"><canvas id="heroCanvas" aria-label="Animated weather scenes with the Spanish sentence for each one"></canvas></div>
+      </div>
+      <div class="stats">
+        <div class="panel stat"><span>Targets ticked</span><b id="stLO">0/7</b><div class="prog"><i id="stLOb"></i></div></div>
+        <div class="panel stat"><span>Flashcards you know</span><b id="stFC">0</b><div class="prog"><i id="stFCb"></i></div></div>
+        <div class="panel stat"><span>Best quiz score</span><b id="stQZ">–</b><div class="prog"><i id="stQZb"></i></div></div>
+      </div>
+      <div>
+        <div class="head" style="margin-bottom:14px"><h2>Six topics</h2><p>Each one has a visual summary, a lab, flashcards and quiz questions.</p></div>
+        <div class="topics" id="topicCards"></div>
+      </div>
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">From the Leaving Certificate Spanish syllabus</p><h2>Performance targets and skills</h2></div><p style="font-size:.88rem">Unit I.3, quoted from the syllabus (scanned text tidied). Tick each one when you're confident. Saved on this device.</p></div>
+        <ul class="lo-list" id="loList"></ul>
+        <p class="result" style="margin-top:10px">Structures and grammar listed for this unit: el tiempo previsto / la predicción del tiempo; cielo despejado, chubascos, granizo, tormentas; use of hacer / haber; radical-changing verb forms: llover, nevar, tronar…; indirect speech: Ha dicho que… Han anunciado que… Han predicho que…; la zona cantábrica, pirenaica…; los puntos cardinales; cordilleras, valles, montañas, ríos, pasos de montaña…</p>
+      </div>
+    </section>
+
+    <!-- ================= LEARN ================= -->
+    <section class="view" data-view="learn" hidden>
+      <div class="head"><div><p class="eyebrow">Visual notes</p><h2>Learn</h2></div><p>Picture first, three key ideas, one common mistake. Then open the lab and try it.</p></div>
+      <div class="learn" id="learnList"></div>
+    </section>
+
+    <!-- ================= LABS ================= -->
+    <section class="view" data-view="labs" hidden>
+      <div class="head"><div><p class="eyebrow">Interactive</p><h2>Labs</h2></div><p>Describe the sky, change the weather verbs, read the map of Spain, collect forecast data, pass on a forecast and decide what you can still do.</p></div>
+      <div class="labtabs" id="labTabs"></div>
+
+      <div class="lab" data-lab="tiempo">
+        <div class="labhead"><span class="pill t">¿Qué tiempo hace?</span><p class="goal">Look at the sky. Choose the sentence that describes it correctly: hace, hay, está or a weather verb.</p></div>
+        <div class="panel sim">
+          <canvas id="wqC" aria-label="A weather scene: sun, clouds, rain, snow, fog, wind or a storm"></canvas>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="wqQ"></div></div>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">¿Qué tiempo hace?</span><div class="btns" id="wqB"></div></div></div>
+          <div class="readout" id="wqOut"></div>
+          <div class="fbbox" id="wqFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Do all fourteen. Which weather words go with hace, which with hay, which with está?</div><div class="try"><b>2</b>Why is it "hace buen tiempo" and not "hace bueno tiempo"?</div><div class="try"><b>3</b>Describe today's weather where you are in two sentences.</div></div>
+      </div>
+
+      <div class="lab" data-lab="verbos" hidden>
+        <div class="labhead"><span class="pill t">Llueve, nieva, truena</span><p class="goal">Pick a weather verb and a tense. Watch the stem change light up in the present, and disappear in every other tense.</p></div>
+        <div class="panel sim">
+          <canvas id="vwC" aria-label="Verb machine: the infinitive turns into the weather verb form, with the stem change highlighted"></canvas>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Verbo</span><div class="btns" id="vwV"></div></div>
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">Tiempo verbal</span><div class="btns" id="vwT"></div></div>
+          </div>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="vwQ"></div></div>
+          <div class="readout" id="vwOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Compare llover and nevar in the present. Which vowel changes in each?</div><div class="try"><b>2</b>Switch to the future and the imperfect. Is there still a stem change?</div><div class="try"><b>3</b>Why are weather verbs only used in the él / ella form?</div></div>
+      </div>
+
+      <div class="lab" data-lab="mapa" hidden>
+        <div class="labhead"><span class="pill t">El mapa del tiempo</span><p class="goal">Read each line of the forecast. Tap the part of Spain it is about. Learn the regions and the points of the compass as you go.</p></div>
+        <div class="panel sim">
+          <canvas id="mpC" aria-label="Map of Spain with regions: Galicia, the Cantabrian coast, the Pyrenees, the Ebro valley, the central plateau, the Mediterranean coast, Andalusia, the Balearic and Canary Islands. Tap a region."></canvas>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="mpQ"></div></div>
+          <div class="controls"><div class="ctl"><span class="lbl">Pronóstico</span><div class="btns"><button id="mpReset">Start again</button><button id="mpNames" aria-pressed="false">Show region names</button></div></div></div>
+          <div class="readout" id="mpOut"></div>
+          <div class="fbbox" id="mpFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Finish the whole forecast. Which regions are "el norte", "el sur", "el este" and "el noroeste"?</div><div class="try"><b>2</b>Find the cordillera that separates Spain from France.</div><div class="try"><b>3</b>Say where you live in Ireland using a compass point: Vivo en el oeste de Irlanda.</div></div>
+      </div>
+
+      <div class="lab" data-lab="prevision" hidden>
+        <div class="labhead"><span class="pill t">Collect &amp; fit</span><p class="goal">Read tomorrow's forecast for towns at different heights. Pick the maximum temperature you hear in words, and plot it against altitude.</p></div>
+        <div class="panel sim">
+          <canvas id="svC" aria-label="Scatter graph of maximum temperature against altitude, with a line of best fit"></canvas>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="svQ"></div></div>
+          <div class="controls">
+            <div class="ctl" style="grid-column:1/-1"><span class="lbl">¿Cuál será la máxima?</span><div class="btns" id="svB"></div></div>
+            <div class="ctl"><span class="lbl">Datos</span><div class="btns"><button class="primary" id="svNext">Next town</button><button id="svClr">Clear data</button></div></div>
+          </div>
+          <div class="readout" id="svOut"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Collect eight towns. By how many degrees does it get colder for every 1 000 m you climb?</div><div class="try"><b>2</b>Use your line: what will the maximum be at 3 000 m (the top of Sierra Nevada is about 3 480 m)?</div><div class="try"><b>3</b>Say one forecast aloud: "En Ávila la máxima será de… grados."</div></div>
+      </div>
+
+      <div class="lab" data-lab="mensaje" hidden>
+        <div class="labhead"><span class="pill t">¿Qué han dicho?</span><p class="goal">Pass the forecast on to someone else. Complete each sentence in indirect speech: ha dicho que…, han anunciado que…</p></div>
+        <div class="panel sim">
+          <canvas id="gpC" aria-label="The sentence as blocks with the gap highlighted"></canvas>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">Choose</span><div class="btns" id="gpB"></div></div></div>
+          <div class="readout" id="gpOut"></div>
+          <div class="fbbox" id="gpFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Get all twelve. After "han dicho que", does the forecast's tense change?</div><div class="try"><b>2</b>Find the one sentence where the future turns into the conditional. What's different about it?</div><div class="try"><b>3</b>Tell a friend tomorrow's forecast: "Han dicho que mañana…"</div></div>
+      </div>
+
+      <div class="lab" data-lab="actividades" hidden>
+        <div class="labhead"><span class="pill t">¿Se podrá?</span><p class="goal">Read the forecast and the plan. Will the activity be possible? Decide, then read the model answer with si + present, future.</p></div>
+        <div class="panel sim">
+          <canvas id="acC" aria-label="Forecast picture on the left and the planned activity on the right, with a yes or no stamp"></canvas>
+          <div class="fbbox" style="padding-top:12px"><div class="qt" id="acQ"></div></div>
+          <div class="controls"><div class="ctl" style="grid-column:1/-1"><span class="lbl">¿Se podrá?</span><div class="btns" id="acB"></div></div></div>
+          <div class="readout" id="acOut"></div>
+          <div class="fbbox" id="acFb"></div>
+        </div>
+        <div class="tries"><div class="try"><b>1</b>Do all twelve. Which weather words told you "no"?</div><div class="try"><b>2</b>Make your own rule: "Si hace viento, no podremos…"</div><div class="try"><b>3</b>Ask about an activity politely: "¿Sabe usted si se podrá esquiar mañana?"</div></div>
+      </div>
+    </section>
+
+    <!-- ================= MIND MAP ================= -->
+    <section class="view" data-view="mindmap" hidden>
+      <div class="head"><div><p class="eyebrow">See the big picture</p><h2>Mind map</h2></div><p>Tap any bubble to see what it means and jump to its lab.</p></div>
+      <div class="panel pad mmdetail" id="mmDetail"></div>
+      <div class="panel mmwrap"><svg id="mm" viewBox="0 0 1100 780" role="img" aria-label="Mind map of weather and climate in Spanish"></svg></div>
+    </section>
+
+    <!-- ================= INFOGRAPHICS ================= -->
+    <section class="view" data-view="infographics" hidden>
+      <div class="head"><div><p class="eyebrow">Picture it</p><h2>A weather forecast in five parts</h2></div><p>Every forecast on the radio or TV follows roughly this order, with the Spanish for each part.</p></div>
+      <div class="cases" id="cases"></div>
+
+      <div class="head"><div><p class="eyebrow">Three pictures</p><h2>Sky, map, mountains</h2></div></div>
+      <div class="boundary">
+        <div class="panel case"><canvas class="mini" data-mini="storm"></canvas><h3>Hay tormenta</h3><p>Dark cloud, rain and lightning: hay tormenta, llueve y truena.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="map"></canvas><h3>El mapa del tiempo</h3><p>Rain in the north and west, sun in the south and the islands.</p></div>
+        <div class="panel case"><canvas class="mini" data-mini="survey"></canvas><h3>Higher is colder</h3><p>The maximum drops by roughly 6 to 7 degrees for every 1 000 m of height.</p></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:16px"><div><p class="eyebrow">La España verde y la España seca</p><h2>How much rain falls in a year?</h2></div><p>Approximate long-term averages, rounded (mm per year). Dublin for comparison.</p></div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="head"><div><p class="eyebrow">Culture tips</p><h2>Weather in the Spanish-speaking world</h2></div></div>
+      <div class="around" id="around"></div>
+    </section>
+
+<!-- ================= FLASHCARDS ================= -->
+    <section class="view" data-view="flashcards" hidden>
+      <div class="head"><div><p class="eyebrow">Spaced practice</p><h2>Flashcards</h2></div><p>Tap the card (or press Space) to flip it. Mark it "Got it" or "Again". Cards you know are saved.</p></div>
+      <div class="fc-wrap">
+        <div class="fc-filter" id="fcFilter"></div>
+        <div class="deck"><div class="card3d" id="fcCard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+          <div class="face front"><span class="pill tag" id="fcTag"></span><h3 id="fcQ"></h3><span class="hint">Tap to flip</span></div>
+          <div class="face back"><span class="pill tag a" id="fcTag2"></span><p class="ans" id="fcA"></p><span class="hint">Did you get it?</span></div>
+        </div></div>
+        <div class="fc-controls"><button id="fcPrev" aria-label="Previous card">←</button><button class="again" id="fcAgain">Again</button><button class="got" id="fcGot">Got it</button><button id="fcNext" aria-label="Next card">→</button></div>
+        <p class="fc-meta" id="fcMeta"></p>
+        <div class="fc-controls"><button class="ghost" id="fcShuffle">Shuffle</button><button class="ghost" id="fcUnknown">Only cards I don't know</button><button class="ghost" id="fcReset">Reset progress</button></div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="view" data-view="quiz" hidden>
+      <div class="qz" id="qz"></div>
+    </section>
+
+    <!-- ================= EXAM PREP ================= -->
+    <section class="view" data-view="exam" hidden>
+      <div class="head"><div><p class="eyebrow">Get exam ready</p><h2>Exam prep</h2></div><p>How Spanish is assessed, what this unit means for the oral and the written paper, and practice with feedback.</p></div>
+
+      <div class="exgrid">
+        <div class="panel pad donutbox">
+          <svg viewBox="0 0 160 160" class="donut" aria-label="Higher Level: speaking 25%, listening 20%, reading 30%, writing 25%">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--terra)" stroke-width="26" stroke-dasharray="91.1 364.4" transform="rotate(-90 80 80)"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--apricot)" stroke-width="26" stroke-dasharray="72.9 364.4" stroke-dashoffset="-91.1" transform="rotate(-90 80 80)"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--sage)" stroke-width="26" stroke-dasharray="109.3 364.4" stroke-dashoffset="-164" transform="rotate(-90 80 80)"/>
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--olive)" stroke-width="26" stroke-dasharray="91.1 364.4" stroke-dashoffset="-273.3" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" class="dn1">4 skills</text><text x="80" y="96" text-anchor="middle" class="dn2">Higher Level</text>
+          </svg>
+          <div class="splits">
+            <div><i style="background:var(--terra)"></i><div><b>Speaking · 25%</b><p>Oral: general conversation (you may discuss a literary work) and a role-play. Expect "¿Qué tiempo hace en Irlanda?" and questions on holidays.</p></div></div>
+            <div><i style="background:var(--apricot)"></i><div><b>Listening · 20%</b><p>Radio forecasts, traffic and travel news, phone messages about the weather; answer in English or Irish.</p></div></div>
+            <div><i style="background:var(--sage)"></i><div><b>Reading · 30%</b><p>Forecasts, weather maps, news about storms, heatwaves and floods.</p></div></div>
+            <div><i style="background:var(--olive)"></i><div><b>Writing · 25%</b><p>Postcards, emails and diary entries from holidays always mention the weather. (Ordinary Level: 20 / 25 / 40 / 15.)</p></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <h3 style="margin-bottom:10px">Top exam tips for this unit</h3>
+          <ol class="tips">
+            <li>Learn the three patterns: <b>hace</b> sol / calor / frío / viento, <b>hay</b> niebla / tormenta, <b>está</b> nublado / despejado.</li>
+            <li>The weather verbs change their stem in the present: <b>llueve, nieva, truena, hiela</b>. Spell them right every time.</li>
+            <li>In a postcard, use <b>three tenses</b>: ayer llovió, hoy hace sol, mañana hará calor.</li>
+            <li>Show range with <b>mucho</b> and <b>un poco de</b>: hace mucho calor, hay un poco de niebla. Never "muy calor".</li>
+            <li>Listening: forecasts are fast. Listen for the <b>region</b>, the <b>sky</b> and the <b>temperature</b>, in that order.</li>
+            <li>Pass on a forecast with <b>Han dicho que + future</b>: Han dicho que mañana lloverá.</li>
+            <li>For the oral, prepare <b>"¿Cómo es el clima en Irlanda?"</b>: templado, húmedo, llueve mucho, nunca hace mucho calor ni mucho frío.</li>
+            <li>Check the SEC for the current exam arrangements. Questions here are practice questions, not official SEC papers.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Read the question</p><h2>Instruction words</h2></div><p>Spanish instructions you'll meet on the paper. Meanings are plain-English summaries.</p></div>
+        <div class="cmds" id="cmds"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad practice">
+          <div class="head"><div><p class="eyebrow">Weather phrases, verbs, indirect speech, temperatures</p><h2>Grammar trainer</h2></div></div>
+          <div class="btns" id="prType"></div>
+          <div class="pq" id="pq"></div>
+          <div class="pa"><input id="paIn" type="text" placeholder="Escribe aquí" aria-label="Your answer" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="primary" id="paCheck">Check</button><button id="paShow">Show answer</button><button id="paNext">New question</button></div>
+          <div class="btns" id="accKeys" style="margin-top:6px"></div>
+          <div id="paFb"></div>
+          <p class="result" id="paScore"></p>
+        </div>
+        <div class="panel pad predict">
+          <div class="head"><div><p class="eyebrow">Quick-fire drill</p><h2>What is the speaker doing?</h2></div></div>
+          <canvas id="predC" aria-label="Five functions: describing the weather now, describing the climate, forecasting, passing on a forecast, asking about an activity. The right one lights up after you check."></canvas>
+          <p class="result" id="predQ"></p>
+          <div class="predopts" id="predOpts"><div class="btns" id="predBtns"></div></div>
+          <div class="btns"><button class="primary" id="predCheck">Check</button><button id="predNext">Next sentence</button></div>
+          <div id="predFb"></div>
+        </div>
+      </div>
+
+<div class="panel pad">
+        <div class="head" style="margin-bottom:14px"><div><p class="eyebrow">Practice questions in exam style (not official SEC papers)</p><h2>Long questions with marking guides</h2></div><p>Try each part on paper first, then open the marking guide and mark yourself.</p></div>
+        <div class="longqs" id="longqs"></div>
+      </div>
+
+      <div class="exgrid">
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Self-check</p><h2>Revision checklist</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Rate yourself on each one: red = not yet, amber = nearly, green = confident. Saved on this device.</p>
+          <div class="rag" id="rag"></div>
+        </div>
+        <div class="panel pad">
+          <div class="head" style="margin-bottom:12px"><div><p class="eyebrow">Exam skills</p><h2>Oral and written skills</h2></div></div>
+          <p class="result" style="margin-bottom:10px">Habits that earn marks in the oral and written papers. Tick them off as you practise.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="view" data-view="glossary" hidden>
+      <div class="head"><div><p class="eyebrow">Key words</p><h2>Glossary</h2></div><p>Key Spanish words and phrases for this unit, with their English meaning.</p></div>
+      <div class="panel pad glbar">
+        <input id="glSearch" type="search" placeholder="Busca: niebla, chubascos, cantábrica…" aria-label="Search the glossary" autocomplete="off">
+        <div class="btns" id="glTopics"></div>
+        <div class="letters" id="glLetters"></div>
+      </div>
+      <p class="result" id="glCount"></p>
+      <div class="gllist" id="glList"></div>
+    </section>
+
+    <!-- ================= PHRASE BANK ================= -->
+    <section class="view" data-view="formulae" hidden>
+      <div class="head"><div><p class="eyebrow">Revision</p><h2>Phrase bank</h2></div><p>Hace, hay, está; the weather verbs in six tenses; forecast words, regions and the phrases for passing on a forecast, on one page.</p></div>
+      <div class="sheet" id="pbank"></div>
+      <footer>
+        <p>Based on Unit I.3 of the <a href="https://www.curriculumonline.ie/senior-cycle/senior-cycle-subjects/spanish/" target="_blank" rel="noopener">Leaving Certificate Spanish Syllabus</a> (Department of Education, common modern-languages framework). Performance targets are quoted from the syllabus. Forecasts, towns' temperatures and situations are invented for practice. Altitudes and rainfall figures are rounded approximations.</p>
+      </footer>
+    </section>
+  </main>
+</div>
+</div>
+
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = { get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
+
+/* ---------- theme + font ---------- */
+const root = document.documentElement;
+const C = {};
+function readColors(){
+  const cs = getComputedStyle(root);
+  ["--bg","--surface","--surface-2","--ink","--muted","--line","--grid","--terra","--terra-ink","--blush","--apricot","--sage","--olive","--olive-ink","--ray","--ray2","--ray3","--img","--glass","--glass-edge","--good","--bad","--warn","--on-accent"].forEach(k=>C[k.slice(2)]=cs.getPropertyValue(k).trim());
+  C.fb = cs.getPropertyValue("--f-body").trim(); C.fd = cs.getPropertyValue("--f-display").trim(); C.fm = cs.getPropertyValue("--f-mono").trim();
+}
+const F = (size,w=700) => `${w} ${size}px ${C.fb}`;
+const M = size => `${size}px ${C.fm}`;
+let theme = store.get("es-theme","auto"), font = store.get("es-font","playful");
+function applyTheme(){ if(theme==="auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme",theme); $("themeLbl").textContent = theme==="auto"?"Auto":theme==="light"?"Light":"Dark"; }
+function applyFont(){ if(font==="playful") root.removeAttribute("data-font"); else root.setAttribute("data-font",font); $("fontSel").value=font; }
+applyTheme(); applyFont(); readColors();
+$("themeBtn").addEventListener("click",()=>{ theme = theme==="auto"?"light":theme==="light"?"dark":"auto"; store.set("es-theme",theme); applyTheme(); });
+$("fontSel").addEventListener("change",e=>{ font=e.target.value; store.set("es-font",font); applyFont(); });
+
+/* ---------- icons + topics ---------- */
+const ICON = {
+  tiempo:'<circle cx="8" cy="8" r="3"/><path d="M8 2v1.5M2 8h1.5M3.8 3.8l1 1M12.2 3.8l-1 1"/><path d="M8 20h10a4 4 0 000-8 5 5 0 00-9.6 1.5A3.3 3.3 0 008 20z"/>',
+  verbos:'<path d="M7 16a4 4 0 01-.5-8 6 6 0 0111.5 1.5A3.5 3.5 0 0117.5 16z"/><path d="M8 19l-1 2M12 19l-1 2M16 19l-1 2"/>',
+  mapa:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  prevision:'<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 13l3-3 2 2 4-4"/>',
+  mensaje:'<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
+  actividades:'<path d="M3 20l6-10 4 6 3-4 5 8z"/><circle cx="17" cy="6" r="2"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/>',
+  wind:'<path d="M3 8h10a3 3 0 10-3-3M3 12h15a3 3 0 11-3 3M3 16h7"/>',
+  drop:'<path d="M12 3s6 7 6 11a6 6 0 01-12 0c0-4 6-11 6-11z"/>',
+};
+const svg = (k,extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+const TOPICS = [
+  {id:"tiempo", name:"Describing the weather", short:"Hace sol, hay niebla, está nublado: hacer, haber and estar with weather words, and the climate.", tint:"var(--blush)"},
+  {id:"verbos", name:"Weather verbs", short:"Llover, nevar, tronar, helar: stem changes in the present, and six tenses.", tint:"var(--apricot)"},
+  {id:"mapa", name:"Regions & compass points", short:"El norte, la zona cantábrica, los Pirineos, la meseta: the map of Spain.", tint:"var(--sage)"},
+  {id:"prevision", name:"Reading a forecast", short:"Cielo despejado, chubascos, granizo, la máxima y la mínima, temperatures in words.", tint:"var(--cream)"},
+  {id:"mensaje", name:"Passing on a forecast", short:"Ha dicho que… Han anunciado que… Indirect speech with the future.", tint:"var(--blush)"},
+  {id:"actividades", name:"Weather & activities", short:"¿Se podrá esquiar? Si hace viento, no podremos navegar.", tint:"var(--sage)"},
+];
+const tname = id => TOPICS.find(t=>t.id===id).name;
+const LO = [
+  ["tiempo","Enquiring about and describing the general weather pattern in a particular country, region, or locality"],
+  ["prevision","Using the media, telephone services and other sources to find out what the weather is going to be like during a particular period"],
+  ["mensaje","Passing on the main points of a weather forecast to a third party"],
+  ["actividades","Enquiring whether particular activities (e.g. driving, skiing, sailing, travelling by air, hiking, swimming) are going to be possible under particular weather conditions"],
+  ["tiempo","Familiarisation with and use of broad range of vocabulary and expressions relating to weather"],
+  ["mensaje","Relating content of weather forecast in indirect form"],
+  ["mapa","Familiarity with simple geographical terms and regions"],
+];
+const LO_HEAD = LO.map((x,i)=>i<4?"Performance target":"Linguistic skill");
+
+/* ---------- glossary: [Spanish, English, note, topic] ---------- */
+const GLOSS = [
+  ["el tiempo","the weather (also: time)","¿Qué tiempo hace? = What's the weather like?","tiempo"],
+  ["el clima","the climate","The usual weather of a place over years: El clima de Irlanda es templado.","tiempo"],
+  ["hace sol","it's sunny","hacer + sol / calor / frío / viento / buen tiempo / mal tiempo.","tiempo"],
+  ["hace calor","it's hot","Hace mucho calor (never muy calor).","tiempo"],
+  ["hace frío","it's cold","Hace frío = the weather. Tengo frío = I feel cold. El café está frío = the coffee is cold.","tiempo"],
+  ["hace viento","it's windy","Also hay viento. Viento fuerte = strong wind.","tiempo"],
+  ["hace buen tiempo","the weather is good","bueno → buen before a masculine noun.","tiempo"],
+  ["hace mal tiempo","the weather is bad","malo → mal before a masculine noun.","tiempo"],
+  ["hay niebla","it's foggy","haber (hay) + niebla, tormenta, nubes, hielo.","tiempo"],
+  ["hay tormenta","there's a storm","Una tormenta = a thunderstorm. Un temporal = a severe storm at sea or on land.","tiempo"],
+  ["está nublado","it's cloudy","estar + nublado / despejado / cubierto.","tiempo"],
+  ["despejado","clear (sky)","El cielo está despejado. Cielo despejado = clear skies.","prevision"],
+  ["templado","mild, temperate","El clima de Irlanda es templado y húmedo.","tiempo"],
+  ["húmedo","humid, damp","Opposite: seco (dry).","tiempo"],
+  ["seco","dry","El sur de España tiene un clima muy seco en verano.","tiempo"],
+  ["llover (ue)","to rain","Llueve (it rains), está lloviendo (it's raining), lloverá (it will rain).","verbos"],
+  ["nevar (ie)","to snow","Nieva, nevó, nevará. La nieve = the snow.","verbos"],
+  ["tronar (ue)","to thunder","Truena. El trueno = thunder. El relámpago = lightning.","verbos"],
+  ["helar (ie)","to freeze","Hiela por la noche. La helada = frost. El hielo = ice.","verbos"],
+  ["granizar","to hail","Regular: graniza. El granizo = hail.","verbos"],
+  ["la lluvia","the rain","Lluvias fuertes = heavy rain. Lluvioso = rainy.","verbos"],
+  ["la nieve","the snow","Nevar = to snow (verb), la nieve = the snow (noun).","verbos"],
+  ["verbo impersonal","impersonal verb","Weather verbs only use the él / ella form: llueve, nevará. No subject.","verbos"],
+  ["cambio de raíz","stem change","o → ue (llover → llueve), e → ie (nevar → nieva). Only in the present.","verbos"],
+  ["el norte","the north","Los puntos cardinales: norte, sur, este, oeste.","mapa"],
+  ["el sur","the south","En el sur de España hace mucho calor en verano.","mapa"],
+  ["el este","the east","Also levante. El litoral mediterráneo está en el este.","mapa"],
+  ["el oeste","the west","Galway está en el oeste de Irlanda.","mapa"],
+  ["el noroeste","the north-west","Galicia está en el noroeste. Also nordeste, sudeste, sudoeste.","mapa"],
+  ["los puntos cardinales","the points of the compass","norte, sur, este, oeste.","mapa"],
+  ["la zona cantábrica","the Cantabrian (northern) coast","The green, rainy north coast: Asturias, Cantabria, el País Vasco.","mapa"],
+  ["la zona pirenaica","the Pyrenees area","Los Pirineos: the mountains between Spain and France.","mapa"],
+  ["la meseta","the central plateau","The high, flat centre of Spain: cold winters, hot summers.","mapa"],
+  ["el litoral","the coast(line)","El litoral mediterráneo = the Mediterranean coast. Also la costa.","mapa"],
+  ["la cordillera","the mountain range","La cordillera Cantábrica, el Sistema Central.","mapa"],
+  ["el valle","the valley","El valle del Ebro.","mapa"],
+  ["el paso de montaña","mountain pass","Also el puerto: El puerto de Navacerrada está cerrado por la nieve.","mapa"],
+  ["el río","the river","El Ebro, el Tajo, el Guadalquivir.","mapa"],
+  ["la predicción del tiempo","the weather forecast","Also el pronóstico, el tiempo previsto, el parte meteorológico.","prevision"],
+  ["el tiempo previsto","the expected weather","El tiempo previsto para mañana…","prevision"],
+  ["los chubascos","showers","Short, heavy showers. Chubascos dispersos = scattered showers.","prevision"],
+  ["el granizo","hail","Tormentas con granizo.","prevision"],
+  ["la máxima","the maximum (temperature)","La máxima será de veinte grados.","prevision"],
+  ["la mínima","the minimum (temperature)","La mínima será de dos grados bajo cero.","prevision"],
+  ["bajo cero","below zero","Cinco grados bajo cero = menos cinco grados (−5 °C).","prevision"],
+  ["los grados","degrees","Estamos a veinte grados. Hace veinte grados. Un grado, veintiún grados.","prevision"],
+  ["subir / bajar","to rise / to fall","Las temperaturas subirán / bajarán.","prevision"],
+  ["intervalos nubosos","cloudy spells","Sol con intervalos nubosos = sunny spells.","prevision"],
+  ["la ola de calor","the heatwave","Una ola de frío = a cold snap.","prevision"],
+  ["el aviso","the weather warning","Aviso amarillo / naranja / rojo.","prevision"],
+  ["ha dicho que","he / she has said that","Present perfect + que + the forecast, tense unchanged: Ha dicho que lloverá.","mensaje"],
+  ["han anunciado que","they have announced that","Han anunciado que habrá tormentas.","mensaje"],
+  ["han predicho que","they have forecast that","predecir → predicho (irregular participle).","mensaje"],
+  ["según","according to","Según la radio, mañana nevará.","mensaje"],
+  ["el estilo indirecto","indirect (reported) speech","Passing on what someone said: Dice que… Han dicho que…","mensaje"],
+  ["¿se podrá…?","will it be possible to…?","¿Se podrá esquiar mañana? Impersonal se + future of poder.","actividades"],
+  ["si + presente, futuro","if… will…","Si hace viento, no podremos navegar.","actividades"],
+  ["esquiar","to ski","Esquío, esquías (accent on the í).","actividades"],
+  ["navegar","to sail","Ir a navegar = to go sailing. El velero = the sailing boat.","actividades"],
+  ["hacer senderismo","to go hiking","Also ir de excursión, caminar por la montaña.","actividades"],
+  ["bañarse","to swim (go for a swim)","¿Podremos bañarnos en la playa?","actividades"],
+  ["el retraso","the delay","Hay retrasos en los vuelos por la niebla.","actividades"],
+  ["la carretera","the road","Carreteras cortadas por la nieve = roads closed by snow.","actividades"],
+].map(([t,aka,d,topic])=>({t,aka,d,topic,id:"g-"+t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-")+"-"+t.length}));
+const glossBy = t => GLOSS.find(g=>g.t===t);
+const GL_LINKS = [["chubascos","los chubascos"],["despejado","despejado"],["stem change","cambio de raíz"],["indirect speech","el estilo indirecto"],["meseta","la meseta"],["climate","el clima"],["impersonal","verbo impersonal"],["bajo cero","bajo cero"]];
+
+function autoLink(str){
+  const tokens=[];
+  GL_LINKS.forEach(([pat,key,cs])=>{ if(!glossBy(key)) return;
+    const re=new RegExp(`(^|[^\\w\\u0000])(${pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})(?![\\w])`, cs?"":"i");
+    str=str.replace(re,(m,pre,word)=>{ tokens.push(`<button class="gl" data-g="${key}">${word}</button>`); return pre+"\u0000"+(tokens.length-1)+"\u0000"; });
+  });
+  return str.replace(/\u0000(\d+)\u0000/g,(m,i)=>tokens[+i]);
+}
+
+/* ---------- canvas helpers ---------- */
+const sims = [];
+function makeCanvas(el, ratio, minH, draw, maxH=10000){
+  const ctx = el.getContext("2d");
+  const s = { el, ctx, w:0, h:0, draw };
+  const fit = () => {
+    const w = el.clientWidth || el.parentElement.clientWidth;
+    if(w<20) return;
+    const h = Math.min(maxH, Math.max(minH, Math.round(w*ratio)));
+    const dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    el.style.height = h+"px"; el.width = Math.round(w*dpr); el.height = Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); s.w=w; s.h=h; draw(s);
+  };
+  s.fit = fit; s.redraw = () => { if(s.w<20) return fit(); ctx.save(); draw(s); ctx.restore(); };
+  new ResizeObserver(fit).observe(el.parentElement);
+  sims.push(s); fit(); return s;
+}
+function line(ctx,x1,y1,x2,y2,color,w=2,dash){ ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=w; ctx.lineCap="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore(); }
+function text(ctx,t,x,y,color,font,align="left",base="alphabetic"){ ctx.save(); ctx.fillStyle=color; ctx.font=font||M(12); ctx.textAlign=align; ctx.textBaseline=base; ctx.fillText(t,x,y); ctx.restore(); }
+function bg(ctx,w,h,col){ ctx.clearRect(0,0,w,h); ctx.fillStyle=col||C.surface; ctx.fillRect(0,0,w,h); }
+function circle(ctx,x,y,r,fill,stroke,lw=2){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw; ctx.stroke(); } }
+function rr(ctx,x,y,w,h,r){ if(w<0){ x+=w; w=-w; } if(h<0){ y+=h; h=-h; } r=Math.max(0,Math.min(r,h/2,w/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function arrowHead(ctx,x,y,dx,dy,col,s=8){ ctx.save(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x+dx*s,y+dy*s); ctx.lineTo(x-dx*s*0.6-dy*s*0.7,y-dy*s*0.6+dx*s*0.7); ctx.lineTo(x-dx*s*0.6+dy*s*0.7,y-dy*s*0.6-dx*s*0.7); ctx.closePath(); ctx.fill(); ctx.restore(); }
+function setReadout(el, items){ el.innerHTML = items.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join(""); }
+function pressGroup(btns, active){ btns.forEach(b=>b.setAttribute("aria-pressed", b===active?"true":"false")); }
+const chipsHTML = list => list.map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join("");
+const nf = (x,d=0) => { const s=(Math.round(x*10**d)/10**d).toFixed(d); const [i,f]=s.split("."); return i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(f?"."+f:""); };
+const eur = x => "€"+nf(x, Math.abs(x-Math.round(x))>0.004?2:0);
+const niceStep = (range,n) => { const r=range/Math.max(1,n), p=10**Math.floor(Math.log10(r)), m=r/p; return (m<=1?1:m<=2?2:m<=5?5:10)*p; };
+const tick = v => String(+v.toFixed(6));
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+// Axes: returns mapping functions. o: x0,x1,y0,y1,xl,yl,compact
+function frame(ctx,w,h,o){
+  const cp=o.compact, L=cp?36:50, R=12, T=cp?12:16, B=cp?24:34, fs=cp?9:11;
+  const X=v=>L+(v-o.x0)/(o.x1-o.x0)*(w-L-R), Y=v=>h-B-(v-o.y0)/(o.y1-o.y0)*(h-B-T);
+  const xs=o.xt||niceStep(o.x1-o.x0, Math.max(3,Math.floor((w-L)/70))), ys=o.yt||niceStep(o.y1-o.y0, Math.max(3,Math.floor((h-B)/45)));
+  for(let v=Math.ceil(o.x0/xs)*xs; v<=o.x1+1e-9; v+=xs){ line(ctx,X(v),T,X(v),h-B,C.grid,1); text(ctx,tick(v),X(v),h-B+(cp?11:14),C.muted,M(fs),"center"); }
+  for(let v=Math.ceil(o.y0/ys)*ys; v<=o.y1+1e-9; v+=ys){ line(ctx,L,Y(v),w-R,Y(v),C.grid,1); text(ctx,tick(v),L-5,Y(v)+3,C.muted,M(fs),"right"); }
+  const y0=Y(Math.max(o.y0,Math.min(o.y1,0)));
+  line(ctx,L,y0,w-R,y0,C.ink,1.5); line(ctx,L,T,L,h-B,C.ink,1.5);
+  if(o.xl) text(ctx,o.xl,w-R,h-B+(cp?22:30),C.muted,F(cp?10:12),"right");
+  if(o.yl) text(ctx,o.yl,L+6,T+(cp?10:12),C.muted,F(cp?10:12),"left");
+  return {X,Y,L,R,T,B};
+}
+function curve(ctx,f,x0,x1,X,Y,col,lw=2.5,dash,clip){ ctx.save(); if(clip){ ctx.beginPath(); ctx.rect(clip[0],clip[1],clip[2],clip[3]); ctx.clip(); } ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.lineJoin="round"; if(dash) ctx.setLineDash(dash); ctx.beginPath(); const n=120; for(let i=0;i<=n;i++){ const x=x0+(x1-x0)*i/n, y=f(x); if(i) ctx.lineTo(X(x),Y(y)); else ctx.moveTo(X(x),Y(y)); } ctx.stroke(); ctx.restore(); }
+
+/* ================= MODELS + DRAWINGS ================= */
+function pointerTap(el,fn){ el.addEventListener("pointerdown",e=>{ const r=el.getBoundingClientRect(); fn(e.clientX-r.left,e.clientY-r.top); }); }
+const pick=a=>a[Math.floor(Math.random()*a.length)], shuffle=a=>{ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+// Spanish numbers 0-100. before=true gives the form before a masculine noun (un año, veintiún años)
+const UNITS = "cero uno dos tres cuatro cinco seis siete ocho nueve diez once doce trece catorce quince dieciséis diecisiete dieciocho diecinueve veinte veintiuno veintidós veintitrés veinticuatro veinticinco veintiséis veintisiete veintiocho veintinueve".split(" ");
+const TENS = {30:"treinta",40:"cuarenta",50:"cincuenta",60:"sesenta",70:"setenta",80:"ochenta",90:"noventa"};
+function numES(n,before){ let s; if(n<30) s=UNITS[n]; else if(n===100) s="cien"; else { const t=Math.floor(n/10)*10, u=n%10; s=TENS[t]+(u?" y "+UNITS[u]:""); }
+  if(before){ if(s==="veintiuno") s="veintiún"; else if(s.endsWith("uno")) s=s.slice(0,-3)+"un"; } return s; }
+/* ---------- models ---------- */
+// Weather pictures: each key is a list of [element, dx, dy, scale] in "s" units
+const WXP = {
+  sol:[["sun",0,0,1.4]],
+  calor:[["sun",-14,-2,1.2],["hot",36,4,1]],
+  frio:[["cloud",-12,-4,1.1],["cold",38,4,1]],
+  viento:[["cloud",14,-16,0.9],["wind",-4,18,1.1]],
+  buen:[["sun",-12,-8,1.15],["cloud",18,10,0.8]],
+  mal:[["dcloud",0,-12,1.25],["rain",0,-12,1.25]],
+  niebla:[["fog",0,0,1.3]],
+  tormenta:[["dcloud",0,-12,1.25],["rain",0,-12,1.25],["bolt",0,-12,1.25]],
+  nublado:[["cloud",-16,8,0.95],["cloud",14,-8,1.1]],
+  despejado:[["moon",0,0,1.3]],
+  lluvia:[["cloud",0,-12,1.25],["rain",0,-12,1.25]],
+  nieve:[["cloud",0,-12,1.25],["snow",0,-12,1.25]],
+  granizo:[["dcloud",0,-12,1.25],["hail",0,-12,1.25]],
+  truena:[["dcloud",0,-12,1.25],["bolt",0,-12,1.25]],
+  hiela:[["ice",0,0,1.3]],
+};
+// ¿Qué tiempo hace? [picture, options (first is right), why, English]
+const WQ = [
+  ["sol",["Hace sol.","Es sol.","Está sol."],"hacer + sol. The weather uses hace, not es or está.","It's sunny."],
+  ["calor",["Hace mucho calor.","Está mucho calor.","Es mucho calor."],"hacer + calor, with mucho (not muy) because calor is a noun.","It's very hot."],
+  ["frio",["Hace frío.","Está frío.","Es frío."],"Hace frío for the weather. Está frío is for things: el café está frío.","It's cold."],
+  ["viento",["Hace viento.","Es viento.","Está viento."],"hacer + viento (hay viento is also fine).","It's windy."],
+  ["buen",["Hace buen tiempo.","Hace bueno tiempo.","Es buen tiempo."],"bueno shortens to buen before a masculine noun: buen tiempo.","The weather is good."],
+  ["mal",["Hace mal tiempo.","Hace malo tiempo.","Está mal tiempo."],"malo shortens to mal before a masculine noun: mal tiempo.","The weather is bad."],
+  ["niebla",["Hay niebla.","Hace niebla.","Es niebla."],"haber (hay) + niebla: there is fog.","It's foggy."],
+  ["tormenta",["Hay tormenta.","Hace tormenta.","Está tormenta."],"hay + tormenta: there's a storm.","There's a storm."],
+  ["nublado",["Está nublado.","Hace nublado.","Hay nublado."],"estar + nublado: nublado is an adjective describing the sky.","It's cloudy."],
+  ["despejado",["El cielo está despejado.","El cielo es despejado.","Hace despejado."],"estar + despejado: the sky is clear right now.","The sky is clear."],
+  ["lluvia",["Está lloviendo.","Está llovendo.","Hace lluvia."],"estar + gerund: lloviendo (llover → llov- + -iendo).","It's raining."],
+  ["nieve",["Nieva.","Neva.","Hace nieve."],"nevar changes e → ie in the present: nieva.","It snows / it's snowing."],
+  ["truena",["Truena.","Trona.","Hace trueno."],"tronar changes o → ue in the present: truena.","It's thundering."],
+  ["hiela",["Hiela por las noches.","Hela por las noches.","Hace hielo por las noches."],"helar changes e → ie in the present: hiela.","It freezes at night."],
+  ["granizo",["Está granizando.","Está granizo.","Hace granizo."],"granizar is regular: está granizando = it's hailing.","It's hailing."],
+];
+// Weather verbs: [infinitive, forms in 6 tenses, English in 6 tenses, stem change label, changed letters]
+const TENSES = ["Presente","Presente continuo","Pretérito indefinido","Imperfecto","Futuro","Ir a + infinitivo"];
+const TP_ES = ["Normalmente","Mira, ahora","Ayer","Antes","Mañana","Esta tarde"], TP_EN = ["Normally","Look, right now","Yesterday","In the past","Tomorrow","This afternoon"];
+const VW = [
+  ["llover",["llueve","está lloviendo","llovió","llovía","lloverá","va a llover"],["it rains","it's raining","it rained","it rained / it used to rain","it will rain","it's going to rain"],"o → ue","ue"],
+  ["nevar",["nieva","está nevando","nevó","nevaba","nevará","va a nevar"],["it snows","it's snowing","it snowed","it snowed / it used to snow","it will snow","it's going to snow"],"e → ie","ie"],
+  ["tronar",["truena","está tronando","tronó","tronaba","tronará","va a tronar"],["it thunders","it's thundering","it thundered","it thundered / it used to thunder","it will thunder","it's going to thunder"],"o → ue","ue"],
+  ["helar",["hiela","está helando","heló","helaba","helará","va a helar"],["it freezes","it's freezing","it froze","it froze / it used to freeze","it will freeze","it's going to freeze"],"e → ie","ie"],
+  ["granizar",["graniza","está granizando","granizó","granizaba","granizará","va a granizar"],["it hails","it's hailing","it hailed","it hailed / it used to hail","it will hail","it's going to hail"],null,null],
+  ["hacer calor",["hace calor","está haciendo calor","hizo calor","hacía calor","hará calor","va a hacer calor"],["it's hot","it's hot (right now)","it was hot","it was hot / it used to be hot","it will be hot","it's going to be hot"],null,null],
+];
+function vwHL(v,t){ const V=VW[v], f=V[1][t];
+  if(V[3]) return t===0? [f.indexOf(V[4]),2,`stem change ${V[3]}`] : [-1,0,"no stem change in this tense"];
+  if(v===5){ if(t===2) return [0,4,"irregular: hacer → hizo"]; if(t===4) return [0,3,"irregular future stem har-"]; if(t===3) return [0,5,"hacía: imperfect with an accent"]; }
+  return [-1,0,"regular"]; }
+function vwSentence(v,t){ let f=VW[v][1][t]; if(t===0||t===3) f = v===5? f.replace("calor","mucho calor") : f+" mucho"; return {es:`${TP_ES[t]} ${f}.`, en:`${TP_EN[t]} ${VW[v][2][t].split(" / ")[0]}${t===0||t===3?" a lot":""}.`}; }
+// Map of Spain (lon, lat)
+const SPAIN = [[-9.3,43.0],[-8.0,43.7],[-7.0,43.55],[-5.8,43.6],[-4.0,43.45],[-3.0,43.4],[-1.8,43.38],[-0.5,42.8],[0.7,42.85],[1.7,42.5],[3.2,42.4],[3.1,41.9],[2.2,41.4],[0.9,41.0],[0.5,40.6],[-0.3,39.5],[0.2,38.8],[-0.5,38.3],[-0.8,37.6],[-1.9,36.9],[-2.5,36.8],[-4.4,36.7],[-5.4,36.1],[-5.6,36.0],[-6.2,36.5],[-6.4,36.8],[-7.4,37.2],[-7.5,37.6],[-7.2,38.2],[-7.1,38.8],[-7.0,39.5],[-7.5,39.7],[-6.9,40.2],[-6.8,41.0],[-6.2,41.6],[-6.6,41.95],[-8.1,41.85],[-8.9,41.9]];
+const PORTUGAL = [[-8.9,41.9],[-8.8,41.2],[-8.7,40.6],[-9.0,39.6],[-9.5,38.8],[-8.9,38.5],[-8.8,37.9],[-8.9,37.0],[-7.4,37.2],[-7.5,37.6],[-7.2,38.2],[-7.1,38.8],[-7.0,39.5],[-7.5,39.7],[-6.9,40.2],[-6.8,41.0],[-6.2,41.6],[-6.6,41.95],[-8.1,41.85]];
+const ISLES = [[2.95,39.62,0.45,0.22],[4.1,39.97,0.25,0.1],[1.42,38.98,0.2,0.12]];
+const CANARIAS = [[-18.0,27.75,0.15],[-17.85,28.65,0.2],[-17.2,28.1,0.15],[-16.6,28.3,0.35],[-15.6,27.95,0.3],[-14.0,28.4,0.38],[-13.6,29.05,0.25]];
+const REG = [
+  ["galicia","Galicia","el noroeste",-7.9,42.75],["cantabrica","la zona cantábrica","el norte",-4.6,43.12],["pirineos","los Pirineos","el nordeste",0.7,42.55],
+  ["ebro","el valle del Ebro","el nordeste",-0.9,41.6],["meseta","la meseta central","el centro",-3.8,40.3],["mediterraneo","el litoral mediterráneo","el este",-0.4,39.0],
+  ["andalucia","Andalucía","el sur",-4.9,37.5],["baleares","las islas Baleares","el este",2.9,39.6],["canarias","las islas Canarias","el sudoeste (en el Atlántico)",null,null],
+];
+const regName = id => REG.find(r=>r[0]===id)[1];
+// Forecast lines for the map lab: [Spanish, region, English, picture]
+const MP = [
+  ["En la zona cantábrica habrá chubascos por la mañana.","cantabrica","Showers on the Cantabrian (north) coast in the morning.","lluvia"],
+  ["En el noroeste, en Galicia, lloverá durante todo el día.","galicia","Rain all day in the north-west, in Galicia.","lluvia"],
+  ["Nevará en los Pirineos por encima de los mil quinientos metros.","pirineos","Snow in the Pyrenees above 1 500 metres.","nieve"],
+  ["En la meseta central el cielo estará despejado, pero helará por la noche.","meseta","Clear skies on the central plateau, but frost at night.","despejado"],
+  ["En el sur hará mucho calor: hasta treinta y ocho grados en Sevilla y Córdoba.","andalucia","Very hot in the south: up to 38 degrees in Seville and Córdoba.","calor"],
+  ["En el litoral mediterráneo habrá tormentas con granizo por la tarde.","mediterraneo","Thunderstorms with hail on the Mediterranean coast in the afternoon.","tormenta"],
+  ["En las islas Canarias hará sol y las temperaturas serán suaves.","canarias","Sunny with mild temperatures in the Canary Islands.","sol"],
+  ["Soplará un viento fuerte del noroeste en el valle del Ebro: es el cierzo.","ebro","Strong north-west wind in the Ebro valley: the cierzo.","viento"],
+  ["En las islas Baleares, intervalos nubosos y el mar en calma.","baleares","Cloudy spells and a calm sea in the Balearic Islands.","nublado"],
+  ["Habrá niebla en los valles del interior de Galicia a primera hora.","galicia","Fog in the inland valleys of Galicia first thing in the morning.","niebla"],
+];
+const MAP_FINAL = {galicia:"lluvia",cantabrica:"lluvia",pirineos:"nieve",ebro:"viento",meseta:"despejado",mediterraneo:"tormenta",andalucia:"calor",baleares:"nublado",canarias:"sol"};
+// Altitude survey: [town, altitude in metres (rounded)]
+const TOWNS = [["Valencia",15],["Málaga",10],["Zaragoza",200],["Toledo",530],["Madrid",660],["Guadalajara",690],["Granada",740],["León",840],["Burgos",860],["Teruel",920],["Cuenca",950],["Segovia",1000],["Soria",1060],["Ávila",1130],["el puerto de Navacerrada",1860],["Pradollano (Sierra Nevada)",2100]];
+const SV_SAMPLE = [[15,26],[200,25],[530,23],[660,22],[1000,19],[1130,19],[1860,14],[2100,12]];
+// Passing on a forecast: [sentence with ___, options, right, rule]
+const REP = [
+  ["Han dicho en la radio ___ mañana lloverá.",["que","qué","de"],0,"decir que + the forecast. No accent: que joins the two parts."],
+  ["La presentadora ha ___ que habrá tormentas.",["dicho","decido","decía"],0,"Present perfect: ha dicho (decir → dicho, irregular participle)."],
+  ["«Mañana nevará.» → Han anunciado que mañana ___ en los Pirineos.",["nevará","nevaba","nieve"],0,"After ha dicho / han anunciado, keep the forecast's tense: nevará."],
+  ["«Hará calor en el sur.» → Han predicho que ___ calor en el sur.",["hará","hizo","hacía"],0,"Han predicho que + the same future: hará."],
+  ["«Va a llover esta tarde.» → Ha dicho que ___ a llover esta tarde.",["va","fue","vaya"],0,"Ir a + infinitive stays the same: va a llover."],
+  ["Según ___ AEMET, habrá niebla en la costa.",["la","el","los"],0,"La AEMET (la Agencia Estatal de Meteorología). Según = according to."],
+  ["Mi padre ha visto el pronóstico y ___ que hará sol.",["dice","dicen","digo"],0,"Mi padre dice que… (he says that…): third person singular."],
+  ["El lunes dijeron que el martes ___, pero hizo sol.",["llovería","lloverá","llueva"],0,"A past reporting verb (dijeron) about a day that's already gone: the future becomes the conditional, llovería."],
+  ["«Habrá chubascos.» → Ha dicho que ___ chubascos.",["habrá","habrán","hay habrá"],0,"Habrá is impersonal: always singular, even with a plural noun."],
+  ["«Las temperaturas bajarán.» → Han dicho que las temperaturas ___.",["bajarán","bajará","bajaron"],0,"The verb agrees with las temperaturas: bajarán."],
+  ["¿Qué ___ dicho los del tiempo para el sábado?",["han","ha","hemos"],0,"¿Qué han dicho…? Plural, to agree with los del tiempo (the forecasters)."],
+  ["Dicen que mañana ___ mucho viento.",["hará","hizo","hacía"],0,"Dicen que + future for a forecast: hará viento."],
+];
+// Weather and activities: [forecast, picture, question, short label, possible?, model answer]
+const ACT = [
+  ["Mañana habrá viento muy fuerte en la costa, con olas de cuatro metros.","viento","¿Podremos ir a navegar?","navegar",false,"No. Si hay olas de cuatro metros, no podremos navegar."],
+  ["Esta noche nevará mucho en Sierra Nevada y mañana el cielo estará despejado.","nieve","¿Se podrá esquiar mañana?","esquiar",true,"Sí. Si nieva esta noche y mañana hace sol, podremos esquiar."],
+  ["Hay niebla espesa en el aeropuerto de Madrid y han cancelado muchos vuelos.","niebla","¿Saldrá nuestro avión a su hora?","volar",false,"No. Si hay tanta niebla, habrá retrasos o cancelaciones."],
+  ["Hará sol y treinta y dos grados en la playa.","calor","¿Podremos bañarnos en el mar?","bañarse",true,"Sí. Si hace calor y sol, podremos bañarnos."],
+  ["Habrá hielo en las carreteras de montaña y recomiendan no viajar.","hiela","¿Es buena idea conducir hasta la sierra?","conducir",false,"No. Si hay hielo en la carretera, será peligroso conducir."],
+  ["Cielo despejado y temperaturas suaves todo el fin de semana.","sol","¿Podremos hacer senderismo el sábado?","senderismo",true,"Sí. Si hace buen tiempo, podremos hacer senderismo."],
+  ["Aviso naranja: tormentas fuertes con rayos en la montaña por la tarde.","tormenta","¿Subimos al pico esta tarde?","subir al pico",false,"No. Si hay tormenta con rayos, será muy peligroso subir."],
+  ["Lloverá un poco por la mañana, pero por la tarde saldrá el sol.","buen","¿Podremos jugar al tenis por la tarde?","tenis",true,"Sí. Si sale el sol por la tarde, podremos jugar."],
+  ["No ha nevado en todo el mes y hace mucho calor para la época.","calor","¿Se podrá esquiar este fin de semana?","esquiar",false,"No. Si no hay nieve, no se podrá esquiar."],
+  ["El mar estará en calma y el viento será suave.","sol","¿Podremos salir en barco?","salir en barco",true,"Sí. Si el mar está en calma, podremos salir en barco."],
+  ["Temporal en el mar: el puerto está cerrado y hoy no sale ningún barco.","mal","¿Podemos coger el ferry a Mallorca hoy?","coger el ferry",false,"No. Si el puerto está cerrado, no podremos coger el ferry."],
+  ["Esta tarde habrá granizo y lluvias fuertes.","granizo","¿Hacemos la barbacoa en el jardín?","barbacoa",false,"No. Si graniza, no podremos hacer la barbacoa fuera."],
+];
+/* ---------- drawings ---------- */
+function fitFont(ctx,t,max,start,min,w=700){ let fs=start; ctx.font=F(fs,w); while(ctx.measureText(t).width>max && fs>min){ fs--; ctx.font=F(fs,w); } return fs; }
+function cloudPath(x,y,s){ const p=new Path2D(); [[-16,4,12],[0,-6,16],[16,2,12]].forEach(([dx,dy,r])=>{ p.moveTo(x+(dx+r)*s,y+dy*s); p.arc(x+dx*s,y+dy*s,r*s,0,Math.PI*2); }); p.rect(x-16*s,y+2*s,32*s,14*s); p.moveTo(x-16*s,y+16*s); p.arc(x-16*s,y+10*s,6*s,Math.PI/2,Math.PI*1.5); p.moveTo(x+16*s,y+4*s); p.arc(x+16*s,y+10*s,6*s,-Math.PI/2,Math.PI/2); return p; }
+function drawEl(ctx,k,x,y,s,bgc){
+  ctx.save(); ctx.lineCap="round"; ctx.lineJoin="round";
+  if(k==="sun"){ ctx.strokeStyle=C.apricot; ctx.lineWidth=3*s; for(let i=0;i<8;i++){ const a=i*Math.PI/4; ctx.beginPath(); ctx.moveTo(x+Math.cos(a)*22*s,y+Math.sin(a)*22*s); ctx.lineTo(x+Math.cos(a)*31*s,y+Math.sin(a)*31*s); ctx.stroke(); } circle(ctx,x,y,17*s,C.apricot); }
+  else if(k==="cloud"||k==="dcloud"){ const p=cloudPath(x,y,s); ctx.strokeStyle=C.muted; ctx.lineWidth=3*s; ctx.stroke(p); ctx.fillStyle=k==="dcloud"?C.olive:C.surface; ctx.fill(p); }
+  else if(k==="rain"){ ctx.strokeStyle=C["olive-ink"]||C.olive; ctx.lineWidth=2.6*s; for(let i=-2;i<=2;i++){ ctx.beginPath(); ctx.moveTo(x+i*10*s+3*s,y+21*s); ctx.lineTo(x+i*10*s-3*s,y+33*s); ctx.stroke(); } }
+  else if(k==="snow"){ ctx.strokeStyle=C.muted; ctx.lineWidth=1.8*s; [[-18,24],[-6,32],[6,24],[18,32],[0,40]].forEach(([dx,dy])=>{ for(let j=0;j<3;j++){ const a=j*Math.PI/3; ctx.beginPath(); ctx.moveTo(x+dx*s-Math.cos(a)*4*s,y+dy*s-Math.sin(a)*4*s); ctx.lineTo(x+dx*s+Math.cos(a)*4*s,y+dy*s+Math.sin(a)*4*s); ctx.stroke(); } }); }
+  else if(k==="hail"){ [[-18,24],[-8,33],[4,25],[14,34],[22,25],[-2,40]].forEach(([dx,dy])=>circle(ctx,x+dx*s,y+dy*s,3.2*s,C.muted)); }
+  else if(k==="bolt"){ ctx.fillStyle=C.terra; ctx.beginPath(); [[4,12],[-8,30],[0,30],[-6,46],[12,24],[3,24],[10,12]].forEach(([dx,dy],i)=>{ if(i) ctx.lineTo(x+dx*s,y+dy*s); else ctx.moveTo(x+dx*s,y+dy*s); }); ctx.closePath(); ctx.fill(); }
+  else if(k==="fog"){ ctx.fillStyle=C.sage; [[-30,-20,60],[-22,-6,48],[-32,8,64],[-18,22,40]].forEach(([dx,dy,len])=>{ rr(ctx,x+dx*s,y+dy*s,len*s,7*s,3.5*s); ctx.fill(); }); }
+  else if(k==="wind"){ ctx.strokeStyle=C.muted; ctx.lineWidth=3*s; [[-12,48],[0,60],[12,40]].forEach(([dy,len])=>{ const x0=x-30*s, x1=x0+len*s, yy=y+dy*s; ctx.beginPath(); ctx.moveTo(x0,yy); ctx.lineTo(x1,yy); ctx.arc(x1,yy-5*s,5*s,Math.PI/2,-Math.PI*0.7,true); ctx.stroke(); }); }
+  else if(k==="hot"||k==="cold"){ const col=k==="hot"?C.terra:C.olive; rr(ctx,x-5*s,y-26*s,10*s,42*s,5*s); ctx.fillStyle=C.surface; ctx.fill(); ctx.strokeStyle=C.muted; ctx.lineWidth=2*s; ctx.stroke(); const top=k==="hot"?-22:2; ctx.fillStyle=col; ctx.fillRect(x-2.5*s,y+top*s,5*s,(16-top)*s); circle(ctx,x,y+19*s,8*s,col,C.muted,2*s); }
+  else if(k==="moon"){ circle(ctx,x,y,16*s,C.apricot); circle(ctx,x+8*s,y-6*s,13.5*s,bgc||C.surface); [[-28,-14],[22,-24],[30,10],[-20,18],[8,24]].forEach(([dx,dy])=>circle(ctx,x+dx*s,y+dy*s,1.8*s,C.apricot)); }
+  else if(k==="ice"){ ctx.fillStyle=C.sage; rr(ctx,x-36*s,y-16*s,72*s,8*s,3*s); ctx.fill(); [[-30,16],[-18,26],[-6,14],[6,30],[18,18],[30,24]].forEach(([dx,len])=>{ ctx.beginPath(); ctx.moveTo(x+(dx-4)*s,y-8*s); ctx.lineTo(x+(dx+4)*s,y-8*s); ctx.lineTo(x+dx*s,y+(len-8)*s); ctx.closePath(); ctx.fill(); }); }
+  ctx.restore();
+}
+function wxDraw(ctx,key,cx,cy,s,bgc){ (WXP[key]||[]).forEach(([k,dx,dy,sc])=>drawEl(ctx,k,cx+dx*s,cy+dy*s,s*sc,bgc)); }
+function drawWeather(ctx,w,h,o){
+  const bgc=o.bgc||C.surface; bg(ctx,w,h,bgc); const cp=!!o.compact, cap=!cp&&o.say;
+  const s=Math.min(w/125,(h-(cap?62:10))/95), cy=cap?(h-58)/2+4:h/2;
+  wxDraw(ctx,o.k,w/2,cy,s,bgc);
+  if(cap){ const f=fitFont(ctx,o.say,w-30,o.big?24:20,10); text(ctx,o.say,w/2,h-(o.sub?32:20),o.ok==null?C.ink:o.ok?C.good:C.bad,F(f),"center"); if(o.sub){ const f2=fitFont(ctx,o.sub,w-30,13,9,600); text(ctx,o.sub,w/2,h-12,C.muted,F(f2,600),"center"); } }
+}
+function drawVerbWx(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=!!o.compact, V=VW[o.v], t=o.t, f=V[1][t], [hi,hl,lab]=vwHL(o.v,t);
+  const pad=cp?10:14; let y=cp?Math.max(8,(h-Math.min(w*0.11,26)*1.8*2-60)/2):34;
+  if(!cp) text(ctx,TENSES[t].toUpperCase(),14,20,C.muted,F(12),"left");
+  const f0=fitFont(ctx,V[0],w-80,cp?Math.min(22,w*0.07):20,9), w0=ctx.measureText(V[0]).width+pad*2, h0=f0*1.8;
+  rr(ctx,(w-w0)/2,y,w0,h0,10); ctx.fillStyle=C.apricot; ctx.fill(); text(ctx,V[0],w/2,y+h0/2+f0*0.35,"#3b2b21",F(f0),"center");
+  const ay=y+h0+(cp?4:8), ry=ay+(cp?14:28); line(ctx,w/2,ay,w/2,ry-8,C.muted,2); arrowHead(ctx,w/2,ry-6,0,1,C.muted,cp?5:7);
+  const rf=fitFont(ctx,f,w-60,cp?Math.min(30,w*0.1):34,10), tw=ctx.measureText(f).width, rw=tw+pad*3, rh=rf*1.8, rx=(w-rw)/2;
+  rr(ctx,rx,ry,rw,rh,12); ctx.fillStyle=C.blush; ctx.fill();
+  let x=(w-tw)/2; const by=ry+rh/2+rf*0.35;
+  const parts = hi>=0? [[f.slice(0,hi),0],[f.slice(hi,hi+hl),1],[f.slice(hi+hl),0]] : [[f,0]];
+  parts.forEach(([p,isH])=>{ if(!p) return; ctx.font=F(rf); const pw=ctx.measureText(p).width; if(isH){ rr(ctx,x-2,ry+rh*0.16,pw+4,rh*0.68,6); ctx.fillStyle=C.terra; ctx.fill(); } text(ctx,p,x,by,isH?(C["on-accent"]||"#fff"):"#3b2b21",F(rf),"left"); x+=pw; });
+  const ly=ry+rh+(cp?12:20); const lf=fitFont(ctx,lab,w-30,cp?13:13,8,600); text(ctx,lab,w/2,ly,hi>=0?C.terra:C.muted,F(lf,700),"center");
+  if(!cp){ const s=vwSentence(o.v,t), sy=ly+30; const f1=fitFont(ctx,s.es,w-30,18,10); text(ctx,s.es,w/2,sy,C.ink,F(f1),"center"); const f2=fitFont(ctx,s.en,w-30,13,9,600); text(ctx,s.en,w/2,sy+22,C.muted,F(f2,600),"center"); }
+}
+function mapProj(w,h,cp){ const L0=-10.2,L1=4.8,B0=35.0,B1=44.2,k=0.766, p=cp?6:12, sc=Math.min((w-2*p)/((L1-L0)*k),(h-2*p)/(B1-B0)), ox=(w-(L1-L0)*k*sc)/2, oy=(h-(B1-B0)*sc)/2;
+  const X=lon=>ox+(lon-L0)*k*sc, Y=lat=>oy+(B1-lat)*sc;
+  const box=[X(-10.1),Y(36.45),X(-6.95)-X(-10.1),Y(35.1)-Y(36.45)];
+  const CX=lon=>box[0]+(lon+18.3)/5*box[2], CY=lat=>box[1]+box[3]-(lat-27.4)/1.9*box[3];
+  return {X,Y,sc,box,CX,CY}; }
+function poly(ctx,pts,X,Y){ ctx.beginPath(); pts.forEach(([a,b],i)=>{ if(i) ctx.lineTo(X(a),Y(b)); else ctx.moveTo(X(a),Y(b)); }); ctx.closePath(); }
+function drawMap(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=!!o.compact||w<440, P=mapProj(w,h,!!o.compact), {X,Y,sc,box,CX,CY}=P, pos={}, land=o.bgc===C["surface-2"]?C.surface:C["surface-2"];
+  poly(ctx,PORTUGAL,X,Y); ctx.fillStyle=C.grid; ctx.fill(); ctx.strokeStyle=C.line; ctx.lineWidth=1; ctx.stroke();
+  poly(ctx,SPAIN,X,Y); ctx.fillStyle=land; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.6; ctx.stroke();
+  ISLES.forEach(([a,b,rx,ry])=>{ ctx.beginPath(); ctx.ellipse(X(a),Y(b),rx*0.766*sc,ry*sc,0,0,Math.PI*2); ctx.fillStyle=land; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.2; ctx.stroke(); });
+  rr(ctx,box[0],box[1],box[2],box[3],6); ctx.strokeStyle=C.line; ctx.lineWidth=1.2; ctx.stroke();
+  CANARIAS.forEach(([a,b,r])=>circle(ctx,CX(a),CY(b),Math.max(2,r*sc*0.55),land,C.ink,1));
+  if(!o.compact){ text(ctx,"PORTUGAL",X(-8.2),Y(39.6),C.muted,F(cp?8:11,700),"center"); text(ctx,"FRANCIA",X(1.2),Y(43.75),C.muted,F(cp?8:11,700),"center"); text(ctx,"Océano Atlántico",X(-8.6),Y(43.95),C.muted,F(cp?8:11,600),"center"); text(ctx,"Mar Mediterráneo",X(2.6),Y(37.6),C.muted,F(cp?8:11,600),"center");
+    const nx=w-(cp?18:28), ny=cp?20:30; line(ctx,nx,ny+12,nx,ny-8,C.ink,2); arrowHead(ctx,nx,ny-10,0,-1,C.ink,6); text(ctx,"N",nx,ny+26,C.ink,F(cp?10:12),"center"); }
+  REG.forEach(([id,name,dir,a,b])=>{ const x=a==null?box[0]+box[2]/2:X(a), y=a==null?box[1]+box[3]/2:Y(b); pos[id]=[x,y];
+    const r=o.compact?3.5:(cp?7:10), hl=o.hl===id, fl=o.flash&&o.flash.id===id;
+    if(o.icons&&o.icons[id]){ wxDraw(ctx,o.icons[id],x,y-(o.compact?2:4),sc/80,land); }
+    else { circle(ctx,x,y,r,hl?C.apricot:C.surface,fl?(o.flash.ok?C.good:C.bad):C.terra,fl?3:2); }
+    if(fl){ circle(ctx,x,y,r+6,null,o.flash.ok?C.good:C.bad,2.5); }
+    if(o.names&&!o.compact){ const f=cp?8:11; text(ctx,name,x,y+r+(cp?9:13),C.ink,F(f,700),"center"); } });
+  return {pos};
+}
+function drawSurvey(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const pts=o.pts||[], fr=frame(ctx,w,h,{x0:0,x1:2200,y0:0,y1:30,xl:"altitud (m)",yl:"máxima (°C)",compact:o.compact,xt:500,yt:5});
+  const f=fitLine(pts); if(f) line(ctx,fr.X(0),fr.Y(f.c),fr.X(2200),fr.Y(f.c+f.m*2200),C.terra,2.5,[7,5]);
+  pts.forEach(([x,y],i)=>circle(ctx,fr.X(x),fr.Y(y),o.compact?3.5:5,i===pts.length-1&&!o.compact?C.apricot:C.surface,C.ink,2));
+}
+function drawGap(ctx,w,h,o){
+  bg(ctx,w,h,o.bgc); const cp=!!o.compact, G=REP[o.k], fs=cp?(w<300?12:15):(w<440?16:20), pad=cp?5:8, bh=fs*1.6, lh=bh+(cp?6:10); ctx.font=F(fs);
+  const toks=G[0].split(" ").map(t=>{ const g=t.includes("___"); return {t:g?t.replace("___", o.done? G[1][o.pick!=null?o.pick:G[2]] : "  ?  "):t, g}; });
+  let x=12, y=cp?10:22; toks.forEach(tk=>{ ctx.font=F(fs); tk.w=Math.min(w-24,ctx.measureText(tk.t).width+pad*2); if(x+tk.w>w-12 && x>12){ x=12; y+=lh; } tk.x=x; tk.y=y; x+=tk.w+(cp?4:6); });
+  toks.forEach(tk=>{ rr(ctx,tk.x,tk.y,tk.w,bh,8); ctx.fillStyle=tk.g?(o.done?(o.ok?C.sage:C.blush):C.apricot):C["surface-2"]; ctx.fill(); if(tk.g){ ctx.strokeStyle=C.terra; ctx.lineWidth=2; ctx.stroke(); } const f=fitFont(ctx,tk.t,tk.w-4,fs,8); text(ctx,tk.t,tk.x+tk.w/2,tk.y+bh/2+f*0.35,tk.g?"#3b2b21":C.ink,F(f),"center"); });
+  const ry=y+lh+(cp?6:14), msg=o.done? G[3] : "Which word fills the gap?", f2=fitFont(ctx,msg,w-40,cp?11:14,7,600);
+  rr(ctx,12,ry,w-24,f2*2.4,10); ctx.fillStyle=o.done?C["surface-2"]:C.surface; ctx.fill(); ctx.strokeStyle=C.line; ctx.lineWidth=1.2; ctx.stroke(); text(ctx,msg,w/2,ry+f2*1.2+f2*0.35,o.done?C.ink:C.muted,F(f2,600),"center");
+}
+function drawAct(ctx,w,h,o){
+  const bgc=o.bgc||C.surface; bg(ctx,w,h,bgc); const cp=!!o.compact||w<440, A=ACT[o.k], s=Math.min(w*0.5/120,h/100);
+  wxDraw(ctx,A[1],w*0.25,h*0.47,s,bgc);
+  line(ctx,w/2,14,w/2,h-14,C.line,1.5,[5,5]);
+  const lf=fitFont(ctx,A[3],w*0.44,cp?18:28,9); text(ctx,A[3],w*0.75,h*0.36,C.ink,F(lf),"center");
+  text(ctx,"¿se podrá?",w*0.75,h*0.36+(cp?18:26),C.muted,F(cp?11:14,600),"center");
+  if(o.done){ const yes=A[4], t=yes?"SÍ":"NO", col=yes?C.good:C.bad, sw=cp?60:90, sh=cp?30:44, sx=w*0.75-sw/2, sy=h*0.58;
+    ctx.save(); ctx.translate(w*0.75,sy+sh/2); ctx.rotate(-0.12); rr(ctx,-sw/2,-sh/2,sw,sh,8); ctx.strokeStyle=col; ctx.lineWidth=3; ctx.stroke(); text(ctx,t,0,(cp?20:30)*0.35,col,F(cp?20:30),"center"); ctx.restore(); }
+}
+function fitLine(pts){ if(pts.length<2) return null; const n=pts.length, mx=pts.reduce((a,p)=>a+p[0],0)/n, my=pts.reduce((a,p)=>a+p[1],0)/n; let sxy=0,sxx=0; pts.forEach(([x,y])=>{ sxy+=(x-mx)*(y-my); sxx+=(x-mx)**2; }); if(!sxx) return null; const m=sxy/sxx; return {m,c:my-m*mx}; }
+
+/* ================= ROUTER ================= */
+const VIEWS = ["overview","learn","labs","mindmap","infographics","flashcards","quiz","exam","glossary","formulae"];
+let view = "overview", lab = "tiempo", curTopic = null;
+function show(v, opts={}){
+  if(!VIEWS.includes(v)) v="overview";
+  view=v;
+  document.querySelectorAll(".view").forEach(s=>s.hidden = s.dataset.view!==v);
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===v));
+  const on=document.querySelector("#tabs a.on"); if(on) on.scrollIntoView({block:"nearest",inline:"nearest"});
+  if(!opts.keepScroll) window.scrollTo(0,0);
+  if(v==="labs") showLab(lab);
+  if(v==="mindmap") drawMindMap();
+  if(v==="overview") refreshStats();
+  fitVisible();
+  markTopics();
+  document.body.classList.remove("menu");
+}
+function showLab(id){
+  lab=id; curTopic=id;
+  document.querySelectorAll(".lab").forEach(l=>l.hidden = l.dataset.lab!==id);
+  document.querySelectorAll("#labTabs button").forEach(b=>b.classList.toggle("on", b.dataset.lab===id));
+  fitVisible();
+  markTopics();
+}
+function fitVisible(){ sims.forEach(s=>{ if(s.el.offsetParent) s.fit(); }); }
+function goTopic(id){
+  curTopic=id;
+  if(view==="labs") showLab(id);
+  else if(view==="flashcards") fcSetFilter(id);
+  else if(view==="quiz") qzStart(id);
+  else { if(view!=="learn") show("learn"); const el=$("l-"+id); if(el) el.scrollIntoView({behavior: reduce?"auto":"smooth"}); }
+  markTopics(); document.body.classList.remove("menu");
+}
+function markTopics(){ document.querySelectorAll("#topicList button").forEach(b=>b.classList.toggle("on", b.dataset.t===curTopic && ["labs","learn","flashcards","quiz"].includes(view))); }
+$("topicList").innerHTML = TOPICS.map(t=>`<button data-t="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("topicList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) goTopic(b.dataset.t); });
+$("labTabs").innerHTML = TOPICS.map(t=>`<button data-lab="${t.id}">${svg(t.id)}${t.name}</button>`).join("");
+$("labTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showLab(b.dataset.lab); });
+$("tabs").addEventListener("click",e=>{ const a=e.target.closest("a"); if(!a) return; e.preventDefault(); history.replaceState(null,"","#"+a.dataset.v); show(a.dataset.v); });
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(!g) return; const v=g.dataset.go; if(g.dataset.lab){ lab=g.dataset.lab; } if(g.dataset.topic){ curTopic=g.dataset.topic; } history.replaceState(null,"","#"+v); show(v); if(v==="learn"&&g.dataset.topic){ const el=$("l-"+g.dataset.topic); if(el) setTimeout(()=>el.scrollIntoView(),30); } if(v==="flashcards"&&g.dataset.topic) fcSetFilter(g.dataset.topic); });
+$("menuBtn").addEventListener("click",()=>document.body.classList.toggle("menu"));
+$("scrim").addEventListener("click",()=>document.body.classList.remove("menu"));
+
+/* ================= OVERVIEW ================= */
+$("topicCards").innerHTML = TOPICS.map(t=>`<div class="panel tcard"><div class="ico" style="background:${t.tint}">${svg(t.id)}</div><h3>${t.name}</h3><p>${t.short}</p><div class="row"><button data-go="learn" data-topic="${t.id}">Learn</button><button data-go="labs" data-lab="${t.id}">Lab</button><button data-go="flashcards" data-topic="${t.id}">Cards</button></div></div>`).join("");
+$("loList").innerHTML = LO.map(([t,s],i)=>`<li><label><input type="checkbox" id="lo${i}"><span class="mono">${i+1}</span><span>${s} <small style="color:var(--muted)">· ${LO_HEAD[i]}</small></span></label></li>`).join("");
+const loState=store.get("es13-lo",{});
+LO.forEach((x,i)=>{ const id="lo"+i; $(id).checked=!!loState[id]; $(id).addEventListener("change",()=>{ loState[id]=$(id).checked; store.set("es13-lo",loState); refreshStats(); }); });
+function refreshStats(){
+  const lo=LO.filter((x,i)=>$("lo"+i).checked).length; $("stLO").textContent=`${lo}/${LO.length}`; $("stLOb").style.width=(lo/LO.length*100)+"%";
+  const kn=Object.keys(fcKnown).length; $("stFC").textContent=`${kn}/${CARDS.length}`; $("stFCb").style.width=(kn/CARDS.length*100)+"%";
+  const best=store.get("es13-best",null); $("stQZ").textContent= best==null? "–" : best+"%"; $("stQZb").style.width=(best||0)+"%";
+}
+let heroT=0;
+/* ================= LEARN ================= */
+const LEARN = {
+  tiempo:{ vis:[["weather",{k:"buen"}]], cap:"Hace buen tiempo: hace sol, pero hay unas nubes. Three verbs describe the weather: hacer, haber and estar.",
+    keys:[["☀","Hace + sol, calor, frío, viento, buen tiempo, mal tiempo. Hace mucho calor (not muy)."],["☁","Hay + niebla, tormenta, nubes. Está + nublado, despejado."],["🌍","Climate: El clima de Irlanda es templado y húmedo. En el sur de España los veranos son muy calurosos y secos."]],
+    f:"hace + noun · hay + noun · está + adjective", mistake:"Using es or está with calor and frío. The weather takes hace: hace frío. (Tengo frío = I feel cold.)" },
+  verbos:{ vis:[["verbwx",{v:0,t:0}]], cap:"llover → llueve: the o becomes ue in the present. In every other tense the stem stays: llovió, lloverá.",
+    keys:[["↻","Stem changes in the present: llover → llueve, tronar → truena (o → ue); nevar → nieva, helar → hiela (e → ie)."],["1","Weather verbs are impersonal: only the él / ella form, no subject. Llueve = it rains."],["⏱","Six tenses: llueve, está lloviendo, llovió, llovía, lloverá, va a llover."]],
+    f:"llueve · nieva · truena · hiela · graniza", mistake:"Writing \"neva\" or \"llove\". Weather verbs change their stem in the present: nieva, llueve." },
+  mapa:{ vis:[["map",{icons:MAP_FINAL}]], cap:"Rain in the north and west, snow on the Pyrenees, sun in the south and the Canaries.",
+    keys:[["🧭","Los puntos cardinales: el norte, el sur, el este, el oeste; el noroeste, el nordeste, el sudeste, el sudoeste."],["⛰","Regions: la zona cantábrica (north coast), la zona pirenaica (Pyrenees), la meseta (centre), el litoral mediterráneo (east)."],["🏞","Geography words: la cordillera, el valle, la montaña, el río, el paso de montaña (el puerto)."]],
+    f:"en el norte de España · en la zona cantábrica · en los Pirineos", mistake:"Leaving out the article. Spanish says en el norte, en el sur: \"en norte\" is wrong." },
+  prevision:{ vis:[["survey",{pts:SV_SAMPLE}]], cap:"Invented forecast data: the higher the town, the lower the maximum, about 6 to 7 degrees less per 1 000 m.",
+    keys:[["📺","Forecast words: cielo despejado, intervalos nubosos, chubascos, granizo, tormentas, niebla, heladas."],["🌡","Temperatures: la máxima será de veinte grados; la mínima, dos grados bajo cero (menos dos)."],["↕","Change: las temperaturas subirán / bajarán; habrá, hará, lloverá, nevará (future tense)."]],
+    f:"la máxima será de + número + grados", mistake:"\"Veintiuno grados\". Before a masculine noun, uno becomes un: veintiún grados, un grado." },
+  mensaje:{ vis:[["gap",{k:2,done:true,ok:true}]], cap:"Han anunciado que mañana nevará: after a present perfect, the forecast keeps its future tense.",
+    keys:[["🗣","Ha dicho que… Han anunciado que… Han predicho que… + the forecast in the same tense."],["📻","Según la radio / la AEMET / el pronóstico, mañana lloverá."],["⏪","Higher Level: a past reporting verb turns the future into the conditional. Dijeron que llovería."]],
+    f:"Han dicho que + futuro · Dijeron que + condicional", mistake:"Leaving out que. In Spanish you must say \"Ha dicho que lloverá\", never \"Ha dicho lloverá\"." },
+  actividades:{ vis:[["act",{k:1,done:true}]], cap:"Fresh snow and a clear sky tomorrow: sí, se podrá esquiar.",
+    keys:[["?","Ask: ¿Se podrá esquiar? ¿Podremos navegar? ¿Habrá vuelos? ¿Estará abierta la carretera?"],["→","If… will…: si + present, future. Si hace viento, no podremos navegar."],["🎿","Activities: esquiar, navegar, hacer senderismo, bañarse, conducir, volar, ir de excursión."]],
+    f:"si + presente → futuro", mistake:"Putting the future after si. Say \"Si llueve, no iremos\", never \"Si lloverá…\"." },
+};
+
+$("learnList").innerHTML = TOPICS.map(t=>{ const L=LEARN[t.id];
+  const vis = L.vis.map((v,k)=>`<canvas class="mini" data-learn="${t.id}" data-k="${k}"></canvas>`).join("");
+  return `<article class="panel lcard" id="l-${t.id}">
+    <div class="vis"><div style="display:grid;gap:8px">${vis}</div><p class="cap">${L.cap}</p></div>
+    <div class="txt"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:${t.tint};color:#3b2b21">${svg(t.id,'width="24" height="24"')}</div><h2 style="font-size:1.5rem">${t.name}</h2></div>
+      <ul class="keys">${L.keys.map(([k,s])=>`<li><i style="background:${t.tint}">${k}</i><span>${autoLink(s)}</span></li>`).join("")}</ul>
+      <div><span class="formula">${L.f}</span></div>
+      <div class="mistake"><b>✕</b><span><b style="color:var(--bad)">Common mistake:</b> ${autoLink(L.mistake)}</span></div>
+      <div class="btns"><button class="primary" data-go="labs" data-lab="${t.id}">Open the lab</button><button data-go="flashcards" data-topic="${t.id}">Flashcards</button></div>
+    </div></article>`; }).join("");
+/* ================= INFOGRAPHICS ================= */
+const CASES = [
+  ["prevision","1 · Greeting and day","var(--blush)","Buenos días. Este es el tiempo previsto para mañana, sábado."],
+  ["mapa","2 · Region by region","var(--apricot)","En el norte, cielos cubiertos; en el sur, sol."],
+  ["tiempo","3 · Rain, snow, storms","var(--sage)","Habrá chubascos en Galicia y nevará en los Pirineos."],
+  ["prevision","4 · Temperatures and wind","var(--cream)","Las temperaturas bajarán. Viento fuerte en el Ebro."],
+  ["actividades","5 · Warnings","var(--blush)","Aviso amarillo por nieve: carreteras cortadas en la sierra."],
+];
+$("cases").innerHTML = CASES.map(([i,n,tn,d])=>`<div class="panel sh-card"><div style="display:flex;gap:10px;align-items:center"><div class="ico" style="background:${tn}">${svg(i)}</div><h3>${n}</h3></div><p style="font-family:var(--f-display);font-size:1.05rem">${d}</p></div>`).join("");
+(()=>{ const B=[["Santiago de Compostela (Galicia)",1800,"≈ 1 800 mm"],["Bilbao (zona cantábrica)",1200,"≈ 1 200 mm"],["Dublin (for comparison)",760,"≈ 760 mm"],["Sevilla (Andalucía)",540,"≈ 540 mm"],["Madrid (meseta)",420,"≈ 420 mm"],["Almería (sudeste)",200,"≈ 200 mm"]], mx=1800;
+  $("bars").innerHTML = B.map(([n,v,l],i)=>`<div class="barrow"><span><b>${n}</b></span><div class="track"><i style="width:${(v/mx*100).toFixed(1)}%;background:var(--${["terra","apricot","olive","sage","blush","cream"][i]})"></i></div><span class="v">${l}</span></div>`).join("") + `<p class="result">Rounded long-term averages; exact figures depend on the station and the years used. Useful phrase: En Galicia llueve mucho más que en Madrid.</p>`; })();
+const AROUND = [
+  ["globe","La AEMET","Spain's national weather service is the Agencia Estatal de Meteorología. Forecasts often begin \"Según la AEMET…\".",[["Spain","neutral"],["Previsión","real"]],"var(--blush)"],
+  ["wind","Winds with names","El cierzo blows down the Ebro valley, la tramontana in Catalonia and the Balearics, el levante through the Strait of Gibraltar.",[["Mapa","real"]],"var(--apricot)"],
+  ["drop","La DANA","In autumn, a cold pocket of air high up can bring sudden torrential rain to the Mediterranean coast. The news calls it una DANA or la gota fría.",[["News","real"]],"var(--sage)"],
+  ["clock","Seasons upside down","In Argentina and Chile, July is winter: en julio hace frío en Buenos Aires y se esquía en los Andes.",[["Latin America","neutral"]],"var(--cream)"],
+];
+$("around").innerHTML = AROUND.map(([i,t,p,ch,tn])=>`<div class="panel"><div class="ico" style="background:${tn}">${svg(i)}</div><div><h3>${t}</h3><p>${p}</p><div class="chips">${chipsHTML(ch)}</div></div></div>`).join("");
+// Phrase bank
+$("pbank").innerHTML = `<div class="panel fcell"><span class="pill">Hacer</span><span class="big">Hace sol · calor · frío · viento</span><dl><dt>Tiempo</dt><dd>Hace buen / mal tiempo</dd><dt>Grados</dt><dd>Hace veinte grados · Estamos a veinte grados</dd><dt>Más</dt><dd>Hace mucho calor · Hace un poco de frío</dd></dl></div>`
+  + `<div class="panel fcell"><span class="pill">Haber y estar</span><span class="big">Hay niebla · Está nublado</span><dl><dt>Hay</dt><dd>niebla, tormenta, nubes, hielo, viento</dd><dt>Está</dt><dd>nublado, despejado, cubierto</dd></dl></div>`
+  + [0,1,5].map(v=>`<div class="panel fcell"><span class="pill">Verb</span><span class="big">${VW[v][0]}${VW[v][3]?` (${VW[v][3]})`:""}</span><table class="ptable">${TENSES.map((t,i)=>`<tr><td>${t}</td><td><b>${VW[v][1][i]}</b></td></tr>`).join("")}</table></div>`).join("")
+  + `<div class="panel fcell"><span class="pill a">Pronóstico</span><span class="big">cielo despejado · chubascos · granizo · tormentas</span><dl><dt>Temperaturas</dt><dd>la máxima / la mínima será de… grados · bajo cero</dd><dt>Cambios</dt><dd>subirán · bajarán · habrá · hará</dd></dl></div>`
+  + `<div class="panel fcell"><span class="pill a">Mapa</span><span class="big">norte · sur · este · oeste</span><dl><dt>Zonas</dt><dd>la zona cantábrica, pirenaica · la meseta · el litoral mediterráneo</dd><dt>Relieve</dt><dd>cordillera, valle, montaña, río, paso de montaña</dd></dl></div>`
+  + `<div class="panel fcell"><span class="pill a">Estilo indirecto</span><span class="big">Ha dicho que · Han anunciado que · Han predicho que</span><dl><dt>Igual</dt><dd>Han dicho que + futuro (lloverá)</dd><dt>Pasado</dt><dd>Dijeron que + condicional (llovería)</dd></dl></div>`
+  + `<div class="panel fcell"><span class="pill a">Actividades</span><span class="big">¿Se podrá esquiar? ¿Podremos navegar?</span><dl><dt>Regla</dt><dd>Si + presente, futuro</dd><dt>e.g.</dt><dd>Si hay niebla, habrá retrasos.</dd></dl></div>`;
+
+/* ================= MIND MAP ================= */
+const MM = [
+  {id:"tiempo",label:"¿Qué tiempo hace?",col:"var(--blush)",leaves:[["Hace","sol, calor, frío, viento."],["Hay","niebla, tormenta."],["Está","nublado, despejado."],["El clima","templado, húmedo, seco."]]},
+  {id:"verbos",label:"Verbos",col:"var(--apricot)",leaves:[["llueve","llover o → ue."],["nieva","nevar e → ie."],["truena","tronar o → ue."],["hiela","helar e → ie."]]},
+  {id:"mapa",label:"El mapa",col:"var(--sage)",leaves:[["Norte / sur","Los puntos cardinales."],["Cantábrica","The rainy north coast."],["Pirineos","Mountains on the French border."],["Meseta","The high centre."]]},
+  {id:"prevision",label:"El pronóstico",col:"var(--cream)",leaves:[["Despejado","Clear sky."],["Chubascos","Showers."],["La máxima","Highest temperature."],["Bajo cero","Below zero."]]},
+  {id:"mensaje",label:"Han dicho que…",col:"var(--blush)",leaves:[["Ha dicho que","+ future, same tense."],["Han anunciado","They've announced."],["Según","According to."],["Dijeron que","+ conditional."]]},
+  {id:"actividades",label:"¿Se podrá?",col:"var(--sage)",leaves:[["Esquiar","Si nieva…"],["Navegar","Si no hay viento…"],["Volar","Si hay niebla…"],["Si + presente","→ futuro."]]},
+];
+
+let mmSel = {b:0,l:-1};
+function drawMindMap(){
+  const S=$("mm"), cx=550, cy=390, R1=200; let out="";
+  const nodes=[];
+  MM.forEach((b,k)=>{
+    const a=-Math.PI/2 + k*(2*Math.PI/MM.length);
+    const bx=cx+Math.cos(a)*R1*1.3, by=cy+Math.sin(a)*R1*0.85;
+    out+=`<path class="link" d="M${cx},${cy} Q${(cx+bx)/2+Math.sin(a)*30},${(cy+by)/2-Math.cos(a)*30} ${bx},${by}" stroke="${b.col}"/>`;
+    const n=b.leaves.length, side=Math.abs(Math.cos(a))>0.3;
+    b.leaves.forEach((lf,j)=>{
+      const off=j-(n-1)/2;
+      const lx = side? bx+Math.sign(Math.cos(a))*200 : bx+off*150;
+      const ly = side? by+off*40+Math.sin(a)*34 :by+Math.sign(Math.sin(a))*(78+(j%2)*40);
+      out+=`<path class="link" d="M${bx},${by} L${lx},${ly}" stroke="${b.col}" stroke-width="2" opacity=".85"/>`;
+      nodes.push({x:lx,y:ly,t:lf[0],b:k,l:j,cls:""});
+    });
+    nodes.push({x:bx,y:by,t:b.label,b:k,l:-1,cls:"branch",col:b.col});
+  });
+  nodes.forEach(nd=>{
+    const fs = nd.cls==="branch"?17:14, wdt = Math.max(60, nd.t.length*(fs*0.56)+24), ht = nd.cls==="branch"?42:32;
+    const x=Math.max(wdt/2+4,Math.min(1100-wdt/2-4,nd.x)), y=Math.max(ht/2+4,Math.min(776-ht/2,nd.y));
+    const sel = mmSel.b===nd.b && mmSel.l===nd.l;
+    const fill = nd.cls==="branch"? nd.col : "var(--surface)";
+    const stroke = nd.cls==="branch"? nd.col : MM[nd.b].col;
+    out+=`<g class="node ${nd.cls}${sel?" sel":""}" tabindex="0" role="button" data-b="${nd.b}" data-l="${nd.l}"><rect x="${x-wdt/2}" y="${y-ht/2}" width="${wdt}" height="${ht}" rx="${ht/2}" fill="${fill}" stroke="${stroke}"/><text x="${x}" y="${y+5}" text-anchor="middle">${nd.t}</text></g>`;
+  });
+  out+=`<g class="node center"><circle cx="${cx}" cy="${cy}" r="78" fill="var(--terra)"/><text x="${cx}" y="${cy-4}" text-anchor="middle">El</text><text x="${cx}" y="${cy+22}" text-anchor="middle">tiempo</text></g>`;
+  S.innerHTML=out; mmDetail();
+}
+function mmDetail(){
+  const b=MM[mmSel.b], t=TOPICS.find(x=>x.id===b.id);
+  const title = mmSel.l<0? b.label : b.leaves[mmSel.l][0];
+  const body = mmSel.l<0? t.short + " Tap a smaller bubble for detail." : b.leaves[mmSel.l][1];
+  $("mmDetail").innerHTML = `<div class="ico" style="background:${b.col}">${svg(b.id)}</div><div><p class="eyebrow">${b.label}</p><h3 style="font-size:1.25rem">${title}</h3><p style="color:var(--muted)">${body}</p></div><button class="primary" data-go="labs" data-lab="${b.id}">Try the lab</button>`;
+}
+$("mm").addEventListener("click",e=>{ const g=e.target.closest(".node[data-b]"); if(!g) return; mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+$("mm").addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest(".node[data-b]"); if(!g) return; e.preventDefault(); mmSel={b:+g.dataset.b,l:+g.dataset.l}; drawMindMap(); });
+
+/* ================= FLASHCARDS ================= */
+const CARDS = [
+  ["tiempo","How do you ask \"What's the weather like?\"","¿Qué tiempo hace? (Tomorrow: ¿Qué tiempo hará mañana?)"],
+  ["tiempo","Which weather words go with hace?","sol, calor, frío, viento, buen tiempo, mal tiempo: Hace sol."],
+  ["tiempo","Which go with hay, and which with está?","Hay niebla / tormenta / nubes. Está nublado / despejado."],
+  ["tiempo","How do you say \"It's very hot\"?","Hace mucho calor (calor is a noun, so mucho, not muy)."],
+  ["tiempo","Hace frío, tengo frío, está frío: what's the difference?","Hace frío = the weather is cold. Tengo frío = I feel cold. Está frío = a thing is cold (el café está frío)."],
+  ["tiempo","Describe Ireland's climate in one sentence.","El clima de Irlanda es templado y húmedo: llueve mucho, pero nunca hace mucho frío ni mucho calor."],
+  ["verbos","What is the present of llover, nevar and tronar?","llueve (o → ue), nieva (e → ie), truena (o → ue)."],
+  ["verbos","Why do weather verbs only have one form?","They're impersonal: there's no subject, so only the él / ella form is used. Llueve = it rains."],
+  ["verbos","\"It's raining\" in Spanish?","Está lloviendo (or simply llueve)."],
+  ["verbos","Give llover in the preterite, imperfect and future.","llovió · llovía · lloverá."],
+  ["verbos","What does hiela mean?","It freezes (helar, e → ie). Una helada = a frost."],
+  ["mapa","Name the four points of the compass.","el norte, el sur, el este, el oeste."],
+  ["mapa","Where is la zona cantábrica?","The north coast of Spain (Asturias, Cantabria, the Basque Country): green and rainy."],
+  ["mapa","What is la meseta?","The high, flat central plateau of Spain, around Madrid: cold winters, hot summers."],
+  ["mapa","What is la cordillera?","A mountain range: la cordillera Cantábrica, los Pirineos."],
+  ["mapa","\"Galicia is in the north-west of Spain.\"","Galicia está en el noroeste de España."],
+  ["prevision","What does cielo despejado mean?","Clear sky."],
+  ["prevision","What are chubascos?","Showers: short bursts of rain."],
+  ["prevision","\"The maximum will be 21 degrees.\"","La máxima será de veintiún grados."],
+  ["prevision","How do you say −5 °C?","Cinco grados bajo cero, or menos cinco grados."],
+  ["prevision","\"Temperatures will fall\" in Spanish?","Las temperaturas bajarán (rise: subirán)."],
+  ["mensaje","How do you pass on a forecast?","Han dicho que + the forecast: Han dicho que mañana lloverá."],
+  ["mensaje","After \"han dicho que\", does the tense change?","No. The present perfect keeps the forecast's tense: han dicho que nevará."],
+  ["mensaje","\"They said it would rain\" (Higher Level)?","Dijeron que llovería (past reporting verb → conditional)."],
+  ["mensaje","What does según mean?","According to: según la AEMET, según la radio."],
+  ["actividades","How do you ask \"Will we be able to ski?\"","¿Podremos esquiar? / ¿Se podrá esquiar?"],
+  ["actividades","Complete: Si hace viento, no ___ navegar.","podremos: si + present, future."],
+];
+
+let fcKnown = store.get("es13-fc",{}), fcFilter="all", fcOnlyUnknown=false, fcOrder=[], fcIdx=0;
+$("fcFilter").innerHTML = `<button data-f="all">All topics</button>` + TOPICS.map(t=>`<button data-f="${t.id}">${t.name}</button>`).join("");
+$("fcFilter").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) fcSetFilter(b.dataset.f); });
+function fcSetFilter(f){ fcFilter=f; curTopic = f==="all"? null : f; fcBuild(); markTopics(); }
+function fcBuild(){
+  fcOrder = CARDS.map((c,k)=>k).filter(k=>(fcFilter==="all"||CARDS[k][0]===fcFilter) && (!fcOnlyUnknown || !fcKnown[k]));
+  fcIdx=0; document.querySelectorAll("#fcFilter button").forEach(b=>b.classList.toggle("on", b.dataset.f===fcFilter));
+  $("fcUnknown").setAttribute("aria-pressed", fcOnlyUnknown); fcRender();
+}
+function fcRender(){
+  $("fcCard").classList.remove("flip");
+  if(!fcOrder.length){ $("fcTag").textContent="Done"; $("fcQ").textContent="You know every card in this set."; $("fcA").textContent="Reset progress or pick another topic."; $("fcTag2").textContent="Done"; $("fcMeta").textContent=""; return; }
+  const k=fcOrder[fcIdx], [t,q,a]=CARDS[k];
+  setTimeout(()=>{ $("fcA").textContent=a; $("fcTag2").textContent=tname(t); }, reduce?0:200);
+  $("fcTag").textContent=tname(t); $("fcQ").textContent=q;
+  const inSet=CARDS.filter(c=>fcFilter==="all"||c[0]===fcFilter), known=inSet.filter(c=>fcKnown[CARDS.indexOf(c)]).length;
+  $("fcMeta").textContent = `Card ${fcIdx+1} of ${fcOrder.length} · you know ${known} of ${inSet.length} in this set${fcKnown[k]?" · ✓ known":""}`;
+}
+function fcFlip(){ $("fcCard").classList.toggle("flip"); }
+function fcMove(d){ if(!fcOrder.length) return; fcIdx=(fcIdx+d+fcOrder.length)%fcOrder.length; fcRender(); }
+$("fcCard").addEventListener("click",fcFlip);
+$("fcCard").addEventListener("keydown",e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); fcFlip(); } });
+document.addEventListener("keydown",e=>{ if(view!=="flashcards"||e.target.tagName==="SELECT") return; if(e.key==="ArrowRight") fcMove(1); if(e.key==="ArrowLeft") fcMove(-1); if(e.key===" "&&e.target===document.body){ e.preventDefault(); fcFlip(); } });
+$("fcPrev").addEventListener("click",()=>fcMove(-1)); $("fcNext").addEventListener("click",()=>fcMove(1));
+$("fcGot").addEventListener("click",()=>{ if(!fcOrder.length) return; fcKnown[fcOrder[fcIdx]]=1; store.set("es13-fc",fcKnown); if(fcOnlyUnknown){ fcOrder.splice(fcIdx,1); if(fcIdx>=fcOrder.length) fcIdx=0; fcRender(); } else fcMove(1); });
+$("fcAgain").addEventListener("click",()=>{ if(!fcOrder.length) return; delete fcKnown[fcOrder[fcIdx]]; store.set("es13-fc",fcKnown); const k=fcOrder.splice(fcIdx,1)[0]; fcOrder.splice(Math.min(fcOrder.length, fcIdx+3),0,k); fcRender(); });
+$("fcShuffle").addEventListener("click",()=>{ for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; } fcIdx=0; fcRender(); });
+$("fcUnknown").addEventListener("click",()=>{ fcOnlyUnknown=!fcOnlyUnknown; fcBuild(); });
+$("fcReset").addEventListener("click",()=>{ fcKnown={}; store.set("es13-fc",fcKnown); fcBuild(); });
+fcBuild();
+/* ================= QUIZ ================= */
+const QUIZ = [
+  ["tiempo","\"It's sunny\" is:",["Es sol.","Hace sol.","Está sol.","Tiene sol."],1,"The weather uses hacer: hace sol."],
+  ["tiempo","Which sentence is correct?",["Hay niebla.","Hace niebla.","Está niebla.","Es niebla."],0,"haber + niebla: hay niebla."],
+  ["tiempo","Complete: Hoy hace ___ calor.",["muy","mucho","mucha","muchos"],1,"Calor is a masculine noun: mucho calor."],
+  ["verbos","The present of nevar is:",["neva","nava","nieva","nevea"],2,"nevar changes e → ie: nieva."],
+  ["verbos","\"Ayer ___ mucho.\" (llover)",["llueve","llovió","lloverá","llovía"],1,"A finished event yesterday: preterite, llovió."],
+  ["verbos","\"Truena\" means:",["it's thundering","it's freezing","it's hailing","it's snowing"],0,"tronar (o → ue) = to thunder."],
+  ["mapa","La zona cantábrica is:",["the south coast","the Pyrenees","the Balearic Islands","the north coast"],3,"The rainy north coast, along the Bay of Biscay."],
+  ["mapa","\"El oeste\" is:",["the east","the west","the north","the south"],1,"Oeste = west. Este = east."],
+  ["mapa","Which mountains lie between Spain and France?",["la Sierra Nevada","los Andes","la meseta","los Pirineos"],3,"Los Pirineos: la zona pirenaica."],
+  ["prevision","\"Cielo despejado\" means:",["overcast sky","foggy sky","clear sky","stormy sky"],2,"Despejado = clear."],
+  ["prevision","\"Chubascos\" are:",["heatwaves","showers","frosts","gales"],1,"Short, heavy showers of rain."],
+  ["prevision","\"La mínima será de tres grados bajo cero\" means the lowest temperature will be:",["3 °C","13 °C","−13 °C","−3 °C"],3,"Bajo cero = below zero: −3 °C."],
+  ["mensaje","«Mañana lloverá.» Passed on: Han dicho que mañana ___.",["llueva","llovía","lloverá","llovió"],2,"After han dicho que, the tense stays the same: lloverá."],
+  ["mensaje","\"Según la AEMET\" means:",["According to AEMET","Against AEMET","Since AEMET","Without AEMET"],0,"Según = according to."],
+  ["actividades","Complete: Si ___ niebla, habrá retrasos.",["hay","habrá","hubo","haya"],0,"si + present (hay), future (habrá)."],
+  ["actividades","\"¿Se podrá esquiar?\" asks:",["Could you ski?","Did they ski?","Do you like skiing?","Will it be possible to ski?"],3,"Impersonal se + future of poder: will it be possible?"],
+];
+
+let qz = { set:[], idx:0, ans:[], topic:"all" };
+function qzStart(topic="all"){
+  qz.topic=topic; curTopic = topic==="all"? null : topic;
+  qz.set = QUIZ.map((q,k)=>k).filter(k=>topic==="all"||QUIZ[k][0]===topic);
+  for(let i=qz.set.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [qz.set[i],qz.set[j]]=[qz.set[j],qz.set[i]]; }
+  qz.idx=0; qz.ans=[]; qzRender(); markTopics();
+}
+function qzRender(){
+  const el=$("qz"), n=qz.set.length;
+  const sel = `<select id="qzTopic" aria-label="Quiz topic"><option value="all">All topics (${QUIZ.length})</option>${TOPICS.map(t=>`<option value="${t.id}" ${qz.topic===t.id?"selected":""}>${t.name}</option>`).join("")}</select>`;
+  const dots = qz.set.map((k,i)=>`<i class="${i<qz.ans.length?(qz.ans[i]?"ok":"no"):i===qz.idx?"cur":""}"></i>`).join("");
+  if(qz.idx>=n){
+    const r=qz.ans.filter(Boolean).length, pct=Math.round(r/n*100);
+    if(qz.topic==="all"){ const best=store.get("es13-best",null); if(best==null||pct>best) store.set("es13-best",pct); }
+    const circ=2*Math.PI*62;
+    el.innerHTML = `<div class="qz-top"><h2>Quiz</h2>${sel}</div><div class="panel final">
+      <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--grid)" stroke-width="14"/><circle cx="75" cy="75" r="62" fill="none" stroke="${pct>=70?"var(--good)":pct>=40?"var(--apricot)":"var(--bad)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${circ*pct/100} ${circ}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle" style="font:700 30px ${C.fd};fill:var(--ink)">${pct}%</text></svg>
+      <h3 style="font-size:1.5rem">${r} out of ${n} correct</h3><p style="color:var(--muted)">${pct>=80?"Excellent work. You're ready for exam questions.":pct>=50?"Good start. Review the ones you missed, then try again.":"Have another look at the Learn cards and labs, then try again."}</p>
+      <div class="btns"><button class="primary" id="qzAgain">Try again</button><button data-go="flashcards">Practise with flashcards</button></div>
+      <div class="review">${qz.set.map((k,i)=>qz.ans[i]?"":`<div><b>${QUIZ[k][1]}</b><br><span style="color:var(--good)">✓ ${QUIZ[k][2][QUIZ[k][3]]}</span> · ${QUIZ[k][4]}</div>`).join("")}</div></div>`;
+    $("qzAgain").addEventListener("click",()=>qzStart(qz.topic));
+  } else {
+    const k=qz.set[qz.idx], [t,q,opts]=QUIZ[k];
+    el.innerHTML = `<div class="qz-top"><div><p class="eyebrow">Question ${qz.idx+1} of ${n}</p><h2>Quiz</h2></div>${sel}</div><div class="dots">${dots}</div>
+      <div class="panel qcard"><span class="pill t" style="justify-self:start">${tname(t)}</span><h3>${q}</h3><div class="opts">${opts.map((o,j)=>`<button data-o="${j}"><span>${"ABCD"[j]}</span>${o}</button>`).join("")}</div><div id="qzWhy"></div></div>`;
+    el.querySelector(".opts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||qz.ans.length>qz.idx) return; const j=+b.dataset.o, right=QUIZ[k][3];
+      qz.ans.push(j===right);
+      el.querySelectorAll(".opts button").forEach((x,i)=>{ if(i===right) x.classList.add("right"); else if(i===j) x.classList.add("wrong"); x.disabled=true; });
+      $("qzWhy").innerHTML = `<div class="why"><b style="color:${j===right?"var(--good)":"var(--bad)"}">${j===right?"Correct!":"Not quite."}</b> ${QUIZ[k][4]}</div><div class="btns" style="margin-top:12px"><button class="primary" id="qzNext">${qz.idx+1<n?"Next question →":"See my score"}</button><button data-go="labs" data-lab="${t}">Open the lab</button></div>`;
+      el.querySelectorAll(".dots i")[qz.idx].className = j===right?"ok":"no";
+      $("qzNext").addEventListener("click",()=>{ qz.idx++; qzRender(); }); $("qzNext").focus(); });
+  }
+  $("qzTopic").addEventListener("change",e=>qzStart(e.target.value));
+}
+qzStart("all");
+
+/* ================= GLOSSARY ================= */
+let glTopic="all", glLetter=null;
+const glFirst = g => /[A-Za-z]/.test(g.t[0]) ? g.t[0].toUpperCase() : "#";
+GLOSS.sort((a,b)=>a.t.localeCompare(b.t));
+$("glTopics").innerHTML = `<button data-t="all">All</button>` + TOPICS.map(t=>`<button data-t="${t.id}">${t.name}</button>`).join("");
+$("glTopics").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; glTopic=b.dataset.t; glLetter=null; glRender(); });
+$("glLetters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return; glLetter = glLetter===b.dataset.l? null : b.dataset.l; glRender(); });
+$("glSearch").addEventListener("input",()=>{ glLetter=null; glRender(); });
+function glRender(){
+  const q=$("glSearch").value.trim().toLowerCase();
+  const base=GLOSS.filter(g=>(glTopic==="all"||g.topic===glTopic) && (!q || (g.t+" "+g.aka+" "+g.d+" "+(g.f||"")).toLowerCase().includes(q)));
+  const have=new Set(base.map(glFirst));
+  $("glLetters").innerHTML = ["#",..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(l=>`<button data-l="${l}" ${have.has(l)?"":"disabled"} class="${glLetter===l?"on":""}">${l}</button>`).join("");
+  document.querySelectorAll("#glTopics button").forEach(b=>b.classList.toggle("on",b.dataset.t===glTopic));
+  const list=base.filter(g=>!glLetter||glFirst(g)===glLetter);
+  $("glCount").textContent = `${list.length} term${list.length===1?"":"s"}`;
+  $("glList").innerHTML = list.length? list.map(g=>`<article class="panel gl-item" id="${g.id}"><header><h3>${g.t}</h3>${g.aka?`<span class="aka">${g.aka}</span>`:""}</header><p>${g.d}</p>${g.f?`<div><span class="formula">${g.f}</span></div>`:""}<div class="foot"><span class="pill t">${tname(g.topic)}</span><button data-go="labs" data-lab="${g.topic}">Open the lab</button></div></article>`).join("")
+    : `<div class="panel pad empty">No terms match "${$("glSearch").value.replace(/</g,"&lt;")}". Try a shorter word or pick "All".</div>`;
+}
+glRender();
+function glJump(term){
+  const g=glossBy(term); if(!g) return;
+  $("glSearch").value=""; glTopic="all"; glLetter=null; glRender();
+  history.replaceState(null,"","#glossary"); show("glossary");
+  const el=$(g.id); if(el){ el.scrollIntoView({block:"center"}); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),1600); }
+}
+const glPop=document.createElement("div"); glPop.id="glPop"; glPop.hidden=true; glPop.setAttribute("role","dialog"); document.body.appendChild(glPop);
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".gl");
+  if(t){ e.preventDefault(); const g=glossBy(t.dataset.g); if(!g) return;
+    glPop.innerHTML=`<b>${g.t}${g.aka?` <span style="font:500 .8rem ${C.fm};opacity:.75">(${g.aka})</span>`:""}</b><span>${g.d}</span>${g.f?`<span class="mono">${g.f}</span>`:""}<button data-gj="${g.t}">Open in glossary</button>`;
+    glPop.hidden=false; const r=t.getBoundingClientRect(), pw=glPop.offsetWidth;
+    glPop.style.left=Math.max(16,Math.min(innerWidth-pw-16,r.left))+scrollX+"px"; glPop.style.top=r.bottom+scrollY+8+"px"; return; }
+  const j=e.target.closest("[data-gj]"); if(j){ glPop.hidden=true; glJump(j.dataset.gj); return; }
+  if(!e.target.closest("#glPop")) glPop.hidden=true;
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") glPop.hidden=true; });
+
+/* ================= EXAM PREP ================= */
+const CMDS = [
+  ["Contesta en inglés","Answer in English (listening and reading questions are usually answered in English or Irish).","Contesta en inglés a las preguntas."],
+  ["Lee el texto","Read the text.","Lee el texto y contesta a las preguntas."],
+  ["Escucha","Listen.","Escucha la conversación."],
+  ["Escribe","Write.","Escribe un correo electrónico a tu amigo."],
+  ["unas 90 palabras","about 90 words: stay close to the limit.","Escribe unas 90 palabras."],
+  ["Busca / encuentra","Find (a word or phrase in the text).","Busca en el texto una palabra que significa…"],
+  ["Explica","Explain.","Explica por qué…"],
+  ["Menciona","Mention / name.","Menciona dos cosas que…"],
+  ["Rellena","Fill in.","Rellena la ficha."],
+  ["Verdadero o falso","True or false.","¿Verdadero o falso?"],
+];
+$("cmds").innerHTML = CMDS.map(([w,m,e])=>`<div class="cmd"><b>${w}</b><p>${m}</p><em>e.g. "${e}"</em></div>`).join("");
+// Grammar trainer (typed answers; accents checked)
+const WXT = [["It's sunny.",["hace sol"]],["It's hot.",["hace calor"]],["It's cold.",["hace frío"]],["It's windy.",["hace viento","hay viento"]],["The weather is good.",["hace buen tiempo"]],["The weather is bad.",["hace mal tiempo"]],["It's foggy.",["hay niebla"]],["There's a storm.",["hay tormenta","hay una tormenta"]],["It's cloudy.",["está nublado"]],["It's raining.",["está lloviendo","llueve"]],["It's snowing.",["está nevando","nieva"]],["The sky is clear.",["el cielo está despejado","está despejado"]],["It's very cold.",["hace mucho frío"]],["It's very hot.",["hace mucho calor"]],["It's a bit windy.",["hace un poco de viento","hay un poco de viento"]],["It's freezing (there's a frost).",["hiela","está helando"]]];
+const IND = [
+  ["Mañana lloverá en el norte.","Han dicho que","han dicho que mañana lloverá en el norte"],
+  ["Habrá tormentas en la costa.","Han anunciado que","han anunciado que habrá tormentas en la costa"],
+  ["Nevará en los Pirineos.","Ha dicho que","ha dicho que nevará en los pirineos"],
+  ["Hará mucho calor en Sevilla.","Han predicho que","han predicho que hará mucho calor en sevilla"],
+  ["Las temperaturas bajarán.","Han dicho que","han dicho que las temperaturas bajarán"],
+  ["Va a hacer sol todo el fin de semana.","Ha dicho que","ha dicho que va a hacer sol todo el fin de semana"],
+  ["Habrá niebla por la mañana.","Han anunciado que","han anunciado que habrá niebla por la mañana"],
+  ["El viento será fuerte en el Ebro.","Ha dicho que","ha dicho que el viento será fuerte en el ebro"],
+];
+const strip = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[¿?¡!.,«»]/g,"").replace(/\s+/g," ").trim();
+const clean = s => s.toLowerCase().replace(/[¿?¡!.,«»]/g,"").replace(/\s+/g," ").trim();
+const cap1 = s => s.charAt(0).toUpperCase()+s.slice(1);
+const tempWords = n => { const a=Math.abs(n), w=a===0?"cero":numES(a,true); return `${n<0?"menos ":""}${w} grado${a===1?"":"s"}`; };
+const PTYPES = {
+  wx:{ name:"Weather phrases", gen(){ const [en,ans]=pick(WXT);
+      return { q:`Say it in Spanish: <b>${en}</b>`, ans, steps:[ans[0].startsWith("hace")?"Weather noun → hace + noun":ans[0].startsWith("hay")?"Something that is there → hay + noun":ans[0].startsWith("está")||ans[0].startsWith("el cielo")?"Adjective or gerund → está + …":"Weather verb, él / ella form",`<b>${cap1(ans[0])}.</b>${ans[1]?` Also: ${ans.slice(1).map(cap1).join(", ")}.`:""}`] }; } },
+  vb:{ name:"Weather verbs", gen(){ const v=rnd(0,VW.length-1), t=rnd(0,5), V=VW[v], ans=V[1][t];
+      return { q:`Write <b>${V[0]}</b> in the <b>${TENSES[t].toLowerCase()}</b> (<i>${V[2][t].split(" / ")[0]}</i>).`, ans:[ans], steps:[vwHL(v,t)[2],`${TENSES[t]}: ${V[1][t]}`,`<b>${cap1(ans)}.</b>`] }; } },
+  ind:{ name:"Pass it on", gen(){ const [d,intro,ans]=pick(IND);
+      return { q:`The forecast says: <b>«${d}»</b> Pass it on, starting <b>"${intro}…"</b>`, ans:[ans], steps:[`${intro} + the forecast`,`After a present perfect (ha dicho / han anunciado) the tense stays the same`,`<b>${intro} ${d.charAt(0).toLowerCase()+d.slice(1)}</b>`] }; } },
+  temp:{ name:"Temperatures", gen(){ const n=pick([rnd(-9,-1),rnd(0,40),rnd(15,35),pick([1,21,31,-1])]), ans=tempWords(n);
+      const alt = n<0? [ans, `${numES(-n,true)} grado${n===-1?"":"s"} bajo cero`] : [ans];
+      return { q:`Write the temperature in words: <b>${n<0?"−":""}${Math.abs(n)} °C</b> (e.g. "veinte grados")`, ans:alt, steps:[Math.abs(n)%10===1&&Math.abs(n)!==11?"uno → un before a masculine noun (grados): un, veintiún, treinta y un":"Number + grados",n<0?"Below zero: menos… or … bajo cero":"No accent needed except dieciséis, veintidós, veintitrés, veintiséis, veintiún",`<b>${alt.join("</b> or <b>")}</b>`] }; } },
+};
+
+let pType="wx", pCur=null, pRight=0, pTried=0, pDone=false;
+$("prType").innerHTML = Object.entries(PTYPES).map(([k,v])=>`<button data-k="${k}">${v.name}</button>`).join("");
+$("prType").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; pType=b.dataset.k; pNew(); });
+$("accKeys").innerHTML = ["á","é","í","ó","ú","ñ","ü","¿","¡"].map(c=>`<button data-c="${c}" style="min-width:38px">${c}</button>`).join("");
+$("accKeys").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const el=$("paIn"), s=el.selectionStart??el.value.length; el.value=el.value.slice(0,s)+b.dataset.c+el.value.slice(el.selectionEnd??s); el.focus(); el.setSelectionRange(s+1,s+1); });
+function pNew(){ pCur=PTYPES[pType].gen(); pDone=false; $("pq").innerHTML=pCur.q; $("paIn").value=""; $("paFb").innerHTML=""; document.querySelectorAll("#prType button").forEach(b=>b.classList.toggle("on",b.dataset.k===pType)); }
+function pSteps(){ return `<div class="steps">${pCur.steps.map(s=>`<span>${s}</span>`).join("")}</div>`; }
+$("paCheck").addEventListener("click",()=>{ const v=$("paIn").value; if(!v.trim()){ $("paFb").innerHTML=`<div class="fb no">Type your answer first.</div>`; return; }
+  const exact=pCur.ans.some(a=>clean(a)===clean(v)), close=!exact && pCur.ans.some(a=>strip(a)===strip(v));
+  if(!pDone){ pTried++; if(exact) pRight++; pDone=true; }
+  $("paFb").innerHTML = exact? `<div class="fb ok"><b style="color:var(--good)">¡Correcto!</b>${pSteps()}</div>` : close? `<div class="fb no"><b style="color:var(--bad)">Almost.</b> Check the accents: <b>${pCur.ans[0]}</b>. Accents count in the exam.</div>` : `<div class="fb no"><b style="color:var(--bad)">Not quite.</b> Try again or show the answer.</div>`;
+  $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; });
+$("paIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("paCheck").click(); });
+$("paShow").addEventListener("click",()=>{ if(!pDone){ pTried++; pDone=true; $("paScore").textContent=`This session: ${pRight} correct out of ${pTried}.`; } $("paFb").innerHTML=`<div class="fb"><b>Answer</b>${pSteps()}</div>`; });
+$("paNext").addEventListener("click",pNew);
+pNew();
+// What is the speaker doing? drill
+const FUNCS = ["Weather now","Climate","Forecasting","Passing on a forecast","Asking about an activity"];
+const FN = [
+  ["Hoy hace un frío horrible.",0],["Mira, está nevando.",0],["¡Qué calor hace hoy!",0],
+  ["En Galicia llueve mucho en invierno.",1],["En el sur de España los veranos son muy calurosos.",1],["En Irlanda el clima es templado y húmedo.",1],
+  ["Mañana habrá chubascos en el norte.",2],["El fin de semana subirán las temperaturas.",2],["Esta noche helará en la meseta.",2],
+  ["Han dicho en la radio que mañana nevará.",3],["Según la AEMET, va a llover toda la semana.",3],["Mi madre ha visto el pronóstico y dice que hará sol.",3],
+  ["¿Crees que podremos esquiar el sábado?",4],["¿Se podrá navegar con tanto viento?",4],["¿Habrá vuelos si hay niebla?",4],["¿Podremos bañarnos en la playa mañana?",4],
+];
+let pd = { k:-1, shown:false, sel:null, streak:0 };
+let predC=null;
+$("predBtns").innerHTML = FUNCS.map((f,i)=>`<button data-a="${i}">${f}</button>`).join("");
+function pdNew(){ let k; do{ k=Math.floor(Math.random()*FN.length); }while(k===pd.k); pd={...pd,k,shown:false,sel:null};
+  document.querySelectorAll("#predOpts button").forEach(b=>b.classList.remove("sel")); $("predFb").innerHTML="";
+  $("predQ").innerHTML=`<b>"${FN[k][0]}"</b> What is the speaker doing?`; if(predC) predC.redraw(); }
+$("predOpts").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||pd.shown) return; pd.sel=+b.dataset.a; b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("sel",x===b)); });
+$("predCheck").addEventListener("click",()=>{ if(pd.sel==null){ $("predFb").innerHTML=`<div class="fb no">Pick one first.</div>`; return; }
+  const ans=FN[pd.k][1], ok=pd.sel===ans; pd.streak=ok?pd.streak+1:0; pd.shown=true; predC.redraw();
+  $("predFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Correcto!":"Not quite."}</b> ${FUNCS[ans]}. ${["Weather now: present tense, hoy, mira, ¡qué…!","Climate: the usual pattern, often with en invierno / en verano and ser.","Forecasting: future tense (habrá, subirán, helará).","Passing on: han dicho que, según, dice que.","Asking about an activity: ¿se podrá…?, ¿podremos…?, ¿habrá…?"][ans]}${ok?` Streak: ${pd.streak} 🔥`:""}</div>`; });
+$("predNext").addEventListener("click",pdNew);
+
+// Long questions (practice, marks illustrative)
+const LONGQ = [
+  { title:"Written production: a postcard from Spain", intro:"Estás de vacaciones en el norte de España con tu familia. Escribe una postal o un correo a tu amigo/a español/a (unas 90 palabras). Write in Spanish; the marks shown are illustrative.",
+    parts:[["a","Di dónde estás y qué tiempo hace hoy.",6,"Place (2), weather with hace / hay / está (4). <i>Estoy en Santander, en la zona cantábrica. Hoy está nublado y hace un poco de frío.</i>"],
+      ["b","Explica qué tiempo hizo ayer y qué hiciste.",8,"Preterite of a weather verb or hacer (4) and an activity (4). <i>Ayer llovió todo el día, así que visitamos un museo.</i>"],
+      ["c","Di qué tiempo va a hacer mañana, según el pronóstico.",8,"Indirect speech or según (4), future (4). <i>Han dicho en la radio que mañana hará sol y que las temperaturas subirán.</i>"],
+      ["d","Explica qué vais a hacer si hace buen tiempo, y despídete.",6,"si + present, future (4), closing (2). <i>Si hace buen tiempo, iremos a la playa. ¡Hasta pronto! Un abrazo, Ciara</i>"]] },
+  { title:"The oral: weather and climate", intro:"These come up in the general conversation and the role-play. Prepare a full answer to each, then compare with the guide. Marks are illustrative.",
+    parts:[["a","¿Cómo es el clima en Irlanda?",8,"Climate words and a contrast. <i>El clima de Irlanda es templado y húmedo. Llueve mucho, sobre todo en el oeste, pero nunca hace mucho frío ni mucho calor.</i>"],
+      ["b","¿Qué tiempo hace hoy?",6,"Two or three expressions with hace / hay / está. <i>Hoy hace viento y está nublado, pero no llueve.</i>"],
+      ["c","¿Prefieres el calor o el frío? ¿Por qué?",8,"Opinion + reason. <i>Prefiero el calor porque me encanta ir a la playa. Cuando hace frío, me quedo en casa.</i>"],
+      ["d","¿Qué tiempo hizo durante tus últimas vacaciones?",10,"Preterite / imperfect. <i>El verano pasado fui a Valencia. Hizo un calor horrible: ¡estábamos a treinta y ocho grados! Una tarde hubo tormenta.</i>"],
+      ["e","Role-play: llamas a una estación de esquí. Pregunta si se podrá esquiar el sábado.",10,"Polite usted question, weather and an activity. <i>Buenos días. ¿Me podría decir si se podrá esquiar el sábado? ¿Va a nevar? ¿Estará abierta la carretera?</i> Examiners reward natural extension."]] },
+  { title:"Reading comprehension: el tiempo para el fin de semana", intro:"Lee el pronóstico y contesta en inglés. (Invented text, marks illustrative.) — «Buenos días. Según la AEMET, el sábado será un día de contrastes. En Galicia y en la zona cantábrica habrá chubascos durante toda la mañana, pero por la tarde el cielo se despejará. En los Pirineos nevará por encima de los mil ochocientos metros y se recomienda llevar cadenas en los pasos de montaña. En la meseta, cielo despejado, aunque las mínimas bajarán hasta los dos grados bajo cero. En Andalucía hará sol y las máximas llegarán a los veintiséis grados. El domingo, el viento soplará con fuerza en el valle del Ebro y en las islas Baleares, donde el estado del mar impedirá la salida de algunos barcos.»",
+    parts:[["a","What will the weather be like in Galicia and on the Cantabrian coast on Saturday?",4,"Showers all morning (2), the sky clearing in the afternoon (2)."],
+      ["b","What advice is given for the Pyrenees, and why?",4,"Carry (snow) chains on mountain passes (2), because it will snow above 1 800 m (2)."],
+      ["c","What will the minimum temperature be on the central plateau?",2,"−2 °C / two degrees below zero (2)."],
+      ["d","What will the maximum be in Andalusia?",2,"26 °C (2)."],
+      ["e","What will happen on Sunday, and what effect will it have?",4,"Strong wind in the Ebro valley and the Balearic Islands (2); the state of the sea will stop some boats from sailing (2)."]] },
+];
+
+$("longqs").innerHTML = LONGQ.map((L,i)=>`<article class="lq"><header><p class="eyebrow">Question ${i+1} · ${L.parts.reduce((a,p)=>a+p[2],0)} marks</p><h3>${L.title}</h3><p>${L.intro}</p></header>
+  <div class="parts">${L.parts.map(([l,q,m,ms])=>`<div class="part"><div class="q"><b>(${l})</b><span>${q}</span><span class="marks">${m} marks</span></div><details><summary>Show marking guide</summary><div class="ms">${ms}</div></details></div>`).join("")}</div></article>`).join("");
+// Revision checklist (red / amber / green)
+const RAG = ["Ask what the weather is like (¿Qué tiempo hace?)","Use hace with sol, calor, frío, viento","Use hay and está with the right weather words","Say hace mucho calor (not muy)","Describe the climate of Ireland and of a region of Spain","Use llueve, nieva, truena, hiela correctly","Use weather verbs in the past and future","Name the points of the compass","Place Galicia, la zona cantábrica, los Pirineos, la meseta on a map","Understand forecast words (despejado, chubascos, granizo)","Say temperatures in words, including below zero","Pass on a forecast with han dicho que","Ask whether an activity will be possible","Use si + present, future"];
+
+const ragState=store.get("es13-rag",{});
+function ragRender(){ $("rag").innerHTML = RAG.map((s,i)=>`<div class="ragrow"><span>${s}</span><div class="btns">${["r","a","g"].map(c=>`<button data-i="${i}" data-c="${c}" class="${ragState[i]===c?c:""}" aria-label="${{r:"Not yet",a:"Nearly",g:"Confident"}[c]}" aria-pressed="${ragState[i]===c}"></button>`).join("")}</div></div>`).join(""); }
+$("rag").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; const i=b.dataset.i; ragState[i] = ragState[i]===b.dataset.c? undefined : b.dataset.c; store.set("es13-rag",ragState); ragRender(); });
+ragRender();
+const SKILLS = [["Three tenses","Ayer llovió, hoy hace sol, mañana hará calor: in every postcard.","Llueve, nieva, truena lab"],["Range","Mix hace, hay, está and a weather verb in one answer.","¿Qué tiempo hace? lab"],["Listening for detail","Region, sky, temperature: note them in that order.","El mapa del tiempo lab"],["Numbers","Temperatures in words without hesitating, including bajo cero.","Collect & fit lab"],["Reporting","Han dicho que + future to pass on what you heard.","¿Qué han dicho? lab"],["Accuracy","Accents: está, frío, llovió, nevará, despejado has none.","Grammar trainer"]];
+
+const skState=store.get("es13-skills",{});
+$("skills").innerHTML = SKILLS.map(([t,d,w],i)=>`<label><input type="checkbox" data-i="${i}" ${skState[i]?"checked":""}><span><b>${t}</b><small>${d} Practise in: ${w}.</small></span></label>`).join("");
+$("skills").addEventListener("change",e=>{ skState[e.target.dataset.i]=e.target.checked; store.set("es13-skills",skState); });
+/* ================= LAB STATE + WIRING ================= */
+const btnRow = (id,items,cur) => { $(id).innerHTML = items.map((t,i)=>`<button data-i="${i}" aria-pressed="${i===cur}">${t}</button>`).join(""); };
+// ¿Qué tiempo hace?
+const wq = {order:[], i:0, pick:null, right:0, perm:[0,1,2]};
+function wqNew(){ wq.order=shuffle(WQ.map((x,i)=>i)); wq.i=0; wq.pick=null; wq.right=0; wq.perm=shuffle([0,1,2]); $("wqFb").innerHTML=""; wqUpd(); }
+function wqUpd(){ const done=wq.i>=WQ.length;
+  if(done){ $("wqQ").innerHTML=`¡Terminado! ${wq.right} of ${WQ.length} correct. <button class="primary" id="wqAgain" style="margin-left:8px">Again</button>`; $("wqAgain").addEventListener("click",wqNew); $("wqB").innerHTML=""; setReadout($("wqOut"),[["Score",`${wq.right} / ${WQ.length}`]]); if(wqC) wqC.redraw(); return; }
+  const W=WQ[wq.order[wq.i]]; $("wqQ").innerHTML=`¿Qué tiempo hace?<small>Picture ${wq.i+1} of ${WQ.length}</small>`;
+  $("wqB").innerHTML = wq.perm.map(i=>`<button data-i="${i}" ${wq.pick!=null?"disabled":""} class="${wq.pick!=null&&i===0?"on":""}">${W[1][i]}</button>`).join("") + (wq.pick!=null?`<button class="primary" id="wqNext">Next →</button>`:"");
+  if(wq.pick!=null) $("wqNext").addEventListener("click",()=>{ wq.i++; wq.pick=null; wq.perm=shuffle([0,1,2]); $("wqFb").innerHTML=""; wqUpd(); });
+  const vb = W[1][0].includes("Hace")?"hacer":W[1][0].includes("Hay")?"haber (hay)":W[1][0].includes("Está")||W[1][0].includes("está")?"estar":"weather verb";
+  setReadout($("wqOut"),[["Score",`${wq.right} / ${wq.i+(wq.pick!=null?1:0)}`],["Verb",wq.pick==null?"?":vb],["English",wq.pick==null?"?":W[3]]]); if(wqC) wqC.redraw(); }
+$("wqB").addEventListener("click",e=>{ const b=e.target.closest("button[data-i]"); if(!b||wq.pick!=null) return; const W=WQ[wq.order[wq.i]]; wq.pick=+b.dataset.i; const ok=wq.pick===0; if(ok) wq.right++;
+  $("wqFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Muy bien!":"Not quite."}</b> "${W[1][0]}" ${W[2]}</div>`; wqUpd(); });
+// Weather verbs
+const vw = {v:0, t:0};
+btnRow("vwV",VW.map(v=>v[0]+(v[3]?` (${v[3].replace(" → ","→")})`:"")),vw.v); btnRow("vwT",TENSES,vw.t);
+$("vwV").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; vw.v=+b.dataset.i; pressGroup([...$("vwV").children],b); vwUpd(); });
+$("vwT").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; vw.t=+b.dataset.i; pressGroup([...$("vwT").children],b); vwUpd(); });
+function vwUpd(){ const V=VW[vw.v], s=vwSentence(vw.v,vw.t);
+  $("vwQ").innerHTML=`${s.es}<small>${s.en}</small>`;
+  setReadout($("vwOut"),[["Verb",V[0]+(V[3]?` · stem change ${V[3]} (present only)`:vw.v===5?" · irregular hizo, hará":" · regular")],["Form",V[1][vw.t]],["All six tenses",V[1].join(", ")]]);
+  if(vwC) vwC.redraw(); }
+// Map
+const mp = {i:0, tries:0, right:0, flash:null, names:false, done:{}, P:null};
+function mpNew(){ mp.i=0; mp.tries=0; mp.right=0; mp.flash=null; mp.done={}; $("mpFb").innerHTML=""; mpUpd(); }
+function mpUpd(){ const fin=mp.i>=MP.length;
+  $("mpQ").innerHTML = fin? `¡Pronóstico completo!<small>${mp.right} of ${MP.length} right first time. The map now shows the whole forecast.</small>` : `«${MP[mp.i][0]}»<small>Line ${mp.i+1} of ${MP.length}. Tap the region this line is about.</small>`;
+  setReadout($("mpOut"),[["Lines done",`${Math.min(mp.i,MP.length)} of ${MP.length}`],["Right first time",mp.right],["Last region",mp.flash?`${regName(mp.flash.id)} · ${REG.find(r=>r[0]===mp.flash.id)[2]}`:"–"]]);
+  if(mpC) mpC.redraw(); }
+function mpTap(x,y){ if(mp.i>=MP.length||!mp.P) return; let best=null, bd=1e9; Object.entries(mp.P.pos).forEach(([id,[px,py]])=>{ const d=Math.hypot(px-x,py-y); if(d<bd){ bd=d; best=id; } }); if(!best||bd>70) return;
+  const L=MP[mp.i], ok=best===L[1]; mp.tries++; mp.flash={id:best,ok};
+  if(ok){ if(mp.tries===1) mp.right++; mp.done[best]=L[3]; $("mpFb").innerHTML=`<div class="fb ok"><b style="color:var(--good)">¡Eso es!</b> ${regName(best)} (${REG.find(r=>r[0]===best)[2]}). "${L[2]}"</div>`; mp.i++; mp.tries=0; }
+  else $("mpFb").innerHTML=`<div class="fb no"><b style="color:var(--bad)">Not quite.</b> You tapped ${regName(best)} (${REG.find(r=>r[0]===best)[2]}). Read the line again and look for the region or compass point.</div>`;
+  mpUpd(); }
+$("mpReset").addEventListener("click",mpNew);
+$("mpNames").addEventListener("click",e=>{ mp.names=!mp.names; e.currentTarget.setAttribute("aria-pressed",mp.names); mpUpd(); });
+// Altitude survey
+const sv = {pts:[], cur:null, answered:false, used:[], base:26, opts:[]};
+function svGen(){ let pool=TOWNS.map((t,i)=>i).filter(i=>!sv.used.includes(i)); if(!pool.length){ sv.used=[]; pool=TOWNS.map((t,i)=>i); }
+  const k=pick(pool); sv.used.push(k); const [town,alt]=TOWNS[k], T=Math.round(sv.base-6.5*alt/1000+(Math.random()*2-1));
+  const sky=pick(["cielo despejado","intervalos nubosos","sol por la mañana y algunas nubes por la tarde"]);
+  return {town,alt,T,say:`«${cap1(town)}, a unos ${nf(alt)} metros de altitud: ${sky}. La máxima será de ${tempWords(T)}.»`}; }
+function svNew(){ sv.cur=svGen(); sv.answered=false; sv.opts=shuffle([sv.cur.T,sv.cur.T+3,sv.cur.T-3,sv.cur.T+10]); svUpd(); }
+function svUpd(){ const c=sv.cur; $("svQ").innerHTML=`${c.say}<small>Pick the maximum temperature you read in words.</small>`;
+  $("svB").innerHTML = sv.opts.map(o=>`<button data-o="${o}" ${sv.answered?"disabled":""} class="${sv.answered&&o===c.T?"on":""}">${o} °C</button>`).join("");
+  const f=fitLine(sv.pts); setReadout($("svOut"),[["Towns recorded",sv.pts.length],["Line of best fit",f?`máxima = ${nf(f.m*1000,1)} × (altitud en km) + ${nf(f.c,1)}`:"record two or more"],["In words",f?`For every 1 000 m higher, the maximum changes by about ${nf(f.m*1000,1)} °C; at sea level it would be about ${nf(f.c,0)} °C.`:"–"]]);
+  if(svC) svC.redraw(); }
+$("svB").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b||sv.answered) return; const ok=+b.dataset.o===sv.cur.T; sv.answered=true; sv.pts.push([sv.cur.alt,sv.cur.T]);
+  svUpd(); $("svQ").innerHTML+=`<div class="fb ${ok?"ok":"no"}" style="margin-top:8px"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Correcto!":"No."}</b> ${tempWords(sv.cur.T)} = ${sv.cur.T} °C at ${nf(sv.cur.alt)} m. Point added to the graph.</div>`; });
+$("svNext").addEventListener("click",svNew);
+$("svClr").addEventListener("click",()=>{ sv.pts=[]; sv.used=[]; sv.base=rnd(24,28); svNew(); });
+// Passing on a forecast (gap-fill)
+const gp = {order:[], i:0, pick:null, right:0, perm:[0,1,2]};
+function gpNew(){ gp.order=shuffle(REP.map((g,i)=>i)); gp.i=0; gp.pick=null; gp.right=0; gp.perm=shuffle([0,1,2]); $("gpFb").innerHTML=""; gpUpd(); }
+function gpUpd(){ const done=gp.i>=REP.length;
+  if(done){ $("gpB").innerHTML=`<button class="primary" id="gpAgain">Again</button>`; $("gpAgain").addEventListener("click",gpNew); setReadout($("gpOut"),[["Score",`${gp.right} / ${REP.length}`]]); if(gpC) gpC.redraw(); return; }
+  const G=REP[gp.order[gp.i]];
+  $("gpB").innerHTML = gp.perm.map(i=>`<button data-i="${i}" ${gp.pick!=null?"disabled":""} class="${gp.pick!=null&&i===G[2]?"on":""}">${G[1][i]}</button>`).join("") + (gp.pick!=null?`<button class="primary" id="gpNext">Next →</button>`:"");
+  if(gp.pick!=null) $("gpNext").addEventListener("click",()=>{ gp.i++; gp.pick=null; gp.perm=shuffle([0,1,2]); $("gpFb").innerHTML=""; gpUpd(); });
+  setReadout($("gpOut"),[["Sentence",`${gp.i+1} of ${REP.length}`],["Score",`${gp.right} / ${gp.i+(gp.pick!=null?1:0)}`]]); if(gpC) gpC.redraw(); }
+$("gpB").addEventListener("click",e=>{ const b=e.target.closest("button[data-i]"); if(!b||gp.pick!=null) return; const G=REP[gp.order[gp.i]]; gp.pick=+b.dataset.i; const ok=gp.pick===G[2]; if(ok) gp.right++;
+  $("gpFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Correcto!":"Not quite."}</b> ${G[0].replace("___","<b>"+G[1][G[2]]+"</b>")}</div>`; gpUpd(); });
+// Weather and activities
+const ac = {order:[], i:0, pick:null, right:0};
+function acNew(){ ac.order=shuffle(ACT.map((a,i)=>i)); ac.i=0; ac.pick=null; ac.right=0; $("acFb").innerHTML=""; acUpd(); }
+function acUpd(){ const done=ac.i>=ACT.length;
+  if(done){ $("acQ").innerHTML=`¡Terminado! ${ac.right} of ${ACT.length} correct. <button class="primary" id="acAgain" style="margin-left:8px">Again</button>`; $("acAgain").addEventListener("click",acNew); $("acB").innerHTML=""; setReadout($("acOut"),[["Score",`${ac.right} / ${ACT.length}`]]); if(acC) acC.redraw(); return; }
+  const A=ACT[ac.order[ac.i]]; $("acQ").innerHTML=`«${A[0]}» ${A[2]}<small>Situation ${ac.i+1} of ${ACT.length}</small>`;
+  $("acB").innerHTML = [[1,"Sí, se podrá"],[0,"No, no se podrá"]].map(([v,l])=>`<button data-v="${v}" ${ac.pick!=null?"disabled":""} class="${ac.pick!=null&&!!v===A[4]?"on":""}">${l}</button>`).join("") + (ac.pick!=null?`<button class="primary" id="acNext">Next →</button>`:"");
+  if(ac.pick!=null) $("acNext").addEventListener("click",()=>{ ac.i++; ac.pick=null; $("acFb").innerHTML=""; acUpd(); });
+  setReadout($("acOut"),[["Score",`${ac.right} / ${ac.i+(ac.pick!=null?1:0)}`],["Activity",A[3]]]); if(acC) acC.redraw(); }
+$("acB").addEventListener("click",e=>{ const b=e.target.closest("button[data-v]"); if(!b||ac.pick!=null) return; const A=ACT[ac.order[ac.i]]; ac.pick=+b.dataset.v; const ok=!!ac.pick===A[4]; if(ok) ac.right++;
+  $("acFb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><b style="color:var(--${ok?"good":"bad"})">${ok?"¡Muy bien!":"Not quite."}</b> ${A[5]}</div>`; acUpd(); });
+
+/* ================= CREATE CANVASES ================= */
+let wqC=null, vwC=null, mpC=null, svC=null, gpC=null, acC=null;
+const HERO = [["sol","Hoy hace sol."],["lluvia","Está lloviendo."],["nieve","Mañana nevará en la sierra."],["niebla","Hay niebla en la costa."],["tormenta","Esta tarde habrá tormenta."],["nublado","Está nublado, pero no hace frío."]];
+const hero = makeCanvas($("heroCanvas"), 0.75, 240, s => { const k=Math.floor((reduce?0:heroT)/2.2)%HERO.length; drawWeather(s.ctx,s.w,s.h,{k:HERO[k][0],say:HERO[k][1],big:true}); }, 440);
+wqC = makeCanvas($("wqC"), 0.45, 230, s => { if(wq.i>=WQ.length) return drawWeather(s.ctx,s.w,s.h,{k:"sol",say:"¡Terminado!",ok:true}); const W=WQ[wq.order[wq.i]]; drawWeather(s.ctx,s.w,s.h,{k:W[0],say:wq.pick==null?"¿…?":W[1][wq.pick],ok:wq.pick==null?null:wq.pick===0,sub:wq.pick==null?"":W[3]}); }, 380);
+vwC = makeCanvas($("vwC"), 0.5, 260, s => drawVerbWx(s.ctx,s.w,s.h,{v:vw.v,t:vw.t}), 340);
+mpC = makeCanvas($("mpC"), 0.62, 240, s => { mp.P=drawMap(s.ctx,s.w,s.h,{flash:mp.flash,names:mp.names,icons:mp.i>=MP.length?MAP_FINAL:mp.done,hl:null}); }, 520);
+pointerTap($("mpC"),mpTap);
+svC = makeCanvas($("svC"), 0.5, 260, s => drawSurvey(s.ctx,s.w,s.h,{pts:sv.pts}), 420);
+gpC = makeCanvas($("gpC"), 0.3, 180, s => { if(gp.i>=REP.length) return drawGap(s.ctx,s.w,s.h,{k:gp.order[REP.length-1]??0,done:true,ok:true}); drawGap(s.ctx,s.w,s.h,{k:gp.order[gp.i],done:gp.pick!=null,pick:gp.pick,ok:gp.pick===REP[gp.order[gp.i]][2]}); }, 320);
+acC = makeCanvas($("acC"), 0.42, 220, s => { const k=ac.i>=ACT.length? ac.order[ACT.length-1] : ac.order[ac.i]; drawAct(s.ctx,s.w,s.h,{k,done:ac.pick!=null||ac.i>=ACT.length}); }, 360);
+predC = makeCanvas($("predC"), 0.6, 210, s => { bg(s.ctx,s.w,s.h,C["surface-2"]); const gh=(s.h-24)/2;
+  FUNCS.forEach((f,i)=>{ const row=i<3?0:1, n=row?2:3, gw=(s.w-24)/n, x=12+(row?i-3:i)*gw, y=12+row*gh, hit=pd.shown && pd.k>=0 && FN[pd.k][1]===i; rr(s.ctx,x+4,y+4,gw-8,gh-8,12); s.ctx.fillStyle=hit?C.terra:C.surface; s.ctx.fill(); s.ctx.strokeStyle=C.line; s.ctx.lineWidth=1.5; s.ctx.stroke();
+    const fs=fitFont(s.ctx,f,gw-20,s.w<380?11:14,8); text(s.ctx,f,x+gw/2,y+gh/2+5,hit?(C["on-accent"]||"#fff"):C.ink,F(fs),"center"); }); }, 320);
+pdNew();
+const MINI = {
+  weather:(s,o)=>drawWeather(s.ctx,s.w,s.h,{...o,compact:true}),
+  verbwx:(s,o)=>drawVerbWx(s.ctx,s.w,s.h,{...o,compact:true}),
+  map:(s,o)=>drawMap(s.ctx,s.w,s.h,{...o,compact:true}),
+  survey:(s,o)=>drawSurvey(s.ctx,s.w,s.h,{...o,compact:true}),
+  gap:(s,o)=>drawGap(s.ctx,s.w,s.h,{...o,compact:true}),
+  act:(s,o)=>drawAct(s.ctx,s.w,s.h,{...o,compact:true}),
+};
+document.querySelectorAll("canvas[data-learn]").forEach(el=>{ const [kind,o]=LEARN[el.dataset.learn].vis[+el.dataset.k]; makeCanvas(el, 0.62, 150, s=>MINI[kind](s,o), 380); });
+const INFO = { storm:["weather",{k:"tormenta"}], map:["map",{icons:MAP_FINAL}], survey:["survey",{pts:SV_SAMPLE}] };
+document.querySelectorAll("canvas[data-mini]").forEach(el=>{ const [k,o]=INFO[el.dataset.mini]; makeCanvas(el,0.7,160,s=>MINI[k](s,{...o,bgc:C["surface-2"]})); });
+vwUpd(); wqNew(); mpNew(); svNew(); gpNew(); acNew();
+
+/* ================= LOOP / THEME / START ================= */
+if(!reduce){ (function loop(t){ heroT=t/1000; if(view==="overview" && hero.el.offsetParent) hero.redraw(); requestAnimationFrame(loop); })(0); }
+const rerender=()=>{ readColors(); sims.forEach(s=>{ if(s.el.offsetParent) s.redraw(); else s.w=0; }); if(view==="mindmap") drawMindMap(); };
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",rerender);
+new MutationObserver(rerender).observe(root,{attributes:true,attributeFilter:["data-theme","data-font"]});
+if(document.fonts) document.fonts.ready.then(rerender);
+const startHash = (location.hash||"").slice(1);
+show(VIEWS.includes(startHash)? startHash : "overview", {keepScroll:true});
+})();
+</script>
